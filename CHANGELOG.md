@@ -2,6 +2,16 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-28 — Claude takeover: baseline verified, source under version control (no engine change)
+
+Maintainer: **Claude**, per `CLAUDE_HANDOFF_2026-07-28.md`. Codex retains analysis planning and content repair in PaperDatabases.
+
+- Re-ran the viewer acceptance suite against the live analysis_v2 bundles and the real ESAT catalogue: **281 passed, 0 failed**, matching the handoff baseline.
+- Confirmed `deploy\esatwallop` clean at `41dbecc` with `build-info.json` carrying the public build `b778d4c0d9c2` (built 2026-07-27T23:43Z, 720 analysis records, 738 classifications).
+- Established the recoverable source checkpoint the handoff required: initialised a real git repository in the source folder (the previous `.git` was empty), with `.gitignore` excluding generated `dist\` and the separately-versioned `deploy\` checkout. Initial commit `bb5ee7a`, 36 files. Local history only; no remote, no push.
+- Removed a stale `deploy\esatwallop\.git\index.lock` (left by a sandboxed status probe; it would have blocked GitHub Desktop commits).
+- No engine, page, bundle or deployment change. Next per `ROADMAP.md` Phase 1: VSAFE-01/VSAFE-02 (invalid/withheld content-safety state; readiness computed from content the viewer actually resolves).
+
 ## 2026-07-24 — Codex takeover, analysis-presentation contract and repeatable ESAT deployment (v0.3.0)
 
 Maintainer: **Codex**. This release completes and verifies the interrupted Qoder
