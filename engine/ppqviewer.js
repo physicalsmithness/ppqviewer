@@ -208,15 +208,17 @@ window.PPQViewer = (function () {
   };
 
   Viewer.prototype._loadStore = function () {
-    try { const raw = localStorage.getItem(this.cfg.storageKey); if (raw) { const o = JSON.parse(raw); return { attempts: o.attempts || [], scores: o.scores || {} }; } }
+    /* VF-07 (Claude 2026-07-28): `flags` — question id -> flagged-at timestamp —
+       joins attempts and scores as first-class persisted store state. */
+    try { const raw = localStorage.getItem(this.cfg.storageKey); if (raw) { const o = JSON.parse(raw); return { attempts: o.attempts || [], scores: o.scores || {}, flags: o.flags || {} }; } }
     catch (e) { /* corrupt or absent */ }
     // one-time migration from a prior storage shape (e.g. chemistry's two flat maps),
     // so pupils keep their history when a subject moves onto the shared engine.
     if (typeof this.cfg.migrate === "function") {
-      try { const seeded = this.cfg.migrate(localStorage); if (seeded) return { attempts: seeded.attempts || [], scores: seeded.scores || {} }; }
+      try { const seeded = this.cfg.migrate(localStorage); if (seeded) return { attempts: seeded.attempts || [], scores: seeded.scores || {}, flags: seeded.flags || {} }; }
       catch (e) { /* migration is best-effort */ }
     }
-    return { attempts: [], scores: {} };
+    return { attempts: [], scores: {}, flags: {} };
   };
   Viewer.prototype._saveStore = function () { localStorage.setItem(this.cfg.storageKey, JSON.stringify(this.store)); this.renderDashboard(); };
 
@@ -298,6 +300,17 @@ window.PPQViewer = (function () {
     if (cfg.defaultOrder === "shuffle") orderSel.value = "shuffle"; /* QoderWork 2026-07-22: Smith: "make the standard to be shuffle" */
     filters.appendChild(orderSel);
     filters.appendChild(el("input", { class: "ppq-start", type: "number", min: "1", placeholder: "Start #", style: "display:none;" }));
+    /* VF-07 (Claude 2026-07-28): flagged-questions filter toggle. Lives with the
+       interrogation module, whose pop-up owns the flag control; hidden until the
+       pupil has flagged something. */
+    if (cfg.modules.postQuestionReview) {
+      filters.appendChild(el("button", {
+        class: "ppq-btn-mini ppq-flagged-toggle",
+        type: "button",
+        style: "display:none;",
+        title: "Show only the questions you have flagged"
+      }, "Flagged"));
+    }
     filters.appendChild(el("span", { class: "ppq-counter" }));
     header.appendChild(filters);
     this.root.appendChild(header);
@@ -676,6 +689,17 @@ window.PPQViewer = (function () {
         self.renderDashboard();
       }
     });
+    /* VF-07 (Claude 2026-07-28): the Flagged view toggle. */
+    const flagToggle = this.q(".ppq-flagged-toggle");
+    if (flagToggle) {
+      flagToggle.addEventListener("click", () => {
+        self._flaggedOnly = !self._flaggedOnly;
+        self._syncFlaggedToggle();
+        self.filterQuestions();
+        self.renderDashboard();
+      });
+      this._syncFlaggedToggle();
+    }
     /* QoderWork 2026-07-23: wire ALL .ppq-prev buttons (top + bottom). */
     this.qa(".ppq-prev").forEach((b) => b.addEventListener("click", () => self.prev()));
     this.q(".ppq-skip").addEventListener("click", () => self.skip());
@@ -1104,8 +1128,23 @@ window.PPQViewer = (function () {
         if (v !== "ALL" && values.indexOf(v) < 0) return false;
       }
     }
+    /* VF-07 (Claude 2026-07-28): the flagged-only view is one more filter every
+       question must pass, so the finder, counter scope and dashboard all agree
+       with the visible list. */
+    if (this._flaggedOnly && !(((this.store || {}).flags) || {})[cfg.idOf(qq)]) return false;
     if (this.groupFilter && cfg.groupKey(qq) !== this.groupFilter) return false;
     return true;
+  };
+
+  /* VF-07: the Flagged toggle carries the live count, shows only once something
+     is flagged (or the view is active), and reflects its on/off state. */
+  Viewer.prototype._syncFlaggedToggle = function () {
+    const b = this.q(".ppq-flagged-toggle");
+    if (!b) return;
+    const n = Object.keys(((this.store || {}).flags) || {}).length;
+    b.textContent = "Flagged" + (n ? " (" + n + ")" : "");
+    b.classList.toggle("on", !!this._flaggedOnly);
+    b.style.display = (n || this._flaggedOnly) ? "" : "none";
   };
 
   Viewer.prototype.filterQuestions = function () {
@@ -1221,6 +1260,8 @@ window.PPQViewer = (function () {
   Viewer.prototype.clearAllFilters = function () {
     const self = this;
     this.groupFilter = null; this._groupFilterLabel = null;
+    this._flaggedOnly = false; /* VF-07 */
+    this._syncFlaggedToggle();
     this.cfg.filters.forEach((f, i) => {
       if (f.multi) {
         self._multiSel[i] = f.default ? new Set(f.default.map(String)) : null;
@@ -2036,13 +2077,25 @@ window.PPQViewer = (function () {
     rate.appendChild(iqNext);
     restPage.appendChild(rate);
 
-    /* --- optional "come back to this" flag (Smith: review / more like this) --- */
-    const flag = el("button", { class: "ppq-iq-flag" }, "Flag this — come back / more like this");
+    /* --- VF-07 (Claude 2026-07-28): the flag is REAL now — persisted per
+       question in the store and surfaced through the header's Flagged filter.
+       The copy is honest: it promises only the list, not a recommender that
+       does not exist yet. --- */
+    const flagId = cfg.idOf(this.cur);
+    const flagCopy = function (on) {
+      return on ? "Flagged ✓ — in your flagged list" : "Flag this question — save it to your flagged list";
+    };
+    const wasFlagged = !!(((this.store || {}).flags) || {})[flagId];
+    const flag = el("button", { class: "ppq-iq-flag" + (wasFlagged ? " on" : ""), type: "button" }, flagCopy(wasFlagged));
     flag.addEventListener("click", () => {
-      flag.classList.toggle("on");
-      const on = flag.classList.contains("on");
-      flag.textContent = on ? "Flagged ✓ — we'll bring more like this" : "Flag this — come back / more like this";
-      self._fireReport({ status: "flag_review", qtype: "review_flag", extra_json: JSON.stringify({ flagged: on }) });
+      if (!self.store.flags) self.store.flags = {};
+      const on = !self.store.flags[flagId];
+      if (on) self.store.flags[flagId] = Date.now(); else delete self.store.flags[flagId];
+      flag.classList.toggle("on", on);
+      flag.textContent = flagCopy(on);
+      self._saveStore();
+      if (self._syncFlaggedToggle) self._syncFlaggedToggle();
+      self._fireReport({ status: "flag_review", qtype: "review_flag", extra_json: JSON.stringify({ flagged: on, question_id: flagId }) });
     });
     restPage.appendChild(flag);
 
@@ -2941,15 +2994,15 @@ window.PPQViewer = (function () {
       wrap.appendChild(el("div", { class: "ppq-iq-elim-prose" }, "rules out: " + esc(txt)));
       return wrap;
     }
-    if (labels.length) {
-      const row = el("div", { class: "ppq-iq-elim-row" });
-      labels.forEach((L) => {
-        L = String(L).toUpperCase();
-        const cls = red.indexOf(L) >= 0 ? "red" : (green.indexOf(L) >= 0 ? "green" : "dim");
-        row.appendChild(el("span", { class: "ppq-elim " + cls }, L));
-      });
-      wrap.appendChild(row);
-    }
+    /* VSAFE-03 (Claude 2026-07-28): legacy eliminations render through the SAME
+       full option rail as deep-v2 (coloured letters; no pills, no background
+       boxes, no strikethrough). The rejected `.ppq-elim` pill presentation is
+       deleted from the stylesheet; do not reintroduce it. Parsed kills project
+       to rules_out, the landing letter to directly_identifies, everything else
+       stays unaffected — the exact projection `_elimChipsV2El` already defines. */
+    const rail = this._elimChipsV2El({ eliminates: red, lands_on: green[0] || null }, labels);
+    const railRow = rail && rail.children && rail.children.length ? rail.children[0] : null;
+    if (railRow) wrap.appendChild(railRow);
     wrap.appendChild(el("div", { class: "ppq-iq-elim-prose" }, esc(txt)));
     return wrap;
   };
@@ -3474,6 +3527,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.4.1" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.5.0" };
 })();
 // build: 0.3.0, maintained by Codex

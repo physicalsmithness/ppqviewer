@@ -2,6 +2,32 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-28 (night) — VSAFE-03 + VF-07: rejected pills deleted, the flag is real (v0.5.0)
+
+Engine v0.5.0, same unpublished ESAT release v0.2.16.
+
+- **VSAFE-03 closed.** The legacy pill/strikethrough elimination chips are
+  DELETED from the stylesheet, not just unused, and the legacy prose parser
+  (`_elimChipsEl`) now renders through the same `.ppq-oev` coloured-letter rail
+  as deep-v2: parsed kills project to rules_out, the landing letter to
+  directly_identifies, survivors stay unaffected. Unparseable prose keeps its
+  honest raw-prose fallback. The suite asserts no pill classes and no
+  struck-through text anywhere in the stylesheet, so no future fallback can
+  silently restore the rejected design.
+- **VF-07 minimum honest implementation.** `store.flags` (question id →
+  flagged-at timestamp) joins attempts/scores as persisted state; a question
+  flagged in a previous session reopens flagged; the header gains a
+  "Flagged (n)" toggle (hidden until something is flagged) filtering through
+  the shared predicate so finder, counter scope and dashboard agree; Clear all
+  filters clears it; unflag works from the same button. Copy is honest: "in
+  your flagged list", with the false recommender promise removed. The
+  `review_flag` event now carries `question_id` alongside `flagged`.
+- Suites: acceptance 314/314 (VSAFE-03 rail projection, VF-07
+  persistence/filter/copy/reopen); content-safety 70/70.
+- Consumer notes: `flags` is additive store state (old stores normalise to
+  `{}`); the Flagged toggle appears only for consumers running
+  `postQuestionReview`. Chemistry unaffected.
+
 ## 2026-07-28 (evening) — Phase 1.5: readable analysis, answer beside the thing (v0.4.1)
 
 Engine v0.4.1, same unpublished ESAT release v0.2.16. Direct response to Smith's

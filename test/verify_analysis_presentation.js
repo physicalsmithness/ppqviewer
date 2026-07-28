@@ -185,7 +185,8 @@ const V = {}; // fake viewer holding the real methods
  "_setDashboardFacetValue", "_clearDashboardFacet", "_zeroRatings",
  "_renderDashboardFacet", "_catHtml",
  "_buildGuessPicker", "_renderInterrogation", "_isV2", "_guessLabel", "_guessPrompt",
- "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety", "_methodAskText"
+ "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety", "_methodAskText",
+ "_elimChipsEl"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -1592,6 +1593,159 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const wrapperHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
   check(wrapperHtml.indexOf("update-note") >= 0 && /Important update/.test(wrapperHtml),
     "the ESAT page announces the update clearly at sign-in");
+})();
+
+// VSAFE-03 (Claude 2026-07-28): the rejected pill/strikethrough option treatment
+// is deleted, and the legacy eliminations parser renders through the same
+// coloured-letter rail as deep-v2, so no fallback can restore the old design.
+(function () {
+  console.log("\n=== legacy eliminations use the approved rail (VSAFE-03) ===");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(css.indexOf(".ppq-elim") < 0, "the .ppq-elim pill classes are deleted from the stylesheet");
+  check(css.indexOf("line-through") < 0, "no strikethrough treatment remains anywhere in the stylesheet");
+
+  const ctx = { _elimChipsV2El: V._elimChipsV2El };
+  const parsed = V._elimChipsEl.call(ctx, { eliminates: "kills B and D, lands on A" }, ["A", "B", "C", "D"], "A");
+  const pills = collect(parsed, (n) => (n.className || "").indexOf("ppq-elim") >= 0);
+  check(pills.length === 0, "the legacy parser emits no pill chips");
+  const rail = collect(parsed, (n) => (n.className || "").indexOf("ppq-oev-row") >= 0);
+  check(rail.length === 1, "parsed legacy eliminations render as the fixed option rail");
+  const letters = rail.length ? collect(rail[0], (n) => (n.className || "").indexOf("ppq-oev ") >= 0) : [];
+  const relOf = {};
+  letters.forEach((n) => { relOf[n._html || n._text || ""] = n.className; });
+  check(letters.length === 4 &&
+    /\bro\b/.test(relOf.B || "") && /\bro\b/.test(relOf.D || "") &&
+    /\bdi\b/.test(relOf.A || "") && /\bun\b/.test(relOf.C || ""),
+    "killed letters read rules_out, the landing letter identifies, survivors stay unaffected");
+
+  const unparsed = V._elimChipsEl.call(ctx, { eliminates: "several quick sanity checks settle it" }, ["A", "B"], "A");
+  check(collect(unparsed, (n) => (n.className || "").indexOf("ppq-oev-row") >= 0).length === 0 &&
+    collect(unparsed, (n) => (n.className || "").indexOf("ppq-iq-elim-prose") >= 0).length === 1,
+    "unparseable prose still falls back to the honest raw-prose line, never guessed chips");
+})();
+
+// VF-07 (Claude 2026-07-28): the flag persists per question, the header gains a
+// real Flagged filter, and the copy stops promising a recommender that does not
+// exist yet.
+(function () {
+  console.log("\n=== persisted flag and flagged filter (VF-07) ===");
+  check(src.indexOf("we'll bring more like this") < 0,
+    "the false 'more like this' promise is gone from the engine");
+  check(src.indexOf("in your flagged list") >= 0 &&
+    src.indexOf("save it to your flagged list") >= 0,
+    "the flag copy describes what actually happens");
+  check(src.indexOf("flags: o.flags || {}") >= 0 &&
+    src.indexOf("return { attempts: [], scores: {}, flags: {} }") >= 0,
+    "flags are first-class persisted store state alongside attempts and scores");
+  check(src.indexOf("ppq-flagged-toggle") >= 0 &&
+    extractFn("_matchesQuestionFilters").toString().indexOf("_flaggedOnly") >= 0,
+    "the header toggle exists and flagged-only is a real filter every view consumer shares");
+  check(extractFn("clearAllFilters").toString().indexOf("_flaggedOnly = false") >= 0,
+    "Clear all filters also clears the flagged-only view");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(css.indexOf(".ppq-flagged-toggle.on") >= 0, "the active flagged toggle is visibly on");
+
+  function flagNodes() {
+    return {
+      ".ppq-modal-body": makeEl("div"),
+      ".ppq-modal-content": makeEl("div"),
+      ".ppq-modal-min": makeEl("button"),
+      ".ppq-modal-reminder": makeEl("div"),
+      ".ppq-modal-feedback-status": makeEl("span"),
+      ".ppq-modal": makeEl("div"),
+      ".ppq-competence": makeEl("div")
+    };
+  }
+  function flagCtx(nodes, flags) {
+    const reports = [];
+    const ctx = {
+      cur: { id: "flag-test-question", correct_answer: "C" },
+      cfg: {
+        modules: { postQuestionReview: true },
+        analysisOf: () => null,
+        idOf: (q) => q.id,
+        correctOf: (q) => q.correct_answer,
+        metaLine: () => "Flag test",
+        selfReport: { levels: 6, prompt: "How did that feel?", meanings: [] }
+      },
+      root: makeEl("div"),
+      q: (selector) => nodes[selector] || null,
+      qa: () => [],
+      store: { attempts: [{ attempt_id: "flag-attempt" }], scores: {}, flags: flags || {} },
+      _saves: 0,
+      _saveStore() { this._saves++; },
+      _fireReport: (payload) => reports.push(payload),
+      _reports: reports,
+      _answerLabels: ["A", "B", "C"],
+      _optionLabels: () => ["A", "B", "C"],
+      _attemptId: "flag-attempt",
+      _chosenLabel: "A",
+      _wasRight: false,
+      _analysisReviewMode: () => false,
+      _syncFlaggedToggle: () => {},
+      _contentSafety: V._contentSafety,
+      _isV2: V._isV2,
+      _guessLabel: V._guessLabel,
+      _guessPrompt: V._guessPrompt,
+      _feedbackReadiness: V._feedbackReadiness,
+      _setFeedbackStatusBadge: V._setFeedbackStatusBadge,
+      _buildGuessPicker: V._buildGuessPicker,
+      _verdictEl: V._verdictEl,
+      _appendFreeformReflectionV2: V._appendFreeformReflectionV2,
+      _renderSelectedOptionDiagnosticV2: () => {},
+      _renderInterrogationFeedback: () => {},
+      _revealCommittedAnswer: () => {},
+      _commitPreVerdictGuess: () => {},
+      closeModal: () => {},
+      next: () => {},
+      _renderInterrogation: V._renderInterrogation
+    };
+    return ctx;
+  }
+
+  const nodesA = flagNodes();
+  const ctxA = flagCtx(nodesA, {});
+  ctxA._renderInterrogation();
+  const flagBtn = collect(nodesA[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-iq-flag") >= 0)[0];
+  check(!!flagBtn && /save it to your flagged list/i.test(flagBtn._html || ""),
+    "an unflagged question offers the honest save-to-list copy");
+  if (flagBtn) {
+    flagBtn.click();
+    check(!!ctxA.store.flags["flag-test-question"] && ctxA._saves === 1,
+      "flagging writes a persisted timestamp through the store");
+    const rep = ctxA._reports.filter((r) => r.qtype === "review_flag").pop();
+    const repData = rep ? JSON.parse(rep.extra_json) : {};
+    check(!!rep && repData.flagged === true && repData.question_id === "flag-test-question",
+      "the flag event reports the question id and the new state");
+    check(/in your flagged list/i.test(flagBtn._html || "") || /in your flagged list/i.test(flagBtn.textContent || ""),
+      "the button confirms membership of the flagged list, promising nothing else");
+    flagBtn.click();
+    check(!ctxA.store.flags["flag-test-question"] && ctxA._saves === 2,
+      "unflagging removes the persisted entry");
+  }
+
+  const nodesB = flagNodes();
+  const ctxB = flagCtx(nodesB, { "flag-test-question": 123 });
+  ctxB._renderInterrogation();
+  const flagBtnB = collect(nodesB[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-iq-flag") >= 0)[0];
+  check(!!flagBtnB && (flagBtnB.className || "").indexOf("on") >= 0 &&
+    /in your flagged list/i.test(flagBtnB._html || ""),
+    "a question flagged in a previous session reopens already flagged");
+
+  const fctx = {
+    cfg: { filters: [], groupKey: () => "ALL", idOf: (q) => q.id },
+    store: { flags: { q1: 1 } },
+    _flaggedOnly: true,
+    _multiSel: {},
+    q: () => null,
+    _filterValues: V._filterValues
+  };
+  check(V._matchesQuestionFilters.call(fctx, { id: "q1" }) === true &&
+    V._matchesQuestionFilters.call(fctx, { id: "q2" }) === false,
+    "flagged-only passes flagged questions and blocks the rest");
+  fctx._flaggedOnly = false;
+  check(V._matchesQuestionFilters.call(fctx, { id: "q2" }) === true,
+    "toggling off restores the full view");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

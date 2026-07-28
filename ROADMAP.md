@@ -49,8 +49,10 @@ shows Solution pending. Do not use the old 46/692/0 roadmap figures.
   real examples exist — kept below.)_
 - [ ] Add unreplaced-placeholder and missing-value/unit checks when the
   analysis project can characterise them (VSAFE-04 residue).
-- [ ] Remove, isolate or prove unreachable the legacy pill/strikethrough option
-  presentation (VSAFE-03).
+- [x] Remove, isolate or prove unreachable the legacy pill/strikethrough option
+  presentation (VSAFE-03). _(2026-07-28, v0.5.0: pill CSS deleted; legacy
+  eliminations render through the deep-v2 letter rail; suite asserts no pill
+  classes or struck-through text can return.)_
 - [ ] Run representative desktop and 320 px interaction checks.
 - [ ] Verify the exact public build and asset identities after deployment.
 
@@ -83,8 +85,11 @@ content they ask about.
   owner and data contract.
 - [ ] Add stable attempted-question history and reopen-analysis behaviour in
   ordered and shuffled modes.
-- [ ] Turn Flag into a real persisted flagged-question list; remove the false
+- [x] Turn Flag into a real persisted flagged-question list; remove the false
   “we'll bring more like this” promise until recommendations exist.
+  _(2026-07-28, v0.5.0: persisted `store.flags`, header Flagged (n) filter,
+  unflag, honest copy. Reopening the ANALYSIS of a flagged attempt rides on
+  the history item below.)_
 - [ ] Build the first pupil analysis page over attempts, ratings, guesses, time,
   flags, prompts and reflections.
 - [ ] Add canonical analysis-ID support to question finding.

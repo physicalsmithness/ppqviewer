@@ -565,18 +565,12 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
    shell. Constrain the prose column so it reads comfortably inside the wide modal. */
 .ppq-iq { max-width: 760px; margin: 0 auto; padding: 0.4rem 0.2rem 1.2rem; }
 
-/* red/green elimination chips per method (best-effort parse of `eliminates`) */
+/* VSAFE-03 (Claude 2026-07-28): the old elimination pill chips are DELETED,
+   not merely unused. Smith rejected pills, background boxes and struck-through
+   letters for option evidence; legacy eliminations now render through the
+   `.ppq-oev` letter rail below. Do not reintroduce a pill treatment here. */
 .ppq-iq-elim { margin-top: 0.5rem; }
-.ppq-iq-elim-row { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-.ppq-elim { display: inline-flex; align-items: center; justify-content: center; min-width: 1.7rem; height: 1.7rem; padding: 0 0.3rem; border-radius: 6px; font-weight: 800; font-size: 0.85rem; border: 1px solid var(--ppq-line); color: var(--ppq-muted); background: var(--ppq-bg); }
-.ppq-elim.red { background: rgba(176, 48, 48, 0.12); border-color: rgba(176, 48, 48, 0.5); color: var(--ppq-bad); text-decoration: line-through; }
-.ppq-elim.green { background: rgba(45, 106, 63, 0.14); border-color: rgba(45, 106, 63, 0.55); color: var(--ppq-ok); }
-.ppq-elim.dim { opacity: 0.55; }
-/* QoderWork 2026-07-23 (analyst request #3): richer evidence vocabulary chips. */
-.ppq-elim.amber { background: rgba(180, 120, 20, 0.12); border-color: rgba(180, 120, 20, 0.5); color: #8a5a00; }
-.ppq-elim.lightgreen { background: rgba(45, 106, 63, 0.08); border-color: rgba(45, 106, 63, 0.3); color: var(--ppq-ok); }
-.ppq-elim.bold { font-weight: 900; border-width: 2px; }
-.ppq-iq-elim-prose { font-size: 0.78rem; line-height: 1.4; color: var(--ppq-muted); margin-top: 0.35rem; font-style: italic; }
+.ppq-iq-elim-prose { font-size: 0.85rem; line-height: 1.5; color: var(--ppq-muted); margin-top: 0.35rem; font-style: italic; }
 
 /* QoderWork 2026-07-24 (handoff #3): complete fixed-position option-evidence rail.
    The LETTER ITSELF is coloured by relationship — no background, pill, border or
@@ -607,7 +601,10 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-iq-stepnum::after { content: "."; }
 
 /* optional "come back / more like this" review flag */
-.ppq-iq-flag { display: block; margin-top: 1.1rem; font-size: 0.85rem; padding: 0.5rem 1rem; border: 1px dashed var(--ppq-line); border-radius: 8px; background: transparent; color: var(--ppq-ink2); cursor: pointer; }
+/* VF-07: the flagged-view header toggle */
+.ppq-flagged-toggle.on { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; font-weight: 700; }
+
+.ppq-iq-flag { display: block; margin-top: 1.1rem; font-size: 0.9rem; padding: 0.5rem 1rem; border: 1px dashed var(--ppq-line); border-radius: 8px; background: transparent; color: var(--ppq-ink2); cursor: pointer; }
 .ppq-iq-flag:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
 .ppq-iq-flag.on { border-style: solid; border-color: var(--ppq-accent); background: rgba(49, 130, 206, 0.08); color: var(--ppq-accent); font-weight: 700; }
 

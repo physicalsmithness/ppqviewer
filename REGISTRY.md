@@ -13,7 +13,7 @@ consumer migration and material module change.
 | Special Relativity | Intended near-term embed | `C:\Claude (not on Gdrive, nor OneDrive)\Special Relativity Driller` | No ppqviewer adapter recorded here | Requires embedded mount |
 | IB Physics | Future consumer; no adapter recorded here | external project | Not connected | Rich tagging/error taxonomy and eventual assistance/history |
 | Economics | Future consumer; no adapter recorded here | external project | Not connected | Past-paper data exists elsewhere; adapter/status not recorded here |
-| Maths | Future consumer; no adapter recorded here | external project | Not connected | Adapter/status not recorded here |
+| Maths | Nearing readiness — Smith reports many questions analysed (2026-07-28); location/format not yet recorded here | external project | Not connected | Adapter/status not recorded here; onboarding needs: catalogue + config (+ analysis bundle if made, which inherits the content-safety gate) |
 | Trilogy Physics | Intended future past-paper viewer | external project | Not connected | Mapping exists elsewhere; no viewer adapter recorded here |
 | pre-IB Physics | Intended future past-paper viewer | external project | Not connected | No viewer adapter recorded here |
 
