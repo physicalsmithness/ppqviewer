@@ -1,0 +1,1518 @@
+/* Verification harness: extracts the REAL render functions from engine/ppqviewer.js
+   and runs them against the current analysis_v2 bundle fixtures, asserting the
+   acceptance criteria in VIEWER_HANDOFF_2026-07-24.md. No browser/jsdom needed.
+
+   Adopted as a permanent project test and maintained by Codex, 2026-07-24. */
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const PROJECT_ROOT = path.resolve(__dirname, "..");
+const ENGINE = path.join(PROJECT_ROOT, "engine", "ppqviewer.js");
+const ANALYSIS_ROOT = process.env.ESAT_ANALYSIS_ROOT ||
+  "C:\\CodexProjects\\PaperDatabases\\Esat Categorisation\\analysis_v2";
+const BUNDLE = path.join(ANALYSIS_ROOT, "dist", "esat_analysis_v2.js");
+const CLASSIFICATION_BUNDLE = path.join(ANALYSIS_ROOT, "dist", "esat_classification.js");
+const CATALOGUE = process.env.ESAT_CATALOGUE_JS ||
+  "C:\\Claude (not on Gdrive, nor OneDrive)\\ESAT Prep App\\app\\data\\esat_catalogue.js";
+
+// ---- minimal element shim -------------------------------------------------
+function makeEl(tag) {
+  const listeners = {};
+  const node = {
+    tagName: String(tag).toUpperCase(),
+    className: "",
+    children: [],
+    style: { cssText: "" },
+    dataset: {},
+    _attrs: {},
+    _text: "",
+    _html: "",
+    value: "",
+    isConnected: true,
+    appendChild(c) { this.children.push(c); c.parent = this; c.parentNode = this; return c; },
+    removeChild(c) {
+      const i = this.children.indexOf(c);
+      if (i >= 0) this.children.splice(i, 1);
+      c.parent = null;
+      c.parentNode = null;
+      return c;
+    },
+    scrollIntoView(opts) { this._scrollIntoView = opts || true; },
+    setAttribute(k, v) {
+      this._attrs[k] = v;
+      if (k.slice(0, 5) === "data-") {
+        const dk = k.slice(5).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+        this.dataset[dk] = v;
+      }
+    },
+    addEventListener(type, fn) { (listeners[type] = listeners[type] || []).push(fn); },
+    dispatchEvent(evt) {
+      const e = typeof evt === "string" ? { type: evt } : evt;
+      e.target = e.target || this;
+      (listeners[e.type] || []).forEach((fn) => fn(e));
+      return true;
+    },
+    click() { this.dispatchEvent({ type: "click", target: this }); },
+    closest(selector) {
+      let cur = this;
+      while (cur) {
+        if (selector.charAt(0) === ".") {
+          const wanted = selector.slice(1).split(".");
+          const have = String(cur.className || "").split(/\s+/);
+          if (wanted.every((c) => have.indexOf(c) >= 0)) return cur;
+        }
+        cur = cur.parentNode;
+      }
+      return null;
+    },
+    focus() { document.activeElement = this; },
+    querySelectorAll(selector) {
+      const out = [];
+      const matches = (n) => {
+        if (selector.charAt(0) === ".") {
+          const wanted = selector.slice(1).split(".");
+          const have = String(n.className || "").split(/\s+/);
+          return wanted.every((c) => have.indexOf(c) >= 0);
+        }
+        return n.tagName === selector.toUpperCase();
+      };
+      (this.children || []).forEach((child) => walk(child, (n) => { if (matches(n)) out.push(n); }));
+      return out;
+    },
+    querySelector(selector) { return this.querySelectorAll(selector)[0] || null; },
+    classList: {
+      add(...names) {
+        const have = String(node.className || "").split(/\s+/).filter(Boolean);
+        names.forEach((name) => { if (have.indexOf(name) < 0) have.push(name); });
+        node.className = have.join(" ");
+      },
+      remove(...names) {
+        node.className = String(node.className || "").split(/\s+/).filter((c) => c && names.indexOf(c) < 0).join(" ");
+      },
+      contains(name) { return String(node.className || "").split(/\s+/).indexOf(name) >= 0; },
+      toggle(name, force) {
+        const on = this.contains(name);
+        const next = force === undefined ? !on : !!force;
+        if (next) this.add(name); else this.remove(name);
+        return next;
+      }
+    },
+    get textContent() { return this._text; },
+    set textContent(v) { this._text = v; },
+    get innerHTML() { return this._html; },
+    set innerHTML(v) { this._html = v; if (v === "") this.children = []; }
+  };
+  return node;
+}
+const document = { createElement: (t) => makeEl(t), activeElement: null };
+
+// ---- el / esc copied verbatim from the engine -----------------------------
+function el(tag, attrs, html) {
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    if (k === "class") n.className = attrs[k];
+    else if (k === "style") {
+      n.style.cssText = attrs[k];
+      String(attrs[k]).split(";").forEach((part) => {
+        const ci = part.indexOf(":");
+        if (ci < 0) return;
+        const prop = part.slice(0, ci).trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+        if (prop) n.style[prop] = part.slice(ci + 1).trim();
+      });
+    }
+    else if (k.slice(0, 5) === "data-") n.setAttribute(k, attrs[k]);
+    else n[k] = attrs[k];
+  }
+  if (html != null) n.innerHTML = html;
+  return n;
+}
+function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+// ---- extract real functions from the engine source ------------------------
+const src = fs.readFileSync(ENGINE, "utf8");
+function extractStandaloneFn(name) {
+  const marker = "function " + name + "(";
+  const start = src.indexOf(marker);
+  if (start < 0) throw new Error("cannot find " + name);
+  const braceOpen = src.indexOf("{", start);
+  let depth = 0, end = -1;
+  for (let i = braceOpen; i < src.length; i++) {
+    const c = src[i];
+    if (c === "{") depth++;
+    else if (c === "}") { depth--; if (depth === 0) { end = i; break; } }
+  }
+  // eslint-disable-next-line no-eval
+  return eval("(" + src.slice(start, end + 1) + ")");
+}
+const analysisMathEsc = extractStandaloneFn("analysisMathEsc");
+const allocateLargestRemainder = extractStandaloneFn("allocateLargestRemainder");
+function extractFn(name) {
+  const marker = "Viewer.prototype." + name + " = function";
+  const start = src.indexOf(marker);
+  if (start < 0) throw new Error("cannot find " + name);
+  const fnStart = src.indexOf("function", start);
+  const braceOpen = src.indexOf("{", fnStart);
+  let depth = 0, end = -1;
+  for (let i = braceOpen; i < src.length; i++) {
+    const c = src[i];
+    if (c === "{") depth++;
+    else if (c === "}") { depth--; if (depth === 0) { end = i; break; } }
+  }
+  const argsAndBody = src.slice(fnStart, end + 1);
+  // eslint-disable-next-line no-eval
+  return eval("(" + argsAndBody + ")");
+}
+function extractFnOptional(name) {
+  const marker = "Viewer.prototype." + name + " = function";
+  return src.indexOf(marker) >= 0 ? extractFn(name) : null;
+}
+
+const V = {}; // fake viewer holding the real methods
+["_appendMethodsV2", "_methodBlockV2", "_methodKindLabel", "_elimChipsV2El",
+ "_optionRailLegendEl", "_appendSelfReportV2", "_promptBlockV2", "_stateLabel",
+ "_verdictEl", "_reviewerDiagnosticsV2", "_feedbackOptionMatchV2",
+ "_feedbackGuessMatchesV2", "_selectedOptionFeedbackV2", "_selectedDiagnosticCardV2",
+ "_matchFeedbackV2", "_thingsUsedItemsV2", "_thingsUsedStatesV2",
+ "_thingsUsedRowV2", "_appendThingsUsedV2", "_appendFreeformReflectionV2",
+ "_interrogationResponseCue", "_renderInterrogationFeedback", "_filterValue",
+ "_filterValues", "_parentFilterValue", "_fillSingleFilterOptions", "_syncSingleFilterStyle",
+ "_refreshDependentFilters", "_dashboardFacet", "_activeDashboardFacet",
+ "_matchesQuestionFilters", "filterQuestions", "setGroupFilter",
+ "_setDashboardFacetValue", "_clearDashboardFacet", "_zeroRatings",
+ "_renderDashboardFacet", "_catHtml",
+ "_buildGuessPicker", "_renderInterrogation", "_isV2", "_guessLabel", "_guessPrompt",
+ "_feedbackReadiness", "_setFeedbackStatusBadge"
+].forEach((n) => { V[n] = extractFn(n); });
+
+// ---- fake instance context ------------------------------------------------
+function makeCtx(rec) {
+  const reports = [];
+  return {
+    cur: { id: (rec.identity && rec.identity.id) || "test-question" },
+    cfg: { idOf: (q) => q.id || ((rec.identity || {}).id || "test-question") },
+    store: { attempts: [{ attempt_id: "test-attempt" }] },
+    _saveStore: () => {},
+    _optionLabels: () => (rec.identity && rec.identity.option_labels) || [],
+    _analysisSelfReports: {},
+    _promptStates: {},
+    _thingsUsedStates: {},
+    _attemptId: "test-attempt",
+    _chosenLabel: "",
+    _wasRight: false,
+    _postGuessDeclared: false,
+    _preGuessDeclaration: null,
+    _fireReport: (payload) => reports.push(payload),
+    _reports: reports,
+    _renderInterrogationFeedback: () => {},
+    // bind the real methods
+    _appendMethodsV2: V._appendMethodsV2, _methodBlockV2: V._methodBlockV2,
+    _methodKindLabel: V._methodKindLabel, _elimChipsV2El: V._elimChipsV2El,
+    _optionRailLegendEl: V._optionRailLegendEl, _appendSelfReportV2: V._appendSelfReportV2,
+    _promptBlockV2: V._promptBlockV2, _stateLabel: V._stateLabel,
+    _verdictEl: V._verdictEl, _reviewerDiagnosticsV2: V._reviewerDiagnosticsV2,
+    _feedbackOptionMatchV2: V._feedbackOptionMatchV2,
+    _feedbackGuessMatchesV2: V._feedbackGuessMatchesV2,
+    _selectedOptionFeedbackV2: V._selectedOptionFeedbackV2,
+    _selectedDiagnosticCardV2: V._selectedDiagnosticCardV2,
+    _matchFeedbackV2: V._matchFeedbackV2,
+    _thingsUsedItemsV2: V._thingsUsedItemsV2,
+    _thingsUsedStatesV2: V._thingsUsedStatesV2,
+    _thingsUsedRowV2: V._thingsUsedRowV2,
+    _appendThingsUsedV2: V._appendThingsUsedV2,
+    _appendFreeformReflectionV2: V._appendFreeformReflectionV2,
+    _interrogationResponseCue: V._interrogationResponseCue,
+    _renderInterrogationFeedback: V._renderInterrogationFeedback,
+    _buildGuessPicker: V._buildGuessPicker
+  };
+}
+
+// ---- load bundle ----------------------------------------------------------
+const bsrc = fs.readFileSync(BUNDLE, "utf8");
+const objStart = bsrc.indexOf("{", bsrc.indexOf("var bundle = {"));
+let d = 0, oe = -1;
+for (let i = objStart; i < bsrc.length; i++) { const c = bsrc[i]; if (c === "{") d++; else if (c === "}") { d--; if (d === 0) { oe = i; break; } } }
+const bundle = JSON.parse(bsrc.slice(objStart, oe + 1));
+const byId = {};
+bundle.records.forEach((r) => { byId[r.identity.id] = r; });
+
+// ---- tree helpers ---------------------------------------------------------
+function walk(node, fn) { fn(node); (node.children || []).forEach((c) => walk(c, fn)); }
+function collect(node, pred, out) { out = out || []; walk(node, (n) => { if (pred(n)) out.push(n); }); return out; }
+function textOf(node) { let t = (node._text || "") + (node._html || ""); (node.children || []).forEach((c) => { t += textOf(c); }); return t; }
+
+// Render methods+prompts into a container and return an ordered summary of
+// top-level blocks: {kind:'method'|'prompt'|'legend', ...}
+function renderAnalysis(rec) {
+  const ctx = makeCtx(rec);
+  const iq = makeEl("div");
+  const rendered = ctx._appendMethodsV2(iq, rec);
+  ctx._appendSelfReportV2(iq, rec, rendered);
+  // Build ordered block list from iq.children
+  const blocks = iq.children.map((c) => {
+    const cls = c.className || "";
+    if (cls.indexOf("ppq-oev-legend") >= 0) return { type: "legend" };
+    if (cls.indexOf("ppq-iq-method") >= 0) {
+      const kind = (cls.match(/ppq-iq-kind-(\w+)/) || [])[1] || "?";
+      const titleEl = collect(c, (n) => n.tagName === "B")[0];
+      const kindTag = collect(c, (n) => (n.className || "").indexOf("ppq-iq-method-kind") >= 0)[0];
+      // rail letters
+      const rail = collect(c, (n) => (n.className || "").indexOf("ppq-oev-row") >= 0)[0];
+      const letters = rail ? rail.children.map((L) => L.innerHTML + ":" + (L.className.match(/ppq-oev (\w+)/) || [])[1]) : [];
+      const numbered = collect(c, (n) => (n.className || "").indexOf("numbered") >= 0).length;
+      const hasUsed = collect(c, (n) => (n.className || "").indexOf("ppq-iq-used") >= 0).length > 0;
+      return { type: "method", id: c.dataset.methodId || "", kind, kindTag: kindTag ? kindTag.innerHTML : "", title: titleEl ? titleEl.innerHTML : "", letters, numbered, hasUsed };
+    }
+    if (cls.indexOf("ppq-iq-prompt") >= 0) {
+      const text = collect(c, (n) => (n.className || "").indexOf("ppq-iq-prompt-text") >= 0)[0];
+      const states = collect(c, (n) => (n.className || "").indexOf("ppq-iq-state") >= 0 && n.tagName === "BUTTON").map((b) => b.innerHTML);
+      return { type: "prompt", text: text ? text.innerHTML : "", states };
+    }
+    return { type: "other", cls };
+  });
+  return { ctx, blocks };
+}
+
+// ---- assertions -----------------------------------------------------------
+let pass = 0, fail = 0;
+function check(cond, msg) { if (cond) { pass++; } else { fail++; console.log("  FAIL: " + msg); } }
+
+function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="); return byId[id]; }
+
+// Lightweight maths notation from the JSON is presented as maths, not authoring
+// syntax, and remains escaped before entering innerHTML.
+(function () {
+  check(analysisMathEsc("p^2q^2 + 4sqrt(2) + sqrt(10x-x^2)") ===
+    "p²q² + 4√2 + √(10x-x²)",
+    "analysis text renders powers and square roots");
+  check(analysisMathEsc("sqrt(ab), sqrt(discriminant), mysqrt2, my_sqrt2") ===
+    "√(ab), √(discriminant), mysqrt2, my_sqrt2",
+    "long radicands retain brackets and sqrt inside a word is untouched");
+  check(analysisMathEsc("<b>sqrt(2)</b>") === "&lt;b&gt;√2&lt;/b&gt;",
+    "analysis maths formatting cannot inject HTML");
+})();
+
+// Q4: four unnumbered peer checks + synthesis; all six letters every row;
+// neutral/time-sink group prompt once after the four checks.
+(function () {
+  const rec = fixture("esat_engaa_2016_s1_Q04", "Q4");
+  const { blocks } = renderAnalysis(rec);
+  const methods = blocks.filter((b) => b.type === "method");
+  const checks = methods.filter((m) => m.kind === "independent_check");
+  const synth = methods.filter((m) => m.kind === "synthesis");
+  check(checks.length === 4, "Q4 has 4 independent_checks (got " + checks.length + ")");
+  check(synth.length === 1, "Q4 has 1 synthesis (got " + synth.length + ")");
+  methods.forEach((m) => check(m.letters.length === 6, "Q4 rail has all 6 letters: " + m.title + " (" + m.letters.length + ")"));
+  checks.forEach((m) => check(m.numbered === 0, "Q4 check is unnumbered: " + m.title));
+  // synthesis rail: A-E rules_out, F directly_identifies
+  const sLet = Object.fromEntries(synth[0].letters.map((x) => x.split(":")));
+  check(sLet.F === "di", "Q4 synthesis F = directly_identifies (got " + sLet.F + ")");
+  check(["A", "B", "C", "D", "E"].every((L) => sLet[L] === "ro"), "Q4 synthesis A-E = rules_out");
+  // statement 1 rail: A/B/C rules_out, D/E/F unaffected
+  const m0 = Object.fromEntries(methods[0].letters.map((x) => x.split(":")));
+  check(m0.A === "ro" && m0.B === "ro" && m0.C === "ro", "Q4 stmt1 A/B/C rules_out");
+  check(m0.D === "un" && m0.E === "un" && m0.F === "un", "Q4 stmt1 D/E/F unaffected (got " + m0.D + m0.E + m0.F + ")");
+  // group prompt (neutral wording) appears once, after the 4th check (before synthesis)
+  const prompts = blocks.filter((b) => b.type === "prompt");
+  const neutral = prompts.filter((p) => /neutral-looking/i.test(p.text));
+  check(neutral.length === 1, "Q4 neutral/time-sink group prompt appears exactly once (got " + neutral.length + ")");
+  // ordering: the 4 per-statement prompts each follow their check; neutral after 4th check
+  const idxNeutral = blocks.indexOf(neutral[0]);
+  const idxSynth = blocks.indexOf(synth[0]);
+  check(idxNeutral < idxSynth, "Q4 group prompt sits before the synthesis (after the peer group)");
+  // no raw proposed__ in any state label
+  prompts.forEach((p) => p.states.forEach((s) => check(s.indexOf("proposed") < 0, "Q4 state label has no 'proposed': " + s)));
+  // used-it hidden on methods that have local prompts (all 4 checks have prompts)
+  checks.forEach((m) => check(!m.hasUsed, "Q4 check has no 'used it' (local prompt exists): " + m.title));
+})();
+
+// Q27: dependent route (numbered), independent check, optional route.
+(function () {
+  const rec = fixture("esat_engaa_2016_s1_Q27", "Q27");
+  const { blocks } = renderAnalysis(rec);
+  const methods = blocks.filter((b) => b.type === "method");
+  const route = methods.find((m) => /angle at Q/i.test(m.title));
+  const indep = methods.find((m) => m.kind === "independent_check");
+  check(route && route.kind === "route", "Q27 'Describe the angle at Q twice' is a route");
+  check(route && route.numbered > 0, "Q27 route steps are numbered (" + (route ? route.numbered : 0) + ")");
+  check(indep && indep.numbered === 0, "Q27 independent check is unnumbered");
+  // independent check rail: A/B/C rules_out, D/E/F/G unaffected (NOT green)
+  const il = Object.fromEntries(indep.letters.map((x) => x.split(":")));
+  check(il.A === "ro" && il.B === "ro" && il.C === "ro", "Q27 check A/B/C rules_out");
+  check(["D", "E", "F", "G"].every((L) => il[L] === "un"), "Q27 survivors D-G are unaffected, not green (got " + ["D","E","F","G"].map((L)=>il[L]).join(",") + ")");
+})();
+
+// Q40: direction check, closeness check, synthesis, two optional routes.
+(function () {
+  const rec = fixture("esat_engaa_2019_s1_Q40", "Q40");
+  const { blocks } = renderAnalysis(rec);
+  const methods = blocks.filter((b) => b.type === "method");
+  const kinds = methods.map((m) => m.kind);
+  check(kinds.filter((k) => k === "independent_check").length === 2, "Q40 has 2 independent_checks");
+  check(kinds.filter((k) => k === "synthesis").length === 1, "Q40 has 1 synthesis");
+  check(kinds.filter((k) => k === "route").length === 2, "Q40 has 2 routes");
+  // direction check rail: A/B unaffected, C/D/E rules_out
+  const dir = methods[0];
+  const dl = Object.fromEntries(dir.letters.map((x) => x.split(":")));
+  check(dl.A === "un" && dl.B === "un", "Q40 direction A/B unaffected");
+  check(dl.C === "ro" && dl.D === "ro" && dl.E === "ro", "Q40 direction C/D/E rules_out");
+  // synthesis: B directly_identifies
+  const syn = methods.find((m) => m.kind === "synthesis");
+  const sl = Object.fromEntries(syn.letters.map((x) => x.split(":")));
+  check(sl.B === "di", "Q40 synthesis B = directly_identifies (got " + sl.B + ")");
+})();
+
+// 2022 Q27 (exact-vs-approximation), 2019 Q01 (surd-square), 2017 Q46 (graph-area) — render without crash + rails complete.
+["esat_engaa_2022_s1_Q27", "esat_engaa_2019_s1_Q01", "esat_engaa_2017_s1_Q46"].forEach((id) => {
+  const rec = byId[id];
+  if (!rec) { console.log("\n=== " + id + " === NOT IN BUNDLE"); check(false, id + " acceptance fixture is present"); return; }
+  const { blocks } = renderAnalysis(rec);
+  const methods = blocks.filter((b) => b.type === "method");
+  const nLabels = (rec.identity.option_labels || []).length;
+  console.log("\n=== " + id + " === " + methods.length + " methods, " + nLabels + " options");
+  methods.forEach((m) => check(m.letters.length === nLabels, id + " rail complete (" + m.letters.length + "/" + nLabels + "): " + m.title));
+  // every prompt rendered has readable states (no proposed__)
+  blocks.filter((b) => b.type === "prompt").forEach((p) => p.states.forEach((s) => check(s.indexOf("proposed") < 0, id + " state has no 'proposed': " + s)));
+});
+
+// 2023 Q29: the two legitimate routes and the intermediate-stop diagnostic
+// are three independently answerable rows, and its surds render as maths.
+(function () {
+  const rec = fixture("esat_engaa_2023_s1_Q29", "Q29 split prompts and maths");
+  const { blocks } = renderAnalysis(rec);
+  const answerable = blocks.filter((b) => b.type === "prompt" && b.states.length);
+  check(answerable.length === 3, "Q29 has three separately answerable prompt rows");
+  check(answerable.map((p) => p.text).join("|") ===
+    "Did you work directly with pr and pq?|Did you find p, q and r separately?|Did you stop at r - q before multiplying by p?",
+    "Q29 keeps the three actions separate and in context");
+  check(answerable[2].states.join("|") ===
+    "Yes, that was it|Something like that|No, another reason|Not sure",
+    "Q29 intermediate-stop row uses the short diagnostic controls");
+  const ctx = makeCtx(rec);
+  const iq = makeEl("div");
+  const rendered = ctx._appendMethodsV2(iq, rec);
+  ctx._appendSelfReportV2(iq, rec, rendered);
+  const visible = textOf(iq);
+  check(visible.indexOf("4√2") >= 0 && visible.indexOf("p²q²") >= 0,
+    "Q29 renders square roots and powers in the method working");
+  check(visible.indexOf("sqrt(") < 0, "Q29 exposes no raw sqrt(...) authoring syntax");
+})();
+
+// Pupil/reviewer split: v2 error_path is hidden from pupils and fully available
+// in the explicit reviewer payload.
+(function () {
+  const rec = fixture("esat_engaa_2022_s1_Q27", "audience split");
+  const ctx = makeCtx(rec);
+  ctx._chosenLabel = "E";
+  ctx._wasRight = false;
+  const pupilVerdict = ctx._verdictEl(rec, true, "E", "A", false, false);
+  const reviewerVerdict = ctx._verdictEl(rec, true, "E", "A", false, true);
+  check(collect(pupilVerdict, (n) => (n.className || "").indexOf("ppq-iq-option-path") >= 0).length === 0,
+    "pupil verdict contains no v2 error_path");
+  check(collect(reviewerVerdict, (n) => (n.className || "").indexOf("ppq-iq-option-path") >= 0).length === 1,
+    "reviewer verdict retains selected error_path");
+  const reviewer = ctx._reviewerDiagnosticsV2(rec);
+  const optionRows = collect(reviewer, (n) => (n.className || "").split(/\s+/).indexOf("ppq-iq-reviewer-option") >= 0);
+  check(optionRows.length === rec.options.length, "reviewer payload shows every option reconstruction");
+  check(textOf(reviewer).indexOf(analysisMathEsc(rec.options.find((o) => o.label === "E").error_path)) >= 0,
+    "reviewer payload includes option E error_path");
+  check(textOf(reviewer).indexOf(rec.review.notes[0]) >= 0, "reviewer payload includes review notes");
+})();
+
+// Selected-answer feedback is a local conditional question with four controls.
+(function () {
+  const rec = fixture("esat_engaa_2022_s1_Q27", "selected-answer diagnostics");
+  const expected = {
+    B: "outside_factor_not_squared",
+    C: "cross_terms_omitted_c",
+    E: "sqrt20_missimplified_e"
+  };
+  Object.keys(expected).forEach((letter) => {
+    const ctx = makeCtx(rec);
+    let diagnosticCue = null;
+    ctx._interrogationResponseCue = (origin, text, delay) => {
+      diagnosticCue = { origin, text, delay };
+    };
+    ctx._chosenLabel = letter;
+    ctx._wasRight = false;
+    const card = ctx._selectedDiagnosticCardV2(rec);
+    check(!!card, "diagnostic card exists for " + letter);
+    check(card && card.dataset.feedbackId === expected[letter], letter + " gets only its matching feedback row");
+    const buttons = collect(card, (n) => (n.className || "").split(/\s+/).indexOf("ppq-iq-diagnostic-choice") >= 0);
+    check(buttons.map((b) => b.innerHTML).join("|") ===
+      "Yes, that was it|Something like that|No, another reason|Not sure",
+      letter + " diagnostic controls use the agreed order");
+    buttons[0].click();
+    check(ctx._reports.length === 1, letter + " diagnostic click emits one report");
+    const payload = JSON.parse(ctx._reports[0].extra_json);
+    check(payload.selected_option === letter && payload.feedback_id === expected[letter] &&
+      payload.response_state === "yes_that_was_it" && payload.attempt_id === "test-attempt",
+      letter + " diagnostic report keeps answer, feedback and attempt context");
+    check(diagnosticCue && diagnosticCue.origin === card &&
+      diagnosticCue.text === "Recorded" && diagnosticCue.delay === 220,
+      letter + " diagnostic visibly acknowledges the answer after the same short beat");
+  });
+
+  const correctCtx = makeCtx(rec);
+  correctCtx._chosenLabel = "A";
+  correctCtx._wasRight = true;
+  correctCtx._preGuessDeclaration = { guess_declared: true };
+  const correctCard = correctCtx._selectedDiagnosticCardV2(rec);
+  const correctButtons = collect(correctCard, (n) => (n.className || "").split(/\s+/).indexOf("ppq-iq-diagnostic-choice") >= 0);
+  check(correctButtons.map((b) => b.innerHTML).join("|") ===
+    "I had a complete reason|I used a shortcut or check|I was not fully sure|It was a guess",
+    "correct-answer diagnostic asks about provenance");
+
+  const synthetic = {
+    identity: { id: "synthetic_feedback" },
+    pupil_analysis: {},
+    feedback: [
+      { id: "generic_wrong", selected_options: ["any_wrong"], prompt_id: null, states: [], text: "generic" },
+      { id: "specific_b", selected_options: ["B"], prompt_id: null, states: [], text: "specific" },
+      { id: "prompt_wrong", selected_options: ["any_wrong"], prompt_id: "p1", states: ["missed"], text: "prompt" }
+    ]
+  };
+  const sctx = makeCtx(synthetic);
+  sctx._chosenLabel = "B"; sctx._wasRight = false;
+  check(sctx._selectedOptionFeedbackV2(synthetic).id === "specific_b",
+    "letter-specific feedback beats any_wrong");
+  sctx._chosenLabel = "C";
+  check(sctx._selectedOptionFeedbackV2(synthetic).id === "generic_wrong",
+    "any_wrong matches an arbitrary wrong letter");
+  sctx._promptStates.p1 = "missed";
+  check(sctx._matchFeedbackV2(synthetic, true).id === "prompt_wrong",
+    "prompt-state any_wrong feedback remains independently reachable");
+})();
+
+// Bottom knowledge/technique audit: no cap, fixed copy/order, implicit default
+// without logging, and explicit interaction does log.
+(function () {
+  const rec = fixture("esat_engaa_2022_s1_Q27", "Things this question used");
+  const ctx = makeCtx(rec);
+  const iq = makeEl("div");
+  ctx._appendThingsUsedV2(iq, rec);
+  const section = collect(iq, (n) => (n.className || "").split(/\s+/).indexOf("ppq-iq-things") >= 0)[0];
+  check(!!section && textOf(section).indexOf("Things this question used") >= 0,
+    "knowledge section has its explicit title");
+  const rows = collect(section, (n) => (n.className || "").split(/\s+/).indexOf("ppq-iq-thing") >= 0);
+  const expectedCount = (rec.requirements.knowledge_atoms || []).length + (rec.requirements.technique_atoms || []).length;
+  check(rows.length === expectedCount && rows.length > 4,
+    "knowledge section renders every atom with no four-item cap (" + rows.length + ")");
+  const stateButtons = rows[0].querySelectorAll(".ppq-iq-thing-state");
+  check(stateButtons.map((b) => b.dataset.state).join("|") ===
+    "secure_before_question|knew_but_did_not_retrieve|sketchy_on_this|still_unclear",
+    "knowledge states have the fixed semantic order");
+  check(stateButtons.map((b) => b.innerHTML).join("|") ===
+    "Known|Known, but did not think of it|Sketchy|Not known",
+    "knowledge states have the agreed pupil copy");
+  check(stateButtons[0].classList.contains("sel") && stateButtons[0].classList.contains("implicit"),
+    "Known is visibly preselected as an implicit default");
+  check(ctx._reports.length === 0 && Object.keys(ctx._thingsUsedStates).length === 0,
+    "rendering the Known default does not log mastery");
+  let knowledgeCue = null;
+  ctx._interrogationResponseCue = (origin, text, delay) => {
+    knowledgeCue = { origin, text, delay };
+  };
+  stateButtons[1].click();
+  check(ctx._thingsUsedStates[rows[0].dataset.thingId] === "knew_but_did_not_retrieve",
+    "an explicit knowledge exception is stored");
+  check(ctx._reports.length === 1 && ctx._reports[0].qtype === "things_used",
+    "an explicit knowledge response emits one report");
+  check(knowledgeCue && knowledgeCue.origin === rows[0] &&
+    knowledgeCue.text === "Recorded" && knowledgeCue.delay === 220,
+    "an explicit knowledge response visibly fires in its own row after 220 ms");
+
+  const confirm = section.querySelector(".ppq-iq-things-confirm");
+  let confirmCue = null;
+  ctx._interrogationResponseCue = (origin, text, delay) => {
+    confirmCue = { origin, text, delay };
+  };
+  confirm.click();
+  check(confirmCue && confirmCue.origin === section &&
+    confirmCue.text === "Recorded" && confirmCue.delay === 220,
+    "confirm-all visibly fires in the knowledge section after 220 ms");
+})();
+
+// Optional free text is stored with the current attempt and reported once.
+(function () {
+  const rec = fixture("esat_engaa_2022_s1_Q27", "freeform reflection");
+  const ctx = makeCtx(rec);
+  const iq = makeEl("div");
+  ctx._appendFreeformReflectionV2(iq, rec);
+  const areas = collect(iq, (n) => (n.className || "").split(/\s+/).indexOf("ppq-iq-reflection-text") >= 0);
+  check(areas.length === 1, "one freeform reflection textarea is rendered");
+  areas[0].value = "  Lost the outside factor  ";
+  areas[0].dispatchEvent({ type: "blur" });
+  check(ctx.store.attempts[0].freeform_reflection === "Lost the outside factor",
+    "freeform reflection is trimmed and stored on the attempt");
+  check(ctx._reports.length === 1 && ctx._reports[0].qtype === "freeform_reflection",
+    "freeform reflection emits one report");
+  const payload = JSON.parse(ctx._reports[0].extra_json);
+  check(payload.attempt_id === "test-attempt" && payload.question_id === rec.identity.id,
+    "freeform report keeps attempt and question context");
+  areas[0].dispatchEvent({ type: "blur" });
+  check(ctx._reports.length === 1, "unchanged freeform text is not reported twice");
+})();
+
+// Authored method order is a contract, not an inferred preferred route.
+(function () {
+  const rec = fixture("esat_engaa_2022_s1_Q27", "authored method order");
+  const { blocks } = renderAnalysis(rec);
+  const ids = blocks.filter((b) => b.type === "method").map((b) => b.id);
+  check(ids.join("|") === rec.methods.map((m) => m.id).join("|"),
+    "rendered methods preserve authored order across interleaved prompts");
+  check(ids.join("|") === "factor_cancel_rationalise|rough_magnitude_filter|expand_then_rationalise",
+    "exact route precedes approximation and expansion in the surd pilot");
+})();
+
+// Guess percentages are part of the normal picker: visible and pre-filled,
+// optional to edit, and Enter accepts the current state exactly once.
+(function () {
+  console.log("\n=== pre-filled guess percentages and Enter ===");
+  const rec = fixture("esat_engaa_2022_s1_Q27", "guess percentages");
+  const ctx = makeCtx(rec);
+  const submissions = [];
+  let skips = 0;
+  const picker = ctx._buildGuessPicker({
+    labels: ["A", "B", "C"],
+    preselect: ["B"],
+    stage: "pre_verdict",
+    prompt: "Which options were in the running?",
+    onDone: (payload) => submissions.push(payload),
+    onSkip: () => { skips++; }
+  });
+  const rows = picker.querySelectorAll(".ppq-gpick-row");
+  const byLetter = {};
+  rows.forEach((row) => {
+    byLetter[row.querySelector(".ppq-gpick-letter").innerHTML] = {
+      row: row,
+      cb: row.querySelector("input"),
+      pct: row.querySelector(".ppq-gpick-pct"),
+      wrap: row.querySelector(".ppq-gpick-pctwrap")
+    };
+  });
+  check(!picker.querySelector(".ppq-gpick-pcttoggle") &&
+    !!picker.querySelector(".ppq-gpick-pcthint"),
+    "percentage fields are normal visible controls, not hidden behind a toggle");
+  check(byLetter.B.pct.value === "100" && !byLetter.B.pct.disabled &&
+    byLetter.A.pct.value === "0" && byLetter.A.pct.disabled,
+    "the preselected answer starts at 100% while unchecked options stay disabled");
+  check(byLetter.A.wrap.style.display === "" && byLetter.B.wrap.style.display === "",
+    "percentages remain visibly beside both selected and available options");
+  check(byLetter.B.pct.ariaLabel === "Percentage for B",
+    "each percentage field has an explicit accessible name");
+
+  byLetter.A.cb.checked = true;
+  picker.querySelector(".ppq-gpick-options").dispatchEvent({
+    type: "change",
+    target: byLetter.A.cb
+  });
+  check(byLetter.A.pct.value === "50" && byLetter.B.pct.value === "50",
+    "selecting a second candidate pre-fills an equal 50/50 split");
+
+  byLetter.A.pct.value = "60";
+  picker.querySelector(".ppq-gpick-options").dispatchEvent({
+    type: "input",
+    target: byLetter.A.pct
+  });
+  check(byLetter.A.pct.value === "60" && byLetter.B.pct.value === "40",
+    "editing one percentage automatically keeps the total at 100");
+
+  let prevented = 0, stopped = 0;
+  const enter = {
+    type: "keydown",
+    key: "Enter",
+    repeat: false,
+    target: byLetter.A.pct,
+    preventDefault: () => { prevented++; },
+    stopPropagation: () => { stopped++; }
+  };
+  picker.dispatchEvent(enter);
+  check(submissions.length === 1 && skips === 0 &&
+    submissions[0].candidate_options.join("|") === "A|B" &&
+    submissions[0].candidate_percentages.A === 60 &&
+    submissions[0].candidate_percentages.B === 40,
+    "Enter from a percentage field accepts the pre-filled/edited declaration");
+  check(prevented === 1 && stopped === 1 &&
+    picker.querySelector(".ppq-gpick-done").textContent === "Done \u2713",
+    "Enter visibly says Done and does not leak to the global key handler");
+  picker.dispatchEvent(enter);
+  check(submissions.length === 1,
+    "a second Enter during the page transition cannot submit twice");
+
+  const singleCtx = makeCtx(rec);
+  let singleDone = 0, singleSkip = 0;
+  const single = singleCtx._buildGuessPicker({
+    labels: ["A", "B", "C"],
+    preselect: ["B"],
+    stage: "pre_verdict",
+    onDone: () => { singleDone++; },
+    onSkip: () => { singleSkip++; }
+  });
+  single.dispatchEvent({
+    type: "keydown",
+    key: "Enter",
+    repeat: false,
+    target: single.querySelector(".ppq-gpick-pct"),
+    preventDefault: () => {},
+    stopPropagation: () => {}
+  });
+  check(singleDone === 0 && singleSkip === 1 &&
+    single.querySelector(".ppq-gpick-done").innerHTML === "Done" &&
+    single.querySelector(".ppq-gpick-skip").textContent === "Skipped \u2713",
+    "with only the original answer selected, Enter advances without declaring a guess");
+
+  const clickCtx = makeCtx(rec);
+  let clickDone = 0, clickSkip = 0;
+  const clickPicker = clickCtx._buildGuessPicker({
+    labels: ["A", "B", "C"],
+    preselect: ["B"],
+    stage: "pre_verdict",
+    onDone: () => { clickDone++; },
+    onSkip: () => { clickSkip++; }
+  });
+  clickPicker.querySelector(".ppq-gpick-done").click();
+  check(clickDone === 0 && clickSkip === 1 &&
+    clickPicker.querySelector(".ppq-gpick-skip").textContent === "Skipped \u2713",
+    "clicking Done with the untouched defaults matches pressing Enter");
+  check(src.indexOf("picker._ppqSubmitOrSkip") >= 0 &&
+    src.indexOf("guessPage.style.display !== \"none\"") >= 0,
+    "global Enter also routes to the visible guess picker when focus is outside it");
+})();
+
+// Selecting an answer must capture it without leaking the verdict while the
+// guess declaration is still on screen. The same committed answer is revealed
+// after Done/Skip, or immediately if the pupil closes that page early.
+(function () {
+  console.log("\n=== verdict waits for guess declaration ===");
+  const selectOption = extractFn("selectOption");
+  const selectMCQ = extractFn("selectMCQ");
+  const afterAnswer = extractFn("_afterAnswer");
+  const closeModal = extractFn("closeModal");
+  const revealCommittedAnswer = extractFnOptional("_revealCommittedAnswer");
+
+  function makeRevealCtx(type) {
+    const options = ["A", "B", "C"].map((label) => {
+      const b = makeEl("button");
+      b.className = "ppq-option";
+      b.dataset.label = label;
+      return b;
+    });
+    const nodes = {
+      ".ppq-answer-line": makeEl("div"),
+      ".ppq-answer-panel": makeEl("div"),
+      ".ppq-examiner-body": makeEl("div"),
+      ".ppq-skip": makeEl("button"),
+      ".ppq-reveal": makeEl("button"),
+      ".ppq-competence": makeEl("div"),
+      ".ppq-unsure": makeEl("button"),
+      ".ppq-guess": makeEl("div"),
+      ".ppq-kb-hint": makeEl("div"),
+      ".ppq-modal-body": makeEl("div"),
+      ".ppq-modal-content": makeEl("div"),
+      ".ppq-modal-min": makeEl("button"),
+      ".ppq-modal-reminder": makeEl("div"),
+      ".ppq-modal-feedback-status": makeEl("span"),
+      ".ppq-modal": makeEl("div"),
+      ".ppq-next": makeEl("button")
+    };
+    const reports = [];
+    const ctx = {
+      answered: false,
+      cur: { id: "deferred-verdict-question", correct_answer: "C" },
+      cfg: {
+        modules: { postQuestionReview: true },
+        analysisOf: () => null,
+        idOf: (q) => q.id,
+        correctOf: (q) => q.correct_answer,
+        answerKeyOf: (q) => q.correct_answer,
+        metaLine: () => "Deferred verdict test",
+        groupLabel: () => "M5 Geometry",
+        analysisReminderGroup: true,
+        selfReport: { levels: 6, prompt: "How did that feel?", meanings: [] },
+        revealCorrect: true
+      },
+      root: makeEl("div"),
+      q(selector) { return nodes[selector] || null; },
+      qa(selector) {
+        if (selector === ".ppq-option") return options;
+        if (selector === ".ppq-scale-btn") return [];
+        return [];
+      },
+      store: { attempts: [{ attempt_id: "deferred-attempt" }], scores: {} },
+      _answerLabels: ["A", "B", "C"],
+      _curType: type || "multipleChoice",
+      _attemptId: "deferred-attempt",
+      _chosenLabel: "",
+      _wasRight: false,
+      _answerRevealPending: false,
+      _preGuessDeclaration: null,
+      _saveStore: () => {},
+      _fireReport: (payload) => reports.push(payload),
+      _commitTimer: () => {},
+      _recordAttempt: () => {},
+      _analysisReviewMode: () => false,
+      _isV2: V._isV2,
+      _guessLabel: V._guessLabel,
+      _guessPrompt: V._guessPrompt,
+      _feedbackReadiness: V._feedbackReadiness,
+      _setFeedbackStatusBadge: V._setFeedbackStatusBadge,
+      _buildGuessPicker: V._buildGuessPicker,
+      _verdictEl: V._verdictEl,
+      _appendFreeformReflectionV2: V._appendFreeformReflectionV2,
+      _renderSelectedOptionDiagnosticV2: () => {},
+      _renderInterrogationFeedback: () => {},
+      _firePendingDashboardPulse: () => {},
+      _commitPreVerdictGuess: () => {},
+      _examinerShown: 0,
+      _showExaminer() { this._examinerShown++; },
+      _renderInterrogation: V._renderInterrogation,
+      _afterAnswer: afterAnswer,
+      _revealCommittedAnswer: revealCommittedAnswer || (() => {}),
+      selectOption: selectOption,
+      selectMCQ: selectMCQ,
+      closeModal: closeModal,
+      next: () => {}
+    };
+    return { ctx, nodes, options, reports };
+  }
+
+  const oldSetTimeout = global.setTimeout;
+  const timers = [];
+  global.setTimeout = (fn, ms) => { timers.push({ fn, ms }); return timers.length; };
+  try {
+    const normal = makeRevealCtx();
+    normal.ctx.selectOption("A");
+    const guessPage = normal.nodes[".ppq-modal-body"].querySelector(".ppq-iq-guesspage");
+    const restPage = normal.nodes[".ppq-modal-body"].querySelector(".ppq-iq-rest");
+    check(/Deferred verdict test/.test(normal.nodes[".ppq-modal-reminder"].textContent) &&
+      /M5 Geometry/.test(normal.nodes[".ppq-modal-reminder"].textContent) &&
+      /you chose A/.test(normal.nodes[".ppq-modal-reminder"].textContent),
+      "the sticky analysis bar retains the question, broad topic and chosen answer while the dashboard is hidden");
+    check(!!guessPage && guessPage.style.display !== "none" &&
+      !!restPage && restPage.style.display === "none",
+      "answering opens the guess declaration before the verdict");
+    check(normal.options.every((b) =>
+      !b.classList.contains("correct") && !b.classList.contains("incorrect")),
+      "no option receives correct/incorrect styling while the guess page is visible");
+    check(!normal.nodes[".ppq-answer-line"].classList.contains("show") &&
+      !normal.nodes[".ppq-answer-line"].textContent,
+      "the outer answer text stays hidden while the guess page is visible");
+
+    guessPage.querySelector(".ppq-gpick-skip").click();
+    const revealTimer = timers.find((t) => t.ms === 180);
+    check(!!revealTimer,
+      "Done/Skip schedules the short transition before revealing the answer");
+    if (revealTimer) revealTimer.fn();
+    check(normal.options[0].classList.contains("incorrect") &&
+      normal.options[2].classList.contains("correct"),
+      "after the guess transition, the chosen and correct options are revealed");
+    check(normal.nodes[".ppq-answer-line"].classList.contains("show") &&
+      /correct answer is C/i.test(normal.nodes[".ppq-answer-line"].textContent),
+      "after the guess transition, the answer text is revealed");
+
+    const early = makeRevealCtx();
+    early.ctx.selectOption("A");
+    check(early.options.every((b) =>
+      !b.classList.contains("correct") && !b.classList.contains("incorrect")) &&
+      !early.nodes[".ppq-answer-line"].classList.contains("show"),
+      "the early-close path also begins with the verdict hidden");
+    early.ctx.closeModal();
+    check(early.options[0].classList.contains("incorrect") &&
+      early.options[2].classList.contains("correct") &&
+      early.nodes[".ppq-answer-line"].classList.contains("show"),
+      "closing the guess page early reveals the committed answer instead of stranding it");
+
+    const mcqTimerStart = timers.length;
+    const mcq = makeRevealCtx("mcq");
+    mcq.ctx.selectMCQ("A");
+    const mcqGuessPage = mcq.nodes[".ppq-modal-body"].querySelector(".ppq-iq-guesspage");
+    check(mcq.options.every((b) =>
+      !b.classList.contains("correct") && !b.classList.contains("incorrect")) &&
+      mcq.ctx._examinerShown === 0,
+      "MCQ correctness and examiner text also remain hidden during guess declaration");
+    mcqGuessPage.querySelector(".ppq-gpick-skip").click();
+    const mcqRevealTimer = timers.slice(mcqTimerStart).find((t) => t.ms === 180);
+    if (mcqRevealTimer) mcqRevealTimer.fn();
+    check(mcq.options[0].classList.contains("incorrect") &&
+      mcq.options[2].classList.contains("correct") &&
+      mcq.ctx._examinerShown === 1,
+      "MCQ styling and examiner text appear together after the transition");
+  } finally {
+    global.setTimeout = oldSetTimeout;
+  }
+})();
+
+// A missing authored analysis must not suppress the attempt-feedback flow.
+// The fallback deliberately contains no invented teaching content, but retains
+// the guess declaration, freeform reflection and self-rating shell.
+(function () {
+  console.log("\n=== feedback fallback without authored analysis ===");
+  const renderSource = extractFn("_renderInterrogation").toString();
+  check(renderSource.indexOf("if (!rec) return") < 0 &&
+    renderSource.indexOf("viewer-feedback-fallback-v1") >= 0,
+    "a question without analysis receives a safe fallback record instead of returning early");
+  check(renderSource.indexOf("this._buildGuessPicker") >= 0,
+    "the no-analysis fallback still passes through the guess declaration page");
+  check(renderSource.indexOf("Question-specific suggestions are still being prepared.") >= 0,
+    "the fallback explains the absence of question-specific suggestions without inventing any");
+  check((renderSource.match(/this\._appendFreeformReflectionV2\(restPage, rec\)/g) || []).length === 1 &&
+    renderSource.indexOf("ppq-iq-rate") >= 0,
+    "every schema path shares exactly one freeform feedback box and the self-rating");
+
+  const modalNodes = {
+    ".ppq-modal-body": makeEl("div"),
+    ".ppq-modal-content": makeEl("div"),
+    ".ppq-modal-min": makeEl("button"),
+    ".ppq-modal-reminder": makeEl("div"),
+    ".ppq-modal-feedback-status": makeEl("span"),
+    ".ppq-modal": makeEl("div"),
+    ".ppq-competence": makeEl("div")
+  };
+  const fallbackReports = [];
+  let fallbackSaves = 0;
+  const fallbackCtx = {
+    cur: { id: "missing-analysis-question", correct_answer: "C" },
+    cfg: {
+      modules: { postQuestionReview: true },
+      analysisOf: () => null,
+      idOf: (q) => q.id,
+      correctOf: (q) => q.correct_answer,
+      metaLine: () => "Missing analysis test",
+      selfReport: { levels: 6, prompt: "How did that feel?", meanings: [] }
+    },
+    root: makeEl("div"),
+    q: (selector) => modalNodes[selector] || null,
+    qa: () => [],
+    store: { attempts: [{ attempt_id: "missing-attempt" }], scores: {} },
+    _saveStore: () => { fallbackSaves++; },
+    _fireReport: (payload) => fallbackReports.push(payload),
+    _answerLabels: ["A", "B", "C"],
+    _optionLabels: () => ["A", "B", "C"],
+    _attemptId: "missing-attempt",
+    _chosenLabel: "A",
+    _wasRight: false,
+    _analysisReviewMode: () => false,
+    _isV2: V._isV2,
+    _guessLabel: V._guessLabel,
+    _guessPrompt: V._guessPrompt,
+    _feedbackReadiness: V._feedbackReadiness,
+    _setFeedbackStatusBadge: V._setFeedbackStatusBadge,
+    _buildGuessPicker: V._buildGuessPicker,
+    _verdictEl: V._verdictEl,
+    _appendFreeformReflectionV2: V._appendFreeformReflectionV2,
+    _renderSelectedOptionDiagnosticV2: () => {},
+    _renderInterrogationFeedback: () => {},
+    _revealCommittedAnswer: () => {},
+    _commitPreVerdictGuess: () => {},
+    closeModal: () => {},
+    next: () => {},
+    _renderInterrogation: V._renderInterrogation
+  };
+  fallbackCtx._renderInterrogation();
+  const mounted = modalNodes[".ppq-modal-body"];
+  const fallbackGuess = mounted.querySelector(".ppq-iq-guesspage");
+  const fallbackRest = mounted.querySelector(".ppq-iq-rest");
+  check(!!fallbackGuess && !!fallbackGuess.querySelector(".ppq-gpick"),
+    "runtime null-analysis rendering opens the ordinary guess picker");
+  check(!!fallbackRest && !!fallbackRest.querySelector(".ppq-iq-fallback-note"),
+    "runtime null-analysis rendering mounts the explicit no-suggestions note");
+  check(/solution pending/i.test(modalNodes[".ppq-modal-feedback-status"].textContent) &&
+    modalNodes[".ppq-modal-feedback-status"].classList.contains("ppq-feedback-status-pending"),
+    "the sticky analysis bar carries the same pending status as the question header");
+  check(collect(fallbackRest, (n) => (n.className || "").indexOf("ppq-iq-reflection-text") >= 0).length === 1 &&
+    collect(fallbackRest, (n) => (n.className || "").indexOf("ppq-iq-scale-btn") >= 0).length === 6,
+    "runtime fallback contains one feedback box and all six rating choices");
+
+  const oldSetTimeout = global.setTimeout;
+  const fallbackTimers = [];
+  global.setTimeout = (fn, ms) => { fallbackTimers.push({ fn: fn, ms: ms }); return fallbackTimers.length; };
+  try {
+    const fallbackPicker = fallbackGuess.querySelector(".ppq-gpick");
+    fallbackPicker.dispatchEvent({
+      type: "keydown",
+      key: "Enter",
+      repeat: false,
+      target: fallbackPicker.querySelector(".ppq-gpick-pct"),
+      preventDefault: () => {},
+      stopPropagation: () => {}
+    });
+    const revealTimer = fallbackTimers.find((t) => t.ms === 180);
+    check(!!revealTimer &&
+      fallbackPicker.querySelector(".ppq-gpick-skip").textContent === "Skipped \u2713",
+      "Enter records the no-guess path visibly before revealing fallback feedback");
+    revealTimer.fn();
+    check(fallbackGuess.style.display === "none" && fallbackRest.style.display === "",
+      "the fallback advances from guess capture to the feedback screen");
+  } finally {
+    global.setTimeout = oldSetTimeout;
+  }
+
+  const fallbackText = fallbackRest.querySelector(".ppq-iq-reflection-text");
+  fallbackText.value = "Needed another route";
+  fallbackText.dispatchEvent({ type: "blur" });
+  check(fallbackCtx.store.attempts[0].freeform_reflection === "Needed another route" &&
+    fallbackSaves === 1 &&
+    fallbackReports.some((r) => r.qtype === "freeform_reflection"),
+    "fallback freeform feedback persists against the current attempt");
+
+  const fallbackScale = fallbackRest.querySelector(".ppq-iq-scale");
+  const fallbackRateButtons = collect(fallbackScale,
+    (n) => (n.className || "").split(/\s+/).indexOf("ppq-iq-scale-btn") >= 0);
+  fallbackScale.dispatchEvent({ type: "click", target: fallbackRateButtons[3] });
+  check(fallbackCtx.store.scores["missing-analysis-question"] === 4 &&
+    fallbackRest.querySelector(".ppq-iq-next").style.display === "inline-block",
+    "fallback rating stores normally and reveals Next question");
+})();
+
+// Answering an inline diagnostic visibly causes its result: the prompt passes
+// its own block as the response origin, then tailored feedback waits briefly,
+// scrolls into view and highlights. A response with no authored feedback still
+// receives a transient Recorded acknowledgement.
+(function () {
+  console.log("\n=== visible response firing ===");
+  const rec = byId.esat_engaa_2022_s1_Q27;
+  const prompt = {
+    id: "test_prompt",
+    prompt: "Did you use this?",
+    states: ["secure_before_question", "still_unclear"]
+  };
+  const ctx = makeCtx(rec);
+  let receivedOrigin = null;
+  ctx._renderInterrogationFeedback = (origin) => { receivedOrigin = origin; };
+  const promptBlock = ctx._promptBlockV2(prompt, "method_awareness");
+  promptBlock.querySelector(".ppq-iq-state").click();
+  check(receivedOrigin === promptBlock,
+    "an inline answer identifies the exact block that fired it");
+
+  const oldSetTimeout = global.setTimeout;
+  const timers = [];
+  global.setTimeout = (fn, ms) => { timers.push({ fn, ms }); return timers.length; };
+  try {
+    const tailored = makeCtx(rec);
+    const feedbackBox = makeEl("div");
+    feedbackBox.className = "ppq-iq-feedback";
+    const iq = makeEl("div");
+    iq.appendChild(feedbackBox);
+    tailored._iqBox = iq;
+    tailored._matchInterrogationFeedback = () => ({ text: "Tailored next step" });
+    const origin = makeEl("div");
+    iq.appendChild(origin);
+    tailored._renderInterrogationFeedback(origin);
+    check(feedbackBox.children.length === 0 && timers.some((t) => t.ms === 220),
+      "tailored feedback waits for a perceptible 220 ms beat");
+    timers.find((t) => t.ms === 220).fn();
+    check(textOf(feedbackBox).indexOf("Tailored next step") >= 0,
+      "tailored feedback appears after the beat");
+    check(feedbackBox.classList.contains("ppq-iq-feedback-fired") &&
+      feedbackBox._scrollIntoView && feedbackBox._scrollIntoView.behavior === "smooth",
+      "tailored feedback highlights and scrolls smoothly into view");
+
+    const noTailored = makeCtx(rec);
+    const noFeedbackBox = makeEl("div");
+    noFeedbackBox.className = "ppq-iq-feedback";
+    const noIq = makeEl("div");
+    noIq.appendChild(noFeedbackBox);
+    const noOrigin = makeEl("div");
+    noIq.appendChild(noOrigin);
+    noTailored._iqBox = noIq;
+    noTailored._matchInterrogationFeedback = () => null;
+    const before = timers.length;
+    noTailored._renderInterrogationFeedback(noOrigin);
+    const responseTimer = timers.slice(before).find((t) => t.ms === 220);
+    responseTimer.fn();
+    check(textOf(noOrigin).indexOf("Recorded") >= 0,
+      "an answer with no tailored branch still visibly says Recorded");
+  } finally {
+    global.setTimeout = oldSetTimeout;
+  }
+})();
+
+// Feedback readiness is pupil-facing state, not an inference they should have
+// to make from whether a long panel happens to appear. Reviewed, draft and
+// missing records must map to three explicit, stable states at the question top.
+(function () {
+  console.log("\n=== feedback readiness badge ===");
+  const feedbackReadiness = extractFnOptional("_feedbackReadiness");
+  check(!!feedbackReadiness,
+    "the viewer exposes one feedback-readiness helper for all status rendering");
+  if (feedbackReadiness) {
+    const ctx = {
+      cfg: {
+        analysisOf: (q) => q.analysis || null
+      }
+    };
+    const full = feedbackReadiness.call(ctx, {
+      id: "reviewed-question",
+      analysis: { review: { status: "reviewed" } }
+    });
+    const provisional = feedbackReadiness.call(ctx, {
+      id: "draft-question",
+      analysis: { review: { status: "draft" } }
+    });
+    const pending = feedbackReadiness.call(ctx, {
+      id: "missing-question",
+      analysis: null
+    });
+    check(full && full.code === "full" && /full feedback/i.test(full.label || ""),
+      "reviewed analysis is labelled Full feedback");
+    check(provisional && provisional.code === "provisional" &&
+      /provisional feedback/i.test(provisional.label || ""),
+      "draft/legacy analysis is labelled Provisional feedback");
+    check(pending && pending.code === "pending" &&
+      /(solution pending|feedback pending|basic feedback)/i.test(pending.label || ""),
+      "missing analysis is explicitly labelled pending/basic rather than appearing broken");
+
+    const modalBadge = makeEl("span");
+    const badgeCtx = {
+      cfg: ctx.cfg,
+      cur: null,
+      _feedbackReadiness: feedbackReadiness
+    };
+    V._setFeedbackStatusBadge.call(
+      badgeCtx,
+      modalBadge,
+      { id: "reviewed-question", analysis: { review: { status: "reviewed" } } },
+      "ppq-modal-feedback-status"
+    );
+    check(/full feedback/i.test(modalBadge.textContent) &&
+      modalBadge.classList.contains("ppq-modal-feedback-status") &&
+      modalBadge.classList.contains("ppq-feedback-status-full"),
+      "the shared badge painter gives the sticky modal status the full-feedback state");
+  }
+  check(src.indexOf("ppq-feedback-status") >= 0 &&
+    src.indexOf("_feedbackReadiness") >= 0,
+    "the question header renders the shared feedback-readiness state as a badge");
+  check(src.indexOf('<span class="ppq-modal-feedback-status"') >= 0 &&
+    src.indexOf('this.q(".ppq-modal-feedback-status")') >= 0 &&
+    src.indexOf("_setFeedbackStatusBadge") >= 0,
+    "the analysis top bar reuses the shared feedback badge instead of duplicating status logic");
+})();
+
+// The ESAT controls default to the launch-safe in-spec estate, distinguish
+// source from year, and offer a direct finder rather than forcing pupils to
+// navigate several filters just to reach a known paper/question.
+(function () {
+  console.log("\n=== ESAT launch filters and question finder ===");
+  const html = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
+  const specAt = html.indexOf('field: "esat_in_spec"');
+  const specConfig = specAt >= 0 ? html.slice(specAt, specAt + 500) : "";
+  check(/allLabel:\s*"In spec \+ out of spec"/.test(specConfig) &&
+    /default:\s*"in_spec"/.test(specConfig),
+    "spec filter defaults to In spec and names the combined choice clearly");
+  check(/positiveValues:\s*\[\s*"in_spec"\s*\]/.test(specConfig),
+    "the in-spec selection is declared as the positive/green filter state");
+  check(/\bfield:\s*"assessment"\s*,[^{}]*allLabel:\s*"All sources"/s.test(html) &&
+    /\bfield:\s*"year"\s*,[^{}]*allLabel:\s*"All years"/s.test(html),
+    "source and paper year are separate, clearly named filters");
+  check(/counterScope:\s*\{[\s\S]*ignoreFilterFields:\s*\[\s*"esat_in_spec"\s*\]/.test(html) &&
+    /analysisReminderGroup:\s*true/.test(html),
+    "ESAT declares the spec-excluding scope counter and broad-topic analysis reminder");
+  check(/questionFinder:\s*true/.test(html) &&
+    src.indexOf("ppq-find-input") >= 0,
+    "the ESAT page enables the direct question finder and the engine renders it");
+
+  const catalogueSandbox = {};
+  catalogueSandbox.window = catalogueSandbox;
+  vm.createContext(catalogueSandbox);
+  vm.runInContext(fs.readFileSync(CATALOGUE, "utf8"), catalogueSandbox);
+  const mathsPhysics = (catalogueSandbox.ESAT_QUESTIONS || [])
+    .filter((q) => q.subject === "maths" || q.subject === "physics");
+  check(mathsPhysics.length === 738 &&
+    mathsPhysics.filter((q) => q.esat_in_spec === "in_spec").length === 613,
+    "the launch counter's real estate is 613 in-spec questions shown from 738 Maths/Physics questions");
+})();
+
+// A scope counter applies every active filter except the deliberately ignored
+// launch filter. It therefore explains a safe default without hard-coding an
+// estate count, and continues to tell the truth after another filter changes.
+(function () {
+  console.log("\n=== shown count versus filter scope ===");
+  const order = makeEl("select"); order.value = "order";
+  const start = makeEl("select"); start.value = "1";
+  const year = makeEl("select"); year.value = "2022";
+  const spec = makeEl("select"); spec.value = "in_spec";
+  const counter = makeEl("div");
+  const selects = { 1: year, 2: spec };
+  const subjectLabels = { maths: "Maths", physics: "Physics", chemistry: "Chemistry" };
+  const ctx = {
+    cfg: {
+      filters: [
+        { field: "subject", multi: true },
+        { field: "year" },
+        { field: "esat_in_spec" }
+      ],
+      counterScope: {
+        ignoreFilterFields: ["esat_in_spec"],
+        label(scopeQuestions) {
+          const present = {};
+          scopeQuestions.forEach((q) => { present[q.subject] = true; });
+          return ["maths", "physics", "chemistry"]
+            .filter((subject) => present[subject])
+            .map((subject) => subjectLabels[subject]).join(" + ");
+        }
+      },
+      idOf: (q) => q.id,
+      sort: (a, b) => a.id.localeCompare(b.id),
+      groupKey: (q) => q.topic_code || q.subject
+    },
+    questions: [
+      { id: "m22i", subject: "maths", year: "2022", esat_in_spec: "in_spec" },
+      { id: "p22i", subject: "physics", year: "2022", esat_in_spec: "in_spec" },
+      { id: "p22o", subject: "physics", year: "2022", esat_in_spec: "out_of_spec" },
+      { id: "p23o", subject: "physics", year: "2023", esat_in_spec: "out_of_spec" },
+      { id: "c22i", subject: "chemistry", year: "2022", esat_in_spec: "in_spec" }
+    ],
+    view: [],
+    idx: -1,
+    groupFilter: null,
+    _multiSel: { 0: new Set(["maths", "physics"]) },
+    _filterValue: V._filterValue,
+    _filterValues: V._filterValues,
+    _matchesQuestionFilters: V._matchesQuestionFilters,
+    q(selector) {
+      if (selector === ".ppq-order") return order;
+      if (selector === ".ppq-start") return start;
+      if (selector === ".ppq-counter") return counter;
+      const match = selector.match(/data-fidx="(\d+)"/);
+      return match ? selects[match[1]] : null;
+    },
+    next() {}
+  };
+
+  V.filterQuestions.call(ctx);
+  check(counter.innerHTML === "2 shown / 3 Maths + Physics",
+    "the in-spec slice is distinguished from the otherwise identical Maths/Physics scope");
+
+  year.value = "2023";
+  V.filterQuestions.call(ctx);
+  check(counter.innerHTML === "0 shown / 1 Physics",
+    "the scope count and label still respect another active filter");
+
+  year.value = "2022";
+  spec.value = "ALL";
+  V.filterQuestions.call(ctx);
+  check(counter.innerHTML === "3 shown / 3 Maths + Physics",
+    "choosing the combined spec view restores every question without changing the scope");
+})();
+
+// Provisional subtopics remain a reversible overlay: their selector is hidden
+// until one broad topic is chosen, then contains only that topic's observed
+// labels and resets safely when the parent topic changes.
+(function () {
+  console.log("\n=== dependent subtopic filter ===");
+  const topic = makeEl("select");
+  topic.dataset.fidx = "0";
+  topic.value = "ALL";
+  const subtopic = makeEl("select");
+  subtopic.dataset.fidx = "1";
+  subtopic.value = "ALL";
+  const filters = [
+    { field: "topic_code", label: "topic", allLabel: "All topics" },
+    {
+      field: "classification_subtopic",
+      label: "subtopic",
+      allLabel: "All first-pass subtopics",
+      dependsOn: "topic_code",
+      hideUntilParent: true
+    }
+  ];
+  const selectors = { 0: topic, 1: subtopic };
+  const ctx = {
+    cfg: { filters },
+    questions: [
+      { topic_code: "P1", classification_subtopic: "Circuit rules" },
+      { topic_code: "P1", classification_subtopic: "Power & energy" },
+      { topic_code: "M5", classification_subtopic: "Angles & polygons" },
+      { topic_code: "M5" }
+    ],
+    _multiSel: {},
+    q(selector) {
+      const match = selector.match(/data-fidx="(\d+)"/);
+      return match ? selectors[match[1]] : null;
+    },
+    _filterValue: V._filterValue,
+    _filterValues: V._filterValues,
+    _parentFilterValue: V._parentFilterValue,
+    _fillSingleFilterOptions: V._fillSingleFilterOptions,
+    _syncSingleFilterStyle: V._syncSingleFilterStyle,
+    _refreshDependentFilters: V._refreshDependentFilters
+  };
+  ctx._fillSingleFilterOptions(1);
+  check(subtopic.style.display === "none" && subtopic.disabled &&
+    subtopic.children.length === 1,
+    "subtopic filter stays out of the way while broad topic is All");
+
+  topic.value = "P1";
+  ctx._refreshDependentFilters("topic_code");
+  const p1Values = subtopic.children.map((option) => option.value);
+  check(subtopic.style.display === "" && !subtopic.disabled,
+    "choosing a broad topic reveals its subtopic filter");
+  check(p1Values.join("|") === "ALL|Circuit rules|Power & energy",
+    "P1 shows only its observed first-pass subtopics in stable order (got " + p1Values.join("|") + ")");
+
+  subtopic.value = "Circuit rules";
+  topic.value = "M5";
+  ctx._refreshDependentFilters("topic_code");
+  const m5Values = subtopic.children.map((option) => option.value);
+  check(m5Values.join("|") === "ALL|Angles & polygons" && subtopic.value === "ALL",
+    "changing broad topic replaces stale options and clears an invalid selection (got " +
+      m5Values.join("|") + "; selected " + subtopic.value + ")");
+
+  const html = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
+  check(html.indexOf("dist/esat_classification.js") >= 0 &&
+    html.indexOf('dependsOn: "topic_code"') >= 0,
+    "ESAT page loads the generated classification overlay and wires the dependent filter");
+  let inlineSyntaxError = "";
+  const inlineScripts = Array.from(html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi));
+  inlineScripts.forEach((match) => {
+    try { new Function(match[1]); } catch (err) { inlineSyntaxError = err.message; }
+  });
+  check(!inlineSyntaxError,
+    "all inline ESAT page scripts parse after taxonomy wiring" +
+      (inlineSyntaxError ? " (" + inlineSyntaxError + ")" : ""));
+})();
+
+// An opted-in dependent, array-valued filter becomes an in-place RHS drill-down.
+// Its displayed vocabulary is stable, while filtering and counts use membership
+// so one question can contribute to more than one family.
+(function () {
+  console.log("\n=== dashboard subtopic facet ===");
+  const topic = makeEl("select");
+  topic.dataset.fidx = "0";
+  const subtopic = makeEl("select");
+  subtopic.dataset.fidx = "1";
+  const order = makeEl("select"); order.value = "order";
+  const start = makeEl("input"); start.value = "";
+  const counter = makeEl("span");
+  function option(select, value) {
+    const node = makeEl("option");
+    node.value = value;
+    node.textContent = value;
+    select.appendChild(node);
+  }
+  option(topic, "ALL"); option(topic, "M5");
+  option(subtopic, "ALL"); option(subtopic, "Angles");
+  option(subtopic, "Solids"); option(subtopic, "Triangles");
+  option(subtopic, "Empty under current filters");
+  topic.value = "M5"; subtopic.value = "ALL";
+
+  const panel = makeEl("aside");
+  panel.appendChild(makeEl("h3"));
+  const subtitle = makeEl("div"); subtitle.className = "ppq-dash-sub"; panel.appendChild(subtitle);
+  const content = makeEl("div"); content.className = "ppq-dash-content"; panel.appendChild(content);
+
+  const questions = [
+    { id: "g1", topic_code: "M5", classification: { primary_subtopic: "Angles" }, classification_subtopics: ["Angles", "Triangles"] },
+    { id: "g2", topic_code: "M5", classification: { primary_subtopic: "Angles" }, classification_subtopics: ["Angles"] },
+    { id: "g3", topic_code: "M5", classification: { primary_subtopic: "Triangles" }, classification_subtopics: ["Triangles"] },
+    { id: "g4", topic_code: "M5", classification: { primary_subtopic: "Solids" }, classification_subtopics: ["Solids"] }
+  ];
+  const stableFamilies = (source) =>
+    Array.from(new Set(source.map((q) => q.classification.primary_subtopic))).sort();
+  const filters = [
+    { field: "topic_code", label: "topic", allLabel: "All topics", values: ["M5"] },
+    { field: "classification_subtopics", label: "subtopic", allLabel: "All subtopics", dependsOn: "topic_code", hideUntilParent: true, dashboardFacet: true, values: stableFamilies }
+  ];
+  const selects = { 0: topic, 1: subtopic };
+  let dashboardRenders = 0;
+  const ctx = {
+    cfg: {
+      filters,
+      selfReport: { levels: 6, ramp: { 1: "1,1,1", 2: "2,2,2", 3: "3,3,3", 4: "4,4,4", 5: "5,5,5", 6: "6,6,6" } },
+      idOf: (q) => q.id,
+      groupKey: (q) => q.topic_code,
+      groupLabel: (q) => q.topic_code + " Geometry",
+      isUntagged: () => false
+    },
+    questions,
+    byId: Object.fromEntries(questions.map((q) => [q.id, q])),
+    store: { attempts: [{ id: "g1", correct: true }], scores: { g1: 4 } },
+    view: [], idx: -1, groupFilter: null, _multiSel: {},
+    q(selector) {
+      if (selector === ".ppq-order") return order;
+      if (selector === ".ppq-start") return start;
+      if (selector === ".ppq-counter") return counter;
+      if (selector === ".ppq-dash-content") return content;
+      const match = selector.match(/data-fidx="(\d+)"/);
+      return match ? selects[match[1]] : null;
+    },
+    qa() { return []; },
+    next() {},
+    renderDashboard() { dashboardRenders++; },
+    _wireCats() {},
+    _filterValue: V._filterValue,
+    _filterValues: V._filterValues,
+    _dashboardFacet: V._dashboardFacet,
+    _activeDashboardFacet: V._activeDashboardFacet,
+    _parentFilterValue: V._parentFilterValue,
+    _fillSingleFilterOptions: V._fillSingleFilterOptions,
+    _syncSingleFilterStyle: V._syncSingleFilterStyle,
+    _refreshDependentFilters: V._refreshDependentFilters,
+    _matchesQuestionFilters: V._matchesQuestionFilters,
+    filterQuestions: V.filterQuestions,
+    _zeroRatings: V._zeroRatings,
+    _catHtml: V._catHtml
+  };
+
+  const facet = ctx._activeDashboardFacet();
+  V._renderDashboardFacet.call(ctx, facet);
+  check(content.innerHTML.indexOf("<b>4 questions.</b>") >= 0 &&
+    content.innerHTML.indexOf("counts below can overlap") >= 0,
+    "the Geometry drill-down states its unique total and explains overlapping counts");
+  check(content.innerHTML.indexOf('data-value="Angles"><div class="ppq-cat-name">Angles <span class="ppq-cat-count">(2)</span>') >= 0 &&
+    content.innerHTML.indexOf('data-value="Triangles"><div class="ppq-cat-name">Triangles <span class="ppq-cat-count">(2)</span>') >= 0,
+    "array membership contributes one question to every applicable stable family");
+  check(content.innerHTML.indexOf(
+    'data-value="Empty under current filters" disabled aria-disabled="true"'
+  ) >= 0,
+  "a stable family with no questions under the other active filters is visible but cannot create an empty view");
+
+  V._setDashboardFacetValue.call(ctx, 1, "Triangles");
+  check(subtopic.value === "Triangles" && ctx.view.length === 2 &&
+    ctx.view.every((q) => q.classification_subtopics.indexOf("Triangles") >= 0),
+    "clicking a RHS family filters through the existing dependent selector");
+  V._setDashboardFacetValue.call(ctx, 1, "Triangles");
+  check(subtopic.value === "ALL" && ctx.view.length === 4,
+    "clicking the active RHS family again restores the whole Geometry topic");
+
+  topic.value = "ALL";
+  ctx._refreshDependentFilters("topic_code");
+  V.setGroupFilter.call(ctx, "M5");
+  check(topic.value === "M5" && ctx.groupFilter === null &&
+    subtopic.style.display === "" && dashboardRenders > 0,
+    "clicking broad M5 uses the same parent selector and drill-down as choosing M5 in the header");
+  V._clearDashboardFacet.call(ctx, true);
+  check(topic.value === "ALL" && subtopic.value === "ALL" &&
+    subtopic.style.display === "none",
+    "All topics clears both levels and hides the dependent selector again");
+
+  check(V._dashboardFacet.call({ cfg: { filters: [{ field: "topic_code" }] } }) === null,
+    "consumers that do not opt in retain the ordinary dashboard contract");
+
+  const html = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
+  check(html.indexOf("dashboardFacet: true") >= 0 &&
+    html.indexOf("stableClassificationFamilies") >= 0 &&
+    html.indexOf("multilabel_source_primary_subtopic") >= 0,
+    "ESAT opts into stable sidecar-owned families rather than every raw or superseded label");
+})();
+
+// The reviewed 2022 rectangle twins must retain the human factor-pair search
+// agreed in moderation instead of jumping from the product equation to x = 11.
+(function () {
+  console.log("\n=== 2022 Q9 factor-pair route ===");
+  ["esat_nsaa_2022_s1_Q09", "esat_engaa_2022_s1_Q09"].forEach((id) => {
+    const rec = byId[id];
+    check(!!rec, id + " is present in the analysis bundle");
+    if (!rec) return;
+    const main = (rec.methods || []).find((method) => method.role === "recommended");
+    const alternative = (rec.methods || []).find((method) => method.id === "expand_quadratic");
+    const mainText = (main && main.pupil_steps || []).join(" ");
+    check(main && main.title === "Look for two factors three apart" &&
+      /10\s*[×x]\s*18/i.test(mainText) && /12\s*[×x]\s*15/i.test(mainText),
+      id + " shows the nearby factor-pair search rather than jumping to x = 11");
+    check(alternative && /usually longer/i.test(alternative.title || "") &&
+      /(x\s*[−-]\s*11).*(x\s*\+\s*16)/i.test((alternative.pupil_steps || []).join(" ")),
+      id + " keeps formal quadratic factorising as an explicit longer alternative");
+    check((rec.self_report_prompts || []).length === 1 &&
+      /factor pair three apart/i.test(rec.self_report_prompts[0].prompt || ""),
+      id + " asks one focused, answerable question about the factor search");
+    check((rec.methods || []).length === 2 &&
+      !(rec.methods || []).some((method) =>
+        /compare enlarged|coefficient.only|reject.*negative/i.test(
+          String(method.id || "") + " " + String(method.title || "")
+        )),
+      id + " contains no redundant pseudo-route for a routine check");
+  });
+})();
+
+// Every generated classification id must resolve to a real displayed catalogue
+// row using the page's part-specific-then-question-level lookup rule.
+(function () {
+  console.log("\n=== classification catalogue coverage ===");
+  const sandbox = {};
+  sandbox.window = sandbox;
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync(CATALOGUE, "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync(CLASSIFICATION_BUNDLE, "utf8"), sandbox);
+  const classification = sandbox.ESAT_CLASSIFICATION;
+  const questions = sandbox.ESAT_QUESTIONS || [];
+  const baseId = (q) => q.slug + "_Q" +
+    String(parseInt(q.question_number, 10)).padStart(2, "0");
+  const partId = (q) => baseId(q) + (q.part ? "_" + q.part : "");
+  const catalogueIds = new Set();
+  questions.forEach((q) => {
+    catalogueIds.add(baseId(q));
+    catalogueIds.add(partId(q));
+  });
+  const classifiedIds = Object.keys(classification.by_id || {});
+  const unmatched = classifiedIds.filter((id) => !catalogueIds.has(id));
+  check(classifiedIds.length === classification.question_count,
+    "classification bundle count matches its unique by_id entries");
+  check(classifiedIds.length === 738,
+    "the full maths/physics estate has a first-pass classification (738/738)");
+  check((classification.unresolved_conflicts || []).length === 0,
+    "all cross-sweep retained-label conflicts have an evidence-backed resolution");
+  check((classification.unreconciled_reroutes || []).length === 0,
+    "every rerouted question has a finalized classification in its target sweep");
+  check(unmatched.length === 0,
+    "every provisional classification resolves to a displayed catalogue row" +
+      (unmatched.length ? " (unmatched: " + unmatched.join(", ") + ")" : ""));
+  const displayedMatches = questions.filter((q) =>
+    !!classification.by_id[partId(q)] || !!classification.by_id[baseId(q)]).length;
+  check(displayedMatches === classification.question_count,
+    "catalogue lookup exposes every classified question exactly once (" +
+      displayedMatches + "/" + classification.question_count + ")");
+
+  const multilabelRoot = path.join(
+    ANALYSIS_ROOT, "generated", "classification", "multilabel"
+  );
+  const sidecars = fs.readdirSync(multilabelRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(
+      multilabelRoot, entry.name, entry.name + "_multilabel.json"
+    ))
+    .filter((file) => fs.existsSync(file));
+  const sidecarRows = sidecars.flatMap((file) => {
+    const payload = JSON.parse(fs.readFileSync(file, "utf8"));
+    return (payload.records || []).map((row) => ({ file, row }));
+  });
+  check(classification.multilabel_records_applied === sidecarRows.length &&
+    (classification.multilabel_sources || []).length === sidecars.length,
+    "the viewer bundle contains every auto-discovered multi-label sidecar row (" +
+      sidecarRows.length + " from " + sidecars.length + " topic maps)");
+  check(classification.multilabel_records_applied === 738,
+    "every classified question has a completed multi-label topic map (738/738)");
+  const droppedSidecarPrimaries = sidecarRows.filter(({ row }) => {
+    const merged = (classification.by_id || {})[row.question_id];
+    return !merged ||
+      merged.multilabel_source_primary_subtopic !== row.primary_subtopic ||
+      (merged.syllabus_subtopics || []).indexOf(row.primary_subtopic) < 0;
+  });
+  check(droppedSidecarPrimaries.length === 0,
+    "each topic map's compact RHS family survives the global merge and remains an overlapping membership" +
+      (droppedSidecarPrimaries.length
+        ? " (first dropped: " + droppedSidecarPrimaries[0].row.question_id + ")"
+        : ""));
+})();
+
+// Wide-screen analysis is a side sheet so the live question remains visible.
+(function () {
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(css.indexOf(".ppq-modal.ppq-modal-analysis:not(.minimized)") >= 0,
+    "analysis modal has a dedicated wide-screen side-sheet rule");
+  check(css.indexOf(".ppq.ppq-analysis-open .ppq-layout") >= 0,
+    "question layout makes room for the analysis side sheet");
+  check(src.indexOf("if (modalContent) modalContent.scrollTop = 0") >= 0,
+    "each newly answered question resets the reused analysis scroller to the top");
+  check(/\.ppq-modal-topbar\s*\{[^}]*position:\s*sticky/i.test(css) &&
+    /\.ppq-modal-feedback-status\s*\{[^}]*white-space:\s*nowrap/i.test(css),
+    "the compact feedback status stays in the sticky modal bar while the analysis scrolls");
+  check(css.indexOf(".ppq-iq-rest-fired") >= 0 &&
+    css.indexOf(".ppq-iq-feedback-fired") >= 0 &&
+    css.indexOf(".ppq-iq-response-cue") >= 0,
+    "verdict reveal, tailored feedback and Recorded acknowledgement all have visible firing styles");
+})();
+
+console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");
+process.exit(fail ? 1 : 0);

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ESAT Prep, Past-Paper Viewer (shared engine)</title>
+  <link rel="stylesheet" href="../engine/ppqviewer.css">
+  <!-- On the real published page the estate GA4 + Microsoft Clarity blocks (WEB_KIT) go here. -->
+  <style> body { margin: 0; background: #faf6ed; } </style>
+</head>
+<body>
+
+  <!-- Option A (d003): the whole viewer is drawn by the engine into this one mount. -->
+  <div id="ppq-root"></div>
+
+  <!-- 1. the subject's data, 2. the subject's config, 3. the shared engine -->
+  <!-- Data path points at the ESAT app's catalogue; adjust when this ships inside that app. -->
+  <script src="../../ESAT Prep App/app/data/esat_catalogue.js"></script>
+  <script src="esat-config.js"></script>
+  <script src="../engine/ppqviewer.js"></script>
+  <script>
+    PPQViewer.mount(document.getElementById("ppq-root"), {
+      config: window.PPQ_CONFIG,
+      questions: window.ESAT_QUESTIONS,
+      meta: window.ESAT_META
+    });
+  </script>
+</body>
+</html>

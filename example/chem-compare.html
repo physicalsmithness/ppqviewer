@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Chemistry PPQ — shared ppqviewer (comparison copy)</title>
+  <!-- GA4 — estate standard (WEB_KIT) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKYGJYERSR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WKYGJYERSR');
+  </script>
+  <!-- Microsoft Clarity — estate standard (WEB_KIT) -->
+  <script type="text/javascript">
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xdr2tsc688");
+  </script>
+  <link rel="stylesheet" href="../engine/ppqviewer.css">
+  <!-- KaTeX + mhchem for the math module -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <style>
+    body { margin: 0; background: #faf6ed; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    /* QoderWork 2026-07-22: Chemistry figures a touch smaller than full width */
+    .ppq { --ppq-crop-width: 90%; }
+    /* Sign-in gate (QoderWork 2026-07-22, modelled on Trilogy shell) */
+    #sign-in-gate { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; gap: 1rem; }
+    #sign-in-gate h2 { margin: 0; color: #1a1a17; }
+    #sign-in-gate input, #sign-in-gate select { padding: 0.5rem 1rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; width: 220px; background: #fff; color: #1a1a17; }
+    #sign-in-gate button { padding: 0.5rem 2rem; font-size: 1rem; background: #3182ce; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    #sign-in-gate button:hover { background: #2b6cb0; }
+    #sign-in-gate .hint { font-size: 0.85rem; color: #8c8579; }
+    #ppq-root { display: none; }
+    #report-flash { position: fixed; bottom: 12px; right: 12px; font-size: 0.75rem; color: #48bb78; opacity: 0; transition: opacity 0.3s; }
+  </style>
+</head>
+<body>
+
+  <!-- Estate shared sign-in gate (QoderWork 2026-07-22): same lightweight login
+       the physics drillers use — shared identity, class chosen from a supplied
+       list, every answer pulses to the one shared workbook. Not an assessment
+       login (the real account tier is still to come). -->
+  <div id="sign-in-gate">
+    <h2>Chemistry PPQ Viewer</h2>
+    <p class="hint">Shared ppqviewer engine, comparison copy</p>
+    <input id="si-name" placeholder="Your name" autocomplete="name">
+    <select id="si-class"></select>
+    <button id="si-start">Start</button>
+    <p class="hint">Sign in with the same name you use for the other drillers. Your class pulse goes to the shared teacher tracker.</p>
+  </div>
+
+  <!-- One mount; the shared engine draws everything inside (d003). -->
+  <div id="ppq-root"></div>
+  <div id="report-flash"></div>
+
+  <!-- Chemistry question bank (the same ppqs.js the live viewer uses) -->
+  <script src="../../chemistrydriller/ppqs.js"></script>
+  <!-- The shared engine (must load before the mount call below) -->
+  <script src="../engine/ppqviewer.js"></script>
+  <!-- Estate shared sign-in + pulse (QoderWork 2026-07-22) -->
+  <script src="ppq-login.js"></script>
+
+  <!-- Config + reporting wiring (QoderWork 2026-07-22) -->
+  <script>
+  (function () {
+    "use strict";
+    var CHEM_BASE = "file:///C:/Claude (not on Gdrive, nor OneDrive)/chemistrydriller/";
+
+    /* ===== Estate shared sign-in + pulse (ppq-login.js) =====
+       Same lightweight login the physics drillers use: shared identity
+       (smithics_fields_identity_v1, so the name prefills across drillers), class
+       chosen from a supplied dropdown, and every answer pulses to the one shared
+       workbook under project "ppqviewer_chemistry". The chemistry class is held
+       scoped (its own key) so it never clobbers a pupil's physics class.
+       INTERIM class list below — Smith to supply the real chemistry class names,
+       then swap to the TeacherViewer M2 single-source doGet when it ships. */
+    var INTERIM_CLASSES = ["Test", "Y10 Chemistry", "Y11 Chemistry"];
+    var login = window.PPQLogin.createLogin({
+      projectTag: "ppqviewer_chemistry",
+      cohortKey: "ppqviewer_chem_cohort_v1",
+      classes: INTERIM_CLASSES,
+      onStatus: function (msg) { flash(msg); }
+    });
+    function report(partial) { login.report(partial); }
+
+    function flash(msg) {
+      var el = document.getElementById("report-flash");
+      if (!el) return;
+      el.textContent = msg; el.style.opacity = "1";
+      setTimeout(function () { el.style.opacity = "0"; }, 1500);
+    }
+
+    /* Already signed in on this browser (shared name + a chemistry class)? Straight in. */
+    if (login.signedIn()) { enterApp(); }
+
+    login.wireGate({
+      name: document.getElementById("si-name"),
+      classSelect: document.getElementById("si-class"),
+      start: document.getElementById("si-start")
+    }, function () { enterApp(); });
+
+    function enterApp() {
+      document.getElementById("sign-in-gate").style.display = "none";
+      document.getElementById("ppq-root").style.display = "block";
+      mountViewer();
+    }
+
+    /* ===== Config ===== */
+    var DATA_BOOKLET_SECTIONS = [
+      "01_some-relevant-equations.png", "02_physical-constants.png", "03_metric-si-multipliers.png",
+      "04_unit-conversions-and-standard-conditions.png", "05_electromagnetic-spectrum.png", "06_names-of-the-elements.png",
+      "07_periodic-table.png", "08_melting-and-boiling-points.png", "09_ionization-affinity-electronegativity.png",
+      "10_atomic-and-ionic-radii.png", "11a_covalent-bond-lengths-single-bonds.png", "11b_covalent-bond-lengths-multiple-bonds.png",
+      "12a_bond-enthalpies-single-bonds.png", "12b_bond-enthalpies-multiple-bonds.png", "13_thermodynamic-data-selected-compounds.png",
+      "14_enthalpies-of-combustion.png", "15_colour-wheel-visible-spectrum.png", "16_lattice-enthalpies.png",
+      "17_triangular-bonding-diagram.png", "18_acid-base-indicators.png", "19_standard-reduction-potentials.png",
+      "20_infrared-data.png", "21_proton-nmr-data.png", "22_mass-spectral-fragments-lost.png", "23_uncertainties.png"
+    ];
+
+    function mountViewer() {
+      window.PPQ_CONFIG = {
+        title: "Chemistry PPQ (shared engine, comparison)",
+        versionLabel: "ppqviewer v0.2.1 · comparison + logging",
+        appVersion: "ppqviewer-chem-compare",
+        storageKey: "chemistrydriller_ppq_COMPARE",
+        learnerId: login.current().display_name || "local",
+        timingMode: "none",
+        prefetchAhead: 3,
+
+        filters: [
+          { field: "paper", label: "paper", allLabel: "All papers", values: ["1A", "1B", "2"], friendlyLabels: { "1A": "Paper 1A (MCQ)", "1B": "Paper 1B (data/short)", "2": "Paper 2 (structured)" } },
+          { field: "level", label: "level", allLabel: "All levels", values: ["HL", "SL"] }
+        ],
+
+        idOf: function (q) { return q.id; },
+
+        dashboardTitle: "Mastery",
+        dashboardLayout: "split",
+        dashboardColumns: [
+          { title: "Paper 1B Mastery", style: "ratingBoxes", includes: function (q) { return q.paper === "1B" && !!q.category_code; }, groupKey: function (q) { return q.category_code; }, groupLabel: function (q) { return (q.category_code + " " + (q.category_label || "")).trim(); } },
+          { title: "Syllabus Overview", style: "ribbonHeat", includes: function (q) { return q.category_code && (q.category_code[0] === "S" || q.category_code[0] === "R"); }, groupKey: function (q) { return q.category_code; }, groupLabel: function (q) { return (q.category_code + " " + (q.category_label || "")).trim(); } }
+        ],
+        groupKey: function (q) { return q.category_code || "UT"; },
+        groupLabel: function (q) { return (q.category_code || "Untagged") + " " + (q.category_label || ""); },
+
+        metaLine: function (q) { return q.id; },
+        tagsOf: function (q) { return ["Paper " + q.paper, q.level + " (" + q.marks + "m)"]; },
+
+        questionType: function (q) { return q.paper === "1A" ? "mcq" : "flashcard"; },
+        questionTextOf: function (q) { return q.question_text || ""; },
+        choicesOf: function (q) { return (q.choices && q.choices.length === 4) ? q.choices : (q.choices || []); },
+        answerKeyOf: function (q) { return q.answer_key; },
+        markschemeOf: function (q) { return q.markscheme_text || ""; },
+        examinerOf: function (q) { return q.examiner_report || ""; },
+
+        cropsOf: function (q) { return q.crop_url ? [q.crop_url] : []; },
+        stemUrlOf: function (q) { return q.page_url ? CHEM_BASE + q.page_url : null; },
+        answerUrlOf: function (q) { return q.answer_url ? CHEM_BASE + q.answer_url : null; },
+
+        modules: {
+          structuredPaper: true,
+          math: true,
+          referenceBooklet: { sections: DATA_BOOKLET_SECTIONS, assetPrefix: CHEM_BASE + "assets/", periodicTableSection: 7 }
+        },
+
+        headerButtons: [
+          { label: "Periodic Table", open: CHEM_BASE + "assets/07_periodic-table.png" },
+          { label: "Data Booklet", open: CHEM_BASE + "assets/chemistry DataBook2025.pdf" }
+        ],
+
+        selfReport: { levels: 6, prompt: "Self-assess your competence (1 = lost, 6 = easy)" }
+      };
+
+      PPQViewer.mount(document.getElementById("ppq-root"), {
+        config: window.PPQ_CONFIG,
+        questions: window.CHEM_PPQS,
+        meta: {},
+        report: report
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Generated output: rebuilt by SYNC_ESAT_WEBSITE.cmd; never hand-edited, never the source of truth
+dist/
+
+# Versioned Pages checkout: its own git repository (github.com/physicalsmithness/esatwallop)
+deploy/
+
+node_modules/
