@@ -152,6 +152,13 @@
   background: rgba(140, 133, 121, 0.08);
   border: 1px solid rgba(140, 133, 121, 0.28);
 }
+/* VSAFE-01: withheld (damaged/suppressed analysis) looks identical to pending
+   for pupils; the distinct class exists for tests and reviewer tooling. */
+.ppq-feedback-status-withheld {
+  color: var(--ppq-muted);
+  background: rgba(140, 133, 121, 0.08);
+  border: 1px solid rgba(140, 133, 121, 0.28);
+}
 .ppq-classification-details { text-transform: none; letter-spacing: 0; }
 .ppq-classification-more { position: relative; }
 .ppq-classification-more summary {

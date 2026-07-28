@@ -284,7 +284,7 @@
 
       window.PPQ_CONFIG = {
         title: "ESAT PPQ (shared engine, comparison)",
-        versionLabel: "ppqviewer v0.2.15 · full Maths + Physics topic maps",
+        versionLabel: "ppqviewer v0.2.16 · content-safety gate",
         appVersion: "ppqviewer-esat-compare",
         storageKey: "esat_ppq_COMPARE",
         /* QoderWork 2026-07-22: login may be null (fallback gate mode). */
@@ -407,6 +407,27 @@
           var bundle = window.ESAT_ANALYSIS_V2 || {};
           var byId = bundle.feedback_status_by_id || {};
           return byId[baseRecordIdOf(q)] || null;
+        },
+        /* VSAFE-01 (Claude 2026-07-28): explicit suppression of records with
+           damaged pupil-facing content. The engine's damage heuristics run as
+           well (they independently catch five of these seven), but every
+           KNOWN-damaged record is pinned here so safety never depends on a
+           heuristic. Remove an entry ONLY when the analysis project ships a
+           repaired record and the damage scan comes back clean.
+           The first five are the analysis owner's RS-01 list
+           (PROJECT_CONTROL_2026-07-28.md); the last two were found by the
+           viewer damage scan on 2026-07-28 and reported back. */
+        contentSafety: {
+          heuristics: true,
+          withheld: {
+            "esat_engaa_2020_s1_Q04": "encoding loss: '?' where minus signs should be ('mass number ?4', '238 ? 206'); marked reviewed/full despite corruption (RS-01)",
+            "esat_nsaa_2020_s1_Q25": "same damaged decay-table analysis as engaa_2020_Q04 ('?4', '8 ? 2'); marked reviewed/full despite corruption (RS-01)",
+            "esat_nsaa_2023_s1_Q27": "nuclide pre-scripts collapsed to '???X'/'???Z' and lost apostrophes ('helium-3?s'); marked reviewed/full despite corruption (RS-01)",
+            "esat_engaa_2023_s1_Q16": "analysis owner lists as damaged/missing mathematical presentation (RS-01); analysis text byte-identical to nsaa_2023_Q36's, suspected missing values in method steps",
+            "esat_nsaa_2023_s1_Q36": "analysis owner lists as damaged/missing mathematical presentation (RS-01); analysis text byte-identical to engaa_2023_Q16's, suspected missing values in method steps",
+            "esat_engaa_2019_s1_Q12": "found by viewer damage scan 2026-07-28: 'row?s', '?Z = ?10' (Delta and minus lost); marked reviewed; same corruption class as the 2020 pair; reported to analysis owner",
+            "esat_nsaa_2019_s1_Q30": "found by viewer damage scan 2026-07-28: byte-identical damaged analysis to engaa_2019_Q12; marked reviewed; reported to analysis owner"
+          }
         },
         modules: { postQuestionReview: true },
 

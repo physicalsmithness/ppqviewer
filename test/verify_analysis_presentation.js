@@ -147,6 +147,9 @@ function extractStandaloneFn(name) {
 }
 const analysisMathEsc = extractStandaloneFn("analysisMathEsc");
 const allocateLargestRemainder = extractStandaloneFn("allocateLargestRemainder");
+/* VSAFE-01 (2026-07-28): module-scope binding — the extracted _contentSafety
+   resolves its free reference to scanAnalysisRecordForDamage against this. */
+const scanAnalysisRecordForDamage = extractStandaloneFn("scanAnalysisRecordForDamage");
 function extractFn(name) {
   const marker = "Viewer.prototype." + name + " = function";
   const start = src.indexOf(marker);
@@ -182,7 +185,7 @@ const V = {}; // fake viewer holding the real methods
  "_setDashboardFacetValue", "_clearDashboardFacet", "_zeroRatings",
  "_renderDashboardFacet", "_catHtml",
  "_buildGuessPicker", "_renderInterrogation", "_isV2", "_guessLabel", "_guessPrompt",
- "_feedbackReadiness", "_setFeedbackStatusBadge"
+ "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -752,6 +755,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
       _commitTimer: () => {},
       _recordAttempt: () => {},
       _analysisReviewMode: () => false,
+      _contentSafety: V._contentSafety, /* VSAFE-01 */
       _isV2: V._isV2,
       _guessLabel: V._guessLabel,
       _guessPrompt: V._guessPrompt,
@@ -893,6 +897,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _chosenLabel: "A",
     _wasRight: false,
     _analysisReviewMode: () => false,
+    _contentSafety: V._contentSafety, /* VSAFE-01 */
     _isV2: V._isV2,
     _guessLabel: V._guessLabel,
     _guessPrompt: V._guessPrompt,
@@ -1040,7 +1045,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     const ctx = {
       cfg: {
         analysisOf: (q) => q.analysis || null
-      }
+      },
+      _contentSafety: V._contentSafety /* VSAFE-01 */
     };
     const full = feedbackReadiness.call(ctx, {
       id: "reviewed-question",
@@ -1067,7 +1073,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     const badgeCtx = {
       cfg: ctx.cfg,
       cur: null,
-      _feedbackReadiness: feedbackReadiness
+      _feedbackReadiness: feedbackReadiness,
+      _contentSafety: V._contentSafety /* VSAFE-01 */
     };
     V._setFeedbackStatusBadge.call(
       badgeCtx,

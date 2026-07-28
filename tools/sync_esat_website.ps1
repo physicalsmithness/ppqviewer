@@ -60,6 +60,7 @@ $ViewerCss = Join-Path $ProjectRoot "engine\ppqviewer.css"
 $SourceHtml = Join-Path $ProjectRoot "example\esat-compare.html"
 $LoginJs = Join-Path $ProjectRoot "example\ppq-login.js"
 $PresentationTest = Join-Path $ProjectRoot "test\verify_analysis_presentation.js"
+$ContentSafetyTest = Join-Path $ProjectRoot "test\test_content_safety.js"
 
 $CatalogueJs = Join-Path $EsatPrepRoot "app\data\esat_catalogue.js"
 $LegacyAnalysisRoot = Join-Path $EsatPrepRoot "data\analysis"
@@ -100,7 +101,7 @@ function Write-Utf8NoBom {
 }
 
 Write-Host ""
-Write-Host "ESAT website sync - maintained by Codex" -ForegroundColor Cyan
+Write-Host "ESAT website sync - viewer maintained by Claude; analysis owned by Codex" -ForegroundColor Cyan
 Write-Host "Project: $ProjectRoot"
 Write-Host "Analysis: $AnalysisRoot"
 Write-Host "GitHub Desktop checkout: $DeployRoot"
@@ -116,6 +117,7 @@ Write-Host ""
     @{ Path = $SourceHtml; Label = "ESAT page source" },
     @{ Path = $LoginJs; Label = "Login module" },
     @{ Path = $PresentationTest; Label = "Analysis presentation test" },
+    @{ Path = $ContentSafetyTest; Label = "Content-safety test (VSAFE-01/02)" },
     @{ Path = $CatalogueJs; Label = "ESAT catalogue" },
     @{ Path = $LegacyAnalysisRoot; Label = "Legacy analysis folder" },
     @{ Path = $CropRoot; Label = "Question crop folder" },
@@ -319,6 +321,8 @@ if ($LASTEXITCODE -ne 0) { throw "Deployed analysis JavaScript syntax check fail
 if ($LASTEXITCODE -ne 0) { throw "Deployed classification JavaScript syntax check failed." }
 & node $PresentationTest
 if ($LASTEXITCODE -ne 0) { throw "Analysis presentation acceptance test failed." }
+& node $ContentSafetyTest
+if ($LASTEXITCODE -ne 0) { throw "Content-safety test failed (VSAFE-01/02): do not publish." }
 
 Write-Host "[7/7] Website prepared for GitHub Desktop." -ForegroundColor Green
 Write-Host ""

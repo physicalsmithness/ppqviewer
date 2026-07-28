@@ -7,7 +7,7 @@ consumer migration and material module change.
 
 | Consumer | Current status | Location/surface | Shared viewer state | Enabled/known capabilities |
 | --- | --- | --- | --- | --- |
-| ESAT | Public shared-engine deployment | source `example\esat-compare.html`; checkout `deploy\esatwallop`; public `physicalsmithness.github.io/esatwallop` | v0.2.15 / engine API 0.3.0 | image self-mark, post-question review, guesses, timer capture/display, reporting, classifications, drawing |
+| ESAT | Public shared-engine deployment | source `example\esat-compare.html`; checkout `deploy\esatwallop`; public `physicalsmithness.github.io/esatwallop` | live v0.2.15 / API 0.3.0; source v0.2.16 / API 0.4.0 (content-safety gate, awaiting sync + push) | image self-mark, post-question review, guesses, timer capture/display, reporting, classifications, drawing, content-safety withholding |
 | Chemistry | Live own copy; shared-engine migration not complete | `C:\Claude (not on Gdrive, nor OneDrive)\chemistrydriller` | Donor/consumer, not yet one runtime source | reference booklet, structured papers, mixed question types, maths, split dashboard |
 | Chemistry G: mirror | Stale; retire | `G:\My Drive\github local files\chemistrydriller` | Not authoritative | Do not use as source |
 | Special Relativity | Intended near-term embed | `C:\Claude (not on Gdrive, nor OneDrive)\Special Relativity Driller` | No ppqviewer adapter recorded here | Requires embedded mount |
@@ -27,11 +27,13 @@ consumer migration and material module change.
 - deep-v2 methods, diagnostics, option evidence and reviewer mode;
 - event reporting and lightweight identity;
 - timing capture and basic display;
-- multi-label classification hierarchy.
+- multi-label classification hierarchy;
+- content-safety gate (engine 0.4.0): consumer withheld list + damage
+  heuristics; unsafe analysis falls back to the generic shell and can never
+  present as Full/Provisional.
 
 ## Requested capabilities not yet generally available
 
-- invalid/withheld analysis fallback;
 - central feedback submission;
 - analysis/history pages and reopenable prior feedback;
 - full timing preference/bank/pause system;

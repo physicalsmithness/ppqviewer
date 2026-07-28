@@ -31,18 +31,49 @@ shows Solution pending. Do not use the old 46/692/0 roadmap figures.
 
 ## Phase 1 — release safety
 
-- [ ] Add invalid/withheld analysis state and safe generic fallback.
-- [ ] Suppress the five known damaged records until repaired.
-- [ ] Test readiness precedence: unsafe or missing content cannot show Full or
-  Provisional.
-- [ ] Add damaged-notation/placeholder checks to the release path.
+- [x] Add invalid/withheld analysis state and safe generic fallback.
+  _(2026-07-28, engine v0.4.0: `contentSafety` config + `_contentSafety` gate;
+  withheld renders the generic shell, badge says Solution pending, `?review`
+  shows the reason.)_
+- [x] Suppress the known damaged records until repaired. _(Seven, not five: the
+  damage scan found `esat_engaa_2019_s1_Q12` and `esat_nsaa_2019_s1_Q30` beyond
+  the RS-01 list; all pinned in `example\esat-compare.html`, reported to Codex
+  in `analysis_v2\VIEWER_DAMAGE_REPORT_2026-07-28.md`.)_
+- [x] Test readiness precedence: unsafe or missing content cannot show Full or
+  Provisional. _(2026-07-28: `test/test_content_safety.js`, 70 assertions, a
+  sync publish gate; 281-suite still green. Post-gate public estate:
+  Full 41 / Provisional 672 / Withheld 7 / Pending 18.)_
+- [x] Add damaged-notation checks to the release path. _(Deterministic scan in
+  the engine at render time and swept across the full bundle by the safety
+  suite on every sync. Placeholder/missing-value patterns still wanted once
+  real examples exist — kept below.)_
+- [ ] Add unreplaced-placeholder and missing-value/unit checks when the
+  analysis project can characterise them (VSAFE-04 residue).
 - [ ] Remove, isolate or prove unreachable the legacy pill/strikethrough option
-  presentation.
+  presentation (VSAFE-03).
 - [ ] Run representative desktop and 320 px interaction checks.
 - [ ] Verify the exact public build and asset identities after deployment.
 
 Exit: unsafe content cannot render and every readiness badge describes the
 content actually resolved by the viewer.
+
+## Phase 1.5 — analysis readability (Smith, 2026-07-28, priority)
+
+Smith's live-use verdict, dictated: the analysis pop-up is "mainly unreadable";
+text is too cramped, and the self-report questions are separated from the
+content they ask about.
+
+- [ ] Open up the typography: line spacing/density in the interrogation pop-up
+  so it reads in one pass.
+- [ ] Put each response control directly beside the thing it asks about, so a
+  pupil reads a method/idea and answers "Yes, I did that / No, I didn't" in
+  place, instead of re-reading content later when a separated question block
+  finally asks.
+- [ ] Reword pupil-facing prompts to be clearly written and digestible in one
+  read (the analyst-facing wording was already flagged as rough in the engine
+  notes).
+- [ ] Regression coverage + a desktop/mobile visual pass on a long-maths
+  question (fold into the Phase 1 visual checks above).
 
 ## Phase 2 — feedback and useful history
 

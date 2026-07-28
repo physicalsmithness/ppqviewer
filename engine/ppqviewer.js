@@ -191,6 +191,17 @@ window.PPQViewer = (function () {
        the generic guess, feedback and rating flow. */
     cfg.analysisOf = cfg.analysisOf || function () { return null; };
     cfg.feedbackStatusOf = cfg.feedbackStatusOf || null;
+    /* VSAFE-01 (Claude 2026-07-28): content-safety gate. A damaged analysis
+       record must not render merely because it exists. `withheld` maps record
+       id -> reason (the consumer's explicit suppression list); `heuristics`
+       (default ON) runs the deterministic damage scan over each record's
+       pupil-facing text. Unsafe records fall back to the generic feedback
+       shell and can never present as Full or Provisional. */
+    const csIn = cfg.contentSafety || {};
+    cfg.contentSafety = {
+      withheld: csIn.withheld || {},
+      heuristics: csIn.heuristics !== false
+    };
     cfg.classificationsOf = cfg.classificationsOf || null;
     cfg.questionFinder = !!cfg.questionFinder;
     return cfg;
@@ -1235,17 +1246,114 @@ window.PPQViewer = (function () {
     if (this.cfg.modules.structuredPaper) this._blockParts(q).forEach((p) => this.cfg.cropsOf(p).forEach((s) => this._preload(s)));
   };
 
+  // ----------------------------------------------- content safety (VSAFE-01)
+  /* Deterministic damage heuristics for authored analysis text. Evidence
+     (2026-07-28, 720-record live ESAT bundle): these patterns flag exactly five
+     records, every one humanly confirmed corrupt (including two records the
+     analysis project's own known-damage list had missed), and zero clean
+     records. The failure direction is deliberate: a false positive withholds
+     good content behind the generic shell; a false negative shows a pupil
+     broken mathematics labelled "Full feedback". Content repair belongs to the
+     analysis project; refusal and fallback belong here. */
+  /* Self-contained (no free variables) so test harnesses can extract it. */
+  function scanAnalysisRecordForDamage(rec) {
+    const PATTERNS = [
+      [/�/, "replacement character"],
+      [/\?\d/, "'?' fused to a digit (lost minus/times/Delta)"],
+      [/\d\s+\?\s+\d/, "'?' between numbers (lost operator)"],
+      [/\?\?+/, "repeated '?' (lost maths/nuclide notation)"],
+      [/[A-Za-z0-9]\?s\b/, "'?s' (lost apostrophe)"],
+      [/â€|Ã—|Ã¢/, "UTF-8 mojibake"]
+    ];
+    const SKIP_KEYS = /crop|url|src|image|path|file|href/i;
+    const found = [];
+    const seen = {};
+    (function walk(node, key) {
+      if (node == null || found.length >= 4) return;
+      if (typeof node === "string") {
+        if (SKIP_KEYS.test(key || "")) return;
+        for (let i = 0; i < PATTERNS.length; i++) {
+          const label = PATTERNS[i][1];
+          if (seen[label]) continue;
+          const m = node.match(PATTERNS[i][0]);
+          if (m) {
+            seen[label] = true;
+            const at = Math.max(0, node.indexOf(m[0]) - 12);
+            found.push(label + " near “" + node.slice(at, at + 28).replace(/\s+/g, " ") + "”");
+          }
+        }
+        return;
+      }
+      if (typeof node !== "object") return;
+      if (Array.isArray(node)) { for (let i = 0; i < node.length; i++) walk(node[i], key); return; }
+      for (const k in node) { if (Object.prototype.hasOwnProperty.call(node, k)) walk(node[k], k); }
+    })(rec, null);
+    return found;
+  }
+
+  /* VSAFE-01: is this record safe to show? Precedence: a safety state declared
+     by the content build (`content_safety`), then the consumer's withheld list,
+     then the damage heuristics. Memoised per record id — records are static for
+     the life of the page. Returns { safe, reasons[] }; reasons are reviewer
+     facing (the ?review strip), never shown to pupils. */
+  Viewer.prototype._contentSafety = function (q, rec) {
+    if (!rec) return { safe: true, reasons: [] };
+    const cs = this.cfg.contentSafety || {};
+    const id = String((rec.identity && rec.identity.id) || rec.id ||
+      (q && typeof this.cfg.idOf === "function" ? this.cfg.idOf(q) : (q && q.id)) || "");
+    if (id && this._safetyCache && this._safetyCache[id]) return this._safetyCache[id];
+    const reasons = [];
+    const declared = rec.content_safety;
+    const declaredStatus = declared && (typeof declared === "string" ? declared : declared.status);
+    if (declaredStatus && /^(invalid|withheld|unsafe|damaged)$/i.test(String(declaredStatus))) {
+      const declaredReasons = (declared && declared.reasons && declared.reasons.length)
+        ? ": " + [].concat(declared.reasons).join("; ") : "";
+      reasons.push("declared " + String(declaredStatus).toLowerCase() + " by content build" + declaredReasons);
+    }
+    if (id && cs.withheld && Object.prototype.hasOwnProperty.call(cs.withheld, id)) {
+      reasons.push("withheld by consumer: " + (cs.withheld[id] || "no reason recorded"));
+    }
+    if (cs.heuristics) {
+      const scan = scanAnalysisRecordForDamage(rec);
+      for (let i = 0; i < scan.length; i++) reasons.push("damage scan: " + scan[i]);
+    }
+    const result = reasons.length ? { safe: false, reasons: reasons } : { safe: true, reasons: [] };
+    if (id) { if (!this._safetyCache) this._safetyCache = {}; this._safetyCache[id] = result; }
+    return result;
+  };
+
   // --------------------------------------------------------------- render
   Viewer.prototype._feedbackReadiness = function (q) {
     let rec = null;
     try { rec = this.cfg.analysisOf ? this.cfg.analysisOf(q) : null; }
     catch (_) { rec = null; }
+    /* VSAFE-01/02 (Claude 2026-07-28): safety comes first and cannot be
+       overridden by any status source — not the explicit feedbackStatusOf hook,
+       not a catalogue field, not the bundle's status ledger. The pupil-facing
+       label stays "Solution pending" (honest and unalarming); the distinct
+       code lets tests, CSS and reviewer surfaces tell withheld from merely
+       unauthored. */
+    const safety = this._contentSafety(q, rec);
+    if (rec && !safety.safe) {
+      return {
+        code: "withheld",
+        label: "Solution pending",
+        title: "Question-specific feedback for this question is being repaired; guess, reflection and rating still work.",
+        withheldReasons: safety.reasons
+      };
+    }
     let explicit = null;
     if (typeof this.cfg.feedbackStatusOf === "function") {
       try { explicit = this.cfg.feedbackStatusOf(q, rec); }
       catch (_) { explicit = null; }
     }
-    if (explicit && typeof explicit === "object" && explicit.code && explicit.label) return explicit;
+    if (explicit && typeof explicit === "object" && explicit.code && explicit.label) {
+      /* VSAFE-02: an explicit status object may downgrade freely, but may not
+         claim full or provisional feedback without a resolvable record behind
+         it. (Unsafe records never reach this point — handled above.) */
+      if (!/^(full|provisional)$/.test(explicit.code) || rec) return explicit;
+      explicit = null;
+    }
     const raw = String(
       explicit ||
       (q && q.feedback_status) ||
@@ -1253,7 +1361,11 @@ window.PPQViewer = (function () {
       (rec && rec.review && rec.review.status) ||
       ""
     ).toLowerCase().replace(/[\s-]+/g, "_");
-    if (/^(reviewed|full|full_feedback|full_review|complete|completed)$/.test(raw)) {
+    /* VSAFE-02: Full and Provisional both require content the viewer actually
+       resolves. A ledger row, catalogue field or hook string on its own can
+       promote nothing — the 18 held launch-only questions stay Solution
+       pending no matter what any status estate says about them. */
+    if (rec && /^(reviewed|full|full_feedback|full_review|complete|completed)$/.test(raw)) {
       return {
         code: "full",
         label: "Full feedback",
@@ -1715,11 +1827,18 @@ window.PPQViewer = (function () {
     const cfg = this.cfg;
     if (!cfg.modules.postQuestionReview || !cfg.analysisOf) return false;
     const authoredRec = cfg.analysisOf(this.cur);
-    const hasAuthoredAnalysis = !!authoredRec;
+    /* VSAFE-01 (Claude 2026-07-28): the safety gate sits at this single entry
+       point. A withheld or damaged record is treated exactly like an absent
+       one — the pupil gets the generic guess/feedback/rating shell, with no
+       fragment of the unsafe content rendered — and the reason appears only
+       in the ?review strip below. */
+    const contentSafety = this._contentSafety(this.cur, authoredRec);
+    const contentWithheld = !!authoredRec && !contentSafety.safe;
+    const hasAuthoredAnalysis = !!authoredRec && !contentWithheld;
     /* Every answered question gets the same feedback shell. This deliberately
        supplies only safe structural defaults: it never invents a method,
        misconception or suggestion when the question has not been analysed yet. */
-    const rec = authoredRec || {
+    const rec = hasAuthoredAnalysis ? authoredRec : {
       schema_version: "viewer-feedback-fallback-v1",
       identity: {
         id: cfg.idOf(this.cur),
@@ -1751,10 +1870,16 @@ window.PPQViewer = (function () {
       const srpCount = (rec.self_report_prompts || []).length;
       const pqcCount = ((rec.requirements || {}).post_question_checks || []).length;
       const strip = el("div", { class: "ppq-iq-reviewer-strip" });
+      /* VSAFE-01: reviewers see WHY content was withheld (and what its review
+         status claimed); pupils never do. */
+      const withheldNote = contentWithheld
+        ? ("CONTENT WITHHELD (was: " + (((authoredRec || {}).review || {}).status || "no review") + ") — " +
+           (contentSafety.reasons.join("; ") || "no reason recorded"))
+        : null;
       strip.textContent = [
         (rec.identity && rec.identity.id) || rec.id || "?",
         "schema " + (rec.schema_version || "?"),
-        hasAuthoredAnalysis ? (rv.status || "no review") : "no authored analysis",
+        withheldNote || (hasAuthoredAnalysis ? (rv.status || "no review") : "no authored analysis"),
         rv.reviewer ? "by " + rv.reviewer : "",
         rv.crop_checked ? "crop✓" : "crop?",
         rv.answer_checked ? "answer✓" : "answer?",
@@ -3321,6 +3446,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.3.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.4.0" };
 })();
 // build: 0.3.0, maintained by Codex

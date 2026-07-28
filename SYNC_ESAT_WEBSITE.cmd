@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0"
 echo.
-echo ESAT website update - maintained by Codex
+echo ESAT website update - viewer maintained by Claude; analysis owned by Codex
 echo This validates PaperDatabases, rebuilds the analysis bundle,
 echo prepares the website, and leaves the changes for GitHub Desktop.
 echo It does not commit or push.

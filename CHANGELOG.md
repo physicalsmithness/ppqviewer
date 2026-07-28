@@ -2,6 +2,52 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-28 (later) — content-safety gate: damaged analysis can no longer render (v0.4.0)
+
+Engine v0.4.0, ESAT wrapper v0.2.16. Implements VSAFE-01/VSAFE-02 from
+`CLAUDE_HANDOFF_2026-07-28.md`. Source-only until the next sync + push.
+
+- New config surface `contentSafety: { withheld: {id: reason}, heuristics: true }`
+  (defaults: empty list, heuristics on). `_contentSafety(q, rec)` decides safety
+  with precedence: bundle-declared `content_safety` state → consumer withheld
+  list → deterministic damage heuristics (`scanAnalysisRecordForDamage`:
+  replacement char, `?` fused to digit, `?` between numbers, repeated `?`, lost
+  apostrophe, UTF-8 mojibake; URL-ish fields skipped; memoised per record).
+  Reasons are reviewer-facing only.
+- `_feedbackReadiness`: safety comes first and cannot be overridden by the
+  `feedbackStatusOf` hook, a catalogue field or the bundle's status ledger.
+  Full and Provisional now both REQUIRE a resolvable safe record: a ledger row
+  alone promotes nothing (the 18 held launch-only questions stay Solution
+  pending whatever the status estate claims — the VSAFE-02 clamp). Unsafe
+  records return new code `withheld` with pupil-facing label "Solution pending"
+  (deliberately indistinguishable from pending for pupils; distinct class
+  `ppq-feedback-status-withheld` in CSS for tests/reviewer tooling).
+- `_renderInterrogation`: the gate sits at the single analysis entry point; a
+  withheld record takes the same generic guess/feedback/rating shell as an
+  absent one, with no fragment of unsafe content rendered. The `?review` strip
+  shows `CONTENT WITHHELD (was: <review status>) — <reasons>`.
+- ESAT wrapper pins seven known-damaged records: the analysis owner's RS-01
+  five, plus TWO MORE the damage scan found on 2026-07-28
+  (`esat_engaa_2019_s1_Q12`, `esat_nsaa_2019_s1_Q30`: byte-identical damaged
+  pair, both marked reviewed, both live as Full). Reported to Codex in
+  `analysis_v2\VIEWER_DAMAGE_REPORT_2026-07-28.md`. Scan sweep: 5/720 flagged,
+  all confirmed damaged, zero false positives.
+- Honest public estate once deployed: Full 41, Provisional 672, Withheld 7,
+  Solution pending 18 (sum 738; previously 46/674/18 with five damaged records
+  presenting as Full). Derived from the 2026-07-27 bundle.
+- Tests: new `test/test_content_safety.js` (70 assertions: heuristics,
+  precedence, clamps, wrapper pinning, real-bundle gating, clean-record
+  non-regression) wired into the sync as a publish gate. The 281-assertion
+  acceptance harness taught the new method (fake ctxs bind `_contentSafety`).
+  Both suites green: 281/281, 70/70.
+- `tools\sync_esat_website.ps1`: runs the safety suite before assembly is
+  publishable; banner now names the split (viewer Claude, analysis Codex).
+
+Consumer notes: chemistry and other non-analysis consumers are unaffected
+(no `analysisOf` → gate never engages). Any consumer that supplies analysis
+records inherits the gate; a consumer claiming Full/Provisional status must now
+actually resolve a safe record or the badge clamps to pending.
+
 ## 2026-07-28 — Claude takeover: baseline verified, source under version control (no engine change)
 
 Maintainer: **Claude**, per `CLAUDE_HANDOFF_2026-07-28.md`. Codex retains analysis planning and content repair in PaperDatabases.
