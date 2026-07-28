@@ -63,17 +63,19 @@ Smith's live-use verdict, dictated: the analysis pop-up is "mainly unreadable";
 text is too cramped, and the self-report questions are separated from the
 content they ask about.
 
-- [ ] Open up the typography: line spacing/density in the interrogation pop-up
-  so it reads in one pass.
-- [ ] Put each response control directly beside the thing it asks about, so a
-  pupil reads a method/idea and answers "Yes, I did that / No, I didn't" in
-  place, instead of re-reading content later when a separated question block
-  finally asks.
-- [ ] Reword pupil-facing prompts to be clearly written and digestible in one
-  read (the analyst-facing wording was already flagged as rough in the engine
-  notes).
-- [ ] Regression coverage + a desktop/mobile visual pass on a long-maths
-  question (fold into the Phase 1 visual checks above).
+- [x] Open up the typography: line spacing/density in the interrogation pop-up
+  so it reads in one pass. _(2026-07-28, v0.4.1: ~1rem body, 1.6+ leading,
+  doubled step spacing, bigger tap targets, more air between cards.)_
+- [x] Put each response control directly beside the thing it asks about.
+  _(2026-07-28: explicit "Yes, I did / No, I didn't" ask at the FOOT of each
+  method; authored prompts render as the joined continuation of their method
+  card; same event grammar.)_
+- [x] Reword the viewer-chrome asks to plain English ("Did you use this
+  route?" etc.). _(Authored prompt prose is analysis-side; if a pupil-voice
+  rewording pass is wanted there, it goes through Codex.)_
+- [ ] Regression coverage landed (294-assertion suite); Smith's desktop/mobile
+  visual pass on a long-maths question still owed (fold into the Phase 1
+  visual checks above).
 
 ## Phase 2 — feedback and useful history
 

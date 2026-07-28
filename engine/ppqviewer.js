@@ -2422,8 +2422,13 @@ window.PPQViewer = (function () {
     if (legend) iq.appendChild(legend);
 
     methods.forEach((m, i) => {
-      iq.appendChild(self._methodBlockV2(m, labels, referenced.has(m.id)));
-      (afterMethod[i] || []).forEach((p) => iq.appendChild(self._promptBlockV2(p, "method")));
+      const block = self._methodBlockV2(m, labels, referenced.has(m.id));
+      /* Phase 1.5 (Smith 2026-07-28): a method with an attached authored prompt
+         forms ONE visually continuous card with it — read the steps, answer the
+         question about them in the same place. */
+      if ((afterMethod[i] || []).length) block.classList.add("ppq-iq-method-joined");
+      iq.appendChild(block);
+      (afterMethod[i] || []).forEach((p) => iq.appendChild(self._promptBlockV2(p, "method", true)));
     });
 
     return rendered;
@@ -2442,17 +2447,6 @@ window.PPQViewer = (function () {
     const head = el("div", { class: "ppq-iq-method-head" });
     head.appendChild(el("span", { class: "ppq-iq-method-kind" }, esc(this._methodKindLabel(kind))));
     head.appendChild(el("b", null, analysisMathEsc(m.title || m.id)));
-    /* QoderWork 2026-07-24 (handoff #4): hide the generic "used it" when an authored
-       local prompt exists for this method. */
-    if (!hasLocalPrompt) {
-      const used = el("button", { class: "ppq-iq-used", type: "button" }, "used it");
-      used.addEventListener("click", () => {
-        const on = used.classList.toggle("on");
-        if (on) self._analysisSelfReports[m.id] = "used"; else delete self._analysisSelfReports[m.id];
-        self._fireReport({ status: "interrogation", qtype: "self_report", extra_json: JSON.stringify({ method_id: m.id, method_ref: m.id, state: on ? "used" : "not_used" }) });
-      });
-      head.appendChild(used);
-    }
     md.appendChild(head);
     const steps = el("div", { class: "ppq-iq-method-desc" });
     (m.pupil_steps || []).forEach((s, si) => {
@@ -2467,7 +2461,38 @@ window.PPQViewer = (function () {
     });
     md.appendChild(steps);
     md.appendChild(self._elimChipsV2El(m, labels));
+    /* Phase 1.5 (Smith 2026-07-28): the ask sits at the FOOT of the method,
+       where the eye lands after reading the steps, as an explicit yes/no pair
+       ("as you read it, you go: yes I did that, no I didn't"), replacing the
+       small head-corner "used it" tick. Suppressed when an authored local
+       prompt follows (that prompt IS the ask; QoderWork handoff #4 rule kept).
+       Same event grammar as before: state "used" / "not_used". */
+    if (!hasLocalPrompt) {
+      const ask = el("div", { class: "ppq-iq-method-ask" });
+      ask.appendChild(el("span", { class: "ppq-iq-method-ask-text" }, esc(this._methodAskText(kind))));
+      const yes = el("button", { class: "ppq-iq-used yes", type: "button" }, "Yes, I did");
+      const no = el("button", { class: "ppq-iq-used no", type: "button" }, "No, I didn't");
+      const pick = function (btn, state) {
+        yes.classList.remove("on"); no.classList.remove("on");
+        btn.classList.add("on");
+        if (state === "used") self._analysisSelfReports[m.id] = "used";
+        else delete self._analysisSelfReports[m.id];
+        self._fireReport({ status: "interrogation", qtype: "self_report", extra_json: JSON.stringify({ method_id: m.id, method_ref: m.id, state: state }) });
+      };
+      yes.addEventListener("click", () => pick(yes, "used"));
+      no.addEventListener("click", () => pick(no, "not_used"));
+      ask.appendChild(yes);
+      ask.appendChild(no);
+      md.appendChild(ask);
+    }
     return md;
+  };
+
+  /* Phase 1.5: plain-English ask matched to the method's presentation kind. */
+  Viewer.prototype._methodAskText = function (kind) {
+    if (kind === "independent_check") return "Did you do this check?";
+    if (kind === "synthesis") return "Did you put it together like this?";
+    return "Did you use this route?";
   };
 
   Viewer.prototype._methodKindLabel = function (kind) {
@@ -2718,9 +2743,12 @@ window.PPQViewer = (function () {
     iq.appendChild(box);
   };
 
-  Viewer.prototype._promptBlockV2 = function (p, kind) {
+  Viewer.prototype._promptBlockV2 = function (p, kind, attached) {
     const self = this;
-    const box = el("div", { class: "ppq-iq-prompt" });
+    /* Phase 1.5: an attached prompt renders as the continuation of the method
+       card it asks about (joined borders, shared background), so the question
+       is answered where the content was read. */
+    const box = el("div", { class: "ppq-iq-prompt" + (attached ? " ppq-iq-prompt-attached" : "") });
     box.appendChild(el("div", { class: "ppq-iq-prompt-text" }, analysisMathEsc(p.prompt || "")));
     const chips = el("div", { class: "ppq-iq-prompt-states" });
     /* QoderWork 2026-07-24 (handoff #4): opt-in multi-select when several authored
@@ -3446,6 +3474,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.4.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.4.1" };
 })();
 // build: 0.3.0, maintained by Codex

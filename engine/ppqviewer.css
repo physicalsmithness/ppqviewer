@@ -455,28 +455,38 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-interrogation { display: none; margin-top: 1.25rem; padding: 1rem 1.1rem; background: var(--ppq-paper); border: 1px solid var(--ppq-line); border-left: 4px solid var(--ppq-accent); border-radius: 10px; }
 .ppq-iq-title { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ppq-accent); margin-bottom: 0.6rem; }
 .ppq-iq-subhead { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ppq-ink2); margin: 0.9rem 0 0.45rem; }
-.ppq-iq-probe { margin-bottom: 0.75rem; }
-.ppq-iq-probe-text { font-size: 0.95rem; line-height: 1.5; color: var(--ppq-ink); }
+.ppq-iq-probe { margin-bottom: 0.9rem; }
+.ppq-iq-probe-text { font-size: 1rem; line-height: 1.6; color: var(--ppq-ink); }
 .ppq-iq-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
 .ppq-iq-chip { font-size: 0.72rem; background: rgba(49, 130, 206, 0.08); border: 1px solid rgba(49, 130, 206, 0.25); color: var(--ppq-accent); border-radius: 5px; padding: 2px 7px; font-family: monospace; }
-.ppq-iq-option { border: 1px solid var(--ppq-line); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.75rem; }
+.ppq-iq-option { border: 1px solid var(--ppq-line); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 0.9rem; }
 /* QoderWork 2026-07-22 (v0.2.5): verdict styling restored — Smith corrected the
    v0.2.4 misread; pupils ARE told right/wrong, the verdict just leads the pop-up. */
 .ppq-iq-option.wrong { border-left: 3px solid var(--ppq-bad); }
 .ppq-iq-option.right { border-left: 3px solid var(--ppq-ok); }
-.ppq-iq-option-head { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; }
+.ppq-iq-option-head { font-weight: 700; font-size: 1rem; margin-bottom: 0.35rem; }
 .ppq-iq-option.wrong .ppq-iq-option-head { color: var(--ppq-bad); }
 .ppq-iq-option.right .ppq-iq-option-head { color: var(--ppq-ok); }
-.ppq-iq-option-path { font-size: 0.9rem; line-height: 1.5; color: var(--ppq-ink2); }
+.ppq-iq-option-path { font-size: 0.95rem; line-height: 1.6; color: var(--ppq-ink2); }
 .ppq-iq-slugs { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.5rem; }
 .ppq-iq-slug { font-size: 0.7rem; background: rgba(176, 48, 48, 0.07); border: 1px solid rgba(176, 48, 48, 0.25); color: var(--ppq-bad); border-radius: 5px; padding: 1px 6px; font-family: monospace; }
-.ppq-iq-method { border: 1px solid var(--ppq-line); border-radius: 8px; padding: 0.6rem 0.85rem; margin-bottom: 0.5rem; }
-.ppq-iq-method-head { display: flex; gap: 0.5rem; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.25rem; }
+.ppq-iq-method { border: 1px solid var(--ppq-line); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem; }
+.ppq-iq-method-head { display: flex; gap: 0.5rem; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.4rem; font-size: 1rem; }
+/* Phase 1.5 (Smith 2026-07-28): a method with an attached authored prompt forms
+   one continuous card with it — square off the join and hand the bottom edge
+   to the prompt continuation. */
+.ppq-iq-method-joined { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: none; margin-bottom: 0; padding-bottom: 0.7rem; }
+/* Phase 1.5: the foot-of-method ask — read the steps, answer right there. */
+.ppq-iq-method-ask { display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap; margin-top: 0.75rem; padding-top: 0.65rem; border-top: 1px dashed var(--ppq-line); }
+.ppq-iq-method-ask-text { font-weight: 700; font-size: 0.95rem; color: var(--ppq-ink); }
+.ppq-iq-method-ask .ppq-iq-used { margin-left: 0; font-size: 0.88rem; padding: 0.4rem 0.95rem; border-radius: 999px; }
+.ppq-iq-method-ask .ppq-iq-used::before, .ppq-iq-method-ask .ppq-iq-used.on::before { content: ""; }
+.ppq-iq-method-ask .ppq-iq-used.no.on { background: var(--ppq-ink2); border-color: var(--ppq-ink2); }
 .ppq-iq-kind { font-size: 0.72rem; font-family: monospace; background: var(--ppq-line); border-radius: 5px; padding: 1px 6px; color: var(--ppq-ink2); }
 /* QoderWork 2026-07-22: method descriptions set out on MULTIPLE LINES — the
    one-line algebra was "quite hard to read" (Smith). "⇒ …" lines are results. */
-.ppq-iq-method-desc { font-size: 0.88rem; line-height: 1.45; color: var(--ppq-ink2); }
-.ppq-iq-method-line { display: block; padding: 0.12rem 0 0.12rem 0.9rem; position: relative; }
+.ppq-iq-method-desc { font-size: 0.98rem; line-height: 1.62; color: var(--ppq-ink2); }
+.ppq-iq-method-line { display: block; padding: 0.24rem 0 0.24rem 1rem; position: relative; }
 .ppq-iq-method-line::before { content: "·"; position: absolute; left: 0.25rem; color: var(--ppq-muted); }
 .ppq-iq-method-line.result { color: var(--ppq-ink); font-weight: 600; }
 .ppq-iq-method-line.result::before { content: ""; }
@@ -495,7 +505,7 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-iq-scale { margin-bottom: 0.5rem; }
 .ppq-iq-next { display: block; margin: 0.8rem auto 0; }
 .ppq-iq-feedback { margin-top: 0.9rem; scroll-margin-block: 5rem; }
-.ppq-iq-feedback-text { font-size: 0.95rem; line-height: 1.55; background: rgba(45, 106, 63, 0.07); border: 1px solid rgba(45, 106, 63, 0.3); border-radius: 8px; padding: 0.8rem 1rem; color: var(--ppq-ink); }
+.ppq-iq-feedback-text { font-size: 1rem; line-height: 1.62; background: rgba(45, 106, 63, 0.07); border: 1px solid rgba(45, 106, 63, 0.3); border-radius: 8px; padding: 0.85rem 1rem; color: var(--ppq-ink); }
 .ppq-iq-guesspage-leaving { opacity: 0.35; transform: translateY(-3px); transition: opacity 180ms ease, transform 180ms ease; pointer-events: none; }
 .ppq-iq-rest-fired { animation: ppq-iq-rest-fired 360ms ease-out both; }
 .ppq-iq-feedback-fired .ppq-iq-feedback-text { animation: ppq-iq-feedback-fired 900ms ease-out; }
@@ -544,10 +554,10 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-iq-selected-diagnostic:empty { display: none; }
 .ppq-iq-diagnostic-card { border: 1px solid rgba(49, 130, 206, 0.28); border-left: 3px solid var(--ppq-accent); border-radius: 8px; padding: 0.75rem 0.9rem; margin: 0 0 0.75rem; background: rgba(49, 130, 206, 0.045); }
 .ppq-iq-diagnostic-kicker { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ppq-accent); margin-bottom: 0.25rem; }
-.ppq-iq-diagnostic-text { font-size: 0.92rem; line-height: 1.5; color: var(--ppq-ink); }
-.ppq-iq-diagnostic-question { font-size: 0.84rem; font-weight: 700; color: var(--ppq-ink2); margin: 0.65rem 0 0.4rem; }
-.ppq-iq-diagnostic-controls { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-.ppq-iq-diagnostic-choice { font-size: 0.78rem; padding: 0.32rem 0.7rem; border: 1px solid var(--ppq-line); border-radius: 999px; background: var(--ppq-bg); color: var(--ppq-ink2); cursor: pointer; }
+.ppq-iq-diagnostic-text { font-size: 1rem; line-height: 1.6; color: var(--ppq-ink); }
+.ppq-iq-diagnostic-question { font-size: 0.95rem; font-weight: 700; color: var(--ppq-ink2); margin: 0.75rem 0 0.5rem; }
+.ppq-iq-diagnostic-controls { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.ppq-iq-diagnostic-choice { font-size: 0.88rem; padding: 0.42rem 0.85rem; border: 1px solid var(--ppq-line); border-radius: 999px; background: var(--ppq-bg); color: var(--ppq-ink2); cursor: pointer; }
 .ppq-iq-diagnostic-choice:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
 .ppq-iq-diagnostic-choice.sel { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; font-weight: 700; }
 
@@ -686,32 +696,36 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 
 /* QoderWork 2026-07-22 (analyst handoff): the v2 pupil insight — three labelled
    lines (first notice / why it matters / next move), prose rendered faithfully. */
-.ppq-iq-insight { border: 1px solid var(--ppq-line); border-left: 3px solid var(--ppq-accent); border-radius: 8px; padding: 0.65rem 0.9rem; margin-bottom: 0.75rem; background: var(--ppq-paper); }
-.ppq-iq-insight-line { display: block; font-size: 0.9rem; line-height: 1.5; padding: 0.18rem 0; }
-.ppq-iq-insight-label { display: block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ppq-accent); margin-bottom: 0.1rem; }
+.ppq-iq-insight { border: 1px solid var(--ppq-line); border-left: 3px solid var(--ppq-accent); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1rem; background: var(--ppq-paper); }
+.ppq-iq-insight-line { display: block; font-size: 0.98rem; line-height: 1.6; padding: 0.3rem 0; }
+.ppq-iq-insight-label { display: block; font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ppq-accent); margin-bottom: 0.15rem; }
 .ppq-iq-insight-text { color: var(--ppq-ink); }
 
 /* QoderWork 2026-07-22 (analyst handoff): the structured self-report prompt and
    its tappable state chips (method-awareness + knowledge check). */
-.ppq-iq-prompt { margin-bottom: 0.75rem; }
-.ppq-iq-prompt-text { font-size: 0.92rem; font-weight: 600; line-height: 1.45; color: var(--ppq-ink); margin-bottom: 0.45rem; }
-.ppq-iq-prompt-states { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-.ppq-iq-state { font-size: 0.78rem; padding: 0.3rem 0.7rem; border: 1px solid var(--ppq-line); border-radius: 999px; background: var(--ppq-bg); color: var(--ppq-ink2); cursor: pointer; }
+.ppq-iq-prompt { margin-bottom: 1rem; }
+.ppq-iq-prompt-text { font-size: 1rem; font-weight: 600; line-height: 1.6; color: var(--ppq-ink); margin-bottom: 0.6rem; }
+.ppq-iq-prompt-states { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+.ppq-iq-state { font-size: 0.88rem; padding: 0.42rem 0.85rem; border: 1px solid var(--ppq-line); border-radius: 999px; background: var(--ppq-bg); color: var(--ppq-ink2); cursor: pointer; }
+/* Phase 1.5 (Smith 2026-07-28): an attached prompt is the continuation of the
+   method card above it — shared walls, dashed divider, faint tint — so the
+   question is visibly ABOUT the steps just read and is answered in place. */
+.ppq-iq-prompt-attached { border: 1px solid var(--ppq-line); border-top: 1px dashed var(--ppq-line); border-radius: 0 0 8px 8px; margin: 0 0 1rem; padding: 0.75rem 1rem 0.85rem; background: rgba(49, 130, 206, 0.035); }
 .ppq-iq-state:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
 .ppq-iq-state.sel { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; font-weight: 700; }
 
 /* Bottom-of-review knowledge/technique audit. It is deliberately collapsed and
    visually quiet; Known is an implicit starting display until the pupil acts. */
 .ppq-iq-things { margin-top: 1rem; border: 1px solid var(--ppq-line); border-radius: 9px; background: var(--ppq-paper); }
-.ppq-iq-things > summary { cursor: pointer; padding: 0.7rem 0.85rem; font-size: 0.88rem; font-weight: 750; color: var(--ppq-ink2); }
+.ppq-iq-things > summary { cursor: pointer; padding: 0.75rem 0.9rem; font-size: 0.95rem; font-weight: 750; color: var(--ppq-ink2); }
 .ppq-iq-things[open] > summary { border-bottom: 1px solid var(--ppq-line); }
-.ppq-iq-things-intro { font-size: 0.76rem; line-height: 1.4; color: var(--ppq-muted); padding: 0.65rem 0.85rem 0.2rem; }
-.ppq-iq-things-rows { padding: 0.35rem 0.85rem 0.2rem; }
-.ppq-iq-thing { padding: 0.65rem 0; border-top: 1px solid var(--ppq-line); }
+.ppq-iq-things-intro { font-size: 0.85rem; line-height: 1.5; color: var(--ppq-muted); padding: 0.7rem 0.9rem 0.25rem; }
+.ppq-iq-things-rows { padding: 0.4rem 0.9rem 0.25rem; }
+.ppq-iq-thing { padding: 0.8rem 0; border-top: 1px solid var(--ppq-line); }
 .ppq-iq-thing:first-child { border-top: none; }
-.ppq-iq-thing-text { font-size: 0.84rem; line-height: 1.42; color: var(--ppq-ink); margin-bottom: 0.4rem; }
-.ppq-iq-thing-states { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-.ppq-iq-thing-state { font-size: 0.72rem; padding: 0.28rem 0.58rem; border: 1px solid var(--ppq-line); border-radius: 999px; background: var(--ppq-bg); color: var(--ppq-ink2); cursor: pointer; }
+.ppq-iq-thing-text { font-size: 0.95rem; line-height: 1.55; color: var(--ppq-ink); margin-bottom: 0.5rem; }
+.ppq-iq-thing-states { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ppq-iq-thing-state { font-size: 0.82rem; padding: 0.36rem 0.7rem; border: 1px solid var(--ppq-line); border-radius: 999px; background: var(--ppq-bg); color: var(--ppq-ink2); cursor: pointer; }
 .ppq-iq-thing-state:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
 .ppq-iq-thing-state.sel { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; font-weight: 700; }
 .ppq-iq-thing-state.sel.implicit { background: rgba(49, 130, 206, 0.07); border-style: dashed; color: var(--ppq-accent); font-weight: 600; }
@@ -719,10 +733,10 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-iq-things-confirm:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
 .ppq-iq-things-confirm.done { border-color: var(--ppq-ok); color: var(--ppq-ok); font-weight: 700; }
 
-.ppq-iq-reflection { margin-top: 0.85rem; padding-top: 0.8rem; border-top: 1px dashed var(--ppq-line); }
-.ppq-iq-reflection-label { display: block; font-size: 0.86rem; font-weight: 700; color: var(--ppq-ink); }
+.ppq-iq-reflection { margin-top: 1rem; padding-top: 0.9rem; border-top: 1px dashed var(--ppq-line); }
+.ppq-iq-reflection-label { display: block; font-size: 0.95rem; font-weight: 700; color: var(--ppq-ink); }
 .ppq-iq-reflection-label > span { font-size: 0.7rem; font-weight: 500; color: var(--ppq-muted); margin-left: 0.35rem; }
-.ppq-iq-reflection-text { display: block; width: 100%; resize: vertical; min-height: 4.2rem; margin-top: 0.45rem; padding: 0.55rem 0.65rem; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); color: var(--ppq-ink); font: inherit; font-size: 0.84rem; line-height: 1.4; }
+.ppq-iq-reflection-text { display: block; width: 100%; resize: vertical; min-height: 4.2rem; margin-top: 0.5rem; padding: 0.6rem 0.7rem; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); color: var(--ppq-ink); font: inherit; font-size: 0.95rem; line-height: 1.5; }
 .ppq-iq-reflection-text:focus { outline: none; border-color: var(--ppq-accent); }
 .ppq-iq-reflection-save { margin-top: 0.4rem; font-size: 0.75rem; padding: 0.3rem 0.7rem; border: 1px solid var(--ppq-line); border-radius: 7px; background: var(--ppq-bg); color: var(--ppq-ink2); cursor: pointer; }
 .ppq-iq-reflection-save:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }

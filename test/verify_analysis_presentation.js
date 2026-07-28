@@ -185,7 +185,7 @@ const V = {}; // fake viewer holding the real methods
  "_setDashboardFacetValue", "_clearDashboardFacet", "_zeroRatings",
  "_renderDashboardFacet", "_catHtml",
  "_buildGuessPicker", "_renderInterrogation", "_isV2", "_guessLabel", "_guessPrompt",
- "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety"
+ "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety", "_methodAskText"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -210,6 +210,7 @@ function makeCtx(rec) {
     _renderInterrogationFeedback: () => {},
     // bind the real methods
     _appendMethodsV2: V._appendMethodsV2, _methodBlockV2: V._methodBlockV2,
+    _methodAskText: V._methodAskText, /* Phase 1.5 */
     _methodKindLabel: V._methodKindLabel, _elimChipsV2El: V._elimChipsV2El,
     _optionRailLegendEl: V._optionRailLegendEl, _appendSelfReportV2: V._appendSelfReportV2,
     _promptBlockV2: V._promptBlockV2, _stateLabel: V._stateLabel,
@@ -1519,6 +1520,78 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     css.indexOf(".ppq-iq-feedback-fired") >= 0 &&
     css.indexOf(".ppq-iq-response-cue") >= 0,
     "verdict reveal, tailored feedback and Recorded acknowledgement all have visible firing styles");
+})();
+
+// Phase 1.5 (Smith 2026-07-28): the ask sits at the FOOT of each method as an
+// explicit yes/no pair, and an attached authored prompt forms one continuous
+// card with its method. Read the thing, answer beside the thing.
+(function () {
+  console.log("\n=== method ask placement (Phase 1.5) ===");
+  const baseRec = { identity: { id: "ask-test", option_labels: ["A", "B"] } };
+
+  const ctx = makeCtx(baseRec);
+  const method = { id: "m_ask", presentation_kind: "route", title: "Test route", pupil_steps: ["Step one.", "Step two."] };
+  const block = V._methodBlockV2.call(ctx, method, ["A", "B"], false);
+  const askRows = collect(block, (n) => (n.className || "") === "ppq-iq-method-ask");
+  check(askRows.length === 1, "a method without a local prompt gets exactly one foot ask row");
+  check(block.children.length && block.children[block.children.length - 1] === askRows[0],
+    "the ask is the LAST element of the method card (after the steps, where the eye lands)");
+  const askButtons = askRows.length ? collect(askRows[0], (n) => (n.className || "").indexOf("ppq-iq-used") >= 0 && n.tagName === "BUTTON") : [];
+  const askText = (b) => String(b._html || b._text || b.textContent || "");
+  check(askButtons.length === 2 &&
+    /yes, i did/i.test(askText(askButtons[0])) &&
+    /no, i didn't/i.test(askText(askButtons[1])),
+    "the ask offers an explicit Yes, I did / No, I didn't pair");
+  const head = collect(block, (n) => (n.className || "") === "ppq-iq-method-head")[0];
+  check(!!head && collect(head, (n) => (n.className || "").indexOf("ppq-iq-used") >= 0).length === 0,
+    "the small head-corner tick is gone");
+  if (askButtons.length === 2) {
+    askButtons[0].dispatchEvent({ type: "click" });
+    askButtons[1].dispatchEvent({ type: "click" });
+    const states = ctx._reports
+      .filter((r) => r.qtype === "self_report")
+      .map((r) => JSON.parse(r.extra_json).state);
+    check(states.indexOf("used") >= 0 && states.indexOf("not_used") >= 0,
+      "Yes fires state used, No fires state not_used (same event grammar as the old tick)");
+  }
+  check(V._methodAskText.call(ctx, "route") === "Did you use this route?" &&
+    V._methodAskText.call(ctx, "independent_check") === "Did you do this check?" &&
+    V._methodAskText.call(ctx, "synthesis") === "Did you put it together like this?",
+    "the ask wording is plain and matched to the method kind");
+
+  const suppressed = V._methodBlockV2.call(makeCtx(baseRec), method, ["A", "B"], true);
+  check(collect(suppressed, (n) => (n.className || "").indexOf("ppq-iq-used") >= 0).length === 0 &&
+    collect(suppressed, (n) => (n.className || "") === "ppq-iq-method-ask").length === 0,
+    "a method with an authored local prompt gets no generic ask (the prompt IS the ask)");
+
+  const joinedRec = {
+    identity: { id: "join-test", option_labels: ["A", "B"] },
+    methods: [{ id: "m_j", presentation_kind: "route", title: "Joined route", pupil_steps: ["One step."] }],
+    self_report_prompts: [{ id: "p_j", prompt: "Did you spot the shortcut?", states: ["used_as_main_route"], method_refs: ["m_j"] }]
+  };
+  const jctx = makeCtx(joinedRec);
+  const iqRoot = makeEl("div");
+  V._appendMethodsV2.call(jctx, iqRoot, joinedRec);
+  const jblock = collect(iqRoot, (n) => (n.className || "").indexOf("ppq-iq-method ") >= 0 || (n.className || "") === "ppq-iq-method")[0] ||
+    iqRoot.children[0];
+  check(!!jblock && jblock.classList.contains("ppq-iq-method-joined"),
+    "a method followed by its attached prompt squares off to join it");
+  const attached = collect(iqRoot, (n) => (n.className || "").indexOf("ppq-iq-prompt-attached") >= 0);
+  check(attached.length === 1, "the referenced prompt renders as the attached continuation of its method");
+  check(iqRoot.children.indexOf(attached[0]) === iqRoot.children.indexOf(jblock) + 1,
+    "the attached prompt directly follows its method (answer beside the thing)");
+
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(css.indexOf(".ppq-iq-method-ask") >= 0 &&
+    css.indexOf(".ppq-iq-prompt-attached") >= 0 &&
+    css.indexOf(".ppq-iq-method-joined") >= 0,
+    "the ask row and the joined-card treatment are styled");
+  check(/\.ppq-iq-method-desc\s*\{[^}]*line-height:\s*1\.6/.test(css) &&
+    /\.ppq-iq-prompt-text\s*\{[^}]*line-height:\s*1\.6/.test(css),
+    "method steps and prompt text carry the opened-up line spacing (Smith: text was too close)");
+  const wrapperHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
+  check(wrapperHtml.indexOf("update-note") >= 0 && /Important update/.test(wrapperHtml),
+    "the ESAT page announces the update clearly at sign-in");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

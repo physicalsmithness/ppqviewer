@@ -27,6 +27,9 @@
     #sign-in-gate button { padding: 0.5rem 2rem; font-size: 1rem; background: #3182ce; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
     #sign-in-gate button:hover { background: #2b6cb0; }
     #sign-in-gate .hint { font-size: 0.85rem; color: #8c8579; }
+    /* Phase 1.5 (Smith 2026-07-28): updates must be clearly visible as updates. */
+    #sign-in-gate .update-note { max-width: 26rem; margin: 0; padding: 0.7rem 1rem; border: 1px solid rgba(49, 130, 206, 0.35); border-left: 4px solid #3182ce; border-radius: 8px; background: rgba(49, 130, 206, 0.06); font-size: 0.9rem; line-height: 1.55; color: #1a1a17; text-align: left; }
+    #sign-in-gate .update-note b { color: #2b6cb0; }
     #ppq-root { display: none; }
     #report-flash { position: fixed; bottom: 12px; right: 12px; font-size: 0.75rem; color: #48bb78; opacity: 0; transition: opacity 0.3s; }
   </style>
@@ -40,6 +43,10 @@
   <div id="sign-in-gate">
     <h2>ESAT Past-Paper Viewer</h2>
     <p class="hint">Shared ppqviewer engine, comparison copy</p>
+    <p class="update-note"><b>Important update, 28 July:</b> the after-answer
+      analysis is easier to read, and you answer each question about a method
+      right where it appears. A few questions with damaged solutions now show
+      "Solution pending" while they are repaired.</p>
     <input id="si-name" placeholder="Your name" autocomplete="name">
     <select id="si-class"></select>
     <button id="si-start">Start</button>
@@ -284,7 +291,7 @@
 
       window.PPQ_CONFIG = {
         title: "ESAT PPQ (shared engine, comparison)",
-        versionLabel: "ppqviewer v0.2.16 · content-safety gate",
+        versionLabel: "ppqviewer v0.2.16 · safer content, clearer analysis",
         appVersion: "ppqviewer-esat-compare",
         storageKey: "esat_ppq_COMPARE",
         /* QoderWork 2026-07-22: login may be null (fallback gate mode). */

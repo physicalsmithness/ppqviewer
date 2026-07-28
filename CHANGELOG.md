@@ -2,6 +2,38 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-28 (evening) — Phase 1.5: readable analysis, answer beside the thing (v0.4.1)
+
+Engine v0.4.1, same unpublished ESAT release v0.2.16. Direct response to Smith's
+live-use verdict (dictated, 2026-07-28): the pop-up was "mainly unreadable",
+text too close together, and the did-you-use-it questions not beside the
+content they ask about.
+
+- Typography opened up across the interrogation pop-up: body text to ~1rem,
+  line-height 1.6+, step padding doubled, bigger chip/choice tap targets, a
+  full unit of air between cards (previously 0.72–0.95rem text at 1.4–1.5
+  leading with 0.5rem card gaps).
+- The generic method tick moved from a small head-corner "used it" button to a
+  foot-of-method ask row, where the eye lands after reading the steps:
+  "Did you use this route? / Did you do this check? / Did you put it together
+  like this?" answered with explicit "Yes, I did / No, I didn't" buttons.
+  Event grammar unchanged (self_report state `used` / `not_used`), so
+  reporting and analysis consumers see the same data.
+- The QoderWork handoff #4 rule is kept: a method with an authored local
+  prompt gets no generic ask; that prompt IS the ask, and it now renders as
+  the visual CONTINUATION of its method card (joined borders, dashed divider,
+  faint tint) so the question is answered where the content was read. DOM
+  order is unchanged (prompt remains the sibling after its method), so the
+  analyst placement contract and existing assertions hold.
+- ESAT sign-in gate now carries a clearly-marked "Important update" note
+  (Smith: an important update must be clearly visible as one), and the
+  versionLabel reads "safer content, clearer analysis".
+- Authored prompt PROSE is untouched (analysis-side ownership); only viewer
+  chrome wording changed.
+- Acceptance suite grows 281 → 294 (ask placement, wording, yes/no events,
+  local-prompt suppression, joined cards, line-spacing wiring, update note).
+  Content-safety suite still 70/70.
+
 ## 2026-07-28 (later) — content-safety gate: damaged analysis can no longer render (v0.4.0)
 
 Engine v0.4.0, ESAT wrapper v0.2.16. Implements VSAFE-01/VSAFE-02 from
