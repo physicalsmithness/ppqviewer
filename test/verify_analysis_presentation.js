@@ -186,7 +186,8 @@ const V = {}; // fake viewer holding the real methods
  "_renderDashboardFacet", "_catHtml",
  "_buildGuessPicker", "_renderInterrogation", "_isV2", "_guessLabel", "_guessPrompt",
  "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety", "_methodAskText",
- "_elimChipsEl"
+ "_elimChipsEl", "next", "prev", "_renderHistoryEntry", "_questionById",
+ "_lastAttemptFor", "_reopenAttempt", "closeModal"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -1746,6 +1747,172 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   fctx._flaggedOnly = false;
   check(V._matchesQuestionFilters.call(fctx, { id: "q2" }) === true,
     "toggling off restores the full view");
+})();
+
+// VF-03 (Claude 2026-07-28): Previous walks the session's attempted history
+// (reshuffle-proof); attempted questions carry a visible Review action that
+// reopens the earlier verdict, declaration, responses and analysis without
+// recording anything new.
+(function () {
+  console.log("\n=== session history and review reopen (VF-03) ===");
+
+  // --- history navigation, ordered and shuffled ---
+  function navCtx(view) {
+    const questions = [{ id: "qa" }, { id: "qb" }, { id: "qc" }, { id: "qd" }];
+    return {
+      cfg: { idOf: (q) => q.id },
+      questions: questions,
+      view: view === "shuffled" ? [questions[3], questions[2], questions[1], questions[0]] : questions.slice(),
+      idx: 0,
+      cur: questions[0],
+      _sessionHistory: [],
+      rendered: [],
+      render(q) {
+        this.cur = q || this.view[this.idx];
+        if (!q) { this._histPos = null; this._returnIdx = null; }
+        this.rendered.push(this.cfg.idOf(this.cur));
+      },
+      _showEmpty: () => {},
+      next: V.next,
+      prev: V.prev,
+      _renderHistoryEntry: V._renderHistoryEntry,
+      _questionById: V._questionById
+    };
+  }
+  ["ordered", "shuffled"].forEach(function (mode) {
+    const ctx = navCtx(mode);
+    /* attempt qa, then qb, exactly as _recordAttempt records them */
+    ctx._sessionHistory = ["qa", "qb"];
+    ctx.cur = ctx.questions[1]; /* qb on screen */
+    ctx.idx = 1;
+    ctx.prev();
+    check(ctx.rendered[ctx.rendered.length - 1] === "qa",
+      mode + ": Previous returns to the question attempted before this one");
+    const len = ctx.rendered.length;
+    ctx.prev();
+    check(ctx.rendered.length === len && ctx._histPos === 0,
+      mode + ": Previous at the oldest attempt stays put instead of wandering");
+    ctx.next();
+    check(ctx.rendered[ctx.rendered.length - 1] === "qb",
+      mode + ": Next walks forward through the history");
+    ctx.next();
+    check(ctx._histPos == null,
+      mode + ": stepping past the newest attempt resumes the live run");
+  });
+  (function () {
+    const ctx = navCtx("ordered");
+    ctx._sessionHistory = ["qa"];
+    ctx.view = []; /* the current filters exclude everything */
+    ctx.cur = null;
+    ctx.prev();
+    check(ctx.rendered[ctx.rendered.length - 1] === "qa",
+      "history survives filter changes: an attempted question reopens even when filtered out");
+  })();
+  check(extractFn("filterQuestions").toString().indexOf("_histPos = null") >= 0,
+    "a filter/order change ends the history walk");
+  check(extractFn("_recordAttempt").toString().indexOf("_sessionHistory") >= 0,
+    "answering records the question into the session history");
+  check(extractFn("render").toString().indexOf("looking back") >= 0,
+    "the card labels history views as looking back");
+
+  // --- review reopen ---
+  function reviewNodes() {
+    return {
+      ".ppq-modal-body": makeEl("div"),
+      ".ppq-modal-content": makeEl("div"),
+      ".ppq-modal-min": makeEl("button"),
+      ".ppq-modal-reminder": makeEl("div"),
+      ".ppq-modal-feedback-status": makeEl("span"),
+      ".ppq-modal": makeEl("div"),
+      ".ppq-competence": makeEl("div")
+    };
+  }
+  const nodes = reviewNodes();
+  const reports = [];
+  let reveals = 0;
+  const ctx = {
+    cur: { id: "review-test-question", correct_answer: "C" },
+    cfg: {
+      modules: { postQuestionReview: true },
+      analysisOf: () => null,
+      idOf: (q) => q.id,
+      correctOf: (q) => q.correct_answer,
+      metaLine: () => "Review test",
+      selfReport: { levels: 6, prompt: "How did that feel?", meanings: [] }
+    },
+    root: makeEl("div"),
+    q: (selector) => nodes[selector] || null,
+    qa: () => [],
+    store: {
+      attempts: [{
+        id: "review-test-question", attempt_id: "orig-att", chosen_option: "B", correct: false,
+        pre_guess_declaration: { candidate_options: ["B", "C"], candidate_percentages: { B: 60, C: 40 } },
+        freeform_reflection: "ran out of time"
+      }],
+      scores: {}, flags: {}
+    },
+    answered: false,
+    _saveStore: () => {},
+    _fireReport: (payload) => reports.push(payload),
+    _answerLabels: ["A", "B", "C"],
+    _optionLabels: () => ["A", "B", "C"],
+    _attemptId: "live-att",
+    _chosenLabel: "",
+    _wasRight: false,
+    _analysisReviewMode: () => false,
+    _syncFlaggedToggle: () => {},
+    _firePendingDashboardPulse: () => {},
+    _revealCommittedAnswer: () => { reveals++; },
+    _contentSafety: V._contentSafety,
+    _isV2: V._isV2,
+    _guessLabel: V._guessLabel,
+    _guessPrompt: V._guessPrompt,
+    _feedbackReadiness: V._feedbackReadiness,
+    _setFeedbackStatusBadge: V._setFeedbackStatusBadge,
+    _buildGuessPicker: V._buildGuessPicker,
+    _verdictEl: V._verdictEl,
+    _appendFreeformReflectionV2: V._appendFreeformReflectionV2,
+    _renderSelectedOptionDiagnosticV2: () => {},
+    _renderInterrogationFeedback: () => {},
+    _commitPreVerdictGuess: () => {},
+    closeModal: V.closeModal,
+    next: () => {},
+    _renderInterrogation: V._renderInterrogation,
+    _lastAttemptFor: V._lastAttemptFor,
+    _reopenAttempt: V._reopenAttempt
+  };
+
+  const row = ctx._lastAttemptFor(ctx.cur);
+  check(!!row && row.attempt_id === "orig-att",
+    "the most recent recorded attempt is found from the persisted log");
+  ctx._reopenAttempt(row);
+  const body = nodes[".ppq-modal-body"];
+  check(collect(body, (n) => (n.className || "").indexOf("ppq-iq-reviewing-note") >= 0).length === 1,
+    "review mode is unmistakably labelled");
+  const guessPage = collect(body, (n) => (n.className || "").indexOf("ppq-iq-guesspage") >= 0)[0];
+  const restPage = collect(body, (n) => (n.className || "").indexOf("ppq-iq-rest") >= 0)[0];
+  check(!!guessPage && guessPage.style.display === "none" &&
+    !!restPage && restPage.style.display !== "none",
+    "reopening goes straight to the verdict — no fresh guess declaration is demanded");
+  const verdictHead = collect(body, (n) => (n.className || "").indexOf("ppq-iq-option-head") >= 0)[0];
+  check(!!verdictHead && /You chose B/.test(verdictHead._html || verdictHead._text || ""),
+    "the stored chosen answer is restored into the verdict");
+  const recap = collect(body, (n) => (n.className || "").indexOf("ppq-iq-declaration-recap") >= 0)[0];
+  check(!!recap && /B \(60%\), C \(40%\)/.test(recap._html || recap._text || ""),
+    "the stored guess declaration is recapped with its percentages");
+  const reflection = collect(body, (n) => (n.className || "").indexOf("ppq-iq-reflection-text") >= 0)[0];
+  check(!!reflection && reflection.value === "ran out of time",
+    "the saved reflection note is restored, not blanked");
+  check(ctx._attemptId === "orig-att",
+    "review adopts the ORIGINAL attempt id so any edits attach to it");
+  check(ctx.store.attempts.length === 1 &&
+    reports.filter((r) => r.status === "answered").length === 0,
+    "reopening records no new attempt row and fires no answer event");
+  check(reveals === 0, "review paints no verdict onto the still-answerable card");
+
+  ctx.closeModal();
+  check(!ctx._reviewingAttempt && ctx._attemptId !== "orig-att" && reveals === 0,
+    "closing a review mints a fresh attempt id and still paints nothing");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

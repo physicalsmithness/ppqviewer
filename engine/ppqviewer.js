@@ -387,7 +387,8 @@ window.PPQViewer = (function () {
     controls.innerHTML =
       '<button class="ppq-btn ppq-prev">Previous (←)</button>' +
       '<button class="ppq-btn ppq-reveal">Reveal (Enter)</button>' +
-      '<button class="ppq-btn ppq-skip">Skip (S)</button>';
+      '<button class="ppq-btn ppq-skip">Skip (S)</button>' +
+      '<button class="ppq-btn ppq-review-attempt" style="display:none;" title="Reopen the verdict, guess declaration, responses and analysis from your last attempt">Review your last answer</button>';
     card.appendChild(controls);
 
     const answerPanel = el("div", { class: "ppq-answer-panel" });
@@ -704,6 +705,12 @@ window.PPQViewer = (function () {
     this.qa(".ppq-prev").forEach((b) => b.addEventListener("click", () => self.prev()));
     this.q(".ppq-skip").addEventListener("click", () => self.skip());
     this.q(".ppq-reveal").addEventListener("click", () => self.reveal());
+    /* VF-03: reopen the last recorded attempt for the question on screen. */
+    const reviewBtn = this.q(".ppq-review-attempt");
+    if (reviewBtn) reviewBtn.addEventListener("click", () => {
+      const row = self._lastAttemptFor(self.cur);
+      if (row) self._reopenAttempt(row);
+    });
     this.q(".ppq-next").addEventListener("click", () => self.next());
     this.q(".ppq-reset").addEventListener("click", () => self.reset());
     if (this.cfg.headerButtons) this.qa(".ppq-headbtn").forEach((b) => b.addEventListener("click", () => {
@@ -1150,6 +1157,10 @@ window.PPQViewer = (function () {
   Viewer.prototype.filterQuestions = function () {
     const cfg = this.cfg;
     const self = this;
+    /* VF-03: a filter/order change ends any history walk (the history list
+       itself survives; only the walk position resets). */
+    this._histPos = null;
+    this._returnIdx = null;
     const order = this.q(".ppq-order").value || "order";
     const start = parseInt(this.q(".ppq-start").value, 10) || 1;
     this.view = this.questions.filter((qq) => self._matchesQuestionFilters(qq));
@@ -1235,9 +1246,84 @@ window.PPQViewer = (function () {
   };
 
   // --------------------------------------------------------------- navigation
-  Viewer.prototype.next = function () { if (this.view.length === 0) { this._showEmpty("No questions match these filters."); return; } this.idx++; if (this.idx >= this.view.length) this.idx = 0; this.render(); };
-  Viewer.prototype.prev = function () { if (this.view.length === 0) return; this.idx--; if (this.idx < 0) this.idx = this.view.length - 1; this.render(); };
+  /* VF-03 (Claude 2026-07-28): Previous walks the SESSION HISTORY — the
+     questions actually attempted this session, in the order they were
+     attempted — which survives filter changes and reshuffles. Next walks
+     forward through that history and then resumes the live run where it left
+     off. With no history yet, both keep their original positional behaviour. */
+  Viewer.prototype.next = function () {
+    const hist = this._sessionHistory || [];
+    if (this._histPos != null) {
+      if (this._histPos < hist.length - 1) { this._histPos++; this._renderHistoryEntry(); return; }
+      this._histPos = null;
+      const returnIdx = this._returnIdx; this._returnIdx = null;
+      if (returnIdx != null && this.view.length) {
+        const backTo = Math.min(returnIdx, this.view.length - 1);
+        const target = this.view[backTo];
+        if (!(target && this.cur && this.cfg.idOf(target) === this.cfg.idOf(this.cur))) {
+          this.idx = backTo; this.render(); return;
+        }
+        /* already showing the resume point (it was the newest attempt): advance */
+      }
+    }
+    if (this.view.length === 0) { this._showEmpty("No questions match these filters."); return; }
+    this.idx++; if (this.idx >= this.view.length) this.idx = 0; this.render();
+  };
+  Viewer.prototype.prev = function () {
+    const hist = this._sessionHistory || [];
+    if (hist.length) {
+      if (this._histPos == null) {
+        let p = hist.length - 1;
+        const curId = this.cur ? String(this.cfg.idOf(this.cur)) : null;
+        if (curId != null && String(hist[p]) === curId) p--; /* step past the question on screen */
+        if (p >= 0) { this._returnIdx = this.idx; this._histPos = p; this._renderHistoryEntry(); return; }
+      } else if (this._histPos > 0) {
+        this._histPos--; this._renderHistoryEntry(); return;
+      } else {
+        return; /* at the oldest attempted question — nowhere sensible further back */
+      }
+    }
+    if (this.view.length === 0) return;
+    this.idx--; if (this.idx < 0) this.idx = this.view.length - 1; this.render();
+  };
   Viewer.prototype.skip = function () { this.next(); };
+  Viewer.prototype._renderHistoryEntry = function () {
+    const id = (this._sessionHistory || [])[this._histPos];
+    const q = this._questionById(id);
+    if (!q) { this._histPos = null; this._returnIdx = null; return; }
+    this.render(q);
+  };
+  Viewer.prototype._questionById = function (id) {
+    for (let i = 0; i < this.questions.length; i++) {
+      if (String(this.cfg.idOf(this.questions[i])) === String(id)) return this.questions[i];
+    }
+    return null;
+  };
+  /* VF-03: the most recent recorded attempt for a question, from the persisted
+     attempts log (so it works across sessions, not just today's). */
+  Viewer.prototype._lastAttemptFor = function (q) {
+    if (!q) return null;
+    const id = String(this.cfg.idOf(q));
+    const attempts = ((this.store || {}).attempts) || [];
+    for (let i = attempts.length - 1; i >= 0; i--) {
+      if (String(attempts[i].id) === id) return attempts[i];
+    }
+    return null;
+  };
+  /* VF-03: reopen a previous attempt's verdict, declaration, responses and
+     analysis WITHOUT recording anything new. The original attempt_id is
+     restored, so edits made while reviewing (reflection, rating, prompt
+     responses) attach to the original attempt instead of minting a phantom
+     one. No answer event fires on this path — _recordAttempt is never called. */
+  Viewer.prototype._reopenAttempt = function (row) {
+    if (!row || !this.cur) return;
+    this._reviewingAttempt = row;
+    if (row.attempt_id) this._attemptId = row.attempt_id;
+    this._chosenLabel = row.chosen_option || "";
+    this._wasRight = !!row.correct;
+    this._preGuessDeclaration = row.pre_guess_declaration || null;
+    if (!this._renderInterrogation()) this._reviewingAttempt = null;
+  };
   Viewer.prototype.goToId = function (id) {
     const i = this.view.findIndex((q) => this.cfg.idOf(q) === id);
     if (i >= 0) { this.idx = i - 1; this.next(); }
@@ -1442,11 +1528,17 @@ window.PPQViewer = (function () {
     return readiness;
   };
 
-  Viewer.prototype.render = function () {
+  Viewer.prototype.render = function (explicitQ) {
     const cfg = this.cfg;
-    this.cur = this.view[this.idx];
+    /* VF-03 (Claude 2026-07-28): render can now show an EXPLICIT question (the
+       session-history walk), independent of the current view and its filters.
+       Any positional render (live advance, finder jump, filter change) ends the
+       history walk. */
+    this.cur = explicitQ || this.view[this.idx];
+    if (!explicitQ) { this._histPos = null; this._returnIdx = null; }
     this.answered = false;
     this.shownAt = Date.now();
+    this._reviewingAttempt = null;
     /* QoderWork 2026-07-22 (analyst handoff): a stable id for THIS displayed
        attempt — session+item is not enough when an item is attempted twice. */
     this._attemptId = "att_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -1458,7 +1550,15 @@ window.PPQViewer = (function () {
 
     this.q(".ppq-empty").style.display = "none";
     this.q(".ppq-card").style.display = "flex";
-    this.q(".ppq-qid").textContent = cfg.metaLine(this.cur);
+    this.q(".ppq-qid").textContent = cfg.metaLine(this.cur) +
+      (this._histPos != null ? "  ·  looking back" : "");
+    /* VF-03: a question with a recorded previous attempt offers a visible way
+       back into its verdict, declaration, responses and analysis. */
+    const reviewBtn = this.q(".ppq-review-attempt");
+    if (reviewBtn) {
+      reviewBtn.style.display =
+        (cfg.modules.postQuestionReview && this._lastAttemptFor(this.cur)) ? "inline-block" : "none";
+    }
     this._setFeedbackStatusBadge(this.q(".ppq-feedback-status"), this.cur);
     /* In/out-of-spec status remains visible and semantically coloured. */
     this.q(".ppq-tags").innerHTML = (cfg.tagsOf(this.cur) || []).map((t) => {
@@ -1717,6 +1817,8 @@ window.PPQViewer = (function () {
   Viewer.prototype._afterAnswer = function () {
     this.q(".ppq-skip").style.display = "none";
     this.q(".ppq-reveal").style.display = "none";
+    const reviewBtn = this.q(".ppq-review-attempt"); /* VF-03: the live attempt supersedes it */
+    if (reviewBtn) reviewBtn.style.display = "none";
     this.q(".ppq-competence").className = "ppq-competence show";
     /* QoderWork 2026-07-22 (analyst handoff): the outer "Actually, I wasn't sure"
        control is superseded by the post-answer guess correction that now sits
@@ -1763,6 +1865,11 @@ window.PPQViewer = (function () {
        so a later correction can be reconciled with what was declared up front. */
     if (this._preGuessDeclaration) row.pre_guess_declaration = this._preGuessDeclaration;
     this.store.attempts.push(row);
+    /* VF-03: the session history records what was actually attempted, in order
+       (consecutive duplicates collapsed), for reshuffle-proof Previous. */
+    if (!this._sessionHistory) this._sessionHistory = [];
+    const histId = String(cfg.idOf(this.cur));
+    if (this._sessionHistory[this._sessionHistory.length - 1] !== histId) this._sessionHistory.push(histId);
     this._pendingDashboardPulse = cfg.groupKey(this.cur);
     this._saveStore();
     /* QoderWork 2026-07-22: report the attempt to the hosting page's callback.
@@ -1894,9 +2001,12 @@ window.PPQViewer = (function () {
     this._analysisSelfReports = {};
     this._thingsUsedStates = {};
     /* QoderWork 2026-07-22 (analyst handoff): per-prompt chosen states drive the
-       v2 feedback match; the post-answer guess flag gates guess-aware feedback. */
+       v2 feedback match; the post-answer guess flag gates guess-aware feedback.
+       VF-03: when reviewing a previous attempt, the stored declaration state is
+       restored rather than reset. */
     this._promptStates = {};
-    this._postGuessDeclared = false;
+    const reviewing = !!this._reviewingAttempt;
+    this._postGuessDeclared = reviewing && !!this._preGuessDeclaration;
 
     const self = this;
     const isV2 = this._isV2(rec);
@@ -1952,7 +2062,7 @@ window.PPQViewer = (function () {
     });
     let restRevealPending = false;
 
-    if (labels.length >= 2) {
+    if (labels.length >= 2 && !reviewing) {
       guessPage.appendChild(el("div", { class: "ppq-iq-guesspage-heading" }, esc(this._guessLabel("pre_verdict"))));
       const picker = this._buildGuessPicker({
         labels: labels,
@@ -2013,7 +2123,23 @@ window.PPQViewer = (function () {
     /* --- 1. the verdict FIRST within the rest (analyst handoff): the concrete
        "You chose X — the answer is Y" leads. The error_path explanation beneath
        it is optional; the verdict line itself is not. --- */
+    if (reviewing) {
+      /* VF-03: make the mode unmistakable, and recap what was declared. */
+      restPage.appendChild(el("div", { class: "ppq-iq-reviewing-note" },
+        "Reviewing your earlier answer — nothing here records a new attempt."));
+    }
     restPage.appendChild(this._verdictEl(rec, isV2, chosen, correctLetter, this._wasRight, reviewMode));
+    if (reviewing) {
+      const d = this._preGuessDeclaration;
+      let recap = "No guess was declared on this attempt.";
+      if (d && d.candidate_options && d.candidate_options.length) {
+        const pcts = d.candidate_percentages || {};
+        recap = "You declared a guess between: " + d.candidate_options.map(function (L) {
+          return pcts[L] != null ? (L + " (" + pcts[L] + "%)") : L;
+        }).join(", ");
+      }
+      restPage.appendChild(el("div", { class: "ppq-iq-declaration-recap" }, esc(recap)));
+    }
 
     if (isV2) {
       /* The pupil sees only the diagnostic question for the option they chose.
@@ -2144,7 +2270,9 @@ window.PPQViewer = (function () {
        than 2 options), render feedback now. Otherwise it fires inside revealRest()
        once the guess page is dismissed. */
     if (restPage.style.display !== "none") {
-      this._revealCommittedAnswer();
+      /* VF-03: reviewing paints nothing on the card behind — the question stays
+         cleanly re-attemptable after the pop-up closes. */
+      if (!reviewing) this._revealCommittedAnswer();
       this._renderSelectedOptionDiagnosticV2();
       this._renderInterrogationFeedback();
     }
@@ -2769,6 +2897,18 @@ window.PPQViewer = (function () {
     const save = el("button", { class: "ppq-iq-reflection-save", type: "button" }, "Save note");
     box.appendChild(save);
     let lastSaved = "";
+    /* VF-03: restore any note already saved on this attempt, so reopening shows
+       what was written rather than a blank box. */
+    const priorAttempts = (self.store && self.store.attempts) || [];
+    for (let i = priorAttempts.length - 1; i >= 0; i--) {
+      if (!self._attemptId || priorAttempts[i].attempt_id === self._attemptId) {
+        if (priorAttempts[i].freeform_reflection) {
+          textarea.value = priorAttempts[i].freeform_reflection;
+          lastSaved = textarea.value;
+        }
+        break;
+      }
+    }
     const commit = function () {
       const text = String(textarea.value || "").trim();
       if (text === lastSaved) return;
@@ -3406,9 +3546,21 @@ window.PPQViewer = (function () {
     min.title = on ? "Restore the analysis" : "Minimise — see the question";
   };
   Viewer.prototype.closeModal = function () {
+    /* VF-03: leaving a review restores a clean live state — fresh attempt id
+       (so a genuine re-attempt never reuses the reviewed one), no inherited
+       declaration, and no verdict painted onto the still-answerable card. */
+    const wasReviewing = !!this._reviewingAttempt;
+    if (wasReviewing) {
+      this._reviewingAttempt = null;
+      this._attemptId = "att_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      this._preGuessDeclaration = null;
+      this._postGuessDeclared = false;
+      this._chosenLabel = "";
+      this._wasRight = false;
+    }
     /* Closing on the guess page is equivalent to skipping it: never strand an
        answered question with its verdict permanently hidden. */
-    if (this._iqOpen) this._revealCommittedAnswer();
+    if (this._iqOpen && !wasReviewing) this._revealCommittedAnswer();
     this.q(".ppq-modal").classList.remove("show", "ppq-modal-analysis");
     this.root.classList.remove("ppq-analysis-open");
     /* QoderWork 2026-07-24 (handoff #1): reset the minimise state for next open. */
@@ -3527,6 +3679,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.5.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.6.0" };
 })();
 // build: 0.3.0, maintained by Codex

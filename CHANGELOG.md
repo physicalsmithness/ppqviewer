@@ -2,6 +2,35 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 — VF-03: session history and review reopen (v0.6.0)
+
+Engine v0.6.0, same unpublished ESAT release v0.2.16.
+
+- **Previous now walks the session's attempted history**, in attempt order,
+  instead of the current view array: it survives reshuffles and filter changes,
+  and reopens an attempted question even when the current filters exclude it.
+  The card says "looking back" while in the walk; at the oldest attempt,
+  Previous stays put rather than wandering into arbitrary positions. Next walks
+  forward through the history, then resumes the live run where it left off.
+  With no history yet, both keep their original positional behaviour.
+- **Attempted questions carry a visible "Review your last answer" button**
+  (fed by the persisted attempts log, so it works across sessions). It reopens
+  the analysis pop-up in review mode: earlier verdict restored, guess
+  declaration recapped with its percentages, saved reflection note restored,
+  rating already showing, flags as they were. Review adopts the ORIGINAL
+  attempt id so any edits made while reviewing attach to that attempt; no new
+  attempt row is written, no answer event fires, nothing is painted onto the
+  still-answerable card, and closing the review mints a fresh attempt id so a
+  genuine re-attempt never reuses the old one.
+- Reflection prefill also fixes same-session reopening showing a blank box
+  where a note had already been saved.
+- Acceptance suite grows 314 → 336 (ordered + shuffled history walks,
+  filtered-out reopen, oldest-attempt behaviour, review-mode restoration,
+  no-duplicate-event guarantees, close-review reset). Content-safety 70/70.
+- Consumer notes: `render()` gains an optional explicit-question parameter;
+  positional calls behave exactly as before. The Review button only appears for
+  consumers running `postQuestionReview`.
+
 ## 2026-07-28 (night) — VSAFE-03 + VF-07: rejected pills deleted, the flag is real (v0.5.0)
 
 Engine v0.5.0, same unpublished ESAT release v0.2.16.

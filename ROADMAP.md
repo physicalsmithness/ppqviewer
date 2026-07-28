@@ -83,8 +83,11 @@ content they ask about.
 
 - [ ] Implement the central feedback submission after confirming its endpoint,
   owner and data contract.
-- [ ] Add stable attempted-question history and reopen-analysis behaviour in
-  ordered and shuffled modes.
+- [x] Add stable attempted-question history and reopen-analysis behaviour in
+  ordered and shuffled modes. _(2026-07-29, v0.6.0: Previous walks the
+  attempted-session history reshuffle-proof; "Review your last answer" reopens
+  verdict/declaration/reflection/rating on the original attempt id with no
+  duplicate events.)_
 - [x] Turn Flag into a real persisted flagged-question list; remove the false
   “we'll bring more like this” promise until recommendations exist.
   _(2026-07-28, v0.5.0: persisted `store.flags`, header Flagged (n) filter,
