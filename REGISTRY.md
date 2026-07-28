@@ -32,10 +32,13 @@ consumer migration and material module change.
   heuristics; unsafe analysis falls back to the generic shell and can never
   present as Full/Provisional.
 
+- session history navigation, review-reopen of prior attempts, persisted
+  flags with a Flagged filter, and the pupil "My progress" page
+  (engine 0.6.0–0.7.0).
+
 ## Requested capabilities not yet generally available
 
 - central feedback submission;
-- analysis/history pages and reopenable prior feedback;
 - full timing preference/bank/pause system;
 - configurable generic error taxonomy and before/after rating;
 - functional flagged/revisit queue and recommendations;

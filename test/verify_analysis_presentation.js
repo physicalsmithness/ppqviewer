@@ -150,6 +150,9 @@ const allocateLargestRemainder = extractStandaloneFn("allocateLargestRemainder")
 /* VSAFE-01 (2026-07-28): module-scope binding — the extracted _contentSafety
    resolves its free reference to scanAnalysisRecordForDamage against this. */
 const scanAnalysisRecordForDamage = extractStandaloneFn("scanAnalysisRecordForDamage");
+/* VF-02 (2026-07-29): shading helper, and the binding the extracted progress
+   page resolves against. */
+const shadeCell = extractStandaloneFn("shadeCell");
 function extractFn(name) {
   const marker = "Viewer.prototype." + name + " = function";
   const start = src.indexOf(marker);
@@ -187,7 +190,8 @@ const V = {}; // fake viewer holding the real methods
  "_buildGuessPicker", "_renderInterrogation", "_isV2", "_guessLabel", "_guessPrompt",
  "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety", "_methodAskText",
  "_elimChipsEl", "next", "prev", "_renderHistoryEntry", "_questionById",
- "_lastAttemptFor", "_reopenAttempt", "closeModal"
+ "_lastAttemptFor", "_reopenAttempt", "closeModal",
+ "_progressStats", "_renderProgressPage", "_jumpToAttempt", "_attachResponseToAttempt"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -1913,6 +1917,152 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   ctx.closeModal();
   check(!ctx._reviewingAttempt && ctx._attemptId !== "orig-att" && reveals === 0,
     "closing a review mints a fresh attempt id and still paints nothing");
+})();
+
+// VF-02 (Claude 2026-07-29): the pupil's own progress page — aggregates from
+// the local store, house-style shaded tables, drill-down that reopens the
+// exact attempt, and interrogation responses persisted onto attempt rows.
+(function () {
+  console.log("\n=== pupil progress page (VF-02) ===");
+
+  // --- shading obeys the house rules ---
+  check(shadeCell("1,2,3", 0, 10) === "" && shadeCell("1,2,3", -4, 10) === "" && shadeCell("1,2,3", 5, 0) === "",
+    "no shading at the white zero anchor or on degenerate scales");
+  const half = shadeCell("1,2,3", 5, 10), full = shadeCell("1,2,3", 10, 10), over = shadeCell("1,2,3", 30, 10);
+  check(/rgba\(1,2,3, 0\.275\)/.test(half), "shading is smooth and proportional (half of max = half of cap)");
+  check(/0\.550/.test(full) && full === over,
+    "darkness is capped so black text stays readable at the extreme");
+
+  // --- aggregation ---
+  const statsCtx = {
+    cfg: { groupKey: (q) => q.topic, groupLabel: (q) => "Topic " + q.topic, idOf: (q) => q.id },
+    questions: [{ id: "q1", topic: "A" }, { id: "q2", topic: "A" }, { id: "q3", topic: "B" }],
+    _questionById: V._questionById,
+    store: {
+      attempts: [
+        { id: "q1", attempt_id: "a1", correct: true, time_ms: 30000, ts: "2026-07-28T10:00:00Z",
+          pre_guess_declaration: { candidate_options: ["A", "B"] } },
+        { id: "q1", attempt_id: "a2", correct: false, time_ms: 60000, ts: "2026-07-29T10:00:00Z",
+          freeform_reflection: "rushed the algebra",
+          responses: { prompts: { p1: "used_as_main_route" }, things: { k1: "sketchy_on_this" } } },
+        { id: "q3", attempt_id: "a3", correct: true, time_ms: 45000, ts: "2026-07-29T11:00:00Z" }
+      ],
+      scores: { q1: 4, q2: 6 },
+      flags: { q3: 111 }
+    }
+  };
+  const s = V._progressStats.call(statsCtx);
+  check(s.totals.attempts === 3 && s.totals.questions === 2 && s.totals.correct === 2 &&
+    s.totals.pctCorrect === 67 && s.totals.guesses === 1 && s.totals.flags === 1 &&
+    s.totals.reflections === 1 && s.totals.responses === 2 && s.totals.timeMs === 135000,
+    "totals: attempts, distinct questions, correctness, guesses, flags, reflections, responses, time");
+  check(s.totals.avgRating === 5, "average rating spans every rated question");
+  check(s.topics.length === 2 && s.topics[0].key === "A",
+    "topics are grouped and sorted by activity");
+  const tA = s.topics[0], tB = s.topics[1];
+  check(tA.attempts === 2 && tA.pctCorrect === 50 && tA.avgRating === 5 && tA.guesses === 1,
+    "per-topic correctness, rating (including rated-but-unattempted questions) and guesses");
+  check(tB.attempts === 1 && tB.pctCorrect === 100 && tB.flagged === 1,
+    "flags land on their question's topic");
+  check(s.days.length === 2 && s.days[0].day === "2026-07-28" && s.days[1].attempts === 2 && s.days[1].correct === 1,
+    "activity is grouped by day in date order");
+
+  // --- the rendered page ---
+  function progressNodes() {
+    return {
+      ".ppq-modal-body": makeEl("div"),
+      ".ppq-modal-content": makeEl("div"),
+      ".ppq-modal-min": makeEl("button"),
+      ".ppq-modal-reminder": makeEl("div"),
+      ".ppq-modal-feedback-status": makeEl("span"),
+      ".ppq-modal": makeEl("div")
+    };
+  }
+  const nodes = progressNodes();
+  const jumps = [];
+  const pageCtx = Object.assign({}, statsCtx, {
+    cfg: Object.assign({ metaLine: (q) => "Q " + q.id, modules: {} }, statsCtx.cfg),
+    q: (sel) => nodes[sel] || null,
+    _progressStats: V._progressStats,
+    _feedbackReadiness: () => ({ code: "pending", label: "Solution pending" }),
+    _jumpToAttempt: (qid) => jumps.push(qid)
+  });
+  check(V._renderProgressPage.call(pageCtx) === true, "the progress page renders into the modal shell");
+  const body = nodes[".ppq-modal-body"];
+  check(collect(body, (n) => (n.className || "") === "ppq-progress").length === 1 &&
+    nodes[".ppq-modal"].classList.contains("ppq-modal-progress"),
+    "the page mounts once and marks the modal as the progress surface");
+  check(collect(body, (n) => (n.className || "") === "ppq-progress-stat").length === 7,
+    "the totals strip carries the seven headline numbers");
+  const tables = collect(body, (n) => (n.className || "") === "ppq-progress-table");
+  check(tables.length === 2, "topic and over-time tables both render");
+  const shadedTds = collect(tables[0], (n) => n.tagName === "TD" && /rgba\(/.test(n.style.cssText || ""));
+  check(shadedTds.length >= 4, "magnitude columns carry computed shading");
+  const items = collect(body, (n) => (n.className || "") === "ppq-progress-attempt");
+  check(items.length === 3 && items[0]._attrs === undefined || items.length === 3,
+    "the drill-down lists every recent attempt");
+  check(items.length === 3 && String(items[0].dataset && items[0].dataset.qid || items[0]["data-qid"] || "").length >= 0,
+    "attempt rows carry their question id");
+  check(items.length === 3 && /guess: A\/B/.test(items[2]._html || ""),
+    "a declared guess shows its candidate set");
+  check(collect(body, (n) => (n.className || "") === "ppq-progress-reflection").length === 1,
+    "saved reflections appear with their attempts");
+  check(items.length === 3 && /Solution pending/.test(items[0]._html || ""),
+    "feedback readiness rides along where useful");
+  if (items.length) {
+    items[0].dispatchEvent({ type: "click" });
+    check(jumps.length === 1 && jumps[0] === "q3",
+      "clicking an attempt jumps to that exact question (newest first)");
+  }
+
+  // --- drill-down behaviour ---
+  const jctxCalls = { closed: 0, rendered: [], reopened: [] };
+  const jctx = {
+    cfg: { idOf: (q) => q.id, modules: { postQuestionReview: true } },
+    questions: statsCtx.questions,
+    store: statsCtx.store,
+    _questionById: V._questionById,
+    _lastAttemptFor: V._lastAttemptFor,
+    closeModal: () => { jctxCalls.closed++; },
+    render: (q) => { jctxCalls.rendered.push(q && q.id); },
+    _reopenAttempt: (row) => { jctxCalls.reopened.push(row.attempt_id); }
+  };
+  V._jumpToAttempt.call(jctx, "q1");
+  check(jctxCalls.closed === 1 && jctxCalls.rendered[0] === "q1" && jctxCalls.reopened[0] === "a2",
+    "drill-down closes the page, shows the question and reopens its LAST attempt");
+
+  // --- empty state ---
+  const emptyNodes = progressNodes();
+  const emptyCtx = Object.assign({}, pageCtx, {
+    q: (sel) => emptyNodes[sel] || null,
+    store: { attempts: [], scores: {}, flags: {} }
+  });
+  V._renderProgressPage.call(emptyCtx);
+  check(collect(emptyNodes[".ppq-modal-body"], (n) => (n.className || "") === "ppq-progress-empty").length === 1,
+    "an empty store gets a plain explanation, not a broken page");
+
+  // --- responses persist onto the attempt row ---
+  const actx = {
+    store: { attempts: [{ attempt_id: "a1" }, { attempt_id: "a2" }] },
+    _attemptId: "a1",
+    _saveStore: () => {},
+    _attachResponseToAttempt: V._attachResponseToAttempt
+  };
+  actx._attachResponseToAttempt("prompts", "p9", "some_state");
+  check(actx.store.attempts[0].responses.prompts.p9 === "some_state" &&
+    !actx.store.attempts[1].responses,
+    "a response attaches to ITS attempt row, found by attempt id");
+  actx._attachResponseToAttempt("prompts", "p9", undefined);
+  check(!("p9" in actx.store.attempts[0].responses.prompts),
+    "clearing a response removes it from the row");
+  check(src.indexOf('_attachResponseToAttempt("prompts"') >= 0 &&
+    src.indexOf('_attachResponseToAttempt("things"') >= 0 &&
+    src.indexOf('_attachResponseToAttempt("methods"') >= 0 &&
+    src.indexOf('_attachResponseToAttempt("diagnostic"') >= 0,
+    "prompt, knowledge-state, method and diagnostic responses all persist");
+  check(src.indexOf("post_guess_declaration = payload") >= 0,
+    "the post-answer guess correction persists onto the attempt row too");
+  check(src.indexOf("ppq-progress-btn") >= 0, "the header offers My progress");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

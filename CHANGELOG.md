@@ -2,6 +2,38 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (later) — VF-02: the pupil's own progress page (v0.7.0)
+
+Engine v0.7.0, same unpublished ESAT release v0.2.16.
+
+- **"My progress" button in the header** (every consumer) opens the pupil's own
+  analysis page in the modal shell, built entirely from the local store: a
+  seven-number totals strip (attempts, questions tried, % correct, average
+  rating, guesses declared, flagged, time practising); a by-topic table
+  (attempts, correct %, average rating, average time, flags); an over-time
+  by-day table; and a recent-questions drill-down where each attempt shows
+  verdict, rating, declared guess candidates, flag, time, persisted response
+  count, feedback-readiness badge and any saved reflection. Clicking an
+  attempt closes the page, shows that exact question (independent of current
+  filters) and reopens its last attempt in review mode.
+- **Tables follow the estate data-presentation standard**: values centred both
+  ways, headings wrapped rather than widening columns, smooth two-tone shading
+  computed per cell and anchored white at zero, one hue per quantity class
+  (counts slate, correctness blue, ratings amber, time purple), black text with
+  capped darkness. Departure stated: flag counts are unshaded because their
+  range is a thin sliver of a zero-anchored scale.
+- **Interrogation responses now persist onto the attempt row**
+  (`row.responses`: prompts, knowledge states, method yes/no, diagnostic
+  choices; plus `post_guess_declaration`). Previously they left only as report
+  events. This feeds the progress page AND completes VF-03: reopening an
+  attempt now restores the chips/states that were actually selected.
+- Empty store gets a plain explanation rather than a broken page. Attempts on
+  questions no longer in the bank render unclickable rather than crashing.
+- Acceptance suite grows 336 → 363 (shading rules, aggregation, rendered page,
+  drill-down, empty state, response persistence). Content-safety 70/70.
+- Consumer notes: `row.responses` is additive; the page needs no config. q11's
+  recommendation (pupil-first, teacher aggregation later) is implemented.
+
 ## 2026-07-29 — VF-03: session history and review reopen (v0.6.0)
 
 Engine v0.6.0, same unpublished ESAT release v0.2.16.

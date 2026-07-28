@@ -604,6 +604,33 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 /* VF-07: the flagged-view header toggle */
 .ppq-flagged-toggle.on { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; font-weight: 700; }
 
+/* VF-02: pupil progress page. Data-presentation house style: values centred
+   both ways, headings wrapped (never widening columns), smooth zero-anchored
+   two-tone shading computed per cell, one hue per quantity class, black text
+   with capped darkness. Flag counts unshaded (thin-sliver range, stated). */
+.ppq-modal.ppq-modal-progress .ppq-modal-content { max-width: 900px; }
+.ppq-progress { max-width: 840px; margin: 0 auto; padding: 0.4rem 0.4rem 1.4rem; color: var(--ppq-ink); }
+.ppq-progress-title { font-size: 1.35rem; font-weight: 800; margin-bottom: 0.9rem; }
+.ppq-progress-empty { color: var(--ppq-muted); font-size: 1rem; padding: 1.2rem 0; }
+.ppq-progress-totals { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+.ppq-progress-stat { border: 1px solid var(--ppq-line); border-radius: 9px; padding: 0.55rem 0.95rem; background: var(--ppq-paper); display: flex; flex-direction: column; align-items: center; min-width: 6.4rem; }
+.ppq-progress-stat b { font-size: 1.15rem; }
+.ppq-progress-stat span { font-size: 0.78rem; color: var(--ppq-muted); }
+.ppq-progress-subhead { font-weight: 800; font-size: 0.98rem; margin: 1.25rem 0 0.5rem; }
+.ppq-progress-table { border-collapse: collapse; }
+.ppq-progress-table th { font-size: 0.78rem; font-weight: 700; color: var(--ppq-ink2); border-bottom: 2px solid var(--ppq-line); padding: 0.3rem 0.6rem; max-width: 6.5rem; white-space: normal; overflow-wrap: break-word; text-align: center; vertical-align: bottom; }
+.ppq-progress-table td { text-align: center; vertical-align: middle; padding: 0.36rem 0.65rem; border-bottom: 1px solid var(--ppq-line); font-size: 0.92rem; color: var(--ppq-ink); }
+.ppq-progress-table td.ppq-progress-topic { text-align: left; font-weight: 600; max-width: 16rem; }
+.ppq-progress-attempts { display: flex; flex-direction: column; gap: 0.45rem; }
+.ppq-progress-attempt { text-align: left; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); padding: 0.55rem 0.85rem; cursor: pointer; font: inherit; color: var(--ppq-ink); line-height: 1.55; }
+.ppq-progress-attempt:hover { border-color: var(--ppq-accent); }
+.ppq-progress-attempt[disabled] { opacity: 0.6; cursor: default; }
+.ppq-progress-verdict { font-weight: 900; margin-right: 0.2rem; }
+.ppq-progress-verdict.right { color: var(--ppq-ok); }
+.ppq-progress-verdict.wrong { color: var(--ppq-bad); }
+.ppq-progress-chip { display: inline-block; font-size: 0.75rem; border: 1px solid var(--ppq-line); border-radius: 999px; padding: 0.1rem 0.5rem; color: var(--ppq-ink2); margin-left: 0.3rem; }
+.ppq-progress-reflection { font-style: italic; color: var(--ppq-muted); font-size: 0.88rem; margin-top: 0.3rem; }
+
 /* VF-03: review-previous-attempt affordance and the review-mode furniture */
 .ppq-review-attempt { border-style: dashed; }
 .ppq-iq-reviewing-note { font-size: 0.9rem; font-weight: 700; color: var(--ppq-accent); background: rgba(49, 130, 206, 0.07); border: 1px dashed rgba(49, 130, 206, 0.4); border-radius: 8px; padding: 0.55rem 0.9rem; margin-bottom: 0.9rem; }

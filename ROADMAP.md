@@ -93,8 +93,10 @@ content they ask about.
   _(2026-07-28, v0.5.0: persisted `store.flags`, header Flagged (n) filter,
   unflag, honest copy. Reopening the ANALYSIS of a flagged attempt rides on
   the history item below.)_
-- [ ] Build the first pupil analysis page over attempts, ratings, guesses, time,
-  flags, prompts and reflections.
+- [x] Build the first pupil analysis page over attempts, ratings, guesses, time,
+  flags, prompts and reflections. _(2026-07-29, v0.7.0: "My progress" page,
+  house-style shaded tables, drill-down reopening the exact attempt;
+  interrogation responses now persist onto attempt rows.)_
 - [ ] Add canonical analysis-ID support to question finding.
 
 Exit: a pupil can report a problem centrally, revisit previous work and inspect

@@ -300,6 +300,12 @@ window.PPQViewer = (function () {
     if (cfg.defaultOrder === "shuffle") orderSel.value = "shuffle"; /* QoderWork 2026-07-22: Smith: "make the standard to be shuffle" */
     filters.appendChild(orderSel);
     filters.appendChild(el("input", { class: "ppq-start", type: "number", min: "1", placeholder: "Start #", style: "display:none;" }));
+    /* VF-02 (Claude 2026-07-29): the pupil's own progress page. */
+    filters.appendChild(el("button", {
+      class: "ppq-btn-mini ppq-progress-btn",
+      type: "button",
+      title: "Your attempts, ratings, guesses, time, flags and reflections"
+    }, "My progress"));
     /* VF-07 (Claude 2026-07-28): flagged-questions filter toggle. Lives with the
        interrogation module, whose pop-up owns the flag control; hidden until the
        pupil has flagged something. */
@@ -690,6 +696,9 @@ window.PPQViewer = (function () {
         self.renderDashboard();
       }
     });
+    /* VF-02 (Claude 2026-07-29): open the progress page. */
+    const progressBtn = this.q(".ppq-progress-btn");
+    if (progressBtn) progressBtn.addEventListener("click", () => self._renderProgressPage());
     /* VF-07 (Claude 2026-07-28): the Flagged view toggle. */
     const flagToggle = this.q(".ppq-flagged-toggle");
     if (flagToggle) {
@@ -1143,6 +1152,235 @@ window.PPQViewer = (function () {
     return true;
   };
 
+  /* VF-02 (Claude 2026-07-29): aggregate the pupil's own record — attempts,
+     correctness, ratings, guesses, flags, time, reflections, responses — by
+     topic and by day, entirely from the local store. Pure computation, no DOM,
+     so it is directly testable. Rated-but-unattempted questions (chemistry
+     flashcards) still surface through their scores. */
+  Viewer.prototype._progressStats = function () {
+    const cfg = this.cfg;
+    const store = this.store || {};
+    const attempts = store.attempts || [];
+    const scores = store.scores || {};
+    const flags = store.flags || {};
+    const topics = {};
+    const days = {};
+    const qids = {};
+    const totals = { attempts: attempts.length, correct: 0, timeMs: 0, guesses: 0, reflections: 0, responses: 0 };
+    const self = this;
+    function topicInfo(qid) {
+      const q = self._questionById(qid);
+      if (q) return { key: String(cfg.groupKey(q)), label: cfg.groupLabel(q) };
+      return { key: "GONE", label: "No longer in the bank" };
+    }
+    function topicFor(info) {
+      return topics[info.key] = topics[info.key] ||
+        { key: info.key, label: info.label, attempts: 0, correct: 0, timeMs: 0, guesses: 0, flagged: 0, ratingSum: 0, ratingN: 0, qids: {} };
+    }
+    attempts.forEach(function (row) {
+      const t = topicFor(topicInfo(row.id));
+      t.attempts++;
+      if (row.correct) { t.correct++; totals.correct++; }
+      t.timeMs += row.time_ms || 0; totals.timeMs += row.time_ms || 0;
+      if (row.pre_guess_declaration || row.post_guess_declaration) { t.guesses++; totals.guesses++; }
+      if (row.freeform_reflection) totals.reflections++;
+      if (row.responses) { for (const k in row.responses) totals.responses += Object.keys(row.responses[k]).length; }
+      t.qids[String(row.id)] = 1; qids[String(row.id)] = 1;
+      const day = String(row.ts || "").slice(0, 10);
+      if (day) { const d = days[day] = days[day] || { day: day, attempts: 0, correct: 0 }; d.attempts++; if (row.correct) d.correct++; }
+    });
+    let ratingSum = 0, ratingN = 0;
+    for (const qid in scores) {
+      const v = scores[qid];
+      if (!v) continue;
+      ratingSum += v; ratingN++;
+      const t = topicFor(topicInfo(qid));
+      t.ratingSum += v; t.ratingN++;
+    }
+    for (const qid in flags) topicFor(topicInfo(qid)).flagged++;
+    const topicList = Object.keys(topics).map(function (k) { return topics[k]; });
+    topicList.forEach(function (t) {
+      t.questions = Object.keys(t.qids).length;
+      t.pctCorrect = t.attempts ? Math.round(100 * t.correct / t.attempts) : null;
+      t.avgRating = t.ratingN ? t.ratingSum / t.ratingN : null;
+      t.avgTimeS = t.attempts ? t.timeMs / t.attempts / 1000 : null;
+    });
+    topicList.sort(function (a, b) { return b.attempts - a.attempts || String(a.label).localeCompare(String(b.label)); });
+    const dayList = Object.keys(days).sort().map(function (k) { return days[k]; });
+    return {
+      totals: {
+        attempts: totals.attempts,
+        questions: Object.keys(qids).length,
+        correct: totals.correct,
+        pctCorrect: totals.attempts ? Math.round(100 * totals.correct / totals.attempts) : null,
+        avgRating: ratingN ? ratingSum / ratingN : null,
+        guesses: totals.guesses,
+        flags: Object.keys(flags).length,
+        timeMs: totals.timeMs,
+        reflections: totals.reflections,
+        responses: totals.responses
+      },
+      topics: topicList,
+      days: dayList
+    };
+  };
+
+  /* VF-02: the pupil's own progress page, rendered into the shared modal shell.
+     Tables follow the estate data-presentation standard: values centred both
+     ways, headings wrapped rather than widening columns, smooth two-tone
+     shading anchored white at zero, one hue per class of quantity (counts
+     slate, correctness blue, ratings amber, time purple), black text with the
+     darkness capped. Flag counts stay unshaded — their range is a thin sliver
+     of a zero-anchored scale. */
+  Viewer.prototype._renderProgressPage = function () {
+    const self = this, cfg = this.cfg;
+    const s = this._progressStats();
+    const page = el("div", { class: "ppq-progress" });
+    page.appendChild(el("div", { class: "ppq-progress-title" }, "My progress"));
+
+    function td(text, style, cls) {
+      return el("td", { style: style || "", class: cls || "" }, text == null ? "—" : String(text));
+    }
+    function headerRow(labels) {
+      const tr = el("tr");
+      labels.forEach(function (h) { tr.appendChild(el("th", null, esc(h))); });
+      const thead = el("thead"); thead.appendChild(tr); return thead;
+    }
+
+    if (!s.totals.attempts && !s.totals.flags && !s.topics.length) {
+      page.appendChild(el("div", { class: "ppq-progress-empty" },
+        "Nothing here yet — answer some questions and this page fills up."));
+    } else {
+      const fmtTime = function (ms) {
+        const m = Math.round(ms / 60000);
+        if (m < 1) return Math.round(ms / 1000) + " s";
+        return m < 60 ? (m + " min") : (Math.floor(m / 60) + " h " + (m % 60) + " min");
+      };
+      const strip = el("div", { class: "ppq-progress-totals" });
+      [["Attempts", s.totals.attempts],
+       ["Questions tried", s.totals.questions],
+       ["Correct", s.totals.pctCorrect != null ? s.totals.pctCorrect + "%" : "—"],
+       ["Average rating", s.totals.avgRating != null ? s.totals.avgRating.toFixed(1) + " / 6" : "—"],
+       ["Guesses declared", s.totals.guesses],
+       ["Flagged", s.totals.flags],
+       ["Time practising", fmtTime(s.totals.timeMs)]
+      ].forEach(function (pair) {
+        const card = el("div", { class: "ppq-progress-stat" });
+        card.appendChild(el("b", null, esc(String(pair[1]))));
+        card.appendChild(el("span", null, esc(pair[0])));
+        strip.appendChild(card);
+      });
+      page.appendChild(strip);
+
+      if (s.topics.length) {
+        page.appendChild(el("div", { class: "ppq-progress-subhead" }, "By topic"));
+        const maxAttempts = s.topics.reduce(function (m, t) { return Math.max(m, t.attempts); }, 1);
+        const maxTime = s.topics.reduce(function (m, t) { return Math.max(m, t.avgTimeS || 0); }, 1);
+        const table = el("table", { class: "ppq-progress-table" });
+        table.appendChild(headerRow(["Topic", "Attempts", "Correct %", "Average rating", "Average time (s)", "Flagged"]));
+        const tbody = el("tbody");
+        s.topics.forEach(function (t) {
+          const tr = el("tr");
+          tr.appendChild(td(t.label, "", "ppq-progress-topic"));
+          tr.appendChild(td(t.attempts, shadeCell("108, 122, 137", t.attempts, maxAttempts)));
+          tr.appendChild(td(t.pctCorrect != null ? t.pctCorrect + "%" : null,
+            t.pctCorrect != null ? shadeCell("49, 130, 206", t.pctCorrect, 100) : ""));
+          tr.appendChild(td(t.avgRating != null ? t.avgRating.toFixed(1) : null,
+            t.avgRating != null ? shadeCell("221, 165, 35", t.avgRating, 6) : ""));
+          tr.appendChild(td(t.avgTimeS != null ? Math.round(t.avgTimeS) : null,
+            t.avgTimeS != null ? shadeCell("128, 90, 213", t.avgTimeS, maxTime) : ""));
+          tr.appendChild(td(t.flagged ? t.flagged : ""));
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        page.appendChild(table);
+      }
+
+      if (s.days.length) {
+        page.appendChild(el("div", { class: "ppq-progress-subhead" }, "Over time"));
+        const recent = s.days.slice(-14);
+        const maxDay = recent.reduce(function (m, d) { return Math.max(m, d.attempts); }, 1);
+        const table = el("table", { class: "ppq-progress-table" });
+        table.appendChild(headerRow(["Day", "Attempts", "Correct %"]));
+        const tbody = el("tbody");
+        recent.forEach(function (d) {
+          const pct = d.attempts ? Math.round(100 * d.correct / d.attempts) : null;
+          const tr = el("tr");
+          tr.appendChild(td(d.day, "", "ppq-progress-topic"));
+          tr.appendChild(td(d.attempts, shadeCell("108, 122, 137", d.attempts, maxDay)));
+          tr.appendChild(td(pct != null ? pct + "%" : null, pct != null ? shadeCell("49, 130, 206", pct, 100) : ""));
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        page.appendChild(table);
+      }
+
+      const recentAttempts = ((this.store || {}).attempts || []).slice(-40).reverse();
+      if (recentAttempts.length) {
+        page.appendChild(el("div", { class: "ppq-progress-subhead" },
+          "Recent questions — click one to reopen it"));
+        const list = el("div", { class: "ppq-progress-attempts" });
+        recentAttempts.forEach(function (row) {
+          const q = self._questionById(row.id);
+          const item = el("button", { class: "ppq-progress-attempt", type: "button", "data-qid": String(row.id) });
+          const bits = [];
+          bits.push('<span class="ppq-progress-verdict ' + (row.correct ? "right" : "wrong") + '">' + (row.correct ? "✓" : "✗") + "</span>");
+          bits.push("<b>" + esc(q ? cfg.metaLine(q) : String(row.id)) + "</b>");
+          const rating = ((self.store || {}).scores || {})[row.id];
+          if (rating) bits.push('<span class="ppq-progress-chip">rated ' + rating + "/6</span>");
+          const decl = row.pre_guess_declaration || row.post_guess_declaration;
+          if (decl && decl.candidate_options && decl.candidate_options.length) {
+            bits.push('<span class="ppq-progress-chip">guess: ' + esc(decl.candidate_options.join("/")) + "</span>");
+          }
+          if (((self.store || {}).flags || {})[row.id]) bits.push('<span class="ppq-progress-chip">flagged</span>');
+          if (row.time_ms) bits.push('<span class="ppq-progress-chip">' + Math.round(row.time_ms / 1000) + " s</span>");
+          let respN = 0;
+          if (row.responses) { for (const k in row.responses) respN += Object.keys(row.responses[k]).length; }
+          if (respN) bits.push('<span class="ppq-progress-chip">' + respN + " response" + (respN === 1 ? "" : "s") + "</span>");
+          if (q) {
+            const ready = self._feedbackReadiness(q);
+            bits.push('<span class="ppq-feedback-status ppq-feedback-status-' + ready.code + '">' + esc(ready.label) + "</span>");
+          }
+          item.innerHTML = bits.join(" ");
+          if (row.freeform_reflection) {
+            item.appendChild(el("div", { class: "ppq-progress-reflection" }, "“" + esc(row.freeform_reflection) + "”"));
+          }
+          if (q) item.addEventListener("click", function () { self._jumpToAttempt(row.id); });
+          else item.disabled = true;
+          list.appendChild(item);
+        });
+        page.appendChild(list);
+      }
+    }
+
+    const body = this.q(".ppq-modal-body");
+    if (!body) return false;
+    body.innerHTML = "";
+    body.appendChild(page);
+    const reminder = this.q(".ppq-modal-reminder");
+    if (reminder) reminder.textContent = "My progress";
+    const minBtn = this.q(".ppq-modal-min");
+    if (minBtn) minBtn.style.display = "none";
+    const badge = this.q(".ppq-modal-feedback-status");
+    if (badge) badge.style.display = "none";
+    const modalContent = this.q(".ppq-modal-content");
+    if (modalContent) modalContent.scrollTop = 0;
+    this.q(".ppq-modal").classList.add("show", "ppq-modal-progress");
+    return true;
+  };
+
+  /* VF-02: drill-down — leave the page, show the exact question (independent of
+     the current filters), and reopen its last recorded attempt. */
+  Viewer.prototype._jumpToAttempt = function (qid) {
+    const q = this._questionById(qid);
+    if (!q) return;
+    this.closeModal();
+    this._histPos = null; this._returnIdx = null;
+    this.render(q);
+    const row = this._lastAttemptFor(q);
+    if (row && this.cfg.modules.postQuestionReview) this._reopenAttempt(row);
+  };
+
   /* VF-07: the Flagged toggle carries the live count, shows only once something
      is flagged (or the view is active), and reflects its on/off state. */
   Viewer.prototype._syncFlaggedToggle = function () {
@@ -1310,6 +1548,24 @@ window.PPQViewer = (function () {
     }
     return null;
   };
+  /* VF-02 (Claude 2026-07-29): interrogation responses now PERSIST onto the
+     attempt row (they previously left only as report events), so the pupil's
+     own progress page can show them and review mode can restore them. */
+  Viewer.prototype._attachResponseToAttempt = function (kind, key, value) {
+    const attempts = ((this.store || {}).attempts) || [];
+    for (let i = attempts.length - 1; i >= 0; i--) {
+      if (!this._attemptId || attempts[i].attempt_id === this._attemptId) {
+        const row = attempts[i];
+        if (!row.responses) row.responses = {};
+        if (!row.responses[kind]) row.responses[kind] = {};
+        if (value === undefined) delete row.responses[kind][key];
+        else row.responses[kind][key] = value;
+        if (this._saveStore) this._saveStore();
+        return;
+      }
+    }
+  };
+
   /* VF-03: reopen a previous attempt's verdict, declaration, responses and
      analysis WITHOUT recording anything new. The original attempt_id is
      restored, so edits made while reviewing (reflection, rating, prompt
@@ -1382,6 +1638,17 @@ window.PPQViewer = (function () {
      good content behind the generic shell; a false negative shows a pupil
      broken mathematics labelled "Full feedback". Content repair belongs to the
      analysis project; refusal and fallback belong here. */
+  /* VF-02 (Claude 2026-07-29): two-tone cell shading, Smith's house style —
+     white anchored at zero, one hue per quantity class, smooth (computed per
+     value, never banded), darkness capped so black text stays readable.
+     Self-contained for test extraction. */
+  function shadeCell(rgb, value, max) {
+    const v = Number(value);
+    if (!max || !(v > 0)) return "";
+    const a = Math.min(0.55, 0.55 * (v / max));
+    return "background: rgba(" + rgb + ", " + a.toFixed(3) + ");";
+  }
+
   /* Self-contained (no free variables) so test harnesses can extract it. */
   function scanAnalysisRecordForDamage(rec) {
     const PATTERNS = [
@@ -1647,7 +1914,7 @@ window.PPQViewer = (function () {
     this._answerRevealPending = false;
     this._iqBox = null;
     this._iqOpen = false;
-    this.q(".ppq-modal").classList.remove("show", "ppq-modal-analysis");
+    this.q(".ppq-modal").classList.remove("show", "ppq-modal-analysis", "ppq-modal-progress");
     this.root.classList.remove("ppq-analysis-open");
     this.q(".ppq-modal-body").innerHTML = "";
   };
@@ -1998,14 +2265,21 @@ window.PPQViewer = (function () {
       feedback: []
     };
     this._analysis = rec;
-    this._analysisSelfReports = {};
-    this._thingsUsedStates = {};
     /* QoderWork 2026-07-22 (analyst handoff): per-prompt chosen states drive the
        v2 feedback match; the post-answer guess flag gates guess-aware feedback.
-       VF-03: when reviewing a previous attempt, the stored declaration state is
-       restored rather than reset. */
-    this._promptStates = {};
+       VF-03/VF-02: when reviewing a previous attempt, the responses persisted on
+       that attempt row are restored rather than reset, so the pop-up shows what
+       was actually answered. */
     const reviewing = !!this._reviewingAttempt;
+    const savedResponses = (reviewing && this._reviewingAttempt.responses) || {};
+    this._analysisSelfReports = {};
+    if (savedResponses.methods) {
+      for (const mk in savedResponses.methods) {
+        if (savedResponses.methods[mk] === "used") this._analysisSelfReports[mk] = "used";
+      }
+    }
+    this._thingsUsedStates = Object.assign({}, savedResponses.things || {});
+    this._promptStates = Object.assign({}, savedResponses.prompts || {});
     this._postGuessDeclared = reviewing && !!this._preGuessDeclaration;
 
     const self = this;
@@ -2449,6 +2723,7 @@ window.PPQViewer = (function () {
       btn.addEventListener("click", () => {
         controls.querySelectorAll(".ppq-iq-diagnostic-choice").forEach((b) => b.classList.remove("sel"));
         btn.classList.add("sel");
+        if (self._attachResponseToAttempt) self._attachResponseToAttempt("diagnostic", fb.id || "selected_answer", choice[0]);
         self._fireReport({
           status: "interrogation",
           qtype: "answer_diagnostic",
@@ -2520,6 +2795,15 @@ window.PPQViewer = (function () {
     payload.correct = !!isRight;
     this._postGuessDeclared = true;
     this._postGuessDeclaration = payload;
+    /* VF-02: persist onto the attempt row, like the pre-verdict declaration. */
+    const pgAttempts = ((this.store || {}).attempts) || [];
+    for (let i = pgAttempts.length - 1; i >= 0; i--) {
+      if (!this._attemptId || pgAttempts[i].attempt_id === this._attemptId) {
+        pgAttempts[i].post_guess_declaration = payload;
+        if (this._saveStore) this._saveStore();
+        break;
+      }
+    }
     const btn = this._iqBox ? this._iqBox.querySelector(".ppq-iq-postguess-btn") : null;
     if (btn) { btn.textContent = "Recorded: " + payload.candidate_options.join(", ") + " ✓"; btn.classList.add("done"); }
     this._fireReport({ status: "interrogation", qtype: "guess_declaration", extra_json: JSON.stringify(payload) });
@@ -2658,8 +2942,14 @@ window.PPQViewer = (function () {
         btn.classList.add("on");
         if (state === "used") self._analysisSelfReports[m.id] = "used";
         else delete self._analysisSelfReports[m.id];
+        if (self._attachResponseToAttempt) self._attachResponseToAttempt("methods", m.id, state);
         self._fireReport({ status: "interrogation", qtype: "self_report", extra_json: JSON.stringify({ method_id: m.id, method_ref: m.id, state: state }) });
       };
+      /* VF-03/VF-02: restore a recorded yes/no on reopen. */
+      const priorPick = (self._reviewingAttempt && self._reviewingAttempt.responses &&
+        self._reviewingAttempt.responses.methods) ? self._reviewingAttempt.responses.methods[m.id] : null;
+      if (priorPick === "used") yes.classList.add("on");
+      else if (priorPick === "not_used") no.classList.add("on");
       yes.addEventListener("click", () => pick(yes, "used"));
       no.addEventListener("click", () => pick(no, "not_used"));
       ask.appendChild(yes);
@@ -2808,9 +3098,15 @@ window.PPQViewer = (function () {
     });
     row.appendChild(el("div", { class: "ppq-iq-thing-text" }, analysisMathEsc(item.statement)));
     const states = el("div", { class: "ppq-iq-thing-states" });
+    /* VF-03/VF-02: a state recorded on this attempt preselects explicitly;
+       otherwise Known remains the implicit starting point. */
+    const priorState = this._thingsUsedStates ? this._thingsUsedStates[item.id] : null;
     this._thingsUsedStatesV2().forEach((state, index) => {
+      const cls = priorState
+        ? (priorState === state[0] ? " sel" : "")
+        : (index === 0 ? " sel implicit" : "");
       const btn = el("button", {
-        class: "ppq-iq-thing-state" + (index === 0 ? " sel implicit" : ""),
+        class: "ppq-iq-thing-state" + cls,
         type: "button",
         "data-state": state[0]
       }, esc(state[1]));
@@ -2818,6 +3114,7 @@ window.PPQViewer = (function () {
         states.querySelectorAll(".ppq-iq-thing-state").forEach((b) => b.classList.remove("sel", "implicit"));
         btn.classList.add("sel");
         self._thingsUsedStates[item.id] = state[0];
+        if (self._attachResponseToAttempt) self._attachResponseToAttempt("things", item.id, state[0]);
         self._fireReport({
           status: "interrogation",
           qtype: "things_used",
@@ -2947,18 +3244,26 @@ window.PPQViewer = (function () {
     /* QoderWork 2026-07-24 (handoff #4): opt-in multi-select when several authored
        descriptions can all be true (multi_select flag). Single-select otherwise. */
     const multi = !!p.multi_select;
+    /* VF-03/VF-02: preselect any state already recorded on this attempt, so a
+       reopened question shows what was answered rather than blank chips. */
+    const prior = self._promptStates ? self._promptStates[p.id] : null;
     (p.states || []).forEach((st) => {
-      const chip = el("button", { class: "ppq-iq-state", type: "button", "data-state": st }, self._stateLabel(st));
+      const wasPicked = multi
+        ? (Array.isArray(prior) && prior.indexOf(st) >= 0)
+        : prior === st;
+      const chip = el("button", { class: "ppq-iq-state" + (wasPicked ? " sel" : ""), type: "button", "data-state": st }, self._stateLabel(st));
       chip.addEventListener("click", () => {
         if (multi) {
           chip.classList.toggle("sel");
           const sel = Array.prototype.map.call(chips.querySelectorAll(".ppq-iq-state.sel"), (c) => c.dataset.state);
           self._promptStates[p.id] = sel;
+          if (self._attachResponseToAttempt) self._attachResponseToAttempt("prompts", p.id, sel.slice());
           self._fireReport({ status: "interrogation", qtype: "self_report", extra_json: JSON.stringify({ prompt_id: p.id, prompt_kind: kind, states: sel, attempt_id: self._attemptId || "" }) });
         } else {
           chips.querySelectorAll(".ppq-iq-state").forEach((c) => c.classList.remove("sel"));
           chip.classList.add("sel");
           self._promptStates[p.id] = st;
+          if (self._attachResponseToAttempt) self._attachResponseToAttempt("prompts", p.id, st);
           self._fireReport({ status: "interrogation", qtype: "self_report", extra_json: JSON.stringify({ prompt_id: p.id, prompt_kind: kind, state: st, attempt_id: self._attemptId || "" }) });
         }
         self._renderInterrogationFeedback(box);
@@ -3561,7 +3866,7 @@ window.PPQViewer = (function () {
     /* Closing on the guess page is equivalent to skipping it: never strand an
        answered question with its verdict permanently hidden. */
     if (this._iqOpen && !wasReviewing) this._revealCommittedAnswer();
-    this.q(".ppq-modal").classList.remove("show", "ppq-modal-analysis");
+    this.q(".ppq-modal").classList.remove("show", "ppq-modal-analysis", "ppq-modal-progress");
     this.root.classList.remove("ppq-analysis-open");
     /* QoderWork 2026-07-24 (handoff #1): reset the minimise state for next open. */
     this.q(".ppq-modal").classList.remove("minimized");
@@ -3679,6 +3984,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.6.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.7.0" };
 })();
 // build: 0.3.0, maintained by Codex
