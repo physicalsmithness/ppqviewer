@@ -2,6 +2,33 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (afternoon) — VF-04r: the timer becomes independent axes, sticky, with a live preview (v0.11.0)
+
+Engine v0.11.0, from Smith's first live look at the timer.
+
+- **Sticky**: the timer is now a floating chip that stays put while the
+  question scrolls ("it shouldn't scroll up with the rest of the q").
+- **Independent options** replace the six bundled modes: count up / count
+  down; Off / Show while working / Reveal after answering; digital clock
+  on/off; pacing ring on/off; when the allocation is up, START FROM ZERO
+  (default) or keep counting; time bank on/off. Old saved prefs migrate onto
+  the axes automatically.
+- **Smith's overtime matrix, verbatim**: counting up past a 2:00 allocation
+  shows red "2:01" (keep counting) or red "+0:01" (start from zero); counting
+  down shows "−0:01" / "+0:01". One formatter drives the live clock and the
+  panel preview, so they cannot disagree.
+- **No jitter**: the ring sits first with fixed geometry and the digits
+  reserve their width, so nothing shifts left/right as numbers change
+  ("distracting"). **Sizes are independent**: clock size S/M/L/XL, ring size
+  S/M/L/XL, and the bank chip grows with the clock.
+- **Live preview in the panel**: as options are toggled, a preview shows the
+  working state and the allocation-up state exactly as they will render
+  ("they should see a preview of this as they select").
+- Attempt rows now record the axes as a compact string (e.g.
+  `show-up-clock-bank`); `off` when hidden.
+- Suites 509/509 + 70/70 (axes round-trip, migration incl. unknown modes,
+  the four overtime formats, panel segs, preview, size persistence).
+
 ## 2026-07-29 (midday, second) — VF-14r2: the question boxes reach the dashboard (v0.10.2)
 
 Smith: "this is for the colour of the little question box." The dashboard's

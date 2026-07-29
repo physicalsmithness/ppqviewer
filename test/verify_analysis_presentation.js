@@ -159,6 +159,9 @@ const TIMING_MODES = ["none", "end_only", "per_question", "clock", "ring", "bank
 /* VF-14r: performance scoring + colour for the question clusters. */
 const questionPerfScore = extractStandaloneFn("questionPerfScore");
 const perfColour = extractStandaloneFn("perfColour");
+/* VF-04r: axes migration + the shared clock/preview formatter. */
+const timingModeToAxes = extractStandaloneFn("timingModeToAxes");
+const timingDisplayText = extractStandaloneFn("timingDisplayText");
 function extractFn(name) {
   const marker = "Viewer.prototype." + name + " = function";
   const start = src.indexOf(marker);
@@ -1716,20 +1719,47 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     };
   }
 
+  // VF-04r: independent axes with migration from the old single-mode pref
   const base = tctx({});
-  check(base._timingPrefs().mode === "clock" && base._timingPrefs().extraPct === 0,
-    "first run takes the consumer's default mode with no extra time");
+  const basePrefs = base._timingPrefs();
+  check(basePrefs.visibility === "show" && basePrefs.clock === true &&
+    basePrefs.direction === "up" && basePrefs.overtimeReset === true &&
+    basePrefs.extraPct === 0 && basePrefs.clockScale === 1 && basePrefs.ringScale === 1,
+    "first run maps the consumer default onto the axes (show + clock, count up, start-from-zero)");
   const savedMode = tctx({ prefs: { timing: { mode: "bank", extraPct: 25 } } });
-  check(savedMode._timingModeNow() === "bank",
-    "a saved learner mode overrides the default");
+  check(savedMode._timingModeNow() === "show-up-clock-bank",
+    "an old saved mode migrates onto the axes (bank -> show + clock + bank)");
   check(savedMode._timingTargetMsFor({ id: "x" }) === 112500,
-    "extra time scales the target (90s + 25% = 112.5s)");
+    "extra time survives migration and scales the target (90s + 25% = 112.5s)");
   const negative = tctx({ prefs: { timing: { mode: "ring", extraPct: -10 } } });
   check(negative._timingTargetMsFor({ id: "x" }) === 81000,
     "a negative adjustment makes practice targets harder (90s − 10% = 81s)");
   const badMode = tctx({ prefs: { timing: { mode: "sideways" } } });
-  check(badMode._timingModeNow() === "clock",
+  check(badMode._timingPrefs().visibility === "show" && badMode._timingPrefs().clock === true,
     "an unknown saved mode falls back to the consumer default");
+  const axesSaved = tctx({ prefs: { timing: { visibility: "show", direction: "down", clock: false, ring: true, overtimeReset: false, bank: true, clockScale: 1.4, ringScale: 1.9, extraPct: 50 } } });
+  const ap = axesSaved._timingPrefs();
+  check(ap.direction === "down" && ap.ring === true && ap.clock === false &&
+    ap.overtimeReset === false && ap.bank === true && ap.clockScale === 1.4 && ap.ringScale === 1.9,
+    "a saved axes shape round-trips exactly, sizes included");
+
+  // Smith's overtime matrix, verbatim
+  const up = { direction: "up", overtimeReset: false };
+  const upReset = { direction: "up", overtimeReset: true };
+  const down = { direction: "down", overtimeReset: false };
+  const downReset = { direction: "down", overtimeReset: true };
+  check(timingDisplayText(up, 121000, 120000).text === "2:01" && timingDisplayText(up, 121000, 120000).over === true,
+    "counting up past 2:00, keep counting: red 2:01");
+  check(timingDisplayText(upReset, 121000, 120000).text === "+0:01",
+    "counting up past 2:00, start from zero: red +0:01");
+  check(timingDisplayText(down, 121000, 120000).text === "−0:01",
+    "counting down past zero, keep counting: −0:01");
+  check(timingDisplayText(downReset, 121000, 120000).text === "+0:01",
+    "counting down past zero, start from zero: +0:01");
+  check(timingDisplayText(down, 47000, 90000).text === "0:43" && timingDisplayText(down, 47000, 90000).over === false,
+    "counting down before the allocation shows the remainder");
+  check(timingDisplayText(up, 47000, null).text === "0:47",
+    "no target means a plain count-up, never an invented allocation");
   check(tctx({ targetOf: function () { return null; } })._timingTargetMsFor({ id: "x" }) === null,
     "no pacing from the subject means no target, never an invented one");
 
@@ -1781,7 +1811,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   };
   rowCtx._recordAttempt("", false, { marks_max: 5 });
   check(rowCtx.store.attempts[0].time_ms === null && rowCtx.store.attempts[0].time_discarded === true &&
-    rowCtx.store.attempts[0].timing_mode === "none",
+    rowCtx.store.attempts[0].timing_mode === "off",
     "a discarded time reaches the attempt row as null, flagged, with the live timing mode");
 
   // the preferences panel
@@ -1809,16 +1839,25 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _openTimingPanel: V._openTimingPanel
   };
   check(pctx._openTimingPanel() === true, "the timing panel renders into the modal shell");
-  const modeRows = collect(pNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-timing-mode") >= 0 && n.tagName === "BUTTON");
-  check(modeRows.length === 6, "all six modes are offered");
-  check(modeRows.every((r) => (r.className || "").indexOf(" off") < 0),
-    "with pacing supplied, ring and bank are available");
-  const bankRow = modeRows.find((r) => r.dataset && r.dataset.mode === "bank");
-  bankRow.dispatchEvent({ type: "click" });
+  const segRows = collect(pNodes[".ppq-modal-body"], (n) => (n.className || "") === "ppq-timing-seg-row");
+  check(segRows.length === 8,
+    "eight independent controls: show, direction, clock, clock size, ring, ring size, overtime, bank");
+  check(segRows.every((r) => (collect(r, (n) => (n.className || "").indexOf("ppq-timing-seg") === 0 && (n.className || "").indexOf(" off") < 0).length > 0)),
+    "with pacing supplied every axis is available");
+  const preview = collect(pNodes[".ppq-modal-body"], (n) => (n.className || "") === "ppq-timing-preview")[0];
+  check(!!preview && /While working/.test(textOf(preview)) && /Allocation up/.test(textOf(preview)),
+    "a live preview shows the working state and the allocation-up state");
+  function segButton(rowIdx, value) {
+    return collect(segRows[rowIdx], (n) => (n.className || "").indexOf("ppq-timing-seg-btn") >= 0 && n.dataset && n.dataset.value === value)[0];
+  }
+  segButton(1, "down").dispatchEvent({ type: "click" });
+  segButton(7, "on").dispatchEvent({ type: "click" });
+  segButton(3, "L").dispatchEvent({ type: "click" });
   const saveBtn = collect(pNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-timing-save") >= 0)[0];
   saveBtn.dispatchEvent({ type: "click" });
-  check(panelCalls.set && panelCalls.set.mode === "bank" && panelCalls.closed === 1 && panelCalls.started === 1,
-    "choosing Time bank and saving persists the pref and restarts the timer");
+  check(panelCalls.set && panelCalls.set.direction === "down" && panelCalls.set.bank === true &&
+    panelCalls.set.clockScale === 1.4 && panelCalls.closed === 1 && panelCalls.started === 1,
+    "picking Count down, bank On and clock size L persists the axes and restarts the timer");
   check(/This session so far/.test(textOf(pNodes[".ppq-modal-body"])),
     "the panel carries the end-only session summary");
 

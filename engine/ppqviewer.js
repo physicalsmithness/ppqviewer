@@ -30,6 +30,33 @@ window.PPQViewer = (function () {
   /* d013/VF-04: the six timing modes (ESAT packet's five plus the pacing ring
      the handoff asked for). Silent capture happens in every one of them. */
   const TIMING_MODES = ["none", "end_only", "per_question", "clock", "ring", "bank"];
+  /* VF-04r (Smith 2026-07-29): the modes decompose into INDEPENDENT axes.
+     A legacy mode string (consumer defaults, old saved prefs) maps onto them. */
+  function timingModeToAxes(mode) {
+    switch (mode) {
+      case "clock": return { visibility: "show", clock: true, ring: false, bank: false };
+      case "ring": return { visibility: "show", clock: false, ring: true, bank: false };
+      case "bank": return { visibility: "show", clock: true, ring: false, bank: true };
+      case "per_question":
+      case "end_only": return { visibility: "reveal_end", clock: true, ring: false, bank: false };
+      default: return { visibility: "off", clock: true, ring: false, bank: false };
+    }
+  }
+  /* VF-04r: one formatter for the live clock AND the panel preview. Smith's
+     overtime matrix: counting up past a 2:00 allocation shows red "2:01" when
+     keeping count, red "+0:01" when starting from zero (the default); counting
+     down shows red "−0:01" / "+0:01" respectively. Self-contained. */
+  function timingDisplayText(prefs, elapsedMs, targetMs) {
+    function fmt(ms) { const s = Math.max(0, Math.floor(ms / 1000)); return Math.floor(s / 60) + ":" + (s % 60 < 10 ? "0" : "") + (s % 60); }
+    const hasTarget = targetMs != null && targetMs > 0;
+    const over = !!hasTarget && elapsedMs > targetMs;
+    let text;
+    if (!hasTarget) text = fmt(elapsedMs);
+    else if (!over) text = prefs.direction === "down" ? fmt(targetMs - elapsedMs) : fmt(elapsedMs);
+    else if (prefs.overtimeReset !== false) text = "+" + fmt(elapsedMs - targetMs);
+    else text = prefs.direction === "down" ? ("−" + fmt(elapsedMs - targetMs)) : fmt(elapsedMs);
+    return { text: text, over: over };
+  }
 
   /* QoderWork 2026-07-22: canonical meaning of each point on the 1-6 self-report
      scale, as defined by Smith. Surfaced as a tooltip on each scale button plus a
@@ -2494,20 +2521,45 @@ window.PPQViewer = (function () {
   /* ============================== d013/VF-04: the timing system ============
      Engine-owned: modes, bank, pause, discard, learner prefs, silent capture.
      Subject-supplied: cfg.timing.targetOf (seconds) + defaultMode. */
+  /* VF-04r: independent axes, migrated from any old single-mode saved pref.
+     clockScale sizes the digits (the bank chip grows with them); ringScale
+     sizes the ring on its own. */
   Viewer.prototype._timingPrefs = function () {
     const saved = ((this.store || {}).prefs || {}).timing || {};
-    const mode = TIMING_MODES.indexOf(saved.mode) >= 0
-      ? saved.mode
-      : ((this.cfg.timing && this.cfg.timing.defaultMode) || "none");
-    const extraPct = typeof saved.extraPct === "number" && isFinite(saved.extraPct) ? saved.extraPct : 0;
-    return { mode: mode, extraPct: extraPct };
+    let base;
+    if (saved.visibility) base = saved;
+    else if (saved.mode && TIMING_MODES.indexOf(saved.mode) >= 0) base = Object.assign(timingModeToAxes(saved.mode), { extraPct: saved.extraPct });
+    else base = timingModeToAxes((this.cfg.timing && this.cfg.timing.defaultMode) || "none");
+    const num = function (v, d, lo, hi) {
+      return (typeof v === "number" && isFinite(v)) ? Math.max(lo, Math.min(hi, v)) : d;
+    };
+    return {
+      direction: base.direction === "down" ? "down" : "up",
+      visibility: ["off", "show", "reveal_end"].indexOf(base.visibility) >= 0 ? base.visibility : "show",
+      clock: base.clock !== false,
+      ring: !!base.ring,
+      overtimeReset: base.overtimeReset !== false,
+      bank: !!base.bank,
+      clockScale: num(base.clockScale, 1, 0.7, 3),
+      ringScale: num(base.ringScale, 1, 0.7, 3),
+      extraPct: num(base.extraPct, 0, -50, 100)
+    };
   };
   Viewer.prototype._setTimingPrefs = function (p) {
     if (!this.store.prefs) this.store.prefs = {};
-    this.store.prefs.timing = { mode: p.mode, extraPct: p.extraPct };
+    this.store.prefs.timing = p;
     this._saveStore();
   };
-  Viewer.prototype._timingModeNow = function () { return this._timingPrefs().mode; };
+  /* Compact axes string for attempt rows and reports. */
+  Viewer.prototype._timingModeNow = function () {
+    const p = this._timingPrefs();
+    if (p.visibility === "off") return "off";
+    const bits = [p.visibility, p.direction];
+    if (p.clock) bits.push("clock");
+    if (p.ring) bits.push("ring");
+    if (p.bank) bits.push("bank");
+    return bits.join("-");
+  };
   /* Effective per-question target in ms: subject pacing × the learner's
      extra-time multiplier (25%, 50%, or a negative practice adjustment). */
   Viewer.prototype._timingTargetMsFor = function (q) {
@@ -2539,28 +2591,32 @@ window.PPQViewer = (function () {
     if (!this._sessionTimed) this._sessionTimed = { count: 0, totalMs: 0, targetMs: 0 };
     const tel = this.q(".ppq-timer");
     if (!tel) return;
-    const mode = this._timingModeNow();
-    tel.className = "ppq-timer ppq-timing ppq-timing--" + mode;
-    /* none/end_only: nothing during the question. per_question: hidden now,
-       revealed at commit. clock/ring/bank: live. */
-    if (mode === "none" || mode === "end_only" || mode === "per_question") {
+    const prefs = this._timingPrefs();
+    tel.className = "ppq-timer ppq-timing";
+    /* off / reveal_end: nothing during the question (revealed at commit for
+       reveal_end). show: live row. */
+    if (prefs.visibility !== "show") {
       tel.style.display = "none";
       return;
     }
     tel.style.display = "";
-    this._buildTimingRow(tel, mode);
+    this._buildTimingRow(tel, prefs);
     const self = this;
     this._tickTiming();
     this._timerInterval = setInterval(function () { self._tickTiming(); }, 500);
   };
 
-  Viewer.prototype._buildTimingRow = function (tel, mode) {
+  Viewer.prototype._buildTimingRow = function (tel, prefs) {
     const self = this;
     tel.innerHTML = "";
-    const useRing = mode === "ring" && !this._reducedMotion();
+    /* VF-04r: the ring sits FIRST with fixed geometry, and the digits get a
+       reserved minimum width, so nothing shifts left/right as numbers change
+       size ("distracting"). Ring and clock size independently; the bank chip
+       grows with the clock. */
+    const useRing = prefs.ring && !this._reducedMotion();
     if (useRing) {
       const R = 9, C = (2 * Math.PI * R).toFixed(2);
-      const svgWrap = el("span", { class: "ppq-timing-ringwrap" });
+      const svgWrap = el("span", { class: "ppq-timing-ringwrap", style: "width:" + (1.5 * prefs.ringScale) + "rem;height:" + (1.5 * prefs.ringScale) + "rem;" });
       svgWrap.innerHTML =
         '<svg class="ppq-timing-ring" viewBox="0 0 24 24" aria-hidden="true">' +
         '<circle class="ppq-timing-ring-track" cx="12" cy="12" r="' + R + '"></circle>' +
@@ -2568,8 +2624,10 @@ window.PPQViewer = (function () {
         "</svg>";
       tel.appendChild(svgWrap);
     }
-    tel.appendChild(el("span", { class: "ppq-timing-display" }, ""));
-    if (mode === "bank") tel.appendChild(el("span", { class: "ppq-timing-bank" }, ""));
+    if (prefs.clock || prefs.ring === false || this._reducedMotion()) {
+      tel.appendChild(el("span", { class: "ppq-timing-display", style: "font-size:" + (0.95 * prefs.clockScale) + "rem;" }, ""));
+    }
+    if (prefs.bank) tel.appendChild(el("span", { class: "ppq-timing-bank", style: "font-size:" + (0.9 * prefs.clockScale) + "rem;" }, ""));
     const pause = el("button", { class: "ppq-timing-pause", type: "button", title: "Pause the clock" }, "❚❚");
     pause.addEventListener("click", function () {
       if (self._pauseStartedAt) {
@@ -2597,34 +2655,28 @@ window.PPQViewer = (function () {
   Viewer.prototype._tickTiming = function () {
     const tel = this.q(".ppq-timer");
     if (!tel || tel.style.display === "none") return;
-    const mode = this._timingModeNow();
+    const prefs = this._timingPrefs();
     const elapsed = this._elapsedTimingMs();
     const target = this._timingTargetMsFor(this.cur);
     const disp = tel.querySelector(".ppq-timing-display");
-    if (!disp) return;
-    if (this._pauseStartedAt) { disp.textContent = "paused · " + this._fmtClock(elapsed); return; }
-    if (mode === "clock" || (mode === "ring" && target == null)) {
-      disp.textContent = this._fmtClock(elapsed);
-    } else if (mode === "ring") {
-      const over = elapsed - target;
-      const fill = tel.querySelector(".ppq-timing-ring-fill");
-      if (fill) {
-        const C = 2 * Math.PI * 9;
-        const frac = Math.min(1, elapsed / target);
-        fill.setAttribute("stroke-dashoffset", (C * (1 - frac)).toFixed(2));
-      }
-      tel.classList.toggle("ppq-timing--over", over > 0);
-      disp.textContent = over > 0
-        ? ("+" + this._fmtClock(over) + " over")
-        : (this._fmtClock(target - elapsed) + " left");
-    } else if (mode === "bank") {
-      disp.textContent = this._fmtClock(elapsed) + (target != null ? (" / " + this._fmtClock(target)) : "");
-      const bankEl = tel.querySelector(".ppq-timing-bank");
-      if (bankEl) {
-        const b = this._bankMs || 0;
-        bankEl.textContent = "bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b));
-        bankEl.classList.toggle("neg", b < 0);
-      }
+    if (this._pauseStartedAt) {
+      if (disp) disp.textContent = "paused";
+      return;
+    }
+    const d = timingDisplayText(prefs, elapsed, target);
+    tel.classList.toggle("ppq-timing--over", d.over);
+    if (disp) disp.textContent = d.text;
+    const fill = tel.querySelector(".ppq-timing-ring-fill");
+    if (fill && target != null) {
+      const C = 2 * Math.PI * 9;
+      const frac = Math.min(1, elapsed / target);
+      fill.setAttribute("stroke-dashoffset", (C * (1 - frac)).toFixed(2));
+    }
+    const bankEl = tel.querySelector(".ppq-timing-bank");
+    if (bankEl) {
+      const b = this._bankMs || 0;
+      bankEl.textContent = "bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b));
+      bankEl.classList.toggle("neg", b < 0);
     }
   };
 
@@ -2637,7 +2689,7 @@ window.PPQViewer = (function () {
     if (this._pauseStartedAt) { this._pausedMs += Date.now() - this._pauseStartedAt; this._pauseStartedAt = null; }
     const spent = this._elapsedTimingMs();
     const target = this._timingTargetMsFor(this.cur);
-    const mode = this._timingModeNow();
+    const prefs = this._timingPrefs();
     this._attemptTimeMs = this._timeDiscarded ? null : spent;
     this._timerCtx = { time_ms: spent };
     if (target != null) {
@@ -2646,7 +2698,7 @@ window.PPQViewer = (function () {
         this._sessionTimed.count++;
         this._sessionTimed.totalMs += spent;
         this._sessionTimed.targetMs += target;
-        if (mode === "bank") this._bankMs = (this._bankMs || 0) + (target - spent);
+        if (prefs.bank) this._bankMs = (this._bankMs || 0) + (target - spent);
       }
     } else if (!this._timeDiscarded) {
       this._sessionTimed.count++;
@@ -2654,14 +2706,14 @@ window.PPQViewer = (function () {
     }
     const tel = this.q(".ppq-timer");
     if (!tel) return;
-    if (mode === "per_question" || mode === "bank" || mode === "ring" || mode === "clock") {
+    if (prefs.visibility !== "off") {
       tel.className = "ppq-timer ppq-timing ppq-timing--reveal";
       tel.style.display = "";
       let text = "took " + this._fmtClock(spent);
       if (this._timeDiscarded) text = "time not recorded for this one";
       else if (target != null) {
         text += " · target " + this._fmtClock(target);
-        if (mode === "bank") { const b = this._bankMs || 0; text += " · bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b)); }
+        if (prefs.bank) { const b = this._bankMs || 0; text += " · bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b)); }
       }
       tel.textContent = text;
     } else {
@@ -2669,42 +2721,96 @@ window.PPQViewer = (function () {
     }
   };
 
-  /* The preferences panel: mode, extra time, and this session so far. */
+  /* VF-04r: the preferences panel — INDEPENDENT axes with a live preview
+     ("they should see a preview of this as they select"). */
   Viewer.prototype._openTimingPanel = function () {
     const self = this;
-    const prefs = this._timingPrefs();
+    const p = this._timingPrefs(); /* mutable working copy */
     const hasTargets = !!(this.cfg.timing && this.cfg.timing.targetOf);
     const page = el("div", { class: "ppq-progress ppq-timing-panel" });
     page.appendChild(el("div", { class: "ppq-progress-title" }, "Timing"));
-    const modes = [
-      ["none", "Off", "Nothing shown while you work. Your time is still recorded quietly."],
-      ["end_only", "Reveal at the end", "See this session's total here, in this panel, when you choose."],
-      ["per_question", "Reveal after each question", "No clock while you think; your time appears once you have answered."],
-      ["clock", "Quiet clock", "A small elapsed clock while you work."],
-      ["ring", "Pacing ring", "A ring fills toward the target time and shows overtime." + (this._reducedMotion() ? " (Reduced motion is on, so this shows as a quiet countdown instead.)" : "")],
-      ["bank", "Time bank", "Bank seconds you save against the target; spend them on hard questions. Stay in the black."]
-    ];
-    const list = el("div", { class: "ppq-timing-modes" });
-    let chosenMode = prefs.mode;
-    modes.forEach(function (m) {
-      const needsTargets = m[0] === "ring" || m[0] === "bank" || m[0] === "per_question";
-      const unavailable = needsTargets && !hasTargets && m[0] !== "per_question";
-      const row = el("button", { class: "ppq-timing-mode" + (m[0] === prefs.mode ? " sel" : "") + (unavailable ? " off" : ""), type: "button", "data-mode": m[0] });
-      row.appendChild(el("b", null, esc(m[1])));
-      row.appendChild(el("span", null, esc(unavailable ? "Needs pacing targets from the subject setup." : m[2])));
-      if (!unavailable) row.addEventListener("click", function () {
-        list.querySelectorAll(".ppq-timing-mode").forEach(function (x) { x.classList.remove("sel"); });
-        row.classList.add("sel");
-        chosenMode = m[0];
+
+    const SCALES = [["S", 0.85], ["M", 1], ["L", 1.4], ["XL", 1.9]];
+    function nearestScale(v) {
+      let best = "M", d = Infinity;
+      SCALES.forEach(function (s) { const dd = Math.abs(s[1] - v); if (dd < d) { d = dd; best = s[0]; } });
+      return best;
+    }
+    function scaleOf(k) { let out = 1; SCALES.forEach(function (s) { if (s[0] === k) out = s[1]; }); return out; }
+
+    /* --- live preview ----------------------------------------------------- */
+    const preview = el("div", { class: "ppq-timing-preview" });
+    function previewRow(labelText, elapsedMs, targetMs) {
+      const row = el("div", { class: "ppq-timing-preview-row" });
+      row.appendChild(el("span", { class: "ppq-timing-preview-label" }, esc(labelText)));
+      if (p.visibility === "off") {
+        row.appendChild(el("span", { class: "ppq-timing-preview-note" }, "nothing shows while you work"));
+        return row;
+      }
+      if (p.visibility === "reveal_end") {
+        row.appendChild(el("span", { class: "ppq-timing-preview-note" },
+          "appears after you answer: “took " + self._fmtClock(elapsedMs) +
+          (hasTargets ? " · target " + self._fmtClock(targetMs) : "") + "”"));
+        return row;
+      }
+      const chip = el("span", { class: "ppq-timing ppq-timing--preview" });
+      const d = timingDisplayText(p, elapsedMs, hasTargets ? targetMs : null);
+      if (d.over) chip.classList.add("ppq-timing--over");
+      if (p.ring && !self._reducedMotion()) {
+        const R = 9, C = 2 * Math.PI * R;
+        const frac = hasTargets ? Math.min(1, elapsedMs / targetMs) : 0;
+        const rw = el("span", { class: "ppq-timing-ringwrap", style: "width:" + (1.5 * p.ringScale) + "rem;height:" + (1.5 * p.ringScale) + "rem;" });
+        rw.innerHTML = '<svg class="ppq-timing-ring" viewBox="0 0 24 24"><circle class="ppq-timing-ring-track" cx="12" cy="12" r="9"></circle><circle class="ppq-timing-ring-fill" cx="12" cy="12" r="9" stroke-dasharray="' + C.toFixed(2) + '" stroke-dashoffset="' + (C * (1 - frac)).toFixed(2) + '"></circle></svg>';
+        chip.appendChild(rw);
+      }
+      if (p.clock) chip.appendChild(el("span", { class: "ppq-timing-display", style: "font-size:" + (0.95 * p.clockScale) + "rem;" }, esc(d.text)));
+      if (p.bank && hasTargets) chip.appendChild(el("span", { class: "ppq-timing-bank", style: "font-size:" + (0.9 * p.clockScale) + "rem;" }, "bank +0:37"));
+      row.appendChild(chip);
+      return row;
+    }
+    function redrawPreview() {
+      preview.innerHTML = "";
+      preview.appendChild(el("b", null, "Preview"));
+      preview.appendChild(previewRow("While working", 47000, 90000));
+      preview.appendChild(previewRow("Allocation up", 121000, 120000));
+    }
+
+    /* --- segmented controls ------------------------------------------------ */
+    function seg(labelText, options, currentValue, onPick, disabledNote) {
+      const row = el("div", { class: "ppq-timing-seg-row" });
+      row.appendChild(el("span", { class: "ppq-timing-seg-label" }, esc(labelText)));
+      const group = el("span", { class: "ppq-timing-seg" + (disabledNote ? " off" : "") });
+      options.forEach(function (o) {
+        const b = el("button", { class: "ppq-timing-seg-btn" + (String(o[0]) === String(currentValue) ? " sel" : ""), type: "button", "data-value": String(o[0]) }, esc(o[1]));
+        if (!disabledNote) b.addEventListener("click", function () {
+          group.querySelectorAll(".ppq-timing-seg-btn").forEach(function (x) { x.classList.remove("sel"); });
+          b.classList.add("sel");
+          onPick(o[0]);
+          redrawPreview();
+        });
+        group.appendChild(b);
       });
-      list.appendChild(row);
-    });
-    page.appendChild(list);
+      row.appendChild(group);
+      if (disabledNote) row.appendChild(el("span", { class: "ppq-timing-preview-note" }, esc(disabledNote)));
+      return row;
+    }
+    const needTargets = hasTargets ? null : "Needs pacing targets from the subject setup.";
+    page.appendChild(seg("Show it", [["off", "Off"], ["show", "Show while working"], ["reveal_end", "Reveal after answering"]], p.visibility, function (v) { p.visibility = v; }));
+    page.appendChild(seg("Direction", [["up", "Count up"], ["down", "Count down"]], p.direction, function (v) { p.direction = v; }, needTargets));
+    page.appendChild(seg("Digital clock", [["on", "On"], ["off", "Off"]], p.clock ? "on" : "off", function (v) { p.clock = v === "on"; }));
+    page.appendChild(seg("Clock size", SCALES.map(function (s) { return [s[0], s[0]]; }), nearestScale(p.clockScale), function (v) { p.clockScale = scaleOf(v); }));
+    page.appendChild(seg("Pacing ring", [["on", "On"], ["off", "Off"]], p.ring ? "on" : "off", function (v) { p.ring = v === "on"; }, needTargets ||
+      (this._reducedMotion() ? "Reduced motion is on — the ring shows as numbers instead." : null)));
+    page.appendChild(seg("Ring size", SCALES.map(function (s) { return [s[0], s[0]]; }), nearestScale(p.ringScale), function (v) { p.ringScale = scaleOf(v); }, needTargets));
+    page.appendChild(seg("When allocation is up", [["reset", "Start from zero (+0:01)"], ["continue", "Keep counting"]], p.overtimeReset ? "reset" : "continue", function (v) { p.overtimeReset = v === "reset"; }, needTargets));
+    page.appendChild(seg("Time bank", [["on", "On"], ["off", "Off"]], p.bank ? "on" : "off", function (v) { p.bank = v === "on"; }, needTargets));
+    page.appendChild(preview);
+    redrawPreview();
 
     const extraRow = el("div", { class: "ppq-timing-extra" });
     extraRow.appendChild(el("b", null, "Extra time"));
     extraRow.appendChild(el("span", null, "Scales every target. 25% and 50% match access arrangements; a negative number makes practice harder."));
-    const extraInput = el("input", { class: "ppq-timing-extra-input", type: "number", step: "5", min: "-50", max: "100", value: String(prefs.extraPct) });
+    const extraInput = el("input", { class: "ppq-timing-extra-input", type: "number", step: "5", min: "-50", max: "100", value: String(p.extraPct) });
     ["0", "25", "50"].forEach(function (v) {
       const b = el("button", { class: "ppq-btn-mini ppq-timing-extra-quick", type: "button" }, v + "%");
       b.addEventListener("click", function () { extraInput.value = v; });
@@ -2735,9 +2841,9 @@ window.PPQViewer = (function () {
     save.addEventListener("click", function () {
       let pct = parseFloat(extraInput.value);
       if (!isFinite(pct)) pct = 0;
-      pct = Math.max(-50, Math.min(100, pct));
-      self._setTimingPrefs({ mode: chosenMode, extraPct: pct });
-      self._fireReport({ status: "timing_prefs", qtype: "timing", extra_json: JSON.stringify({ mode: chosenMode, extra_pct: pct }) });
+      p.extraPct = Math.max(-50, Math.min(100, pct));
+      self._setTimingPrefs(p);
+      self._fireReport({ status: "timing_prefs", qtype: "timing", extra_json: JSON.stringify(p) });
       self.closeModal();
       self._startTiming();
     });
@@ -4798,6 +4904,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.10.2" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.11.0" };
 })();
 // build: 0.3.0, maintained by Codex

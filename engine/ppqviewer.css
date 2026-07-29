@@ -223,8 +223,12 @@
 .ppq-timer--tight { color: var(--ppq-bad); }
 .ppq-timer--forced { color: var(--ppq-bad); animation: ppq-timer-pulse 1s ease-in-out infinite; }
 
-/* d013/VF-04: the timing system row (clock / ring / bank) + reveal state */
-.ppq-timing { align-self: flex-end; display: flex; align-items: center; gap: 0.55rem; font-size: 0.95rem; color: var(--ppq-muted); margin-top: -0.6rem; }
+/* d013/VF-04: the timing system row (clock / ring / bank) + reveal state.
+   VF-04r: STICKY — it must not scroll away with the question — and the digits
+   get a reserved width so the ring never shifts left/right as numbers change. */
+.ppq-timing { position: sticky; top: 0.45rem; z-index: 6; align-self: flex-end; display: flex; align-items: center; gap: 0.55rem; font-size: 0.95rem; color: var(--ppq-ink2); margin-top: -0.6rem; background: var(--ppq-paper); border: 1px solid var(--ppq-line); border-radius: 999px; padding: 0.28rem 0.8rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07); }
+.ppq-timing--preview { position: static; margin-top: 0; box-shadow: none; }
+.ppq-timing-display { font-variant-numeric: tabular-nums; min-width: 4.5ch; text-align: right; }
 .ppq-timing--reveal { color: var(--ppq-ink2); font-weight: 700; }
 .ppq-timing--paused .ppq-timing-display { opacity: 0.6; }
 .ppq-timing--over .ppq-timing-display { color: var(--ppq-bad); }
@@ -251,6 +255,18 @@
 .ppq-timing-extra-input { width: 5rem; padding: 0.4rem 0.5rem; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); color: var(--ppq-ink); font: inherit; }
 .ppq-timing-session { margin-bottom: 1.1rem; display: flex; flex-direction: column; gap: 0.2rem; }
 .ppq-timing-session span { color: var(--ppq-ink2); }
+/* VF-04r: segmented axis controls + the live preview */
+.ppq-timing-seg-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.55rem; }
+.ppq-timing-seg-label { min-width: 10.5rem; font-weight: 700; font-size: 0.92rem; }
+.ppq-timing-seg { display: inline-flex; border: 1px solid var(--ppq-line); border-radius: 9px; overflow: hidden; }
+.ppq-timing-seg.off { opacity: 0.5; }
+.ppq-timing-seg-btn { border: none; background: var(--ppq-bg); color: var(--ppq-ink2); font: inherit; font-size: 0.88rem; padding: 0.4rem 0.8rem; cursor: pointer; border-right: 1px solid var(--ppq-line); }
+.ppq-timing-seg-btn:last-child { border-right: none; }
+.ppq-timing-seg-btn.sel { background: var(--ppq-accent); color: #fff; font-weight: 700; }
+.ppq-timing-preview { border: 1px dashed var(--ppq-line); border-radius: 9px; padding: 0.7rem 0.9rem; margin: 0.8rem 0 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.ppq-timing-preview-row { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+.ppq-timing-preview-label { min-width: 10.5rem; font-size: 0.85rem; color: var(--ppq-muted); }
+.ppq-timing-preview-note { font-size: 0.85rem; color: var(--ppq-muted); font-style: italic; }
 @keyframes ppq-timer-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
 .ppq-draw-container { position: relative; display: block; max-width: var(--ppq-crop-width, 92%); margin: 0 auto; }
