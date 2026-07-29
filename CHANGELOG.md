@@ -2,6 +2,21 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (midday) — VF-14r: the last-10 strip becomes a QUESTION CLUSTER (v0.10.1)
+
+Smith's correction, minutes after v0.10.0, confirmed for ESAT and maths alike:
+not a rolling last-10 — **one dot per available question in the category**.
+Untried questions sit neutral; a tried question is coloured by its performance
+score, where the MOST RECENT answer weighs 4× all earlier ones (attempt
+values: right 1, wrong 0, marks attempts their fraction, ranges their
+midpoint). The colour runs continuously red (0) → **pale yellow at exactly
+0.2** → green (1); the 0.2 anchor is precisely the right-then-wrong score, so
+"was right, just got it wrong" reads as pale yellow rather than an accusing
+red. Clusters cap at 240 dots with an honest "+n"; a "tried / available"
+count sits beneath; per-dot tooltips carry the question id and percentage.
+Suites 497/497 + 70/70 (weighting anchors, colour stops and smoothness,
+availability counting, neutral dots, cluster rendering).
+
 ## 2026-07-29 (late morning) — VF-14: performance and filters by many more categories, with last-10 dots (v0.10.0)
 
 Engine v0.10.0, from Smith's dictated ask ("view performance by lots of the

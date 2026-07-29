@@ -693,15 +693,16 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-progress-verdict.wrong { color: var(--ppq-bad); }
 .ppq-progress-chip { display: inline-block; font-size: 0.75rem; border: 1px solid var(--ppq-line); border-radius: 999px; padding: 0.1rem 0.5rem; color: var(--ppq-ink2); margin-left: 0.3rem; }
 .ppq-progress-reflection { font-style: italic; color: var(--ppq-muted); font-size: 0.88rem; margin-top: 0.3rem; }
-/* VF-14: the last-10 dots bundle (P-SLI-LAST10DOTS): green right, amber part
-   marks, red wrong, pale pads; oldest first, newest at the right edge. */
-.ppq-dots { display: inline-grid; grid-template-columns: repeat(10, 10px); gap: 2px; vertical-align: middle; }
-.ppq-dot { width: 10px; height: 10px; border-radius: 2px; }
-.ppq-dot.r { background: var(--ppq-ok); }
-.ppq-dot.w { background: var(--ppq-bad); }
-.ppq-dot.p { background: #d4a017; }
-.ppq-dot.pad { background: var(--ppq-line); opacity: 0.45; }
-.ppq-progress-dots { min-width: 8.2rem; }
+/* VF-14r: the question cluster — one dot per available question in the
+   category. Neutral until attempted; attempted dots carry the continuous
+   performance colour (red 0 → pale yellow 0.2 → green 1), computed per value,
+   never banded. */
+.ppq-qcluster { display: inline-flex; flex-wrap: wrap; gap: 2px; max-width: 12.5rem; vertical-align: middle; }
+.ppq-qdot { width: 7px; height: 7px; border-radius: 2px; }
+.ppq-qdot.untried { background: var(--ppq-line); opacity: 0.5; }
+.ppq-qcluster-more { font-size: 0.68rem; color: var(--ppq-muted); align-self: center; margin-left: 2px; }
+.ppq-qcluster-count { font-size: 0.72rem; color: var(--ppq-muted); margin-top: 0.2rem; }
+.ppq-progress-dots { min-width: 9rem; max-width: 13.5rem; }
 .ppq-progress-more { font-size: 0.8rem; color: var(--ppq-muted); margin: 0.3rem 0 0.6rem; }
 
 /* VF-03: review-previous-attempt affordance and the review-mode furniture */

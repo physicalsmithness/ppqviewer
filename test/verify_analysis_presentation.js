@@ -156,6 +156,9 @@ const shadeCell = extractStandaloneFn("shadeCell");
 /* d013: the extracted timing functions resolve their free reference against
    this mirror; the source assert pins the engine literal so drift is caught. */
 const TIMING_MODES = ["none", "end_only", "per_question", "clock", "ring", "bank"];
+/* VF-14r: performance scoring + colour for the question clusters. */
+const questionPerfScore = extractStandaloneFn("questionPerfScore");
+const perfColour = extractStandaloneFn("perfColour");
 function extractFn(name) {
   const marker = "Viewer.prototype." + name + " = function";
   const start = src.indexOf(marker);
@@ -1833,10 +1836,32 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the no-guess-inference rule is stated where the timing system lives");
 })();
 
-// VF-14 (Smith 2026-07-29): performance and filtering by lots of other
-// categories, with the last-10 dots bundle (P-SLI-LAST10DOTS) per category.
+// VF-14r (Smith 2026-07-29): performance and filtering by lots of other
+// categories, each with a question cluster — one dot per available question,
+// neutral until tried, then the 4×-most-recent performance colour.
 (function () {
-  console.log("\n=== category axes and last-10 dots (VF-14) ===");
+  console.log("\n=== category axes and question clusters (VF-14r) ===");
+
+  // scoring: the most recent answer weighs 4× all earlier ones
+  check(questionPerfScore([]) === null && questionPerfScore(null) === null,
+    "no attempts means no score (neutral dot)");
+  check(questionPerfScore([1]) === 1 && questionPerfScore([0]) === 0,
+    "a single attempt scores itself");
+  check(questionPerfScore([1, 0]) === 0.2,
+    "right-then-wrong lands exactly on 0.2 (the pale-yellow anchor)");
+  check(questionPerfScore([0, 1]) === 0.8,
+    "wrong-then-right lands at 0.8");
+  check(Math.abs(questionPerfScore([1, 1, 0.4]) - (4 * 0.4 + 2) / 6) < 1e-9,
+    "marks fractions blend into the weighted score");
+
+  // colour: continuous, red 0 -> pale yellow 0.2 -> green 1
+  check(perfColour(0) === "rgb(176,48,48)" && perfColour(1) === "rgb(45,106,63)",
+    "the ends are red and green");
+  check(perfColour(0.2) === "rgb(245,233,168)",
+    "0.2 is exactly the pale yellow");
+  check(perfColour(0.6) === "rgb(145,170,116)",
+    "between the anchors the colour interpolates smoothly (no bands)");
+
   const axisCtx = {
     cfg: {
       groupKey: (q) => q.topic, groupLabel: (q) => "Topic " + q.topic, idOf: (q) => q.id,
@@ -1848,7 +1873,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     questions: [
       { id: "q1", topic: "A", families: ["Spot the disguise", "Bridge"], types: ["Proof"] },
       { id: "q2", topic: "A", families: ["Bridge"], types: ["Direct"] },
-      { id: "q3", topic: "B", families: [], types: ["Direct"] }
+      { id: "q3", topic: "B", families: [], types: ["Direct"] },
+      { id: "q4", topic: "B", families: ["Bridge"], types: [] }
     ],
     _questionById: V._questionById,
     store: {
@@ -1868,8 +1894,13 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const bridge = fam.rows.find((r) => r.value === "Bridge");
   check(!!bridge && bridge.attempts === 3 && bridge.correct === 1,
     "a multi-value category counts every question that belongs to it");
-  check(bridge.outcomes.join("") === "rpw",
-    "the outcome trail is chronological: right, part-marks amber, wrong");
+  check(bridge.available === 3 && bridge.tried === 2,
+    "the cluster covers every AVAILABLE question, tried or not");
+  const bridgeScores = {};
+  bridge.questions.forEach((d) => { bridgeScores[d.id] = d.score; });
+  check(bridgeScores.q1 === 1 && bridgeScores.q4 === null &&
+    Math.abs(bridgeScores.q2 - 0.08) < 1e-9,
+    "per-question scores: clean right = 1, untried = neutral, marks-then-wrong = 0.08");
   check(bridge.avgRating === 4, "category ratings average the member questions' scores");
   check(bridge.timeN === 3 && Math.round(bridge.avgTimeS) === 37,
     "category time averages over its timed attempts");
@@ -1878,7 +1909,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "axis rows sort by practice volume");
   const typeAxis = stats.axes[1];
   const direct = typeAxis.rows.find((r) => r.value === "Direct");
-  check(!!direct && direct.attempts === 3 && direct.outcomes.join("") === "pwr",
+  check(!!direct && direct.attempts === 3 && direct.available === 2 && direct.tried === 2,
     "a second axis slices the same attempts its own way");
   check(direct.timeN === 2 && Math.round(direct.avgTimeS) === 40,
     "discarded times stay out of the averages");
@@ -1903,13 +1934,18 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   aPage._renderProgressPage();
   const axisTables = collect(aNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-progress-axis") >= 0);
   check(axisTables.length === 2, "one table renders per axis");
-  const dotBundles = collect(axisTables[0], (n) => (n.className || "") === "ppq-dots");
-  check(dotBundles.length >= 2, "each category row carries its dots bundle");
-  const bridgeDots = collect(dotBundles[0], (n) => (n.className || "").indexOf("ppq-dot ") >= 0);
-  check(bridgeDots.length === 10, "the bundle is padded to exactly ten slots");
-  const cls = bridgeDots.map((d) => d.className.replace("ppq-dot ", ""));
-  check(cls.slice(0, 7).every((c) => c === "pad") && cls.slice(7).join(",") === "r,p,w",
-    "pads lead, outcomes sit newest-at-the-right (r,p,w)");
+  const clusters = collect(axisTables[0], (n) => (n.className || "") === "ppq-qcluster");
+  check(clusters.length >= 2, "each category row carries its question cluster");
+  const bridgeCluster = clusters[0];
+  const bridgeDotEls = collect(bridgeCluster, (n) => (n.className || "").indexOf("ppq-qdot") >= 0);
+  check(bridgeDotEls.length === 3, "one dot per AVAILABLE question in the category");
+  check(bridgeDotEls.filter((d) => (d.className || "").indexOf("untried") >= 0).length === 1,
+    "an unattempted question shows as a neutral dot");
+  check(bridgeDotEls.some((d) => (d.style.cssText || "").indexOf(perfColour(1)) >= 0),
+    "a clean-right question wears the full green");
+  check(collect(axisTables[0], (n) => (n.className || "") === "ppq-qcluster-count")
+    .some((n) => /2 \/ 3/.test(n._html || n._text || n.textContent || "")),
+    "the tried / available count sits under the cluster");
 
   // wrappers expose the new filters and axes
   const mHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
@@ -1922,8 +1958,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(/progressAxes:/.test(eHtml) && /By subtopic/.test(eHtml) && /By spec status/.test(eHtml),
     "ESAT supplies its performance axes");
   const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
-  check(css.indexOf(".ppq-dot.r") >= 0 && css.indexOf(".ppq-dot.p") >= 0 && css.indexOf(".ppq-dot.pad") >= 0,
-    "the dots carry the green/amber/red/pad classes");
+  check(css.indexOf(".ppq-qcluster") >= 0 && css.indexOf(".ppq-qdot.untried") >= 0,
+    "the cluster and its neutral untried dots are styled");
 })();
 
 // VSAFE-03 (Claude 2026-07-28): the rejected pill/strikethrough option treatment

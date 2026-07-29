@@ -1248,34 +1248,56 @@ window.PPQViewer = (function () {
     topicList.sort(function (a, b) { return b.attempts - a.attempts || String(a.label).localeCompare(String(b.label)); });
     const dayList = Object.keys(days).sort().map(function (k) { return days[k]; });
 
-    /* VF-14: per-axis aggregation with a chronological outcome trail per
-       category (feeds the last-10 dots, P-SLI-LAST10DOTS: green right, amber
-       part marks, red wrong, padded). Attempts iterate in stored order, so the
-       trail is oldest -> newest; the renderer keeps the last ten. */
+    /* VF-14r (Smith): per-axis aggregation with a QUESTION CLUSTER per
+       category — one dot per available question, neutral until attempted,
+       then coloured by the 4×-most-recent performance score. Attempt values
+       accumulate per question first (in stored order), then every axis slices
+       the same map its own way. */
+    const perQuestionValues = {};
+    attempts.forEach(function (att) {
+      let v;
+      if (att.marks_max != null && att.marks_max > 0) {
+        if (att.marks_awarded != null) v = att.marks_awarded / att.marks_max;
+        else if (att.marks_range) v = (att.marks_range[0] + att.marks_range[1]) / 2 / att.marks_max;
+        else v = att.correct ? 1 : 0;
+      } else {
+        v = att.correct ? 1 : 0;
+      }
+      (perQuestionValues[String(att.id)] = perQuestionValues[String(att.id)] || []).push(v);
+    });
+    const perQuestionScore = {};
+    for (const qid in perQuestionValues) perQuestionScore[qid] = questionPerfScore(perQuestionValues[qid]);
+
     const axes = (cfg.progressAxes || []).map(function (axis) {
       const rowsByValue = {};
       function rowFor(value) {
         return rowsByValue[value] = rowsByValue[value] ||
-          { value: value, attempts: 0, correct: 0, timeMs: 0, timeN: 0, ratingSum: 0, ratingN: 0, outcomes: [] };
+          { value: value, questions: [], attempts: 0, correct: 0, timeMs: 0, timeN: 0, ratingSum: 0, ratingN: 0 };
       }
+      /* one dot per AVAILABLE question, in catalogue order */
+      (self.questions || []).forEach(function (q) {
+        let values = [];
+        try { values = axis.valuesOf(q) || []; } catch (_) { values = []; }
+        const qid = String(cfg.idOf(q));
+        values.forEach(function (v) {
+          if (v == null || v === "") return;
+          rowFor(String(v)).questions.push({
+            id: qid,
+            score: perQuestionScore[qid] != null ? perQuestionScore[qid] : null
+          });
+        });
+      });
       attempts.forEach(function (att) {
         const q = self._questionById(att.id);
         if (!q) return;
         let values = [];
         try { values = axis.valuesOf(q) || []; } catch (_) { values = []; }
-        let outcome = att.correct ? "r" : "w";
-        if (!att.correct) {
-          const partial = (att.marks_awarded != null && att.marks_awarded > 0) ||
-            (att.marks_range && att.marks_range[0] > 0);
-          if (partial) outcome = "p";
-        }
         values.forEach(function (v) {
           if (v == null || v === "") return;
           const row = rowFor(String(v));
           row.attempts++;
           if (att.correct) row.correct++;
           if (att.time_ms != null) { row.timeMs += att.time_ms; row.timeN++; }
-          row.outcomes.push(outcome);
         });
       });
       for (const qid in scores) {
@@ -1293,6 +1315,8 @@ window.PPQViewer = (function () {
       }
       const rows = Object.keys(rowsByValue).map(function (k) { return rowsByValue[k]; });
       rows.forEach(function (r) {
+        r.available = r.questions.length;
+        r.tried = r.questions.filter(function (d) { return d.score != null; }).length;
         r.pctCorrect = r.attempts ? Math.round(100 * r.correct / r.attempts) : null;
         r.avgRating = r.ratingN ? r.ratingSum / r.ratingN : null;
         r.avgTimeS = r.timeN ? r.timeMs / r.timeN / 1000 : null;
@@ -1391,15 +1415,23 @@ window.PPQViewer = (function () {
         page.appendChild(table);
       }
 
-      /* VF-14: one table per configured axis, each row carrying its last-10
-         dots (P-SLI-LAST10DOTS): most recent outcomes in order, oldest gone,
-         empty slots padded. Green right, amber part marks, red wrong. */
-      function dotsEl(outcomes) {
-        const wrap = el("span", { class: "ppq-dots", title: "Your last 10 attempts here, oldest first" });
-        const last = (outcomes || []).slice(-10);
-        for (let i = 0; i < 10; i++) {
-          const o = i < 10 - last.length ? null : last[i - (10 - last.length)];
-          wrap.appendChild(el("span", { class: "ppq-dot " + (o == null ? "pad" : o) }));
+      /* VF-14r: one table per configured axis. Each category carries its
+         QUESTION CLUSTER: one small dot per available question (neutral until
+         attempted, then the continuous performance colour with pale yellow at
+         0.2). Confirmed for ESAT and maths alike. */
+      function clusterEl(questionDots) {
+        const wrap = el("span", { class: "ppq-qcluster" });
+        const cap = 240;
+        (questionDots || []).slice(0, cap).forEach(function (d) {
+          const attrs = {
+            class: "ppq-qdot" + (d.score == null ? " untried" : ""),
+            title: d.id + (d.score == null ? " — not tried yet" : " — " + Math.round(d.score * 100) + "%")
+          };
+          if (d.score != null) attrs.style = "background: " + perfColour(d.score) + ";";
+          wrap.appendChild(el("span", attrs));
+        });
+        if ((questionDots || []).length > cap) {
+          wrap.appendChild(el("span", { class: "ppq-qcluster-more" }, "+" + (questionDots.length - cap)));
         }
         return wrap;
       }
@@ -1407,7 +1439,7 @@ window.PPQViewer = (function () {
         if (!axis.rows.length) return;
         page.appendChild(el("div", { class: "ppq-progress-subhead" }, esc(axis.label)));
         const table = el("table", { class: "ppq-progress-table ppq-progress-axis" });
-        table.appendChild(headerRow([axis.label.replace(/^By /, ""), "Last 10", "Attempts", "Correct %", "Average rating", "Average time (s)"]));
+        table.appendChild(headerRow([axis.label.replace(/^By /, ""), "Questions (tried / available)", "Attempts", "Correct %", "Average rating", "Average time (s)"]));
         const tbody = el("tbody");
         const maxA = axis.rows.reduce(function (m, r) { return Math.max(m, r.attempts); }, 1);
         const maxT = axis.rows.reduce(function (m, r) { return Math.max(m, r.avgTimeS || 0); }, 1);
@@ -1416,7 +1448,8 @@ window.PPQViewer = (function () {
           const tr = el("tr");
           tr.appendChild(td(r.value, "", "ppq-progress-topic"));
           const dotsTd = el("td", { class: "ppq-progress-dots" });
-          dotsTd.appendChild(dotsEl(r.outcomes));
+          dotsTd.appendChild(clusterEl(r.questions));
+          dotsTd.appendChild(el("div", { class: "ppq-qcluster-count" }, r.tried + " / " + r.available));
           tr.appendChild(dotsTd);
           tr.appendChild(td(r.attempts || null, r.attempts ? shadeCell("108, 122, 137", r.attempts, maxA) : ""));
           tr.appendChild(td(r.pctCorrect != null ? r.pctCorrect + "%" : null,
@@ -1786,6 +1819,32 @@ window.PPQViewer = (function () {
      good content behind the generic shell; a false negative shows a pupil
      broken mathematics labelled "Full feedback". Content repair belongs to the
      analysis project; refusal and fallback belong here. */
+  /* VF-14r (Smith 2026-07-29): per-question performance score. The most recent
+     answer is weighted 4× all earlier ones, so score 1.0 means "right last
+     time" with history agreeing, right-then-wrong lands at exactly 0.20, and
+     wrong-then-right at 0.80. Attempt values: right = 1, wrong = 0, marks
+     attempts = fraction of maximum (a declared range scores its midpoint).
+     Self-contained for test extraction. */
+  function questionPerfScore(values) {
+    if (!values || !values.length) return null;
+    const latest = values[values.length - 1];
+    let sum = 0;
+    for (let i = 0; i < values.length - 1; i++) sum += values[i];
+    return (4 * latest + sum) / (4 + values.length - 1);
+  }
+  /* VF-14r: continuous green-to-red with the pale-yellow anchor at 0.2 (the
+     right-then-wrong score). Piecewise linear: 0 red → 0.2 pale yellow →
+     1 green. Never banded. Self-contained for test extraction. */
+  function perfColour(score) {
+    const stops = [[176, 48, 48], [245, 233, 168], [45, 106, 63]];
+    const s = Math.max(0, Math.min(1, Number(score)));
+    let a, b, t;
+    if (s <= 0.2) { a = stops[0]; b = stops[1]; t = s / 0.2; }
+    else { a = stops[1]; b = stops[2]; t = (s - 0.2) / 0.8; }
+    const mix = a.map(function (c, i) { return Math.round(c + (b[i] - c) * t); });
+    return "rgb(" + mix.join(",") + ")";
+  }
+
   /* VF-02 (Claude 2026-07-29): two-tone cell shading, Smith's house style —
      white anchored at zero, one hue per quantity class, smooth (computed per
      value, never banded), darkness capped so black text stays readable.
@@ -4708,6 +4767,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.10.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.10.1" };
 })();
 // build: 0.3.0, maintained by Codex
