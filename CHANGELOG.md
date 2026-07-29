@@ -2,6 +2,32 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (late morning) — VF-14: performance and filters by many more categories, with last-10 dots (v0.10.0)
+
+Engine v0.10.0, from Smith's dictated ask ("view performance by lots of the
+other categories… filter by lots of other categories… a little bundle of
+green & red squares next to each — look at patterns"). The squares are
+The Smithy patterns gallery's **P-SLI-LAST10DOTS**: the most recent outcomes
+in order, oldest dropping off, empty slots padded.
+
+- **New config surface `progressAxes`**: each axis names a label and
+  `valuesOf(q) -> [categories]` (multi-value welcome — a question counts in
+  every category it belongs to). My progress renders one house-style shaded
+  table per axis: category, **last-10 dots** (green right, amber part-marks,
+  red wrong, pale pads, newest at the right), attempts, correct %, average
+  rating, average time. Rows sort by practice volume, capped at the 14
+  most-practised with an honest "+n more" line. Ratings average the member
+  questions' scores; discarded times stay out of the averages.
+- **IB Maths**: filters gain question type, theme and command term (the
+  catalogue's `command_terms` now ride the flattened rows); performance axes:
+  subtopic, family, question type, theme, command term, paper, syllabus era.
+- **ESAT**: performance axes: subtopic, source, year, spec status.
+- Suites: acceptance 486/486 (multi-value counting, chronological r/p/w
+  trails, rating and time aggregation, dot padding and order, wrapper wiring);
+  content-safety 70/70.
+- Consumer notes: `progressAxes` is optional; consumers without it keep the
+  existing topic-only progress page.
+
 ## 2026-07-29 (mid-morning) — d013/VF-04: the timing system (v0.9.0)
 
 Engine v0.9.0. Sources: handoff VF-04 + the ESAT architecture packet

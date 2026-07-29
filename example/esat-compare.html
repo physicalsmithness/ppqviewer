@@ -442,6 +442,14 @@
         },
         modules: { postQuestionReview: true },
 
+        /* VF-14: performance axes for My progress, each with last-10 dots. */
+        progressAxes: [
+          { key: "subtopic", label: "By subtopic", valuesOf: function (q) { return q.classification_subtopics || []; } },
+          { key: "source", label: "By source", valuesOf: function (q) { return [q.assessment]; } },
+          { key: "year", label: "By year", valuesOf: function (q) { return [String(q.year)]; } },
+          { key: "spec", label: "By spec status", valuesOf: function (q) { return [q.esat_in_spec === "in_spec" ? "In spec" : "Out of spec"]; } }
+        ],
+
         /* QoderWork 2026-07-22 (analyst handoff): guess-declaration wording comes
            from the analysts' interaction_defaults (settled labels "I'm guessing" /
            "Actually, it was a guess" + candidate prompts). The engine falls back

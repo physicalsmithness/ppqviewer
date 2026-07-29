@@ -83,6 +83,7 @@
         subtopics: subtopics,
         families: q.families || [],
         question_types: q.question_types || [], themes: q.themes || [],
+        command_terms: q.command_terms || [],
         topic_num: tnum,
         topic_code: tnum ? ("T" + tnum) : null,
         topic: tnum ? TOPIC_NAMES[tnum] : null,
@@ -116,8 +117,23 @@
         { field: "topic_code", label: "topic", allLabel: "All topics", values: ["T1", "T2", "T3", "T4", "T5"], friendlyLabels: topicFriendly },
         { field: "subtopics", label: "subtopic", allLabel: "All subtopics", dependsOn: "topic_code", hideUntilParent: true, dashboardFacet: true },
         { field: "families", label: "family", allLabel: "All families" },
+        /* VF-14: filter by lots of other categories */
+        { field: "question_types", label: "type", allLabel: "All question types" },
+        { field: "themes", label: "theme", allLabel: "All themes" },
+        { field: "command_terms", label: "command", allLabel: "All command terms" },
         { field: "paper", label: "paper", allLabel: "All papers", values: ["1", "2", "3"], friendlyLabels: { "1": "Paper 1 (non-calc on AAHL)", "2": "Paper 2", "3": "Paper 3" } },
         { field: "year", label: "year", allLabel: "All years" }
+      ],
+      /* VF-14: performance by lots of the other categories, each row with its
+         last-10 dots bundle (P-SLI-LAST10DOTS in The Smithy patterns gallery). */
+      progressAxes: [
+        { key: "subtopic", label: "By subtopic", valuesOf: function (q) { return q.subtopics; } },
+        { key: "family", label: "By family", valuesOf: function (q) { return q.families; } },
+        { key: "qtype", label: "By question type", valuesOf: function (q) { return q.question_types; } },
+        { key: "theme", label: "By theme", valuesOf: function (q) { return q.themes; } },
+        { key: "command", label: "By command term", valuesOf: function (q) { return q.command_terms; } },
+        { key: "paper", label: "By paper", valuesOf: function (q) { return ["Paper " + q.paper]; } },
+        { key: "era", label: "By syllabus era", valuesOf: function (q) { return [q.syllabus]; } }
       ],
       questionFinder: true,
 

@@ -1833,6 +1833,99 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the no-guess-inference rule is stated where the timing system lives");
 })();
 
+// VF-14 (Smith 2026-07-29): performance and filtering by lots of other
+// categories, with the last-10 dots bundle (P-SLI-LAST10DOTS) per category.
+(function () {
+  console.log("\n=== category axes and last-10 dots (VF-14) ===");
+  const axisCtx = {
+    cfg: {
+      groupKey: (q) => q.topic, groupLabel: (q) => "Topic " + q.topic, idOf: (q) => q.id,
+      progressAxes: [
+        { key: "fam", label: "By family", valuesOf: (q) => q.families },
+        { key: "type", label: "By type", valuesOf: (q) => q.types }
+      ]
+    },
+    questions: [
+      { id: "q1", topic: "A", families: ["Spot the disguise", "Bridge"], types: ["Proof"] },
+      { id: "q2", topic: "A", families: ["Bridge"], types: ["Direct"] },
+      { id: "q3", topic: "B", families: [], types: ["Direct"] }
+    ],
+    _questionById: V._questionById,
+    store: {
+      attempts: [
+        { id: "q1", attempt_id: "x1", correct: true, time_ms: 30000, ts: "2026-07-29T09:00:00Z" },
+        { id: "q2", attempt_id: "x2", correct: false, time_ms: 60000, ts: "2026-07-29T09:05:00Z", marks_awarded: 2, marks_max: 5 },
+        { id: "q2", attempt_id: "x3", correct: false, time_ms: 20000, ts: "2026-07-29T09:10:00Z" },
+        { id: "q3", attempt_id: "x4", correct: true, time_ms: null, ts: "2026-07-29T09:15:00Z", time_discarded: true }
+      ],
+      scores: { q1: 5, q2: 3 },
+      flags: {}
+    }
+  };
+  const stats = V._progressStats.call(axisCtx);
+  check(stats.axes.length === 2, "every configured axis aggregates");
+  const fam = stats.axes[0];
+  const bridge = fam.rows.find((r) => r.value === "Bridge");
+  check(!!bridge && bridge.attempts === 3 && bridge.correct === 1,
+    "a multi-value category counts every question that belongs to it");
+  check(bridge.outcomes.join("") === "rpw",
+    "the outcome trail is chronological: right, part-marks amber, wrong");
+  check(bridge.avgRating === 4, "category ratings average the member questions' scores");
+  check(bridge.timeN === 3 && Math.round(bridge.avgTimeS) === 37,
+    "category time averages over its timed attempts");
+  const disguise = fam.rows.find((r) => r.value === "Spot the disguise");
+  check(!!disguise && disguise.attempts === 1 && fam.rows[0].value === "Bridge",
+    "axis rows sort by practice volume");
+  const typeAxis = stats.axes[1];
+  const direct = typeAxis.rows.find((r) => r.value === "Direct");
+  check(!!direct && direct.attempts === 3 && direct.outcomes.join("") === "pwr",
+    "a second axis slices the same attempts its own way");
+  check(direct.timeN === 2 && Math.round(direct.avgTimeS) === 40,
+    "discarded times stay out of the averages");
+
+  // rendered page: axis tables with dots bundles
+  const aNodes = {
+    ".ppq-modal-body": makeEl("div"),
+    ".ppq-modal-content": makeEl("div"),
+    ".ppq-modal-min": makeEl("button"),
+    ".ppq-modal-reminder": makeEl("div"),
+    ".ppq-modal-feedback-status": makeEl("span"),
+    ".ppq-modal": makeEl("div")
+  };
+  const aPage = Object.assign({}, axisCtx, {
+    cfg: Object.assign({ metaLine: (q) => "Q " + q.id, modules: {} }, axisCtx.cfg),
+    q: (sel) => aNodes[sel] || null,
+    _progressStats: V._progressStats,
+    _feedbackReadiness: () => ({ code: "pending", label: "Solution pending" }),
+    _jumpToAttempt: () => {},
+    _renderProgressPage: V._renderProgressPage
+  });
+  aPage._renderProgressPage();
+  const axisTables = collect(aNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-progress-axis") >= 0);
+  check(axisTables.length === 2, "one table renders per axis");
+  const dotBundles = collect(axisTables[0], (n) => (n.className || "") === "ppq-dots");
+  check(dotBundles.length >= 2, "each category row carries its dots bundle");
+  const bridgeDots = collect(dotBundles[0], (n) => (n.className || "").indexOf("ppq-dot ") >= 0);
+  check(bridgeDots.length === 10, "the bundle is padded to exactly ten slots");
+  const cls = bridgeDots.map((d) => d.className.replace("ppq-dot ", ""));
+  check(cls.slice(0, 7).every((c) => c === "pad") && cls.slice(7).join(",") === "r,p,w",
+    "pads lead, outcomes sit newest-at-the-right (r,p,w)");
+
+  // wrappers expose the new filters and axes
+  const mHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
+  check(/field: "question_types"/.test(mHtml) && /field: "themes"/.test(mHtml) &&
+    /field: "command_terms"/.test(mHtml) && /command_terms: q\.command_terms/.test(mHtml),
+    "IB Maths filters by type, theme and command term");
+  check(/progressAxes:/.test(mHtml) && /By family/.test(mHtml) && /By command term/.test(mHtml),
+    "IB Maths supplies its performance axes");
+  const eHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
+  check(/progressAxes:/.test(eHtml) && /By subtopic/.test(eHtml) && /By spec status/.test(eHtml),
+    "ESAT supplies its performance axes");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(css.indexOf(".ppq-dot.r") >= 0 && css.indexOf(".ppq-dot.p") >= 0 && css.indexOf(".ppq-dot.pad") >= 0,
+    "the dots carry the green/amber/red/pad classes");
+})();
+
 // VSAFE-03 (Claude 2026-07-28): the rejected pill/strikethrough option treatment
 // is deleted, and the legacy eliminations parser renders through the same
 // coloured-letter rail as deep-v2, so no fallback can restore the old design.

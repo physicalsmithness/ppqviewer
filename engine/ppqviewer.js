@@ -199,6 +199,11 @@ window.PPQViewer = (function () {
       targetOf: typeof tgIn.targetOf === "function" ? tgIn.targetOf : null,
       defaultMode: TIMING_MODES.indexOf(tgIn.defaultMode) >= 0 ? tgIn.defaultMode : "none"
     } : null;
+    /* VF-14 (Smith 2026-07-29): extra performance axes for the progress page —
+       each axis names a label and a valuesOf(q) -> [category values] (multi-value
+       welcome: a question counts in every category it belongs to). */
+    cfg.progressAxes = (Array.isArray(cfg.progressAxes) ? cfg.progressAxes : [])
+      .filter(function (a) { return a && a.label && typeof a.valuesOf === "function"; });
     cfg.questionTextOf = cfg.questionTextOf || function (q) { return q.question_text || ""; };
     cfg.choicesOf = cfg.choicesOf || function (q) { return q.choices || []; };
     cfg.answerKeyOf = cfg.answerKeyOf || function (q) { return q.answer_key; };
@@ -1242,7 +1247,62 @@ window.PPQViewer = (function () {
     });
     topicList.sort(function (a, b) { return b.attempts - a.attempts || String(a.label).localeCompare(String(b.label)); });
     const dayList = Object.keys(days).sort().map(function (k) { return days[k]; });
+
+    /* VF-14: per-axis aggregation with a chronological outcome trail per
+       category (feeds the last-10 dots, P-SLI-LAST10DOTS: green right, amber
+       part marks, red wrong, padded). Attempts iterate in stored order, so the
+       trail is oldest -> newest; the renderer keeps the last ten. */
+    const axes = (cfg.progressAxes || []).map(function (axis) {
+      const rowsByValue = {};
+      function rowFor(value) {
+        return rowsByValue[value] = rowsByValue[value] ||
+          { value: value, attempts: 0, correct: 0, timeMs: 0, timeN: 0, ratingSum: 0, ratingN: 0, outcomes: [] };
+      }
+      attempts.forEach(function (att) {
+        const q = self._questionById(att.id);
+        if (!q) return;
+        let values = [];
+        try { values = axis.valuesOf(q) || []; } catch (_) { values = []; }
+        let outcome = att.correct ? "r" : "w";
+        if (!att.correct) {
+          const partial = (att.marks_awarded != null && att.marks_awarded > 0) ||
+            (att.marks_range && att.marks_range[0] > 0);
+          if (partial) outcome = "p";
+        }
+        values.forEach(function (v) {
+          if (v == null || v === "") return;
+          const row = rowFor(String(v));
+          row.attempts++;
+          if (att.correct) row.correct++;
+          if (att.time_ms != null) { row.timeMs += att.time_ms; row.timeN++; }
+          row.outcomes.push(outcome);
+        });
+      });
+      for (const qid in scores) {
+        const v0 = scores[qid];
+        if (!v0) continue;
+        const q = self._questionById(qid);
+        if (!q) continue;
+        let values = [];
+        try { values = axis.valuesOf(q) || []; } catch (_) { values = []; }
+        values.forEach(function (v) {
+          if (v == null || v === "") return;
+          const row = rowFor(String(v));
+          row.ratingSum += v0; row.ratingN++;
+        });
+      }
+      const rows = Object.keys(rowsByValue).map(function (k) { return rowsByValue[k]; });
+      rows.forEach(function (r) {
+        r.pctCorrect = r.attempts ? Math.round(100 * r.correct / r.attempts) : null;
+        r.avgRating = r.ratingN ? r.ratingSum / r.ratingN : null;
+        r.avgTimeS = r.timeN ? r.timeMs / r.timeN / 1000 : null;
+      });
+      rows.sort(function (a, b) { return b.attempts - a.attempts || String(a.value).localeCompare(String(b.value)); });
+      return { key: axis.key || axis.label, label: axis.label, rows: rows };
+    });
+
     return {
+      axes: axes,
       totals: {
         attempts: totals.attempts,
         questions: Object.keys(qids).length,
@@ -1330,6 +1390,50 @@ window.PPQViewer = (function () {
         table.appendChild(tbody);
         page.appendChild(table);
       }
+
+      /* VF-14: one table per configured axis, each row carrying its last-10
+         dots (P-SLI-LAST10DOTS): most recent outcomes in order, oldest gone,
+         empty slots padded. Green right, amber part marks, red wrong. */
+      function dotsEl(outcomes) {
+        const wrap = el("span", { class: "ppq-dots", title: "Your last 10 attempts here, oldest first" });
+        const last = (outcomes || []).slice(-10);
+        for (let i = 0; i < 10; i++) {
+          const o = i < 10 - last.length ? null : last[i - (10 - last.length)];
+          wrap.appendChild(el("span", { class: "ppq-dot " + (o == null ? "pad" : o) }));
+        }
+        return wrap;
+      }
+      (s.axes || []).forEach(function (axis) {
+        if (!axis.rows.length) return;
+        page.appendChild(el("div", { class: "ppq-progress-subhead" }, esc(axis.label)));
+        const table = el("table", { class: "ppq-progress-table ppq-progress-axis" });
+        table.appendChild(headerRow([axis.label.replace(/^By /, ""), "Last 10", "Attempts", "Correct %", "Average rating", "Average time (s)"]));
+        const tbody = el("tbody");
+        const maxA = axis.rows.reduce(function (m, r) { return Math.max(m, r.attempts); }, 1);
+        const maxT = axis.rows.reduce(function (m, r) { return Math.max(m, r.avgTimeS || 0); }, 1);
+        const shown = axis.rows.filter(function (r) { return r.attempts > 0 || r.ratingN > 0; }).slice(0, 14);
+        shown.forEach(function (r) {
+          const tr = el("tr");
+          tr.appendChild(td(r.value, "", "ppq-progress-topic"));
+          const dotsTd = el("td", { class: "ppq-progress-dots" });
+          dotsTd.appendChild(dotsEl(r.outcomes));
+          tr.appendChild(dotsTd);
+          tr.appendChild(td(r.attempts || null, r.attempts ? shadeCell("108, 122, 137", r.attempts, maxA) : ""));
+          tr.appendChild(td(r.pctCorrect != null ? r.pctCorrect + "%" : null,
+            r.pctCorrect != null ? shadeCell("49, 130, 206", r.pctCorrect, 100) : ""));
+          tr.appendChild(td(r.avgRating != null ? r.avgRating.toFixed(1) : null,
+            r.avgRating != null ? shadeCell("221, 165, 35", r.avgRating, 6) : ""));
+          tr.appendChild(td(r.avgTimeS != null ? Math.round(r.avgTimeS) : null,
+            r.avgTimeS != null ? shadeCell("128, 90, 213", r.avgTimeS, maxT) : ""));
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        page.appendChild(table);
+        if (axis.rows.length > shown.length) {
+          page.appendChild(el("div", { class: "ppq-progress-more" },
+            "Showing the " + shown.length + " most-practised of " + axis.rows.length + " categories."));
+        }
+      });
 
       if (s.days.length) {
         page.appendChild(el("div", { class: "ppq-progress-subhead" }, "Over time"));
@@ -4604,6 +4708,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.9.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.10.0" };
 })();
 // build: 0.3.0, maintained by Codex

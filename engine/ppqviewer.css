@@ -693,6 +693,16 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-progress-verdict.wrong { color: var(--ppq-bad); }
 .ppq-progress-chip { display: inline-block; font-size: 0.75rem; border: 1px solid var(--ppq-line); border-radius: 999px; padding: 0.1rem 0.5rem; color: var(--ppq-ink2); margin-left: 0.3rem; }
 .ppq-progress-reflection { font-style: italic; color: var(--ppq-muted); font-size: 0.88rem; margin-top: 0.3rem; }
+/* VF-14: the last-10 dots bundle (P-SLI-LAST10DOTS): green right, amber part
+   marks, red wrong, pale pads; oldest first, newest at the right edge. */
+.ppq-dots { display: inline-grid; grid-template-columns: repeat(10, 10px); gap: 2px; vertical-align: middle; }
+.ppq-dot { width: 10px; height: 10px; border-radius: 2px; }
+.ppq-dot.r { background: var(--ppq-ok); }
+.ppq-dot.w { background: var(--ppq-bad); }
+.ppq-dot.p { background: #d4a017; }
+.ppq-dot.pad { background: var(--ppq-line); opacity: 0.45; }
+.ppq-progress-dots { min-width: 8.2rem; }
+.ppq-progress-more { font-size: 0.8rem; color: var(--ppq-muted); margin: 0.3rem 0 0.6rem; }
 
 /* VF-03: review-previous-attempt affordance and the review-mode furniture */
 .ppq-review-attempt { border-style: dashed; }

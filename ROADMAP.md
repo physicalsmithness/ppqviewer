@@ -97,6 +97,10 @@ content they ask about.
   flags, prompts and reflections. _(2026-07-29, v0.7.0: "My progress" page,
   house-style shaded tables, drill-down reopening the exact attempt;
   interrogation responses now persist onto attempt rows.)_
+- [x] VF-14 (Smith 2026-07-29): performance and filters by many more category
+  axes, each row with its P-SLI-LAST10DOTS bundle. _(v0.10.0: `progressAxes`
+  config; IB Maths adds type/theme/command filters + seven axes; ESAT adds
+  four axes.)_
 - [ ] Add canonical analysis-ID support to question finding.
 
 Exit: a pupil can report a problem centrally, revisit previous work and inspect
