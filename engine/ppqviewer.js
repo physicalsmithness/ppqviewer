@@ -2704,20 +2704,66 @@ window.PPQViewer = (function () {
       this._sessionTimed.count++;
       this._sessionTimed.totalMs += spent;
     }
+    /* VF-04r2 (Smith): remember exactly what this commit added, so a
+       straight-after-answering discard can unwind it precisely. */
+    this._lastCommitTiming = this._timeDiscarded ? null : {
+      spent: spent,
+      target: target,
+      banked: (target != null && prefs.bank) ? (target - spent) : 0
+    };
     const tel = this.q(".ppq-timer");
     if (!tel) return;
     if (prefs.visibility !== "off") {
       tel.className = "ppq-timer ppq-timing ppq-timing--reveal";
       tel.style.display = "";
+      tel.innerHTML = "";
       let text = "took " + this._fmtClock(spent);
       if (this._timeDiscarded) text = "time not recorded for this one";
       else if (target != null) {
         text += " · target " + this._fmtClock(target);
         if (prefs.bank) { const b = this._bankMs || 0; text += " · bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b)); }
       }
-      tel.textContent = text;
+      tel.appendChild(el("span", { class: "ppq-timing-display" }, esc(text)));
+      /* VF-04r2: the clock can be ignored AFTER answering too. */
+      if (!this._timeDiscarded) {
+        const self = this;
+        const undo = el("button", { class: "ppq-timing-discard", type: "button", title: "Strike the time just recorded for this question" }, "don't record this one");
+        undo.addEventListener("click", function () { self._discardCommittedTime(); });
+        tel.appendChild(undo);
+      }
     } else {
       tel.style.display = "none";
+    }
+  };
+
+  /* VF-04r2 (Smith 2026-07-29): retroactive time discard, straight after
+     answering. Strikes time_ms on the just-recorded attempt row, unwinds the
+     bank credit and the session tally, and says so in the reveal line. The
+     answer itself stays recorded — only the clock is ignored. */
+  Viewer.prototype._discardCommittedTime = function () {
+    const last = this._lastCommitTiming;
+    if (!last) return;
+    this._lastCommitTiming = null;
+    this._timeDiscarded = true;
+    this._attemptTimeMs = null;
+    this._sessionTimed.count = Math.max(0, this._sessionTimed.count - 1);
+    this._sessionTimed.totalMs = Math.max(0, this._sessionTimed.totalMs - last.spent);
+    if (last.target != null) this._sessionTimed.targetMs = Math.max(0, this._sessionTimed.targetMs - last.target);
+    if (last.banked) this._bankMs = (this._bankMs || 0) - last.banked;
+    const attempts = ((this.store || {}).attempts) || [];
+    for (let i = attempts.length - 1; i >= 0; i--) {
+      if (!this._attemptId || attempts[i].attempt_id === this._attemptId) {
+        attempts[i].time_ms = null;
+        attempts[i].time_discarded = true;
+        if (this._saveStore) this._saveStore();
+        break;
+      }
+    }
+    this._fireReport({ status: "timing_prefs", qtype: "timing", extra_json: JSON.stringify({ time_discard_retro: true, attempt_id: this._attemptId || "" }) });
+    const tel = this.q(".ppq-timer");
+    if (tel && tel.style.display !== "none") {
+      tel.innerHTML = "";
+      tel.appendChild(el("span", { class: "ppq-timing-display" }, "time not recorded for this one"));
     }
   };
 

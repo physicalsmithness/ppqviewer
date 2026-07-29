@@ -204,7 +204,7 @@ const V = {}; // fake viewer holding the real methods
  "_promptMethodAskV2", "_syncAnalysisReminder",
  "_timingPrefs", "_setTimingPrefs", "_timingModeNow", "_timingTargetMsFor",
  "_elapsedTimingMs", "_commitTiming", "_openTimingPanel", "_reducedMotion", "_fmtClock",
- "_questionScores"
+ "_questionScores", "_discardCommittedTime"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -1707,8 +1707,11 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
       _timeDiscarded: !!opts.discard,
       _stopTimer: () => {},
       _saveStore() { this._saved = (this._saved || 0) + 1; },
+      _fireReport: () => {},
+      _attemptId: "a-commit",
       q: (sel) => (sel === ".ppq-timer" ? tel : null),
       _tel: tel,
+      _discardCommittedTime: V._discardCommittedTime,
       _timingPrefs: V._timingPrefs,
       _setTimingPrefs: V._setTimingPrefs,
       _timingModeNow: V._timingModeNow,
@@ -1776,7 +1779,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "a quick answer banks the saved seconds (target 90s − ~30s spent)");
   check(bankCtx._timerCtx.target_ms === 90000 && bankCtx._sessionTimed.count === 1,
     "the commit context carries the target and the session tally grows");
-  check(/took/.test(bankCtx._tel.textContent || "") && /bank \+/.test(bankCtx._tel.textContent || ""),
+  check(/took/.test(textOf(bankCtx._tel)) && /bank \+/.test(textOf(bankCtx._tel)),
     "the reveal line shows the spend, the target and the bank");
 
   const overdrawn = tctx({ spentMs: 120000, prefs: { timing: { mode: "bank", extraPct: 0 } } });
@@ -1788,8 +1791,26 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   discard._commitTiming();
   check(discard._attemptTimeMs === null && discard._bankMs === 0 &&
     discard._sessionTimed.count === 0 &&
-    /not recorded/.test(discard._tel.textContent || ""),
+    /not recorded/.test(textOf(discard._tel)),
     "don't-record-this-one yields an honest null and touches neither bank nor tally");
+
+  // VF-04r2: the clock can be ignored STRAIGHT AFTER answering too
+  const retro = tctx({ spentMs: 30000, prefs: { timing: { mode: "bank", extraPct: 0 } } });
+  retro._commitTiming();
+  retro.store.attempts.push({ attempt_id: "a-commit", time_ms: retro._attemptTimeMs, correct: true });
+  check(retro._bankMs > 0 && retro._sessionTimed.count === 1 &&
+    collect(retro._tel, (n) => (n.className || "").indexOf("ppq-timing-discard") >= 0).length === 1,
+    "the reveal line carries its own don't-record control");
+  retro._discardCommittedTime();
+  check(retro.store.attempts[0].time_ms === null && retro.store.attempts[0].time_discarded === true &&
+    retro.store.attempts[0].correct === true,
+    "retro discard strikes the time but keeps the answer recorded");
+  check(retro._bankMs === 0 && retro._sessionTimed.count === 0 && retro._sessionTimed.totalMs === 0,
+    "retro discard unwinds the bank credit and the session tally exactly");
+  check(/not recorded/.test(textOf(retro._tel)), "the reveal line says so");
+  const bankAfter = retro._bankMs;
+  retro._discardCommittedTime();
+  check(retro._bankMs === bankAfter, "a second click cannot double-unwind");
 
   // discard flows through to the stored row
   const rowCtx = {
