@@ -702,6 +702,7 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-qdot.untried { background: var(--ppq-line); opacity: 0.5; }
 .ppq-qcluster-more { font-size: 0.68rem; color: var(--ppq-muted); align-self: center; margin-left: 2px; }
 .ppq-qcluster-count { font-size: 0.72rem; color: var(--ppq-muted); margin-top: 0.2rem; }
+.ppq-dash-cluster { max-width: 100%; margin: 0.25rem 0 0.3rem; }
 .ppq-progress-dots { min-width: 9rem; max-width: 13.5rem; }
 .ppq-progress-more { font-size: 0.8rem; color: var(--ppq-muted); margin: 0.3rem 0 0.6rem; }
 

@@ -200,7 +200,8 @@ const V = {}; // fake viewer holding the real methods
  "_progressStats", "_renderProgressPage", "_jumpToAttempt", "_attachResponseToAttempt",
  "_promptMethodAskV2", "_syncAnalysisReminder",
  "_timingPrefs", "_setTimingPrefs", "_timingModeNow", "_timingTargetMsFor",
- "_elapsedTimingMs", "_commitTiming", "_openTimingPanel", "_reducedMotion", "_fmtClock"
+ "_elapsedTimingMs", "_commitTiming", "_openTimingPanel", "_reducedMotion", "_fmtClock",
+ "_questionScores"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -1402,6 +1403,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _matchesQuestionFilters: V._matchesQuestionFilters,
     filterQuestions: V.filterQuestions,
     _zeroRatings: V._zeroRatings,
+    _questionScores: V._questionScores, /* VF-14r2 */
     _catHtml: V._catHtml
   };
 
@@ -1877,6 +1879,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
       { id: "q4", topic: "B", families: ["Bridge"], types: [] }
     ],
     _questionById: V._questionById,
+    _questionScores: V._questionScores,
     store: {
       attempts: [
         { id: "q1", attempt_id: "x1", correct: true, time_ms: 30000, ts: "2026-07-29T09:00:00Z" },
@@ -1960,6 +1963,33 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
   check(css.indexOf(".ppq-qcluster") >= 0 && css.indexOf(".ppq-qdot.untried") >= 0,
     "the cluster and its neutral untried dots are styled");
+
+  // VF-14r2: the little question boxes live on the DASHBOARD categories too
+  const scoresMap = V._questionScores.call({
+    store: { attempts: [
+      { id: "qa", correct: true },
+      { id: "qa", correct: false },
+      { id: "qb", correct: false, marks_awarded: 3, marks_max: 5 }
+    ] }
+  });
+  check(scoresMap.qa === 0.2 && scoresMap.qb === 0.6,
+    "_questionScores shares the 4x-most-recent weighting (right-then-wrong = 0.2)");
+  const catHtml = V._catHtml.call(
+    { cfg: { selfReport: { ramp: { 1: "1,1,1" }, levels: 1 }, revealCorrect: true }, groupFilter: null },
+    "T1",
+    { label: "Topic one", total: 2, marks: [true], ratings: { 1: 0 },
+      qids: ["qa", "qz"], qscores: { qa: 1 } },
+    "ribbonHeat"
+  );
+  check(catHtml.indexOf("ppq-qcluster") >= 0 &&
+    catHtml.indexOf("untried") >= 0 &&
+    catHtml.indexOf(perfColour(1)) >= 0,
+    "a dashboard category renders one box per question, neutral or performance-coloured");
+  check(extractFn("renderDashboard").toString().indexOf("_questionScores") >= 0 &&
+    extractFn("_renderDashboardFacet").toString().indexOf("_questionScores") >= 0,
+    "both the grouped dashboard and the subtopic facet carry the boxes");
+  check(src.indexOf("One box per question — grey until tried") >= 0,
+    "the dashboard legend explains the boxes");
 })();
 
 // VSAFE-03 (Claude 2026-07-28): the rejected pill/strikethrough option treatment
@@ -2300,6 +2330,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     cfg: { groupKey: (q) => q.topic, groupLabel: (q) => "Topic " + q.topic, idOf: (q) => q.id },
     questions: [{ id: "q1", topic: "A" }, { id: "q2", topic: "A" }, { id: "q3", topic: "B" }],
     _questionById: V._questionById,
+    _questionScores: V._questionScores,
     store: {
       attempts: [
         { id: "q1", attempt_id: "a1", correct: true, time_ms: 30000, ts: "2026-07-28T10:00:00Z",
@@ -2384,6 +2415,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     questions: statsCtx.questions,
     store: statsCtx.store,
     _questionById: V._questionById,
+    _questionScores: V._questionScores,
     _lastAttemptFor: V._lastAttemptFor,
     closeModal: () => { jctxCalls.closed++; },
     render: (q) => { jctxCalls.rendered.push(q && q.id); },

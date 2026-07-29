@@ -2,6 +2,19 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (midday, second) — VF-14r2: the question boxes reach the dashboard (v0.10.2)
+
+Smith: "this is for the colour of the little question box." The dashboard's
+category rows (and the subtopic facet drill-down) now carry the same little
+question boxes as the progress page — one per question in the category,
+neutral grey until tried, then the continuous performance colour from the
+shared `_questionScores` map (4×-most-recent, pale yellow at 0.2). The ribbon
+and rating heat stay beneath; the dashboard legend explains the boxes. ESAT
+wrapper release label bumped to **v0.2.17 · timing, clusters, bigger
+analysis** so deployed builds are tellable apart at a glance (the label had
+sat at v0.2.16 across several engine versions — my omission). Suites 501/501
++ 70/70.
+
 ## 2026-07-29 (midday) — VF-14r: the last-10 strip becomes a QUESTION CLUSTER (v0.10.1)
 
 Smith's correction, minutes after v0.10.0, confirmed for ESAT and maths alike:

@@ -1192,6 +1192,29 @@ window.PPQViewer = (function () {
     return true;
   };
 
+  /* VF-14r (Smith 2026-07-29): per-question performance scores from the
+     attempts log — right 1, wrong 0, marks attempts their fraction, ranges
+     their midpoint; the most recent answer weighs 4× all earlier ones. One
+     map, shared by the progress clusters and the dashboard's little question
+     boxes. */
+  Viewer.prototype._questionScores = function () {
+    const values = {};
+    (((this.store || {}).attempts) || []).forEach(function (att) {
+      let v;
+      if (att.marks_max != null && att.marks_max > 0) {
+        if (att.marks_awarded != null) v = att.marks_awarded / att.marks_max;
+        else if (att.marks_range) v = (att.marks_range[0] + att.marks_range[1]) / 2 / att.marks_max;
+        else v = att.correct ? 1 : 0;
+      } else {
+        v = att.correct ? 1 : 0;
+      }
+      (values[String(att.id)] = values[String(att.id)] || []).push(v);
+    });
+    const scores = {};
+    for (const qid in values) scores[qid] = questionPerfScore(values[qid]);
+    return scores;
+  };
+
   /* VF-02 (Claude 2026-07-29): aggregate the pupil's own record — attempts,
      correctness, ratings, guesses, flags, time, reflections, responses — by
      topic and by day, entirely from the local store. Pure computation, no DOM,
@@ -1249,24 +1272,9 @@ window.PPQViewer = (function () {
     const dayList = Object.keys(days).sort().map(function (k) { return days[k]; });
 
     /* VF-14r (Smith): per-axis aggregation with a QUESTION CLUSTER per
-       category — one dot per available question, neutral until attempted,
-       then coloured by the 4×-most-recent performance score. Attempt values
-       accumulate per question first (in stored order), then every axis slices
-       the same map its own way. */
-    const perQuestionValues = {};
-    attempts.forEach(function (att) {
-      let v;
-      if (att.marks_max != null && att.marks_max > 0) {
-        if (att.marks_awarded != null) v = att.marks_awarded / att.marks_max;
-        else if (att.marks_range) v = (att.marks_range[0] + att.marks_range[1]) / 2 / att.marks_max;
-        else v = att.correct ? 1 : 0;
-      } else {
-        v = att.correct ? 1 : 0;
-      }
-      (perQuestionValues[String(att.id)] = perQuestionValues[String(att.id)] || []).push(v);
-    });
-    const perQuestionScore = {};
-    for (const qid in perQuestionValues) perQuestionScore[qid] = questionPerfScore(perQuestionValues[qid]);
+       category — one little box per available question, neutral until
+       attempted, then coloured by the 4×-most-recent performance score. */
+    const perQuestionScore = this._questionScores();
 
     const axes = (cfg.progressAxes || []).map(function (axis) {
       const rowsByValue = {};
@@ -4403,7 +4411,10 @@ window.PPQViewer = (function () {
     const facet = this._activeDashboardFacet();
     if (facet) return this._renderDashboardFacet(facet);
     const cfg = this.cfg, groups = {};
-    this.questions.forEach((q) => { const k = cfg.groupKey(q); if (!groups[k]) groups[k] = { label: cfg.groupLabel(q), total: 0, marks: [], ratings: this._zeroRatings() }; groups[k].total++; });
+    /* VF-14r2 (Smith): the little question boxes live here too — one per
+       question in the group, sharing the progress page's performance scores. */
+    const qscores = this._questionScores();
+    this.questions.forEach((q) => { const k = cfg.groupKey(q); if (!groups[k]) groups[k] = { label: cfg.groupLabel(q), total: 0, marks: [], ratings: this._zeroRatings(), qids: [], qscores: qscores }; groups[k].total++; groups[k].qids.push(String(cfg.idOf(q))); });
     this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q) return; const g = groups[cfg.groupKey(q)]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); });
     Object.keys(this.store.scores).forEach((id) => { const q = this.byId[id]; if (!q) return; const g = groups[cfg.groupKey(q)]; if (g && g.ratings[this.store.scores[id]] != null) g.ratings[this.store.scores[id]]++; });
     const keys = Object.keys(groups).sort((a, b) => { const ua = cfg.isUntagged(a), ub = cfg.isUntagged(b); if (ua !== ub) return ua ? 1 : -1; return a.localeCompare(b); });
@@ -4412,7 +4423,7 @@ window.PPQViewer = (function () {
     const title = panel && panel.querySelector("h3");
     const subtitle = panel && panel.querySelector(".ppq-dash-sub");
     if (title) title.textContent = cfg.dashboardTitle;
-    if (subtitle) subtitle.textContent = "Recent ticks/crosses and your self-rating spread, per group. Click a group to filter.";
+    if (subtitle) subtitle.textContent = "One box per question — grey until tried, then green to red by recent performance. Ticks/crosses and rating spread beneath. Click a group to filter.";
     content.className = "ppq-dash-content";
     content.innerHTML = keys.map((k) => this._catHtml(k, groups[k], "ribbonHeat")).join("");
     this._wireCats();
@@ -4439,12 +4450,16 @@ window.PPQViewer = (function () {
     const sourceIds = {};
     source.forEach((q) => { sourceIds[cfg.idOf(q)] = true; });
     const groups = {};
+    /* VF-14r2: facet categories carry the little question boxes too. */
+    const facetScores = this._questionScores();
     values.forEach((value) => {
       groups[value] = {
         label: (filter.friendlyLabels && filter.friendlyLabels[value]) || value,
         total: 0,
         marks: [],
-        ratings: this._zeroRatings()
+        ratings: this._zeroRatings(),
+        qids: [],
+        qscores: facetScores
       };
     });
     const memberships = (q) => {
@@ -4455,7 +4470,7 @@ window.PPQViewer = (function () {
         return true;
       });
     };
-    source.forEach((q) => memberships(q).forEach((value) => { groups[value].total++; }));
+    source.forEach((q) => memberships(q).forEach((value) => { groups[value].total++; groups[value].qids.push(String(cfg.idOf(q))); }));
     this.store.attempts.forEach((attempt) => {
       const q = this.byId[attempt.id];
       if (!q || !sourceIds[cfg.idOf(q)]) return;
@@ -4533,6 +4548,22 @@ window.PPQViewer = (function () {
       for (let i = 0; i < 10; i++) { const v = seq[i]; boxes += '<div class="ppq-lhs-box"' + (v ? ' style="background:rgb(' + (ramp[v] || "128,128,128") + ')"' : "") + "></div>"; }
       inner += '<div class="ppq-lhs-row">' + boxes + "</div>";
     } else {
+      /* VF-14r2 (Smith): the little question boxes — one per question in the
+         category, neutral until tried, then the continuous performance colour
+         (4×-most-recent weighting, pale yellow at 0.2). */
+      if (g.qids && g.qids.length) {
+        const qs = g.qscores || {};
+        const cap = 240;
+        let boxes = "";
+        g.qids.slice(0, cap).forEach(function (qid) {
+          const s = qs[qid];
+          boxes += s == null
+            ? '<span class="ppq-qdot untried" title="' + esc(qid) + ' — not tried yet"></span>'
+            : '<span class="ppq-qdot" style="background:' + perfColour(s) + '" title="' + esc(qid) + ' — ' + Math.round(s * 100) + '%"></span>';
+        });
+        if (g.qids.length > cap) boxes += '<span class="ppq-qcluster-more">+' + (g.qids.length - cap) + "</span>";
+        inner += '<div class="ppq-qcluster ppq-dash-cluster">' + boxes + "</div>";
+      }
       const last = g.marks.slice(-10);
       /* QoderWork 2026-07-22: with revealCorrect off, ticks/crosses would leak the
          verdict the app never shows — render a neutral dot per attempt instead. */
@@ -4767,6 +4798,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.10.1" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.10.2" };
 })();
 // build: 0.3.0, maintained by Codex
