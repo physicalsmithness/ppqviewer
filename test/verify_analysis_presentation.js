@@ -153,6 +153,9 @@ const scanAnalysisRecordForDamage = extractStandaloneFn("scanAnalysisRecordForDa
 /* VF-02 (2026-07-29): shading helper, and the binding the extracted progress
    page resolves against. */
 const shadeCell = extractStandaloneFn("shadeCell");
+/* d013: the extracted timing functions resolve their free reference against
+   this mirror; the source assert pins the engine literal so drift is caught. */
+const TIMING_MODES = ["none", "end_only", "per_question", "clock", "ring", "bank"];
 function extractFn(name) {
   const marker = "Viewer.prototype." + name + " = function";
   const start = src.indexOf(marker);
@@ -192,7 +195,9 @@ const V = {}; // fake viewer holding the real methods
  "_elimChipsEl", "next", "prev", "_renderHistoryEntry", "_questionById",
  "_lastAttemptFor", "_reopenAttempt", "closeModal",
  "_progressStats", "_renderProgressPage", "_jumpToAttempt", "_attachResponseToAttempt",
- "_promptMethodAskV2", "_syncAnalysisReminder"
+ "_promptMethodAskV2", "_syncAnalysisReminder",
+ "_timingPrefs", "_setTimingPrefs", "_timingModeNow", "_timingTargetMsFor",
+ "_elapsedTimingMs", "_commitTiming", "_openTimingPanel", "_reducedMotion", "_fmtClock"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -1667,6 +1672,167 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the bar shows the answer AND the declared percentages together");
 })();
 
+// d013/VF-04 (Smith priority, 2026-07-29): the timing system — six modes, the
+// time bank, per-learner extra time, pause, discard, silent capture always.
+(function () {
+  console.log("\n=== timing system (VF-04/d013) ===");
+  check(src.indexOf('["none", "end_only", "per_question", "clock", "ring", "bank"]') >= 0,
+    "the six timing modes exist (the ESAT packet's five plus the pacing ring)");
+  check(extractFn("_startTimer").toString().indexOf("_startTiming") >= 0 &&
+    extractFn("_commitTimer").toString().indexOf("_commitTiming") >= 0,
+    "cfg.timing supersedes the legacy timer while legacy consumers keep working");
+  check(src.indexOf("prefs: o.prefs || {}") >= 0,
+    "learner preferences persist in the store");
+
+  function tctx(opts) {
+    opts = opts || {};
+    const tel = makeEl("div");
+    return {
+      cfg: { timing: { targetOf: opts.targetOf || function () { return 90; }, defaultMode: opts.defaultMode || "clock" } },
+      store: { prefs: opts.prefs || {}, attempts: [] },
+      cur: { id: "t1" },
+      shownAt: Date.now() - (opts.spentMs != null ? opts.spentMs : 30000),
+      _pausedMs: opts.pausedMs || 0,
+      _pauseStartedAt: null,
+      _bankMs: opts.bankMs != null ? opts.bankMs : 0,
+      _sessionTimed: { count: 0, totalMs: 0, targetMs: 0 },
+      _timeDiscarded: !!opts.discard,
+      _stopTimer: () => {},
+      _saveStore() { this._saved = (this._saved || 0) + 1; },
+      q: (sel) => (sel === ".ppq-timer" ? tel : null),
+      _tel: tel,
+      _timingPrefs: V._timingPrefs,
+      _setTimingPrefs: V._setTimingPrefs,
+      _timingModeNow: V._timingModeNow,
+      _timingTargetMsFor: V._timingTargetMsFor,
+      _elapsedTimingMs: V._elapsedTimingMs,
+      _commitTiming: V._commitTiming,
+      _fmtClock: V._fmtClock
+    };
+  }
+
+  const base = tctx({});
+  check(base._timingPrefs().mode === "clock" && base._timingPrefs().extraPct === 0,
+    "first run takes the consumer's default mode with no extra time");
+  const savedMode = tctx({ prefs: { timing: { mode: "bank", extraPct: 25 } } });
+  check(savedMode._timingModeNow() === "bank",
+    "a saved learner mode overrides the default");
+  check(savedMode._timingTargetMsFor({ id: "x" }) === 112500,
+    "extra time scales the target (90s + 25% = 112.5s)");
+  const negative = tctx({ prefs: { timing: { mode: "ring", extraPct: -10 } } });
+  check(negative._timingTargetMsFor({ id: "x" }) === 81000,
+    "a negative adjustment makes practice targets harder (90s − 10% = 81s)");
+  const badMode = tctx({ prefs: { timing: { mode: "sideways" } } });
+  check(badMode._timingModeNow() === "clock",
+    "an unknown saved mode falls back to the consumer default");
+  check(tctx({ targetOf: function () { return null; } })._timingTargetMsFor({ id: "x" }) === null,
+    "no pacing from the subject means no target, never an invented one");
+
+  const paused = tctx({ spentMs: 40000, pausedMs: 10000 });
+  const pausedElapsed = paused._elapsedTimingMs();
+  check(pausedElapsed >= 29000 && pausedElapsed <= 31500,
+    "pause time is excluded from the spend (got " + pausedElapsed + "ms)");
+
+  const bankCtx = tctx({ spentMs: 30000, prefs: { timing: { mode: "bank", extraPct: 0 } } });
+  bankCtx._commitTiming();
+  check(bankCtx._attemptTimeMs >= 29000 && bankCtx._attemptTimeMs <= 31500,
+    "commit freezes the pause-adjusted spend");
+  check(bankCtx._bankMs >= 58500 && bankCtx._bankMs <= 61000,
+    "a quick answer banks the saved seconds (target 90s − ~30s spent)");
+  check(bankCtx._timerCtx.target_ms === 90000 && bankCtx._sessionTimed.count === 1,
+    "the commit context carries the target and the session tally grows");
+  check(/took/.test(bankCtx._tel.textContent || "") && /bank \+/.test(bankCtx._tel.textContent || ""),
+    "the reveal line shows the spend, the target and the bank");
+
+  const overdrawn = tctx({ spentMs: 120000, prefs: { timing: { mode: "bank", extraPct: 0 } } });
+  overdrawn._commitTiming();
+  check(overdrawn._bankMs <= -29000 && overdrawn._bankMs >= -31500,
+    "overrunning draws the bank negative — deficit is visible, not floored away");
+
+  const discard = tctx({ spentMs: 30000, discard: true, prefs: { timing: { mode: "bank", extraPct: 0 } } });
+  discard._commitTiming();
+  check(discard._attemptTimeMs === null && discard._bankMs === 0 &&
+    discard._sessionTimed.count === 0 &&
+    /not recorded/.test(discard._tel.textContent || ""),
+    "don't-record-this-one yields an honest null and touches neither bank nor tally");
+
+  // discard flows through to the stored row
+  const rowCtx = {
+    cfg: { learnerId: "x", idOf: (q) => q.id, timingMode: "none", timing: { targetOf: () => 90, defaultMode: "none" }, appVersion: "t", attemptFields: () => ({}), groupKey: () => "T" },
+    cur: { id: "q9" },
+    shownAt: Date.now() - 5000,
+    store: { attempts: [] },
+    _curType: "marksSelfAssess",
+    _attemptId: "a-t",
+    _attemptTimeMs: null,
+    _timeDiscarded: true,
+    _timingModeNow: V._timingModeNow,
+    _timingPrefs: V._timingPrefs,
+    _sessionHistory: [],
+    _pendingDashboardPulse: null,
+    _saveStore: () => {},
+    _fireReport: () => {},
+    _recordAttempt: extractFn("_recordAttempt")
+  };
+  rowCtx._recordAttempt("", false, { marks_max: 5 });
+  check(rowCtx.store.attempts[0].time_ms === null && rowCtx.store.attempts[0].time_discarded === true &&
+    rowCtx.store.attempts[0].timing_mode === "none",
+    "a discarded time reaches the attempt row as null, flagged, with the live timing mode");
+
+  // the preferences panel
+  const pNodes = {
+    ".ppq-modal-body": makeEl("div"),
+    ".ppq-modal-reminder": makeEl("div"),
+    ".ppq-modal-min": makeEl("button"),
+    ".ppq-modal-feedback-status": makeEl("span"),
+    ".ppq-modal": makeEl("div")
+  };
+  const panelCalls = { set: null, closed: 0, started: 0 };
+  const pctx = {
+    cfg: { timing: { targetOf: () => 90, defaultMode: "clock" } },
+    store: { prefs: {} },
+    _sessionTimed: { count: 2, totalMs: 150000, targetMs: 180000 },
+    _bankMs: 30000,
+    _timingPrefs: V._timingPrefs,
+    _reducedMotion: () => false,
+    _fmtClock: V._fmtClock,
+    _setTimingPrefs: (p) => { panelCalls.set = p; },
+    _fireReport: () => {},
+    closeModal: () => { panelCalls.closed++; },
+    _startTiming: () => { panelCalls.started++; },
+    q: (sel) => pNodes[sel] || null,
+    _openTimingPanel: V._openTimingPanel
+  };
+  check(pctx._openTimingPanel() === true, "the timing panel renders into the modal shell");
+  const modeRows = collect(pNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-timing-mode") >= 0 && n.tagName === "BUTTON");
+  check(modeRows.length === 6, "all six modes are offered");
+  check(modeRows.every((r) => (r.className || "").indexOf(" off") < 0),
+    "with pacing supplied, ring and bank are available");
+  const bankRow = modeRows.find((r) => r.dataset && r.dataset.mode === "bank");
+  bankRow.dispatchEvent({ type: "click" });
+  const saveBtn = collect(pNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-timing-save") >= 0)[0];
+  saveBtn.dispatchEvent({ type: "click" });
+  check(panelCalls.set && panelCalls.set.mode === "bank" && panelCalls.closed === 1 && panelCalls.started === 1,
+    "choosing Time bank and saving persists the pref and restarts the timer");
+  check(/This session so far/.test(textOf(pNodes[".ppq-modal-body"])),
+    "the panel carries the end-only session summary");
+
+  // wrappers supply pacing
+  const esatHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
+  check(/timing:\s*\{[\s\S]{0,200}return 90;[\s\S]{0,200}defaultMode: "clock"/.test(esatHtml),
+    "ESAT supplies uniform 90s section pacing with the quiet clock default");
+  const mathsHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
+  check(/timing:\s*\{[\s\S]{0,260}q\.marks[\s\S]{0,60}\* 90;[\s\S]{0,200}defaultMode: "none"/.test(mathsHtml),
+    "IB Maths paces at 1.5 minutes per mark with timing off by default");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(css.indexOf(".ppq-timing-ring-fill") >= 0 && css.indexOf(".ppq-timing-bank.neg") >= 0,
+    "the ring and the in-the-red bank are styled");
+  check(extractFn("_buildTimingRow").toString().indexOf("_reducedMotion") >= 0,
+    "reduced motion swaps the ring for a quiet countdown");
+  check(src.indexOf("Guessing is never inferred from") >= 0,
+    "the no-guess-inference rule is stated where the timing system lives");
+})();
+
 // VSAFE-03 (Claude 2026-07-28): the rejected pill/strikethrough option treatment
 // is deleted, and the legacy eliminations parser renders through the same
 // coloured-letter rail as deep-v2, so no fallback can restore the old design.
@@ -1707,8 +1873,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     src.indexOf("save it to your flagged list") >= 0,
     "the flag copy describes what actually happens");
   check(src.indexOf("flags: o.flags || {}") >= 0 &&
-    src.indexOf("return { attempts: [], scores: {}, flags: {} }") >= 0,
-    "flags are first-class persisted store state alongside attempts and scores");
+    src.indexOf("return { attempts: [], scores: {}, flags: {}, prefs: {} }") >= 0,
+    "flags (and prefs) are first-class persisted store state alongside attempts and scores");
   check(src.indexOf("ppq-flagged-toggle") >= 0 &&
     extractFn("_matchesQuestionFilters").toString().indexOf("_flaggedOnly") >= 0,
     "the header toggle exists and flagged-only is a real filter every view consumer shares");

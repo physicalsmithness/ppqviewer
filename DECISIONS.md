@@ -115,6 +115,14 @@ Implemented as question type `marksSelfAssess` in the shared engine, configured 
 
 ---
 
+## d013 (timing system): engine owns modes, bank, pause, discard and the learner's extra time; subjects supply only pacing
+
+**Decision (built 2026-07-29; sources: handoff VF-04 + the ESAT architecture packet of 2026-06-29).** The shared engine owns the timing MECHANISM: six modes (`none`, `end_only`, `per_question`, `clock`, `ring`, `bank` — the packet's five plus the pacing ring), the running time bank (allowed to go negative: a deficit is shown, not floored away), pause (paused time excluded from the spend), the per-question "don't record this one" (an honest `time_ms: null` + `time_discarded`), the learner's extra-time percentage (25%/50%/custom, negative allowed for harder practice), and silent `time_ms` capture in every mode. Preferences persist per learner per consumer in `store.prefs.timing` and are edited in the engine's Timing panel. The ring falls back to a quiet countdown under `prefers-reduced-motion`. Analysis/reflection time is excluded by construction: the clock commits when the answer (or the markscheme reveal, for marks questions) lands. Guessing is never inferred from time.
+
+**Subjects supply only** `cfg.timing = { targetOf(q) -> seconds, defaultMode }`: ESAT paces uniformly per section (S1: 60 min / 40 questions = 90 s; default mode keeps Smith's quiet count-up clock); IB Maths paces at 1.5 minutes per mark (`marks × 90 s`; default off per q10 while learning). No pace is hardcoded in the engine; difficulty-based targets remain a pattern to learn from real medians later, never assumed. Legacy `cfg.timer` consumers keep working unchanged.
+
+---
+
 ## d009 (embeddable as a bolt-on component, not only a standalone page): the viewer must run inside a larger app
 
 **Decision.** Smith (2026-07-01) on Special Relativity: it IS a consumer and wants to use this soon, but "it's only a part" of the app, "a thing to be bolted onto". So the viewer is not always the whole page; it must run as a component mounted inside a larger host app (the circuit-builder-embed pattern from ECM). This fits d003 (engine-owns-DOM into one `#ppq-root` mount): the same mount-point design serves both a standalone page and an embed. Requirement: no reliance on owning `<body>`, the header, or global singletons that would clash with a host; everything scoped to the mount and namespaced. SR is the first embed consumer, near-term.

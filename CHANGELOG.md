@@ -2,6 +2,38 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (mid-morning) — d013/VF-04: the timing system (v0.9.0)
+
+Engine v0.9.0. Sources: handoff VF-04 + the ESAT architecture packet
+(2026-06-29), built as one bounded feature per the handoff sequence.
+
+- **Six modes**, learner-chosen in the new header Timing panel and persisted
+  per device (`store.prefs.timing`): Off (silent capture only), Reveal at the
+  end (session summary in the panel), Reveal after each question, Quiet clock,
+  Pacing ring (fills toward the target, shows "+0:12 over"; swaps to a quiet
+  countdown under prefers-reduced-motion), and Time bank (± seconds against
+  the target; the bank can go NEGATIVE — deficit is shown, never floored
+  away).
+- **Pacing comes from the subject**: `cfg.timing = { targetOf(q) -> seconds,
+  defaultMode }`. ESAT: uniform 90 s (60 min / 40 questions), default quiet
+  clock (Smith's earlier choice preserved). IB Maths: 1.5 min per mark
+  (`marks × 90 s`), default off while learning (q10). No pace is hardcoded;
+  difficulty-based targets stay a later, learned pattern.
+- **Extra time is a learner preference, not config**: 25% / 50% / custom in
+  the panel, negative allowed for harder practice; scales every target.
+- **Pause** (paused time excluded from the spend) and **"don't record this
+  one"** (attempt lands with `time_ms: null` + `time_discarded`, touching
+  neither bank nor session tally). Analysis/reflection time is excluded by
+  construction — the clock commits at answer (or at markscheme reveal for
+  marks questions). Report payloads gain `target_ms` and `time_discarded`.
+  Guessing is never inferred from time.
+- Legacy `cfg.timer` consumers are untouched; `cfg.timing` supersedes when
+  present. `timing_mode` on attempt rows now records the live mode.
+- Suites: acceptance 470/470 (prefs, target×multiplier incl. negative, pause
+  arithmetic, bank credit and deficit, discard honesty, panel behaviour,
+  wrapper pacing, reduced-motion fallback); content-safety 70/70.
+- Config-shape confirmation posted to `ESAT Prep App\inbox\`.
+
 ## 2026-07-29 (morning) — VF-13: analysis overhaul round 2 — read once, answer there, loads more room (v0.8.1)
 
 Engine v0.8.1, from Smith's live-use dictation ("we only ever want anyone to

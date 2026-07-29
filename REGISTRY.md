@@ -34,7 +34,11 @@ consumer migration and material module change.
 
 - session history navigation, review-reopen of prior attempts, persisted
   flags with a Flagged filter, and the pupil "My progress" page
-  (engine 0.6.0–0.7.0).
+  (engine 0.6.0–0.7.0);
+- marks-based self-assessment with the error taxonomy (d012, engine 0.8.0);
+- the full timing system (d013, engine 0.9.0): six modes incl. time bank,
+  learner extra time, pause, discard; subjects supply only `timing.targetOf`
+  + `defaultMode`.
 
 ## Requested capabilities not yet generally available
 

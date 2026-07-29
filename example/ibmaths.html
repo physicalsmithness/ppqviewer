@@ -99,10 +99,16 @@
       appVersion: "ibmaths-teacher-preview",
       storageKey: "ibmaths_ppq_v1",
       learnerId: "teacher-preview",
-      timingMode: "up",
+      timingMode: "none",
       prefetchAhead: 2,
       defaultOrder: "shuffle",
-      timer: { mode: "up", prominence: "subtle" },
+      /* d013/VF-04: IB pacing rule of thumb — 1.5 minutes per mark. Timing is
+         off by default while learning (q10 guidance); pupils opt in via the
+         Timing panel, where extra time (25%/50%/custom) also lives. */
+      timing: {
+        targetOf: function (q) { return (q.marks || 1) * 90; },
+        defaultMode: "none"
+      },
 
       filters: [
         { field: "syllabus", label: "syllabus", allLabel: "AAHL + legacy MHL", values: ["AAHL", "MHL"], friendlyLabels: { AAHL: "AA HL (2021—)", MHL: "Legacy MHL (2004–20)" } },

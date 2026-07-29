@@ -121,15 +121,21 @@ capture always on; analytics joined to the interrogation layer). Confirm the
 pacing/extra-time config shape back to `ESAT Prep App\inbox\` as part of the
 build.
 
-- [ ] Build the timing-preference screen: off/background, number, ring/pie and
-  time-bank modes.
-- [ ] Support extra-time and optional negative practice adjustments.
-- [ ] Add pause and per-question “Don't keep a record of the time for this one.”
-- [ ] Exclude analysis/reflection time automatically.
-- [ ] Implement bank/deficit display across remaining questions.
-- [ ] Add accessibility, persistence and regression coverage.
+- [x] Build the timing-preference screen: off/background, number, ring/pie and
+  time-bank modes. _(2026-07-29, v0.9.0/d013: six modes incl. end-only and
+  per-question reveal; Timing panel in the header.)_
+- [x] Support extra-time and optional negative practice adjustments.
+  _(25/50/custom %, negative allowed; a learner preference, not config.)_
+- [x] Add pause and per-question “Don't keep a record of the time for this
+  one.” _(Both live in the timing row; discard yields time_ms null.)_
+- [x] Exclude analysis/reflection time automatically. _(By construction: the
+  clock commits at answer / markscheme reveal.)_
+- [x] Implement bank/deficit display across remaining questions. _(Bank runs
+  ± and shows deficit; session summary in the panel.)_
+- [x] Add accessibility, persistence and regression coverage. _(Reduced-motion
+  ring fallback; per-device prefs; 27 new suite assertions.)_
 
-Do not infer guessing from time.
+Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
 
 ## Phase 5 — launch polish
 

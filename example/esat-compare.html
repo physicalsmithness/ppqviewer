@@ -393,12 +393,16 @@
 
         options: { mode: "labels" },
         optionsLeft: true, /* QoderWork 2026-07-22: letter picker in a left rail, no long scroll to answer */
-        /* QoderWork 2026-07-22 (v0.2.4): count-UP timer (Smith: "you're counting
-           down, no, count up… and just to have a log of how long"). A subtle
-           elapsed clock; every answer records time_ms either way. The down mode
-           (with banking + forced/tight/ok pressure tags) stays in the engine for
-           later if a paced mode is wanted. */
-        timer: { mode: "up", prominence: "subtle" },
+        /* d013/VF-04 (2026-07-29): the full timing system replaces the old
+           count-up timer. Pacing per the ESAT architecture packet: uniform per
+           section, S1 = 60 min / 40 questions = 90 s per question. The learner
+           picks the mode (default keeps Smith's chosen quiet count-up clock)
+           and their extra-time percentage in the Timing panel; both persist on
+           the device. Silent time_ms capture continues in every mode. */
+        timing: {
+          targetOf: function () { return 90; },
+          defaultMode: "clock"
+        },
         correctOf: function (q) { return q.correct_answer || ""; },
 
         attemptFields: function (q) {

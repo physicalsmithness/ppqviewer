@@ -27,6 +27,9 @@ window.PPQViewer = (function () {
   "use strict";
 
   const DEFAULT_RAMP = { 1: "229,62,62", 2: "221,107,32", 3: "214,158,46", 4: "72,187,120", 5: "56,161,105", 6: "47,133,90" };
+  /* d013/VF-04: the six timing modes (ESAT packet's five plus the pacing ring
+     the handoff asked for). Silent capture happens in every one of them. */
+  const TIMING_MODES = ["none", "end_only", "per_question", "clock", "ring", "bank"];
 
   /* QoderWork 2026-07-22: canonical meaning of each point on the 1-6 self-report
      scale, as defined by Smith. Surfaced as a tooltip on each scale button plus a
@@ -185,6 +188,17 @@ window.PPQViewer = (function () {
       taxonomy: Array.isArray(saIn.taxonomy) ? saIn.taxonomy : [],
       weakAreasOf: typeof saIn.weakAreasOf === "function" ? saIn.weakAreasOf : null
     };
+    /* d013/VF-04 (Claude 2026-07-29): the timing system. The ENGINE owns the
+       mechanism, the modes, the time bank, the learner's extra-time preference
+       and the silent capture; the SUBJECT supplies only pacing (targetOf, in
+       seconds — e.g. uniform section-time/questions for ESAT, marks×90s for IB
+       Maths) and the first-run default mode. Guessing is never inferred from
+       time. Legacy cfg.timer keeps working for consumers not yet migrated. */
+    const tgIn = cfg.timing || null;
+    cfg.timing = tgIn ? {
+      targetOf: typeof tgIn.targetOf === "function" ? tgIn.targetOf : null,
+      defaultMode: TIMING_MODES.indexOf(tgIn.defaultMode) >= 0 ? tgIn.defaultMode : "none"
+    } : null;
     cfg.questionTextOf = cfg.questionTextOf || function (q) { return q.question_text || ""; };
     cfg.choicesOf = cfg.choicesOf || function (q) { return q.choices || []; };
     cfg.answerKeyOf = cfg.answerKeyOf || function (q) { return q.answer_key; };
@@ -217,16 +231,18 @@ window.PPQViewer = (function () {
 
   Viewer.prototype._loadStore = function () {
     /* VF-07 (Claude 2026-07-28): `flags` — question id -> flagged-at timestamp —
-       joins attempts and scores as first-class persisted store state. */
-    try { const raw = localStorage.getItem(this.cfg.storageKey); if (raw) { const o = JSON.parse(raw); return { attempts: o.attempts || [], scores: o.scores || {}, flags: o.flags || {} }; } }
+       joins attempts and scores as first-class persisted store state.
+       d013 (2026-07-29): `prefs` — per-learner, per-consumer preferences (the
+       timing mode and extra-time multiplier live here) — joins them. */
+    try { const raw = localStorage.getItem(this.cfg.storageKey); if (raw) { const o = JSON.parse(raw); return { attempts: o.attempts || [], scores: o.scores || {}, flags: o.flags || {}, prefs: o.prefs || {} }; } }
     catch (e) { /* corrupt or absent */ }
     // one-time migration from a prior storage shape (e.g. chemistry's two flat maps),
     // so pupils keep their history when a subject moves onto the shared engine.
     if (typeof this.cfg.migrate === "function") {
-      try { const seeded = this.cfg.migrate(localStorage); if (seeded) return { attempts: seeded.attempts || [], scores: seeded.scores || {}, flags: seeded.flags || {} }; }
+      try { const seeded = this.cfg.migrate(localStorage); if (seeded) return { attempts: seeded.attempts || [], scores: seeded.scores || {}, flags: seeded.flags || {}, prefs: seeded.prefs || {} }; }
       catch (e) { /* migration is best-effort */ }
     }
-    return { attempts: [], scores: {}, flags: {} };
+    return { attempts: [], scores: {}, flags: {}, prefs: {} };
   };
   Viewer.prototype._saveStore = function () { localStorage.setItem(this.cfg.storageKey, JSON.stringify(this.store)); this.renderDashboard(); };
 
@@ -314,6 +330,14 @@ window.PPQViewer = (function () {
       type: "button",
       title: "Your attempts, ratings, guesses, time, flags and reflections"
     }, "My progress"));
+    /* d013/VF-04: timing preferences (only when the consumer supplies timing). */
+    if (cfg.timing) {
+      filters.appendChild(el("button", {
+        class: "ppq-btn-mini ppq-timing-btn",
+        type: "button",
+        title: "Timing: off, reveal, clock, pacing ring or time bank — and your extra time"
+      }, "Timing"));
+    }
     /* VF-07 (Claude 2026-07-28): flagged-questions filter toggle. Lives with the
        interrogation module, whose pop-up owns the flag control; hidden until the
        pupil has flagged something. */
@@ -707,6 +731,9 @@ window.PPQViewer = (function () {
     /* VF-02 (Claude 2026-07-29): open the progress page. */
     const progressBtn = this.q(".ppq-progress-btn");
     if (progressBtn) progressBtn.addEventListener("click", () => self._renderProgressPage());
+    /* d013/VF-04: timing preferences panel. */
+    const timingBtn = this.q(".ppq-timing-btn");
+    if (timingBtn) timingBtn.addEventListener("click", () => self._openTimingPanel());
     /* VF-07 (Claude 2026-07-28): the Flagged view toggle. */
     const flagToggle = this.q(".ppq-flagged-toggle");
     if (flagToggle) {
@@ -2252,10 +2279,15 @@ window.PPQViewer = (function () {
     const cfg = this.cfg;
     const row = Object.assign({
       learner_id: cfg.learnerId, id: cfg.idOf(this.cur), chosen_option: chosen, correct: !!isRight, is_correct: isRight ? "right" : "wrong",
-      time_ms: Date.now() - this.shownAt, timing_mode: cfg.timingMode, self_report: null, ts: new Date().toISOString(),
+      /* d013: pause-adjusted spend from the timing system when present; the
+         learner's "don't record this one" turns the value into an honest null. */
+      time_ms: (this._attemptTimeMs !== undefined ? this._attemptTimeMs : (Date.now() - this.shownAt)),
+      timing_mode: cfg.timing ? this._timingModeNow() : cfg.timingMode,
+      self_report: null, ts: new Date().toISOString(),
       app_version: cfg.appVersion, context: { view: "viewer", id: cfg.idOf(this.cur), type: this._curType },
       attempt_id: this._attemptId || "" /* QoderWork 2026-07-22 (analyst handoff) */
     }, cfg.attemptFields(this.cur), extras || {} /* d012: marks fields ride on the row */);
+    if (this._timeDiscarded) { row.time_ms = null; row.time_discarded = true; }
     /* QoderWork 2026-07-22 (analyst handoff): attach the pre-answer guess snapshot
        so a later correction can be reconciled with what was declared up front. */
     if (this._preGuessDeclaration) row.pre_guess_declaration = this._preGuessDeclaration;
@@ -2276,7 +2308,9 @@ window.PPQViewer = (function () {
     if (this._timerCtx) {
       if (this._timerCtx.time_remaining_ms != null) extra.time_remaining_ms = this._timerCtx.time_remaining_ms;
       if (this._timerCtx.time_pressure) extra.time_pressure = this._timerCtx.time_pressure;
+      if (this._timerCtx.target_ms != null) extra.target_ms = this._timerCtx.target_ms; /* d013 */
     }
+    if (this._timeDiscarded) extra.time_discarded = true; /* d013 */
     this._fireReport({ status: "answered", picked_id: chosen, level: (this.cur && this.cur.level) || "", extra_json: JSON.stringify(extra) });
   };
 
@@ -2286,7 +2320,274 @@ window.PPQViewer = (function () {
      config.timer is set. NOTE-TO-SELF: per-question allocation is a single
      perQuestionSec for every question — ESAT may want per-subject/per-paper
      budgets; banking is a simple surplus-carries-forward pool (floored at 0). */
+  /* ============================== d013/VF-04: the timing system ============
+     Engine-owned: modes, bank, pause, discard, learner prefs, silent capture.
+     Subject-supplied: cfg.timing.targetOf (seconds) + defaultMode. */
+  Viewer.prototype._timingPrefs = function () {
+    const saved = ((this.store || {}).prefs || {}).timing || {};
+    const mode = TIMING_MODES.indexOf(saved.mode) >= 0
+      ? saved.mode
+      : ((this.cfg.timing && this.cfg.timing.defaultMode) || "none");
+    const extraPct = typeof saved.extraPct === "number" && isFinite(saved.extraPct) ? saved.extraPct : 0;
+    return { mode: mode, extraPct: extraPct };
+  };
+  Viewer.prototype._setTimingPrefs = function (p) {
+    if (!this.store.prefs) this.store.prefs = {};
+    this.store.prefs.timing = { mode: p.mode, extraPct: p.extraPct };
+    this._saveStore();
+  };
+  Viewer.prototype._timingModeNow = function () { return this._timingPrefs().mode; };
+  /* Effective per-question target in ms: subject pacing × the learner's
+     extra-time multiplier (25%, 50%, or a negative practice adjustment). */
+  Viewer.prototype._timingTargetMsFor = function (q) {
+    const t = this.cfg.timing;
+    if (!t || !t.targetOf || !q) return null;
+    let base = null;
+    try { base = t.targetOf(q); } catch (_) { base = null; }
+    if (base == null || !(base > 0)) return null;
+    return Math.round(base * 1000 * (1 + this._timingPrefs().extraPct / 100));
+  };
+  Viewer.prototype._elapsedTimingMs = function () {
+    let ms = Date.now() - this.shownAt - (this._pausedMs || 0);
+    if (this._pauseStartedAt) ms -= (Date.now() - this._pauseStartedAt);
+    return Math.max(0, ms);
+  };
+  Viewer.prototype._reducedMotion = function () {
+    try { return typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches; }
+    catch (_) { return false; }
+  };
+
+  Viewer.prototype._startTiming = function () {
+    this._stopTimer();
+    this._timerCtx = null;
+    this._attemptTimeMs = undefined;
+    this._timeDiscarded = false;
+    this._pausedMs = 0;
+    this._pauseStartedAt = null;
+    if (this._bankMs == null) this._bankMs = 0;
+    if (!this._sessionTimed) this._sessionTimed = { count: 0, totalMs: 0, targetMs: 0 };
+    const tel = this.q(".ppq-timer");
+    if (!tel) return;
+    const mode = this._timingModeNow();
+    tel.className = "ppq-timer ppq-timing ppq-timing--" + mode;
+    /* none/end_only: nothing during the question. per_question: hidden now,
+       revealed at commit. clock/ring/bank: live. */
+    if (mode === "none" || mode === "end_only" || mode === "per_question") {
+      tel.style.display = "none";
+      return;
+    }
+    tel.style.display = "";
+    this._buildTimingRow(tel, mode);
+    const self = this;
+    this._tickTiming();
+    this._timerInterval = setInterval(function () { self._tickTiming(); }, 500);
+  };
+
+  Viewer.prototype._buildTimingRow = function (tel, mode) {
+    const self = this;
+    tel.innerHTML = "";
+    const useRing = mode === "ring" && !this._reducedMotion();
+    if (useRing) {
+      const R = 9, C = (2 * Math.PI * R).toFixed(2);
+      const svgWrap = el("span", { class: "ppq-timing-ringwrap" });
+      svgWrap.innerHTML =
+        '<svg class="ppq-timing-ring" viewBox="0 0 24 24" aria-hidden="true">' +
+        '<circle class="ppq-timing-ring-track" cx="12" cy="12" r="' + R + '"></circle>' +
+        '<circle class="ppq-timing-ring-fill" cx="12" cy="12" r="' + R + '" stroke-dasharray="' + C + '" stroke-dashoffset="' + C + '"></circle>' +
+        "</svg>";
+      tel.appendChild(svgWrap);
+    }
+    tel.appendChild(el("span", { class: "ppq-timing-display" }, ""));
+    if (mode === "bank") tel.appendChild(el("span", { class: "ppq-timing-bank" }, ""));
+    const pause = el("button", { class: "ppq-timing-pause", type: "button", title: "Pause the clock" }, "❚❚");
+    pause.addEventListener("click", function () {
+      if (self._pauseStartedAt) {
+        self._pausedMs += Date.now() - self._pauseStartedAt;
+        self._pauseStartedAt = null;
+        pause.textContent = "❚❚"; pause.title = "Pause the clock";
+        tel.classList.remove("ppq-timing--paused");
+      } else {
+        self._pauseStartedAt = Date.now();
+        pause.textContent = "▶"; pause.title = "Resume";
+        tel.classList.add("ppq-timing--paused");
+      }
+      self._tickTiming();
+    });
+    tel.appendChild(pause);
+    const discard = el("button", { class: "ppq-timing-discard", type: "button", title: "Don't keep a record of the time for this one" }, "don't record this one");
+    discard.addEventListener("click", function () {
+      self._timeDiscarded = !self._timeDiscarded;
+      discard.classList.toggle("on", self._timeDiscarded);
+      discard.textContent = self._timeDiscarded ? "time won't be recorded ✓" : "don't record this one";
+    });
+    tel.appendChild(discard);
+  };
+
+  Viewer.prototype._tickTiming = function () {
+    const tel = this.q(".ppq-timer");
+    if (!tel || tel.style.display === "none") return;
+    const mode = this._timingModeNow();
+    const elapsed = this._elapsedTimingMs();
+    const target = this._timingTargetMsFor(this.cur);
+    const disp = tel.querySelector(".ppq-timing-display");
+    if (!disp) return;
+    if (this._pauseStartedAt) { disp.textContent = "paused · " + this._fmtClock(elapsed); return; }
+    if (mode === "clock" || (mode === "ring" && target == null)) {
+      disp.textContent = this._fmtClock(elapsed);
+    } else if (mode === "ring") {
+      const over = elapsed - target;
+      const fill = tel.querySelector(".ppq-timing-ring-fill");
+      if (fill) {
+        const C = 2 * Math.PI * 9;
+        const frac = Math.min(1, elapsed / target);
+        fill.setAttribute("stroke-dashoffset", (C * (1 - frac)).toFixed(2));
+      }
+      tel.classList.toggle("ppq-timing--over", over > 0);
+      disp.textContent = over > 0
+        ? ("+" + this._fmtClock(over) + " over")
+        : (this._fmtClock(target - elapsed) + " left");
+    } else if (mode === "bank") {
+      disp.textContent = this._fmtClock(elapsed) + (target != null ? (" / " + this._fmtClock(target)) : "");
+      const bankEl = tel.querySelector(".ppq-timing-bank");
+      if (bankEl) {
+        const b = this._bankMs || 0;
+        bankEl.textContent = "bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b));
+        bankEl.classList.toggle("neg", b < 0);
+      }
+    }
+  };
+
+  /* Commit for the new system: freeze the pause-adjusted spend, settle the
+     bank, reveal per-question timing where that mode asks for it. Analysis
+     and reflection time is excluded by construction — the clock is committed
+     the moment the answer (or markscheme reveal, for marks questions) lands. */
+  Viewer.prototype._commitTiming = function () {
+    this._stopTimer();
+    if (this._pauseStartedAt) { this._pausedMs += Date.now() - this._pauseStartedAt; this._pauseStartedAt = null; }
+    const spent = this._elapsedTimingMs();
+    const target = this._timingTargetMsFor(this.cur);
+    const mode = this._timingModeNow();
+    this._attemptTimeMs = this._timeDiscarded ? null : spent;
+    this._timerCtx = { time_ms: spent };
+    if (target != null) {
+      this._timerCtx.target_ms = target;
+      if (!this._timeDiscarded) {
+        this._sessionTimed.count++;
+        this._sessionTimed.totalMs += spent;
+        this._sessionTimed.targetMs += target;
+        if (mode === "bank") this._bankMs = (this._bankMs || 0) + (target - spent);
+      }
+    } else if (!this._timeDiscarded) {
+      this._sessionTimed.count++;
+      this._sessionTimed.totalMs += spent;
+    }
+    const tel = this.q(".ppq-timer");
+    if (!tel) return;
+    if (mode === "per_question" || mode === "bank" || mode === "ring" || mode === "clock") {
+      tel.className = "ppq-timer ppq-timing ppq-timing--reveal";
+      tel.style.display = "";
+      let text = "took " + this._fmtClock(spent);
+      if (this._timeDiscarded) text = "time not recorded for this one";
+      else if (target != null) {
+        text += " · target " + this._fmtClock(target);
+        if (mode === "bank") { const b = this._bankMs || 0; text += " · bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b)); }
+      }
+      tel.textContent = text;
+    } else {
+      tel.style.display = "none";
+    }
+  };
+
+  /* The preferences panel: mode, extra time, and this session so far. */
+  Viewer.prototype._openTimingPanel = function () {
+    const self = this;
+    const prefs = this._timingPrefs();
+    const hasTargets = !!(this.cfg.timing && this.cfg.timing.targetOf);
+    const page = el("div", { class: "ppq-progress ppq-timing-panel" });
+    page.appendChild(el("div", { class: "ppq-progress-title" }, "Timing"));
+    const modes = [
+      ["none", "Off", "Nothing shown while you work. Your time is still recorded quietly."],
+      ["end_only", "Reveal at the end", "See this session's total here, in this panel, when you choose."],
+      ["per_question", "Reveal after each question", "No clock while you think; your time appears once you have answered."],
+      ["clock", "Quiet clock", "A small elapsed clock while you work."],
+      ["ring", "Pacing ring", "A ring fills toward the target time and shows overtime." + (this._reducedMotion() ? " (Reduced motion is on, so this shows as a quiet countdown instead.)" : "")],
+      ["bank", "Time bank", "Bank seconds you save against the target; spend them on hard questions. Stay in the black."]
+    ];
+    const list = el("div", { class: "ppq-timing-modes" });
+    let chosenMode = prefs.mode;
+    modes.forEach(function (m) {
+      const needsTargets = m[0] === "ring" || m[0] === "bank" || m[0] === "per_question";
+      const unavailable = needsTargets && !hasTargets && m[0] !== "per_question";
+      const row = el("button", { class: "ppq-timing-mode" + (m[0] === prefs.mode ? " sel" : "") + (unavailable ? " off" : ""), type: "button", "data-mode": m[0] });
+      row.appendChild(el("b", null, esc(m[1])));
+      row.appendChild(el("span", null, esc(unavailable ? "Needs pacing targets from the subject setup." : m[2])));
+      if (!unavailable) row.addEventListener("click", function () {
+        list.querySelectorAll(".ppq-timing-mode").forEach(function (x) { x.classList.remove("sel"); });
+        row.classList.add("sel");
+        chosenMode = m[0];
+      });
+      list.appendChild(row);
+    });
+    page.appendChild(list);
+
+    const extraRow = el("div", { class: "ppq-timing-extra" });
+    extraRow.appendChild(el("b", null, "Extra time"));
+    extraRow.appendChild(el("span", null, "Scales every target. 25% and 50% match access arrangements; a negative number makes practice harder."));
+    const extraInput = el("input", { class: "ppq-timing-extra-input", type: "number", step: "5", min: "-50", max: "100", value: String(prefs.extraPct) });
+    ["0", "25", "50"].forEach(function (v) {
+      const b = el("button", { class: "ppq-btn-mini ppq-timing-extra-quick", type: "button" }, v + "%");
+      b.addEventListener("click", function () { extraInput.value = v; });
+      extraRow.appendChild(b);
+    });
+    extraRow.appendChild(extraInput);
+    extraRow.appendChild(el("span", { class: "ppq-timing-extra-pc" }, "%"));
+    page.appendChild(extraRow);
+
+    const st = this._sessionTimed || { count: 0, totalMs: 0, targetMs: 0 };
+    const sess = el("div", { class: "ppq-timing-session" });
+    sess.appendChild(el("b", null, "This session so far"));
+    let sessText = st.count
+      ? (st.count + " timed question" + (st.count === 1 ? "" : "s") + " · " + this._fmtClock(st.totalMs))
+      : "No timed questions yet.";
+    if (st.count && st.targetMs) {
+      const diff = st.targetMs - st.totalMs;
+      sessText += " · vs target " + (diff >= 0 ? "+" : "−") + this._fmtClock(Math.abs(diff));
+    }
+    if ((this._bankMs || 0) !== 0) {
+      const b = this._bankMs;
+      sessText += " · bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b));
+    }
+    sess.appendChild(el("span", null, esc(sessText)));
+    page.appendChild(sess);
+
+    const save = el("button", { class: "ppq-btn ppq-primary ppq-timing-save", type: "button" }, "Save — remembered on this device");
+    save.addEventListener("click", function () {
+      let pct = parseFloat(extraInput.value);
+      if (!isFinite(pct)) pct = 0;
+      pct = Math.max(-50, Math.min(100, pct));
+      self._setTimingPrefs({ mode: chosenMode, extraPct: pct });
+      self._fireReport({ status: "timing_prefs", qtype: "timing", extra_json: JSON.stringify({ mode: chosenMode, extra_pct: pct }) });
+      self.closeModal();
+      self._startTiming();
+    });
+    page.appendChild(save);
+
+    const body = this.q(".ppq-modal-body");
+    if (!body) return false;
+    body.innerHTML = "";
+    body.appendChild(page);
+    const reminder = this.q(".ppq-modal-reminder");
+    if (reminder) reminder.textContent = "Timing";
+    const minBtn = this.q(".ppq-modal-min");
+    if (minBtn) minBtn.style.display = "none";
+    const badge = this.q(".ppq-modal-feedback-status");
+    if (badge) badge.style.display = "none";
+    this.q(".ppq-modal").classList.add("show", "ppq-modal-progress");
+    return true;
+  };
+
   Viewer.prototype._startTimer = function () {
+    if (this.cfg.timing) return this._startTiming(); /* d013 supersedes */
     this._stopTimer();
     const t = this.cfg.timer;
     const tel = this.q(".ppq-timer");
@@ -2328,6 +2629,7 @@ window.PPQViewer = (function () {
     return m + ":" + (r < 10 ? "0" : "") + r;
   };
   Viewer.prototype._commitTimer = function () {
+    if (this.cfg.timing) return this._commitTiming(); /* d013 supersedes */
     this._stopTimer();
     const t = this.cfg.timer;
     if (!t) { this._timerCtx = null; return; }
@@ -4302,6 +4604,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.8.1" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.9.0" };
 })();
 // build: 0.3.0, maintained by Codex

@@ -222,6 +222,35 @@
 .ppq-timer--prominent { align-self: center; font-size: 1.9rem; color: var(--ppq-ink); padding: 0.25rem 1rem; border: 1px solid var(--ppq-line); border-radius: 12px; background: var(--ppq-bg); margin-top: -0.4rem; }
 .ppq-timer--tight { color: var(--ppq-bad); }
 .ppq-timer--forced { color: var(--ppq-bad); animation: ppq-timer-pulse 1s ease-in-out infinite; }
+
+/* d013/VF-04: the timing system row (clock / ring / bank) + reveal state */
+.ppq-timing { align-self: flex-end; display: flex; align-items: center; gap: 0.55rem; font-size: 0.95rem; color: var(--ppq-muted); margin-top: -0.6rem; }
+.ppq-timing--reveal { color: var(--ppq-ink2); font-weight: 700; }
+.ppq-timing--paused .ppq-timing-display { opacity: 0.6; }
+.ppq-timing--over .ppq-timing-display { color: var(--ppq-bad); }
+.ppq-timing-ringwrap { display: inline-flex; width: 1.5rem; height: 1.5rem; }
+.ppq-timing-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ppq-timing-ring-track { fill: none; stroke: var(--ppq-line); stroke-width: 3; }
+.ppq-timing-ring-fill { fill: none; stroke: var(--ppq-accent); stroke-width: 3; stroke-linecap: round; }
+.ppq-timing--over .ppq-timing-ring-fill { stroke: var(--ppq-bad); }
+.ppq-timing-bank { font-weight: 800; color: var(--ppq-ok); }
+.ppq-timing-bank.neg { color: var(--ppq-bad); }
+.ppq-timing-pause { border: 1px solid var(--ppq-line); border-radius: 6px; background: var(--ppq-bg); color: var(--ppq-ink2); font-size: 0.7rem; padding: 0.15rem 0.45rem; cursor: pointer; }
+.ppq-timing-pause:hover { border-color: var(--ppq-accent); }
+.ppq-timing-discard { border: none; background: transparent; color: var(--ppq-muted); font-size: 0.72rem; text-decoration: underline dotted; cursor: pointer; padding: 0; }
+.ppq-timing-discard.on { color: var(--ppq-accent); text-decoration: none; font-weight: 700; }
+/* the preferences panel */
+.ppq-timing-modes { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.ppq-timing-mode { text-align: left; border: 1px solid var(--ppq-line); border-radius: 9px; background: var(--ppq-bg); padding: 0.6rem 0.9rem; cursor: pointer; font: inherit; color: var(--ppq-ink); display: flex; flex-direction: column; gap: 0.15rem; }
+.ppq-timing-mode span { font-size: 0.88rem; color: var(--ppq-muted); line-height: 1.45; }
+.ppq-timing-mode:hover { border-color: var(--ppq-accent); }
+.ppq-timing-mode.sel { border-color: var(--ppq-accent); box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25); }
+.ppq-timing-mode.off { opacity: 0.55; cursor: default; }
+.ppq-timing-extra { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.ppq-timing-extra > span { flex-basis: 100%; font-size: 0.88rem; color: var(--ppq-muted); }
+.ppq-timing-extra-input { width: 5rem; padding: 0.4rem 0.5rem; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); color: var(--ppq-ink); font: inherit; }
+.ppq-timing-session { margin-bottom: 1.1rem; display: flex; flex-direction: column; gap: 0.2rem; }
+.ppq-timing-session span { color: var(--ppq-ink2); }
 @keyframes ppq-timer-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
 .ppq-draw-container { position: relative; display: block; max-width: var(--ppq-crop-width, 92%); margin: 0 auto; }
