@@ -604,6 +604,34 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 /* VF-07: the flagged-view header toggle */
 .ppq-flagged-toggle.on { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; font-weight: 700; }
 
+/* d012: marks-based self-assessment — the marks bar and the what-went-wrong */
+.ppq-marksbar { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--ppq-line); }
+.ppq-marksbar.done { opacity: 0.75; }
+.ppq-marksbar-prompt { font-weight: 700; font-size: 0.98rem; margin-bottom: 0.55rem; }
+.ppq-marksbar-row { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.ppq-mark-btn { min-width: 2.6rem; padding: 0.5rem 0.75rem; font-size: 1rem; font-weight: 700; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); color: var(--ppq-ink); cursor: pointer; }
+.ppq-mark-btn:hover { border-color: var(--ppq-accent); }
+.ppq-mark-btn.full { border-color: rgba(45, 106, 63, 0.55); color: var(--ppq-ok); font-weight: 800; }
+.ppq-mark-btn.lo { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; }
+.ppq-marks-unsure { margin-top: 0.55rem; font-size: 0.85rem; padding: 0.35rem 0.8rem; border: 1px dashed var(--ppq-line); border-radius: 999px; background: transparent; color: var(--ppq-ink2); cursor: pointer; }
+.ppq-marks-unsure.on { border-style: solid; border-color: var(--ppq-accent); color: var(--ppq-accent); font-weight: 700; }
+.ppq-ms-crop { display: block; max-width: 100%; margin: 0.5rem 0; border: 1px solid var(--ppq-line); border-radius: 6px; }
+/* d012: full marks prompts the 4-6 band; others stay clickable */
+.ppq-iq-scale-btn.ppq-band { border-color: var(--ppq-accent); box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25); }
+/* d012: what-went-wrong taxonomy */
+.ppq-iq-errtax { margin: 0.9rem 0 0.4rem; padding: 0.85rem 1rem; border: 1px solid var(--ppq-line); border-left: 3px solid var(--ppq-accent); border-radius: 8px; background: var(--ppq-paper); }
+.ppq-iq-errtax-head { font-weight: 800; font-size: 1rem; margin-bottom: 0.6rem; }
+.ppq-iq-errtax-group { margin-bottom: 0.65rem; }
+.ppq-iq-errtax-label { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ppq-muted); margin-bottom: 0.35rem; }
+.ppq-iq-errtax-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.ppq-iq-errtag.weak { border-color: rgba(221, 165, 35, 0.6); box-shadow: 0 0 0 2px rgba(221, 165, 35, 0.2); }
+.ppq-iq-errtax-other { display: flex; gap: 0.5rem; align-items: flex-start; margin-top: 0.5rem; }
+.ppq-iq-errtax-other-text { flex: 1; resize: vertical; padding: 0.5rem 0.6rem; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); color: var(--ppq-ink); font: inherit; font-size: 0.92rem; }
+.ppq-iq-errtax-propose { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+.ppq-iq-errtax-propose-text { flex: 1; padding: 0.45rem 0.6rem; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); color: var(--ppq-ink2); font: inherit; font-size: 0.88rem; }
+.ppq-iq-errtax-save { font-size: 0.85rem; padding: 0.4rem 0.85rem; border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-bg); color: var(--ppq-ink2); cursor: pointer; }
+.ppq-iq-errtax-save:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
+
 /* VF-02: pupil progress page. Data-presentation house style: values centred
    both ways, headings wrapped (never widening columns), smooth zero-anchored
    two-tone shading computed per cell, one hue per quantity class, black text

@@ -177,6 +177,14 @@ window.PPQViewer = (function () {
     cfg.stemUrlOf = cfg.stemUrlOf || function (q) { return q.page_url || null; };
     // v0.2 question-type + module hooks
     cfg.questionType = cfg.questionType || function () { return "imageSelfMark"; };
+    /* d012 (Claude 2026-07-29): marks-based self-assessment configuration. */
+    cfg.marksOf = cfg.marksOf || function (q) { return q.marks; };
+    cfg.msCropsOf = cfg.msCropsOf || null;
+    const saIn = cfg.selfAssess || {};
+    cfg.selfAssess = {
+      taxonomy: Array.isArray(saIn.taxonomy) ? saIn.taxonomy : [],
+      weakAreasOf: typeof saIn.weakAreasOf === "function" ? saIn.weakAreasOf : null
+    };
     cfg.questionTextOf = cfg.questionTextOf || function (q) { return q.question_text || ""; };
     cfg.choicesOf = cfg.choicesOf || function (q) { return q.choices || []; };
     cfg.answerKeyOf = cfg.answerKeyOf || function (q) { return q.answer_key; };
@@ -1578,6 +1586,15 @@ window.PPQViewer = (function () {
     this._chosenLabel = row.chosen_option || "";
     this._wasRight = !!row.correct;
     this._preGuessDeclaration = row.pre_guess_declaration || null;
+    /* d012: reconstruct a marks-based attempt's outcome so the verdict and the
+       what-went-wrong panel review faithfully. */
+    this._marksOutcome = row.marks_max != null ? {
+      max: row.marks_max,
+      awarded: row.marks_awarded != null ? row.marks_awarded : null,
+      range: row.marks_range || null,
+      sure: row.sure !== false,
+      full: !!row.correct
+    } : null;
     if (!this._renderInterrogation()) this._reviewingAttempt = null;
   };
   Viewer.prototype.goToId = function (id) {
@@ -1806,6 +1823,8 @@ window.PPQViewer = (function () {
     this.answered = false;
     this.shownAt = Date.now();
     this._reviewingAttempt = null;
+    this._marksOutcome = null; /* d012 */
+    this._marksPending = false;
     /* QoderWork 2026-07-22 (analyst handoff): a stable id for THIS displayed
        attempt — session+item is not enough when an item is attempted twice. */
     this._attemptId = "att_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -1946,7 +1965,18 @@ window.PPQViewer = (function () {
   Viewer.prototype._renderAnswerArea = function (q, type) {
     if (type === "mcq") return this._renderMCQ(q);
     if (type === "flashcard") return this._renderFlashcard(q);
+    if (type === "marksSelfAssess") return this._renderMarksSelfAssess(q);
     return this._renderImageSelfMark(q);
+  };
+
+  /* d012 (Claude 2026-07-29): long-form marks-based self-assessment. Work on
+     paper, reveal the markscheme, then enter marks out of the part's maximum —
+     one click when sure, a two-tap range behind "Not sure?". */
+  Viewer.prototype._renderMarksSelfAssess = function (q) {
+    this._answerLabels = [];
+    this.q(".ppq-options").style.display = "none";
+    this.q(".ppq-reveal").style.display = "inline-block";
+    this.q(".ppq-kb-hint").textContent = "Enter/R to reveal the markscheme · S skip · ← previous";
   };
 
   Viewer.prototype._renderImageSelfMark = function (q) {
@@ -1987,6 +2017,84 @@ window.PPQViewer = (function () {
     this.q(".ppq-options").style.display = "none";
     this.q(".ppq-reveal").style.display = "inline-block";
     this.q(".ppq-kb-hint").textContent = "Enter/R to reveal the markscheme · S skip · ← previous";
+  };
+
+  /* d012: the marks bar. One row 0..max (max button doubles as "Got it right"),
+     one click when sure; "Not sure?" flips to a two-tap lowest/highest range.
+     Fewest clicks by design. */
+  Viewer.prototype._renderMarksBar = function (q) {
+    const self = this;
+    const max = Math.max(1, parseInt((typeof this.cfg.marksOf === "function" ? this.cfg.marksOf(q) : q.marks) || 0, 10) || 1);
+    const old = this.q(".ppq-marksbar");
+    if (old && old.parentNode) old.parentNode.removeChild(old);
+    const bar = el("div", { class: "ppq-marksbar" });
+    const prompt = el("div", { class: "ppq-marksbar-prompt" }, "How many marks, out of " + max + "?");
+    bar.appendChild(prompt);
+    const row = el("div", { class: "ppq-marksbar-row" });
+    let unsure = false, lo = null;
+    for (let v = 0; v <= max; v++) {
+      const label = v === max ? (max + " · Got it right") : String(v);
+      const b = el("button", { class: "ppq-mark-btn" + (v === max ? " full" : ""), type: "button", "data-mark": String(v) }, esc(label));
+      b.addEventListener("click", () => {
+        if (!unsure) { self._commitMarks(q, { max: max, awarded: v, sure: true }); return; }
+        if (lo == null) {
+          lo = v;
+          b.classList.add("lo");
+          prompt.textContent = "…and the highest it might be?";
+        } else {
+          const a = Math.min(lo, v), z = Math.max(lo, v);
+          if (a === z) { self._commitMarks(q, { max: max, awarded: a, sure: false }); }
+          else { self._commitMarks(q, { max: max, range: [a, z], sure: false }); }
+        }
+      });
+      row.appendChild(b);
+    }
+    bar.appendChild(row);
+    const unsureBtn = el("button", { class: "ppq-marks-unsure", type: "button" }, "Not sure? Give a range");
+    unsureBtn.addEventListener("click", () => {
+      unsure = !unsure; lo = null;
+      row.querySelectorAll(".ppq-mark-btn").forEach((x) => x.classList.remove("lo"));
+      unsureBtn.classList.toggle("on", unsure);
+      prompt.textContent = unsure
+        ? "Tap the lowest plausible mark…"
+        : ("How many marks, out of " + max + "?");
+    });
+    bar.appendChild(unsureBtn);
+    const panel = this.q(".ppq-answer-panel");
+    panel.appendChild(bar);
+    this.q(".ppq-kb-hint").textContent = "Tap your marks (0–" + max + ") · number keys work too";
+  };
+
+  /* d012: commit the self-assessed marks as the attempt. `correct` stays the
+     derived full-marks boolean so every existing surface keeps working; the
+     richer truth (exact/range, sure) rides on the attempt row. */
+  Viewer.prototype._commitMarks = function (q, outcome) {
+    if (this.answered) return;
+    this.answered = true;
+    this._marksPending = false;
+    const full = outcome.awarded != null
+      ? outcome.awarded === outcome.max
+      : (outcome.range && outcome.range[0] === outcome.max);
+    this._marksOutcome = {
+      max: outcome.max,
+      awarded: outcome.awarded != null ? outcome.awarded : null,
+      range: outcome.range || null,
+      sure: outcome.sure !== false,
+      full: !!full
+    };
+    this._chosenLabel = "";
+    this._wasRight = !!full;
+    this._answerRevealPending = false; /* the markscheme is already open */
+    const extras = { marks_max: outcome.max, sure: outcome.sure !== false };
+    if (outcome.awarded != null) extras.marks_awarded = outcome.awarded;
+    if (outcome.range) extras.marks_range = outcome.range;
+    this._recordAttempt("", !!full, extras);
+    const bar = this.q(".ppq-marksbar");
+    if (bar) {
+      bar.querySelectorAll(".ppq-mark-btn, .ppq-marks-unsure").forEach((b) => { b.disabled = true; });
+      bar.classList.add("done");
+    }
+    this._afterAnswer();
   };
 
   Viewer.prototype._optionLabels = function (q) {
@@ -2060,6 +2168,26 @@ window.PPQViewer = (function () {
 
   Viewer.prototype.reveal = function () {
     if (this.answered) return;
+    if (this._curType === "marksSelfAssess") {
+      /* d012: the clock stops at reveal (marks entry is not working time). The
+         attempt is recorded when the marks are committed, not here. */
+      if (this._marksPending) return;
+      this._marksPending = true;
+      this._commitTimer();
+      let ms = this._formatMarkscheme(this.cfg.markschemeOf(this.cur));
+      const msImgs = (typeof this.cfg.msCropsOf === "function" ? this.cfg.msCropsOf(this.cur) : null) || [];
+      msImgs.forEach((src) => { ms += '<img class="ppq-ms-crop" src="' + esc(src) + '">'; });
+      const ansImg = this.cfg.answerUrlOf(this.cur);
+      if (ansImg && !msImgs.length) ms += '<details class="ppq-ms-full"><summary>Show full markscheme page <span class="ppq-spoiler">(may well contain spoilers for other parts)</span></summary><img src="' + esc(ansImg) + '"></details>';
+      this.q(".ppq-markscheme").innerHTML = ms;
+      this.q(".ppq-answer-panel").className = "ppq-answer-panel show";
+      this._showExaminer(this.cur);
+      this.q(".ppq-reveal").style.display = "none";
+      this.q(".ppq-skip").style.display = "none";
+      if (this.cfg.modules.math) this._applyMath(this.q(".ppq-answer-panel"));
+      this._renderMarksBar(this.cur);
+      return;
+    }
     if (this._curType === "flashcard") {
       this.answered = true;
       this._commitTimer(); /* QoderWork 2026-07-22: stop the clock on reveal */
@@ -2120,14 +2248,14 @@ window.PPQViewer = (function () {
     return s;
   };
 
-  Viewer.prototype._recordAttempt = function (chosen, isRight) {
+  Viewer.prototype._recordAttempt = function (chosen, isRight, extras) {
     const cfg = this.cfg;
     const row = Object.assign({
       learner_id: cfg.learnerId, id: cfg.idOf(this.cur), chosen_option: chosen, correct: !!isRight, is_correct: isRight ? "right" : "wrong",
       time_ms: Date.now() - this.shownAt, timing_mode: cfg.timingMode, self_report: null, ts: new Date().toISOString(),
       app_version: cfg.appVersion, context: { view: "viewer", id: cfg.idOf(this.cur), type: this._curType },
       attempt_id: this._attemptId || "" /* QoderWork 2026-07-22 (analyst handoff) */
-    }, cfg.attemptFields(this.cur));
+    }, cfg.attemptFields(this.cur), extras || {} /* d012: marks fields ride on the row */);
     /* QoderWork 2026-07-22 (analyst handoff): attach the pre-answer guess snapshot
        so a later correction can be reconciled with what was declared up front. */
     if (this._preGuessDeclaration) row.pre_guess_declaration = this._preGuessDeclaration;
@@ -2405,14 +2533,20 @@ window.PPQViewer = (function () {
     restPage.appendChild(this._verdictEl(rec, isV2, chosen, correctLetter, this._wasRight, reviewMode));
     if (reviewing) {
       const d = this._preGuessDeclaration;
-      let recap = "No guess was declared on this attempt.";
-      if (d && d.candidate_options && d.candidate_options.length) {
-        const pcts = d.candidate_percentages || {};
-        recap = "You declared a guess between: " + d.candidate_options.map(function (L) {
-          return pcts[L] != null ? (L + " (" + pcts[L] + "%)") : L;
-        }).join(", ");
+      if (labels.length >= 2 || d) {
+        let recap = "No guess was declared on this attempt.";
+        if (d && d.candidate_options && d.candidate_options.length) {
+          const pcts = d.candidate_percentages || {};
+          recap = "You declared a guess between: " + d.candidate_options.map(function (L) {
+            return pcts[L] != null ? (L + " (" + pcts[L] + "%)") : L;
+          }).join(", ");
+        }
+        restPage.appendChild(el("div", { class: "ppq-iq-declaration-recap" }, esc(recap)));
       }
-      restPage.appendChild(el("div", { class: "ppq-iq-declaration-recap" }, esc(recap)));
+    }
+    /* d012: part marks or a zero opens the structured what-went-wrong. */
+    if (this._marksOutcome && !this._marksOutcome.full) {
+      this._appendErrorTaxonomy(restPage);
     }
 
     if (isV2) {
@@ -2452,7 +2586,9 @@ window.PPQViewer = (function () {
     for (let v = 1; v <= cfg.selfReport.levels; v++) {
       const lbl = cfg.selfReport.labels ? cfg.selfReport.labels[v - 1] : String(v);
       const meaning = meanings[v - 1] || "";
-      scale.appendChild(el("button", { class: "ppq-scale-btn ppq-iq-scale-btn", "data-val": String(v), title: meaning ? (v + " — " + meaning) : "" }, esc(lbl)));
+      /* d012: full marks prompts the 4/5/6 band — highlighted, others clickable. */
+      const banded = this._marksOutcome && this._marksOutcome.full && v >= 4 && cfg.selfReport.levels === 6;
+      scale.appendChild(el("button", { class: "ppq-scale-btn ppq-iq-scale-btn" + (banded ? " ppq-band" : ""), "data-val": String(v), title: meaning ? (v + " — " + meaning) : "" }, esc(lbl)));
     }
     rate.appendChild(scale);
     if (meanings.length) {
@@ -2629,9 +2765,19 @@ window.PPQViewer = (function () {
       opt = rec.options.filter((o) => String(o.label).toUpperCase() === String(chosen).toUpperCase())[0] || null;
     }
     const op = el("div", { class: "ppq-iq-option " + (isRight ? "right" : "wrong") });
-    op.appendChild(el("div", { class: "ppq-iq-option-head" },
-      "You chose " + esc(chosen || "?") +
-      (isRight ? " — the right answer" : (correctLetter ? " — the answer is " + esc(correctLetter) : ""))));
+    /* d012: marks-based attempts carry a marks verdict, not a letter verdict. */
+    const mo = this._marksOutcome;
+    let headText;
+    if (mo && !chosen) {
+      headText = mo.awarded != null
+        ? ("You gave yourself " + mo.awarded + " / " + mo.max +
+           (mo.full ? " — got it right" : "") + (mo.sure ? "" : " (not sure)"))
+        : ("You gave yourself " + mo.range[0] + "–" + mo.range[1] + " / " + mo.max + " (not sure)");
+    } else {
+      headText = "You chose " + (chosen || "?") +
+        (isRight ? " — the right answer" : (correctLetter ? " — the answer is " + correctLetter : ""));
+    }
+    op.appendChild(el("div", { class: "ppq-iq-option-head" }, esc(headText)));
     /* Deep-v2 error_path is a reconstructed reviewer mechanism, not a known pupil
        history. Pupils get the matching conditional feedback question instead. */
     if (opt && opt.error_path && (!isV2 || reviewMode)) {
@@ -3230,6 +3376,92 @@ window.PPQViewer = (function () {
     };
     save.addEventListener("click", commit);
     textarea.addEventListener("blur", commit);
+    iq.appendChild(box);
+  };
+
+  /* d012 (Claude 2026-07-29): the structured what-went-wrong for marks-based
+     attempts that fell short. Config-driven vocabulary (consumer taxonomy),
+     the question's own subtopics as one-click weak-area chips (pre-highlighted
+     when the consumer marks them weak), multi-select, an Other free text and a
+     new-category proposal channel. Selections persist onto the attempt row. */
+  Viewer.prototype._appendErrorTaxonomy = function (iq) {
+    const self = this;
+    const sa = this.cfg.selfAssess || {};
+    const attempts = ((this.store || {}).attempts) || [];
+    let prior = {};
+    for (let i = attempts.length - 1; i >= 0; i--) {
+      if (!this._attemptId || attempts[i].attempt_id === this._attemptId) {
+        prior = (attempts[i].responses && attempts[i].responses.error_tags) || {};
+        break;
+      }
+    }
+    const box = el("div", { class: "ppq-iq-errtax" });
+    box.appendChild(el("div", { class: "ppq-iq-errtax-head" }, "What went wrong? Tap everything that applies."));
+
+    function chipRow(groupLabel, chips, kindTag) {
+      if (!chips.length) return;
+      const g = el("div", { class: "ppq-iq-errtax-group" });
+      g.appendChild(el("div", { class: "ppq-iq-errtax-label" }, esc(groupLabel)));
+      const row = el("div", { class: "ppq-iq-errtax-chips" });
+      chips.forEach(function (c) {
+        const value = typeof c === "string" ? c : c.value;
+        const label = typeof c === "string" ? c : (c.label || c.value);
+        const weak = typeof c === "object" && c.weak;
+        const chip = el("button", {
+          class: "ppq-iq-state ppq-iq-errtag" + (prior[value] ? " sel" : "") + (weak ? " weak" : ""),
+          type: "button",
+          "data-tag": value
+        }, esc(label));
+        chip.addEventListener("click", function () {
+          const on = chip.classList.toggle("sel");
+          if (self._attachResponseToAttempt) self._attachResponseToAttempt("error_tags", value, on ? true : undefined);
+          self._fireReport({ status: "interrogation", qtype: "error_tag", extra_json: JSON.stringify({ tag: value, group: kindTag, on: on, attempt_id: self._attemptId || "" }) });
+        });
+        row.appendChild(chip);
+      });
+      g.appendChild(row);
+      box.appendChild(g);
+    }
+
+    /* weak-area chips: the question's own content, one click to name the gap */
+    if (sa.weakAreasOf && this.cur) {
+      let areas = [];
+      try { areas = sa.weakAreasOf(this.cur) || []; } catch (_) { areas = []; }
+      chipRow("Weak area? (this question's content)", areas, "weak_area");
+    }
+    (sa.taxonomy || []).forEach(function (group) {
+      chipRow(group.group || "", group.tags || [], group.group || "");
+    });
+
+    /* escapes: Other free text, and a new-category proposal */
+    const other = el("div", { class: "ppq-iq-errtax-other" });
+    const otherInput = el("textarea", { class: "ppq-iq-errtax-other-text", rows: 2, placeholder: "Other — what happened, in your own words?" });
+    if (typeof prior.other === "string") otherInput.value = prior.other;
+    const otherSave = el("button", { class: "ppq-iq-errtax-save", type: "button" }, "Save");
+    otherSave.addEventListener("click", function () {
+      const text = String(otherInput.value || "").trim();
+      if (self._attachResponseToAttempt) self._attachResponseToAttempt("error_tags", "other", text || undefined);
+      self._fireReport({ status: "interrogation", qtype: "error_tag", extra_json: JSON.stringify({ tag: "other", text: text, attempt_id: self._attemptId || "" }) });
+      otherSave.textContent = "Saved";
+    });
+    other.appendChild(otherInput);
+    other.appendChild(otherSave);
+    box.appendChild(other);
+
+    const propose = el("div", { class: "ppq-iq-errtax-propose" });
+    const proposeInput = el("input", { class: "ppq-iq-errtax-propose-text", type: "text", placeholder: "This list needs another category… (suggest it)" });
+    const proposeSend = el("button", { class: "ppq-iq-errtax-save", type: "button" }, "Suggest");
+    proposeSend.addEventListener("click", function () {
+      const text = String(proposeInput.value || "").trim();
+      if (!text) return;
+      if (self._attachResponseToAttempt) self._attachResponseToAttempt("error_tags", "proposed_category", text);
+      self._fireReport({ status: "interrogation", qtype: "taxonomy_proposal", extra_json: JSON.stringify({ proposal: text, attempt_id: self._attemptId || "" }) });
+      proposeSend.textContent = "Sent";
+    });
+    propose.appendChild(proposeInput);
+    propose.appendChild(proposeSend);
+    box.appendChild(propose);
+
     iq.appendChild(box);
   };
 
@@ -3862,6 +4094,7 @@ window.PPQViewer = (function () {
       this._postGuessDeclared = false;
       this._chosenLabel = "";
       this._wasRight = false;
+      this._marksOutcome = null; /* d012 */
     }
     /* Closing on the guess page is equivalent to skipping it: never strand an
        answered question with its verdict permanently hidden. */
@@ -3920,8 +4153,14 @@ window.PPQViewer = (function () {
       if (e.key === "ArrowLeft") { self.prev(); return; }
       if (e.key === "ArrowRight") { self.next(); return; }
       if (e.key === "s" || e.key === "S") { if (!self.answered) self.skip(); return; }
-      if (e.key === "r" || e.key === "R") { if (!self.answered && (self._curType === "flashcard" || self._curType === "imageSelfMark")) self.reveal(); return; }
-      if (e.key === "Enter") { if (self.answered) self.next(); else if (self._curType === "flashcard") self.reveal(); return; }
+      /* d012: number keys enter marks while the marks bar is open. */
+      if (self._marksPending && /^[0-9]$/.test(e.key)) {
+        const btn = self.q('.ppq-marksbar .ppq-mark-btn[data-mark="' + e.key + '"]');
+        if (btn && !btn.disabled) btn.click();
+        return;
+      }
+      if (e.key === "r" || e.key === "R") { if (!self.answered && !self._marksPending && (self._curType === "flashcard" || self._curType === "imageSelfMark" || self._curType === "marksSelfAssess")) self.reveal(); return; }
+      if (e.key === "Enter") { if (self.answered) self.next(); else if (!self._marksPending && (self._curType === "flashcard" || self._curType === "marksSelfAssess")) self.reveal(); return; }
       if (!self.answered) {
         const L = e.key.toUpperCase(), labels = self._answerLabels || [];
         if (labels.indexOf(L) >= 0) { self._pick(L); return; }
@@ -3984,6 +4223,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.7.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.8.0" };
 })();
 // build: 0.3.0, maintained by Codex

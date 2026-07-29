@@ -64,6 +64,16 @@ phase.
 Decision required only if the host-side data model makes the pupil-first slice
 impractical.
 
+## q12 — IB-content public exclusion gate (blocks any public IB Maths deploy)
+
+The IB Maths viewer consumes IB past-paper crops. The Maths seat's onboarding
+note (inbox, 2026-07-29) flags the provenance/licence exclusion-layer question
+as unresolved for any PUBLIC deployment; a teacher-only surface has no such
+gate. Until Smith rules on what may be published (and under what exclusion
+rules), `example\ibmaths.html` stays a teacher-only local page and
+`deploy\ibmathsdriller` stays on the placeholder. Decision needed before the
+first real publish.
+
 ## Previously resolved
 
 - Special Relativity is an intended embedded consumer.

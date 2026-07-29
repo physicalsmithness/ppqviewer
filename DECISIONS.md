@@ -96,6 +96,25 @@ Once a learned set exists, the question filters operate WITHIN it by default: "A
 
 ---
 
+## d012 (marks-based self-assessment with uncertainty and an error taxonomy): the long-form self-mark is marks out of maximum, a declared range when unsure, a banded rating prompt, and a structured what-went-wrong
+
+**Decision (Smith, dictated 2026-07-29; his framing: "let's get a rough thing outlined for that, and we can work on it").** For long-form parts (IB Maths first), right/wrong is not enough. After revealing the markscheme the pupil enters MARKS:
+
+1. **Marks bar, fewest clicks.** One row of buttons `0 … max` (max from the part's marks). One click records an exact, sure mark. The max button is visually distinct and labelled "Got it right" (no "I", Smith's wording); zero is plain. A separate "Not sure?" toggle switches to RANGE entry: tap the lowest plausible and highest plausible mark (two clicks). Partial credit is automatic from the value, not a separate mode.
+2. **Banded rating prompt.** Full marks highlights ratings 4, 5, 6 in the 1-6 self-report ("should prompt you to rate it four, five or six; the others should be clickable, but those should be highlighted"). Other outcomes leave the scale neutral until Smith specifies more bands.
+3. **What went wrong (part marks or zero).** A structured, MULTI-SELECT taxonomy panel opens, config-driven per consumer (extends d006's pluggable self-report and implements VF-06's configurable vocabulary + free-text escape). Maths seed vocabulary, grouped:
+   - **Annoying slips**: algebraic slip (written); algebraic slip (mental); mental arithmetic; calculator; miscopied / mistyped the question or equation.
+   - **Getting stuck**: couldn't find a way in; saw half the way in; got halfway there; stuck on the algebra; didn't spot factorising; took the wrong route (e.g. expanded when not needed); didn't spot taking logs; didn't spot the hidden quadratic.
+   - **Content gap ("weak area", clickable)**: the question's OWN subtopics render as chips ("I'm not solid on …"), so naming the weak area is one click; where the pupil's progress data already marks a subtopic weak, that chip is pre-highlighted ("you should be prompting for a weak area if we have that, if that's joined up").
+   - **Communication (provisional)**: didn't state the conclusion / justification missing. (Smith's dictation was unclear here — "didn't comment… probably a different section" — flagged for his correction rather than guessed at.)
+   - **Escapes**: "Other…" free text, and "Suggest a new category" (a proposal channel, reported for review, mirroring the estate's vocabulary-coinage pattern).
+   Some causes are question-specific and should eventually feed FROM the question (analysis-side, when authored analysis exists); the taxonomy is a shared floor, not a ceiling.
+4. **Storage.** The attempt row carries `marks_max`, `marks_awarded` (exact) or `marks_range: [lo, hi]`, `sure` (boolean), and `error_tags` (selected taxonomy values + free text). `correct` stays derived (awarded === max) so every existing surface (dashboard, progress, history) keeps working; the progress page can grow marks-fraction views later.
+
+Implemented as question type `marksSelfAssess` in the shared engine, configured per consumer (`selfAssess: { taxonomy: … }`). Rough by design; Smith iterates on the wording and the taxonomy after first contact.
+
+---
+
 ## d009 (embeddable as a bolt-on component, not only a standalone page): the viewer must run inside a larger app
 
 **Decision.** Smith (2026-07-01) on Special Relativity: it IS a consumer and wants to use this soon, but "it's only a part" of the app, "a thing to be bolted onto". So the viewer is not always the whole page; it must run as a component mounted inside a larger host app (the circuit-builder-embed pattern from ECM). This fits d003 (engine-owns-DOM into one `#ppq-root` mount): the same mount-point design serves both a standalone page and an embed. Requirement: no reliance on owning `<body>`, the header, or global singletons that would clash with a host; everything scoped to the mount and namespaced. SR is the first embed consumer, near-term.

@@ -2,6 +2,48 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (small hours) — d012 marks self-assessment + the IB Maths teacher-only consumer (v0.8.0)
+
+Engine v0.8.0. New consumer: IB Maths (teacher-only). ESAT release unchanged.
+
+- **New question type `marksSelfAssess` (d012, Smith's dictated spec).** Work on
+  paper, reveal the markscheme (ms text and/or ms crops; the clock stops at
+  reveal, so marks entry is not working time), then the marks bar: one row
+  0..max, one click when sure, the max button doubles as "Got it right" (no
+  "I"), a "Not sure?" toggle takes a two-tap lowest/highest range. `correct`
+  stays the derived full-marks boolean so every existing surface works;
+  `marks_max`, `marks_awarded`/`marks_range` and `sure` ride on the attempt
+  row. Number keys enter marks. Full marks highlights the 4/5/6 rating band
+  (others stay clickable). The verdict reads "You gave yourself X / max".
+- **Structured what-went-wrong (d012 taxonomy, implements VF-06's shape).**
+  Part marks or a zero opens a config-driven multi-select taxonomy
+  (`selfAssess.taxonomy` groups; maths seed: Annoying slips / Getting stuck /
+  provisional Communication), the question's own topic-parts as one-click
+  weak-area chips (`selfAssess.weakAreasOf`), an "Other" free text and a
+  "Suggest a new category" proposal channel. Selections persist onto the
+  attempt row (`responses.error_tags`) and restore in review mode.
+- **IB Maths consumer (`example\ibmaths.html`), TEACHER-ONLY.** Mounts the
+  Maths Categorisation seat's canonical catalogue
+  (`Maths Categorisation\viewer\maths_catalogue.js`, 2,195 questions, AAHL +
+  legacy MHL, live-read so their regeneration flows through). Question-unit
+  marking (their per-part marks still carry aggregation quirks); filters
+  syllabus/era, AA fit (default Yes), topic, topic-part facet, family, paper,
+  year; d012 taxonomy seeded; count-up timer; generic feedback shell; flags,
+  history, review and My progress inherited. Public deployment is BLOCKED on
+  q12 (IB-content exclusion gate); `deploy\ibmathsdriller` holds a placeholder
+  only. 840 legacy questions lack markscheme crops — honest in-app note, and
+  reported to the Maths seat with the `ms_pages` fix suggestion.
+- **Supersession:** yesterday evening's `tools/build_ibmaths_catalogue.js` and
+  its generated `example/ibmaths/` output are REMOVED — the Maths seat now
+  ships the canonical catalogue (their `viewer\build_viewer_catalogue.py`), and
+  one source beats two. Its AAHL-flat join logic lives on in git history
+  (commit 732c3b3) if ever needed.
+- Verification: acceptance 363/363 and safety 70/70 still green (no regression
+  from the new type); `_commitMarks` semantics spot-checked (full / partial /
+  range / range-at-max / double-commit guard). A dedicated d012 suite section
+  and Smith's visual pass are still owed before this engine version reaches a
+  publish.
+
 ## 2026-07-29 (later) — VF-02: the pupil's own progress page (v0.7.0)
 
 Engine v0.7.0, same unpublished ESAT release v0.2.16.
