@@ -138,7 +138,14 @@ Do not infer guessing from time.
 - [ ] Cross-consumer teacher analytics.
 - [ ] Chemistry shared-engine migration.
 - [ ] Special Relativity embed.
-- [ ] IB Physics, Economics, Maths, Trilogy Physics and pre-IB Physics adapters.
+- [ ] IB Physics, Economics, Trilogy Physics and pre-IB Physics adapters.
+- [ ] **IB Maths adapter — ACTIVE (Smith, 2026-07-29).** Source:
+  `PaperDatabases\Maths Categorisation` masters + AAHL flat export + previews.
+  Profile: chemistry-style reveal-markscheme + examiner comments (no authored
+  how-to yet), keeping timing and guess-probability machinery. Deploy:
+  `deploy\ibmathsdriller` checkout of github.com/physicalsmithness/ibmathsdriller.
+  Steps: catalogue builder → wrapper + config → local visual pass → sync script
+  → first publish (enable GitHub Pages on the repo at that point).
 - [ ] Final shared-hosted-script versus vendored-copy decision.
 
 ## Implemented foundation
