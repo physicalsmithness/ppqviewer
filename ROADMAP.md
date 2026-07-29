@@ -146,6 +146,8 @@ Do not infer guessing from time.
   `deploy\ibmathsdriller` checkout of github.com/physicalsmithness/ibmathsdriller.
   Steps: catalogue builder → wrapper + config → local visual pass → sync script
   → first publish (enable GitHub Pages on the repo at that point).
+  Includes d011 (learned scope): nested tri-state tick tree over the syllabus
+  spine, filters default to within-learned, master toggle, unlearned greyed.
 - [ ] Final shared-hosted-script versus vendored-copy decision.
 
 ## Implemented foundation
