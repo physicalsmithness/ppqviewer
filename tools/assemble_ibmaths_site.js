@@ -56,11 +56,12 @@ const assetsOnly = process.argv[2] === "assets";
 if (!assetsOnly) {
   must(fs.existsSync(path.join(DEPLOY, ".git")), "deploy checkout missing at " + DEPLOY);
   let html = fs.readFileSync(WRAPPER, "utf8");
-  const startMark = "<!-- PPQ-SYNC:TEACHER-ONLY-START (removed from the deployed copy) -->";
-  const endMark = "<!-- PPQ-SYNC:TEACHER-ONLY-END -->";
-  const si = html.indexOf(startMark), ei = html.indexOf(endMark);
-  must(si >= 0 && ei > si, "teacher-only markers");
-  html = html.slice(0, si) + html.slice(ei + endMark.length);
+  [["<!-- PPQ-SYNC:TEACHER-ONLY-START (removed from the deployed copy) -->", "<!-- PPQ-SYNC:TEACHER-ONLY-END -->"],
+   ["<!-- PPQ-SYNC:LOCAL-NOTE-START (removed from the deployed copy) -->", "<!-- PPQ-SYNC:LOCAL-NOTE-END -->"]].forEach(function (pair) {
+    const si = html.indexOf(pair[0]), ei = html.indexOf(pair[1]);
+    must(si >= 0 && ei > si, "strip markers: " + pair[0]);
+    html = html.slice(0, si) + html.slice(ei + pair[1].length);
+  });
   html = replaceOnce(html, "<!-- PPQ-SYNC:HEAD (the sync injects the estate GA4 + Clarity blocks here on deploy) -->", GA_BLOCK, "GA inject");
   html = replaceOnce(html, '<link rel="stylesheet" href="../engine/ppqviewer.css">', '<link rel="stylesheet" href="engine/ppqviewer.css">', "css path");
   html = replaceOnce(html, '<script src="../../../CodexProjects/PaperDatabases/Maths Categorisation/viewer/maths_catalogue.js"></script>', '<script src="data/maths_catalogue.js"></script>', "catalogue path");
@@ -68,7 +69,7 @@ if (!assetsOnly) {
   html = replaceOnce(html, '<script src="../engine/ppqviewer.js"></script>', '<script src="engine/ppqviewer.js"></script>', "engine path");
   html = replaceOnce(html, 'var BASE = "file:///C:/CodexProjects/PaperDatabases/outputs/previews/";', 'var BASE = "assets/previews/";', "asset base");
   html = replaceOnce(html, "<title>IB Maths driller — teacher preview</title>", "<title>IB Maths driller</title>", "title");
-  html = replaceOnce(html, 'versionLabel: "ibmaths v0.1.0 (teacher preview) · engine "', 'versionLabel: "ibmaths v0.1.0 · engine "', "versionLabel");
+  html = replaceOnce(html, 'versionLabel: "ibmaths v0.1.1 (teacher preview) · engine "', 'versionLabel: "ibmaths v0.1.1 · engine "', "versionLabel");
   html = replaceOnce(html, 'appVersion: "ibmaths-teacher-preview"', 'appVersion: "ibmaths-live"', "appVersion");
   html = replaceOnce(html, 'learnerId: "teacher-preview"', 'learnerId: "local"', "learnerId");
   must(/<\/html>\s*$/.test(html), "index ends with </html>");
@@ -87,13 +88,21 @@ const vm = require("vm");
 const cctx = { window: {} };
 vm.createContext(cctx);
 vm.runInContext(fs.readFileSync(CATALOGUE, "utf8"), cctx);
+/* d014 (q12 resolved, publish approved): the deployed site now ships the
+   COMPLETE markscheme pages too — cropped markschemes can truncate working
+   (VF-15), so ms_pages back the engine's full-pages expander. ms_pages repeat
+   per question across a paper, so refs are deduped before copying
+   (~41k refs → ~4.3k unique pages, ≈334MB alongside ≈340MB of crops). */
+const seen = Object.create(null);
 const refs = [];
+function addRef(rel) { if (!seen[rel]) { seen[rel] = 1; refs.push(rel); } }
 (cctx.window.MATHS_PPQS || []).forEach(function (q) {
   (q.parts || []).forEach(function (p) {
     (p.crops || []).concat(p.ms_crops || []).forEach(function (c) {
-      refs.push(q.preview + "/" + c);
+      addRef(q.preview + "/" + c);
     });
   });
+  (q.ms_pages || []).forEach(function (c) { addRef(q.preview + "/" + c); });
 });
 let copied = 0, skipped = 0, missing = 0;
 const BUDGET_MS = parseInt(process.env.IBMATHS_COPY_BUDGET_MS || "0", 10); /* 0 = no time budget (host runs) */

@@ -2,6 +2,35 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (night) — d014: IB Maths publish approved (q12 resolved); Smith's three faults fixed (v0.13.0)
+
+Engine v0.13.0; ibmaths wrapper v0.1.1.
+
+- **q12 resolved by Smith → d014.** The IB Maths driller publishes: served to
+  school pupils who hold rights to the papers, not publicised beyond school,
+  GA4 watched for spikes; Google sign-in expedited for the medium term. The
+  assembler now ships the complete markscheme pages too (deduped 41k refs →
+  ~4.3k files, ≈334MB; site total ≈680MB) and strips the local-note comment
+  block from the deployed index.
+- **"Markscheme clearly too short" (VF-15):** new engine config `msPagesOf`.
+  Reveal shows ms crops inline as before, then a "Show the complete markscheme
+  pages" expander with the full pages — open automatically when a question has
+  no crops at all. Exemplar: MHL 2216-7208 P3 Q4, 13 marks, two thin crops,
+  13 full pages.
+- **"Don't have q stem":** the seat's text extractor drops display maths,
+  leaving `[diagram/graph layout text omitted; see source clipping]`
+  mid-sentence in 989 of 2,195 questions. The wrapper now renders the marker
+  as a quiet ellipsis (the crop below is authoritative), hides stems that say
+  nothing once cleaned, and also strips the leading question number,
+  `[Maximum mark: n]`, duplicate part labels and trailing `[n]` tokens the
+  surrounding furniture already shows. Real inline maths in the catalogue text
+  remains the seat-side fix (packet sent).
+- **"Don't have categories":** the 492 legacy questions with no AA mapping no
+  longer pool in one "Untagged" bucket — a commented navigation heuristic maps
+  MHL core codes (and pre-2008 option names) to the nearest AA topic, only
+  when AA codes gave nothing. Item-level mapping stays with the seat.
+- Suites: 556/556 presentation + 70/70 content safety.
+
 ## 2026-07-29 (late afternoon) — d011: Learned so far, built; guide-true maths pacing (v0.12.0)
 
 Engine v0.12.0. IB Maths only per Smith ("not needed for esat").

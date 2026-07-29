@@ -152,6 +152,11 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
 
 ## Later shared-platform work
 
+- [ ] **Google sign-in — EXPEDITED, medium term (d014, Smith 2026-07-29).**
+  Identity for the published IB Maths driller (and then every consumer):
+  supersedes the light honour sign-in as the plan of record. Needs an auth
+  decision (Firebase/GIS vs backend) — ties into q07/q08 rather than another
+  bespoke layer.
 - [ ] Assistance module with pupil/class/all visibility.
 - [ ] Real identity/class membership backend.
 - [ ] Cross-consumer teacher analytics.

@@ -121,6 +121,25 @@ Implemented as question type `marksSelfAssess` in the shared engine, configured 
 
 ---
 
+## d014 (IB Maths publication): school-use publish approved; q12 closed
+
+**Decision (Smith, 2026-07-29 night, verbatim intent):** "this will only be
+served to people in school where i know they have rights. in the meantime it
+won't be publicised to people outside of school and i will know if there's any
+spike. i think it's safe to issue. but we can expedite google login too, for
+medium term."
+
+So: `deploy\ibmathsdriller` publishes to GitHub Pages with the estate GA4 +
+Clarity blocks (spike-watching is part of the basis), it is not linked or
+publicised beyond school, and **Google sign-in is an expedited medium-term
+item** (ROADMAP; supersedes the light honour sign-in as the identity answer
+for IB content). The assembler ships crops, ms crops and the complete
+deduped markscheme pages (~680MB site). The rights position is Smith's own
+call as the teacher serving licensed pupils; the viewer's job is to keep the
+surface unpublicised (no index pages, no cross-links) and observable (GA4).
+
+---
+
 ## d013 (timing system): engine owns modes, bank, pause, discard and the learner's extra time; subjects supply only pacing
 
 **Decision (built 2026-07-29; sources: handoff VF-04 + the ESAT architecture packet of 2026-06-29).** The shared engine owns the timing MECHANISM: six modes (`none`, `end_only`, `per_question`, `clock`, `ring`, `bank` — the packet's five plus the pacing ring), the running time bank (allowed to go negative: a deficit is shown, not floored away), pause (paused time excluded from the spend), the per-question "don't record this one" (an honest `time_ms: null` + `time_discarded`), the learner's extra-time percentage (25%/50%/custom, negative allowed for harder practice), and silent `time_ms` capture in every mode. Preferences persist per learner per consumer in `store.prefs.timing` and are edited in the engine's Timing panel. The ring falls back to a quiet countdown under `prefers-reduced-motion`. Analysis/reflection time is excluded by construction: the clock commits when the answer (or the markscheme reveal, for marks questions) lands. Guessing is never inferred from time.

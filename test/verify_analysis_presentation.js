@@ -2662,5 +2662,65 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "no feedback source means no readiness badge (maths noise gone)");
 })();
 
+// ===== d014 / VF-15: q12 resolved — publish pipeline + Smith's three faults =====
+(function () {
+  console.log("\n-- d014/VF-15: publish + stem/categories/markscheme faults (2026-07-29 late) --");
+  const mSrc = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
+  const aSrc = fs.readFileSync(path.join(PROJECT_ROOT, "tools", "assemble_ibmaths_site.js"), "utf8");
+
+  // engine: complete markscheme pages behind an expander
+  check(src.indexOf("cfg.msPagesOf = cfg.msPagesOf || null") >= 0,
+    "msPagesOf is engine config");
+  const revealSrc = extractFn("reveal").toString();
+  check(revealSrc.indexOf("ppq-ms-page") >= 0 &&
+    revealSrc.indexOf("Show the complete markscheme pages") >= 0,
+    "reveal offers the complete markscheme pages when the consumer supplies them");
+  check(revealSrc.indexOf('msImgs.length ? "" : " open"') >= 0,
+    "the pages open by themselves when there are no crops at all");
+  check(css5014().indexOf(".ppq-ms-page") >= 0, "markscheme pages are styled");
+  function css5014() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
+  check(src.indexOf('version: "0.13.0"') >= 0, "engine bumped to 0.13.0 for the msPagesOf API");
+
+  // wrapper: crops inline, pages behind the expander, never conflated
+  check(/msCropsOf: function \(q\) \{ return q\.ms_crops \|\| \[\]; \}/.test(mSrc) &&
+    /msPagesOf: function \(q\) \{ return q\.ms_pages \|\| \[\]; \}/.test(mSrc),
+    "maths wrapper splits ms crops from complete pages (13-mark Q4 with two thin crops was the tell)");
+
+  // wrapper text cleanup + legacy topic fallback: run the real code
+  const hi = mSrc.indexOf("var OMIT_RE");
+  const hj = mSrc.indexOf("/* ===== Flatten");
+  check(hi >= 0 && hj > hi, "wrapper helper block found");
+  const helpers = new Function(mSrc.slice(hi, hj) +
+    "; return { cleanStemText: cleanStemText, cleanPartText: cleanPartText, legacyTopicNumOf: legacyTopicNumOf };")();
+  const stem = helpers.cleanStemText("4. [Maximum mark: 13] Consider the differential equation d [diagram/graph layout text omitted; see source clipping] where y > 0 and y = 2 when x = 0 .");
+  check(stem.indexOf("omitted") < 0 && stem.indexOf("[") < 0 && stem.indexOf("…") >= 0 &&
+    stem.indexOf("Consider the differential equation") === 0 && stem.indexOf("where y > 0") > 0,
+    "stem cleanup: omission marker becomes an ellipsis; Qn and [Maximum mark] duplicates go; conditions survive");
+  check(helpers.cleanStemText("1. [diagram/graph layout text omitted; see source clipping]") === "",
+    "a stem that says nothing after cleanup hides rather than printing an ellipsis");
+  const part = helpers.cleanPartText("a", "(a) Show that putting z = y2 transforms the differential equation into d [diagram/graph layout text omitted; see source clipping] 2 . [4]");
+  check(part.indexOf("(a)") < 0 && !/\[\s*4\s*\]\s*\.?\s*$/.test(part) && part.indexOf("Show that putting") === 0,
+    "part cleanup: duplicate label and trailing mark token go; the ask survives");
+  check(helpers.legacyTopicNumOf(["MHL-6.2", "MHL-6.3"], "") === 5 &&
+    helpers.legacyTopicNumOf(["MHL-4.2"], "") === 3 &&
+    helpers.legacyTopicNumOf(["PRE08-MAT"], "Discrete mathematics") === 1 &&
+    helpers.legacyTopicNumOf([], "") === null,
+    "legacy topic fallback: MHL core codes and pre-2008 option names land on the nearest AA topic; nothing invents one");
+  check(mSrc.indexOf("if (tnum == null) tnum = legacyTopicNumOf(") >= 0,
+    "the fallback only fires when AA codes gave no topic");
+
+  // publish pipeline: q12 ruling recorded, pages shipped, local note stripped
+  check(mSrc.indexOf("q12 RESOLVED") >= 0 && mSrc.indexOf("d014") >= 0 &&
+    mSrc.indexOf("PPQ-SYNC:LOCAL-NOTE-START") >= 0,
+    "the wrapper records the publish ruling inside strip markers");
+  check(aSrc.indexOf("PPQ-SYNC:LOCAL-NOTE-START") >= 0 &&
+    aSrc.indexOf("q.ms_pages || []).forEach(function (c) { addRef(") >= 0 &&
+    aSrc.indexOf("function addRef(rel) { if (!seen[rel])") >= 0,
+    "the assembler strips the local note, ships deduped ms_pages, and copies each page once");
+  check(aSrc.indexOf('versionLabel: "ibmaths v0.1.1 (teacher preview)') >= 0 &&
+    mSrc.indexOf('versionLabel: "ibmaths v0.1.1 (teacher preview)') >= 0,
+    "wrapper and assembler agree the build is tellable as v0.1.1");
+})();
+
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");
 process.exit(fail ? 1 : 0);

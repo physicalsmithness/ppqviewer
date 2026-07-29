@@ -210,6 +210,7 @@ window.PPQViewer = (function () {
     /* d012 (Claude 2026-07-29): marks-based self-assessment configuration. */
     cfg.marksOf = cfg.marksOf || function (q) { return q.marks; };
     cfg.msCropsOf = cfg.msCropsOf || null;
+    cfg.msPagesOf = cfg.msPagesOf || null; /* VF-15: complete markscheme pages behind an expander */
     const saIn = cfg.selfAssess || {};
     cfg.selfAssess = {
       taxonomy: Array.isArray(saIn.taxonomy) ? saIn.taxonomy : [],
@@ -2621,8 +2622,19 @@ window.PPQViewer = (function () {
       let ms = this._formatMarkscheme(this.cfg.markschemeOf(this.cur));
       const msImgs = (typeof this.cfg.msCropsOf === "function" ? this.cfg.msCropsOf(this.cur) : null) || [];
       msImgs.forEach((src) => { ms += '<img class="ppq-ms-crop" src="' + esc(src) + '">'; });
+      /* VF-15 (Smith, 2026-07-29: "markscheme clearly too short"): cropped
+         markschemes can truncate the working, so when the consumer supplies
+         full pages they are always one click away — and shown outright when
+         there are no crops at all. */
+      const msPages = (typeof this.cfg.msPagesOf === "function" ? this.cfg.msPagesOf(this.cur) : null) || [];
       const ansImg = this.cfg.answerUrlOf(this.cur);
-      if (ansImg && !msImgs.length) ms += '<details class="ppq-ms-full"><summary>Show full markscheme page <span class="ppq-spoiler">(may well contain spoilers for other parts)</span></summary><img src="' + esc(ansImg) + '"></details>';
+      if (msPages.length) {
+        let pg = "";
+        msPages.forEach((src) => { pg += '<img class="ppq-ms-page" src="' + esc(src) + '">'; });
+        ms += '<details class="ppq-ms-full"' + (msImgs.length ? "" : " open") + '><summary>Show the complete markscheme pages <span class="ppq-spoiler">(full working; includes other questions)</span></summary>' + pg + "</details>";
+      } else if (ansImg && !msImgs.length) {
+        ms += '<details class="ppq-ms-full"><summary>Show full markscheme page <span class="ppq-spoiler">(may well contain spoilers for other parts)</span></summary><img src="' + esc(ansImg) + '"></details>';
+      }
       this.q(".ppq-markscheme").innerHTML = ms;
       this.q(".ppq-answer-panel").className = "ppq-answer-panel show";
       this._showExaminer(this.cur);
@@ -5188,6 +5200,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.12.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.13.0" };
 })();
 // build: 0.3.0, maintained by Codex

@@ -451,6 +451,8 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-ms-full { margin-top: 0.75rem; padding: 0.5rem; border: 1px solid var(--ppq-line); border-radius: 8px; }
 .ppq-ms-full > summary { cursor: pointer; font-weight: 700; }
 .ppq-ms-full img { max-width: 100%; margin-top: 0.75rem; border-radius: 8px; }
+/* VF-15: complete markscheme pages — full-width, clearly page-like */
+.ppq-ms-page { display: block; width: 100%; margin: 0.6rem 0; border: 1px solid var(--ppq-line); border-radius: 6px; background: #fff; }
 .ppq-spoiler { color: #dc2626; font-weight: 400; }
 .ppq-examiner { display: none; background: #fffaf0; border-left: 4px solid #dd6b20; padding: 0.75rem; border-radius: 0 8px 8px 0; font-size: 0.9rem; }
 .ppq-answer-panel.has-examiner .ppq-examiner { display: block; }
