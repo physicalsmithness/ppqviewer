@@ -115,6 +115,10 @@ Once a learned set exists, the question filters operate WITHIN it by default: "A
 
 Implemented as question type `marksSelfAssess` in the shared engine, configured per consumer (`selfAssess: { taxonomy: … }`). Rough by design; Smith iterates on the wording and the taxonomy after first contact.
 
+**First-contact iteration (Smith, 2026-07-29 evening), built the same day:** the prompt reads "How many marks do you award yourself, out of N?"; full marks above 2 reads "Got it completely right". Groups reordered: the WAY-IN block first (couldn't find a way in / saw half the way in / got halfway there), then **Stuck algebraically** (didn't spot factorising; took an unhelpful route; expanded when I should have factorised; didn't see I had to gather terms; didn't spot the hidden quadratic; didn't spot taking logs; stuck on the algebra) which "should only trigger when it's really there" — groups may declare `when(q)`, maths gates it on algebra content as an interim until the seat's TECHNIQUES axis lands — then Annoying slips BELOW. Communication is OUT until a communication mark exists in the data. Suggest-a-category sits above Other. Weak-area chips and the learned tree speak human (labels generated from the syllabus spine; "no way people are going to know what SL1.2 is"). Consumers with no feedback source show no readiness badge.
+
+**Open direction (Smith's, recorded not resolved):** whether to categorise every error at all, per-mark opinions ("give an opinion on each mark — did you miss it?"), and whether the same structure transfers to chemistry and physics, where errors are less well-categorised than maths. The techniques axis (per-question, student-phrased) is the expected next input.
+
 ---
 
 ## d013 (timing system): engine owns modes, bank, pause, discard and the learner's extra time; subjects supply only pacing

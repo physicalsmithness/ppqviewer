@@ -2636,6 +2636,30 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(mHtml2.indexOf("subtopics || []).slice(0, 4)") < 0 &&
     /families \|\| \[\]\)\.slice\(0, 2\)/.test(mHtml2),
     "default chips thin to topic + families (fault 1)");
+
+  // Smith's taxonomy restructure (2026-07-29 evening)
+  check(src.indexOf("How many marks do you award yourself, out of ") >= 0 &&
+    src.indexOf('max > 2 ? "Got it completely right" : "Got it right"') >= 0,
+    "the marks bar asks in Smith's words, with completely-right above two marks");
+  const mSrc = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
+  const iWayIn = mSrc.indexOf('"Couldn\'t find a way in", tags');
+  const iAlg = mSrc.indexOf('"Stuck algebraically"');
+  const iSlips = mSrc.indexOf('"Annoying slips"');
+  check(iWayIn >= 0 && iAlg > iWayIn && iSlips > iAlg,
+    "group order: way in, then stuck algebraically, then annoying slips below");
+  check(/when: function \(q\)/.test(mSrc) && mSrc.indexOf('group: "Communication') < 0,
+    "stuck-algebraically gates on algebra content; the Communication group is out until a communication mark exists");
+  check(extractFn("_appendErrorTaxonomy").toString().indexOf("group.when") >= 0,
+    "the engine honours per-group when(q) applicability");
+  const taxSrc = extractFn("_appendErrorTaxonomy").toString();
+  check(taxSrc.indexOf("ppq-iq-errtax-propose") < taxSrc.indexOf("ppq-iq-errtax-other"),
+    "suggest-a-category sits above Other");
+  check(/spineLabel/.test(mSrc) && fs.existsSync(path.join(PROJECT_ROOT, "example", "ibmaths_spine_labels.js")),
+    "weak areas and the learned tree speak human (spine labels generated)");
+  check(src.indexOf("_hasFeedbackSource = !!(cfg.analysisOf || cfg.feedbackStatusOf)") >= 0 &&
+    extractFn("_setFeedbackStatusBadge").toString().indexOf("_hasFeedbackSource === false") >= 0 &&
+    !/analysisOf: function \(\) \{ return null; \},/.test(mSrc),
+    "no feedback source means no readiness badge (maths noise gone)");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

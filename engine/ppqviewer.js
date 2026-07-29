@@ -257,6 +257,10 @@ window.PPQViewer = (function () {
        (ESAT d028 shape: probe, options, methods, self_report_prompts, feedback) or
        null when a question has no authored analysis. A null record still receives
        the generic guess, feedback and rating flow. */
+    /* Smith 2026-07-29: a consumer with NO feedback source (no analysis, no
+       status ledger) shows no readiness badge at all — "Solution pending" on
+       every maths question was noise, not information. */
+    cfg._hasFeedbackSource = !!(cfg.analysisOf || cfg.feedbackStatusOf);
     cfg.analysisOf = cfg.analysisOf || function () { return null; };
     cfg.feedbackStatusOf = cfg.feedbackStatusOf || null;
     /* VSAFE-01 (Claude 2026-07-28): content-safety gate. A damaged analysis
@@ -2239,6 +2243,7 @@ window.PPQViewer = (function () {
      pupil-facing status labels from drifting apart. */
   Viewer.prototype._setFeedbackStatusBadge = function (node, q, extraClass) {
     if (!node) return null;
+    if (this.cfg && this.cfg._hasFeedbackSource === false) { node.style.display = "none"; return null; }
     const readiness = this._feedbackReadiness(q || this.cur);
     node.className = "ppq-feedback-status" +
       (extraClass ? " " + extraClass : "") +
@@ -2465,12 +2470,14 @@ window.PPQViewer = (function () {
     const old = this.q(".ppq-marksbar");
     if (old && old.parentNode) old.parentNode.removeChild(old);
     const bar = el("div", { class: "ppq-marksbar" });
-    const prompt = el("div", { class: "ppq-marksbar-prompt" }, "How many marks, out of " + max + "?");
+    /* Smith 2026-07-29: "how many marks do you award yourself?", and above two
+       marks full marks reads "completely right". */
+    const prompt = el("div", { class: "ppq-marksbar-prompt" }, "How many marks do you award yourself, out of " + max + "?");
     bar.appendChild(prompt);
     const row = el("div", { class: "ppq-marksbar-row" });
     let unsure = false, lo = null;
     for (let v = 0; v <= max; v++) {
-      const label = v === max ? (max + " · Got it right") : String(v);
+      const label = v === max ? (max + " · " + (max > 2 ? "Got it completely right" : "Got it right")) : String(v);
       const b = el("button", { class: "ppq-mark-btn" + (v === max ? " full" : ""), type: "button", "data-mark": String(v) }, esc(label));
       b.addEventListener("click", () => {
         if (!unsure) { self._commitMarks(q, { max: max, awarded: v, sure: true }); return; }
@@ -4353,25 +4360,18 @@ window.PPQViewer = (function () {
       try { areas = sa.weakAreasOf(this.cur) || []; } catch (_) { areas = []; }
       chipRow("Weak area? (this question's content)", areas, "weak_area");
     }
+    /* Smith 2026-07-29: a group can declare when(q) so it "only triggers when
+       it's really there" (e.g. Stuck algebraically only on algebra content). */
     (sa.taxonomy || []).forEach(function (group) {
+      if (typeof group.when === "function") {
+        let applies = true;
+        try { applies = !!group.when(self.cur); } catch (_) { applies = true; }
+        if (!applies) return;
+      }
       chipRow(group.group || "", group.tags || [], group.group || "");
     });
 
-    /* escapes: Other free text, and a new-category proposal */
-    const other = el("div", { class: "ppq-iq-errtax-other" });
-    const otherInput = el("textarea", { class: "ppq-iq-errtax-other-text", rows: 2, placeholder: "Other — what happened, in your own words?" });
-    if (typeof prior.other === "string") otherInput.value = prior.other;
-    const otherSave = el("button", { class: "ppq-iq-errtax-save", type: "button" }, "Save");
-    otherSave.addEventListener("click", function () {
-      const text = String(otherInput.value || "").trim();
-      if (self._attachResponseToAttempt) self._attachResponseToAttempt("error_tags", "other", text || undefined);
-      self._fireReport({ status: "interrogation", qtype: "error_tag", extra_json: JSON.stringify({ tag: "other", text: text, attempt_id: self._attemptId || "" }) });
-      otherSave.textContent = "Saved";
-    });
-    other.appendChild(otherInput);
-    other.appendChild(otherSave);
-    box.appendChild(other);
-
+    /* escapes — Smith 2026-07-29: the new-category suggestion sits ABOVE Other. */
     const propose = el("div", { class: "ppq-iq-errtax-propose" });
     const proposeInput = el("input", { class: "ppq-iq-errtax-propose-text", type: "text", placeholder: "This list needs another category… (suggest it)" });
     const proposeSend = el("button", { class: "ppq-iq-errtax-save", type: "button" }, "Suggest");
@@ -4385,6 +4385,20 @@ window.PPQViewer = (function () {
     propose.appendChild(proposeInput);
     propose.appendChild(proposeSend);
     box.appendChild(propose);
+
+    const other = el("div", { class: "ppq-iq-errtax-other" });
+    const otherInput = el("textarea", { class: "ppq-iq-errtax-other-text", rows: 2, placeholder: "Other — what happened, in your own words?" });
+    if (typeof prior.other === "string") otherInput.value = prior.other;
+    const otherSave = el("button", { class: "ppq-iq-errtax-save", type: "button" }, "Save");
+    otherSave.addEventListener("click", function () {
+      const text = String(otherInput.value || "").trim();
+      if (self._attachResponseToAttempt) self._attachResponseToAttempt("error_tags", "other", text || undefined);
+      self._fireReport({ status: "interrogation", qtype: "error_tag", extra_json: JSON.stringify({ tag: "other", text: text, attempt_id: self._attemptId || "" }) });
+      otherSave.textContent = "Saved";
+    });
+    other.appendChild(otherInput);
+    other.appendChild(otherSave);
+    box.appendChild(other);
 
     iq.appendChild(box);
   };

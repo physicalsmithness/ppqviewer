@@ -64,6 +64,7 @@ if (!assetsOnly) {
   html = replaceOnce(html, "<!-- PPQ-SYNC:HEAD (the sync injects the estate GA4 + Clarity blocks here on deploy) -->", GA_BLOCK, "GA inject");
   html = replaceOnce(html, '<link rel="stylesheet" href="../engine/ppqviewer.css">', '<link rel="stylesheet" href="engine/ppqviewer.css">', "css path");
   html = replaceOnce(html, '<script src="../../../CodexProjects/PaperDatabases/Maths Categorisation/viewer/maths_catalogue.js"></script>', '<script src="data/maths_catalogue.js"></script>', "catalogue path");
+  html = replaceOnce(html, '<script src="ibmaths_spine_labels.js"></script>', '<script src="data/ibmaths_spine_labels.js"></script>', "spine labels path");
   html = replaceOnce(html, '<script src="../engine/ppqviewer.js"></script>', '<script src="engine/ppqviewer.js"></script>', "engine path");
   html = replaceOnce(html, 'var BASE = "file:///C:/CodexProjects/PaperDatabases/outputs/previews/";', 'var BASE = "assets/previews/";', "asset base");
   html = replaceOnce(html, "<title>IB Maths driller — teacher preview</title>", "<title>IB Maths driller</title>", "title");
@@ -77,6 +78,7 @@ if (!assetsOnly) {
   fs.copyFileSync(ENGINE_JS, path.join(DEPLOY, "engine", "ppqviewer.js"));
   fs.copyFileSync(ENGINE_CSS, path.join(DEPLOY, "engine", "ppqviewer.css"));
   fs.copyFileSync(CATALOGUE, path.join(DEPLOY, "data", "maths_catalogue.js"));
+  fs.copyFileSync(path.join(PROJECT_ROOT, "example", "ibmaths_spine_labels.js"), path.join(DEPLOY, "data", "ibmaths_spine_labels.js"));
   console.log("site files assembled (index.html rewritten: teacher strip out, GA in, relative paths)");
 }
 
