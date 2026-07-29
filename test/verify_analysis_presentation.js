@@ -1641,8 +1641,10 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     /\.ppq-iq-prompt-text\s*\{[^}]*line-height:\s*1\.6/.test(css),
     "method steps and prompt text carry the opened-up line spacing (Smith: text was too close)");
   const wrapperHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
-  check(wrapperHtml.indexOf("update-note") >= 0 && /Important update/.test(wrapperHtml),
-    "the ESAT page announces the update clearly at sign-in");
+  check(wrapperHtml.indexOf("update-note") < 0 &&
+    wrapperHtml.indexOf("comparison copy") < 0 &&
+    wrapperHtml.indexOf("shared engine, comparison") < 0,
+    "the initial screen carries no intro message and no interim comparison branding (Smith 2026-07-29)");
 })();
 
 // VF-13 (Smith 2026-07-29): loads more real estate, everything visible at once,
