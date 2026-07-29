@@ -2812,6 +2812,12 @@ window.PPQViewer = (function () {
       return;
     }
     tel.style.display = "";
+    /* VF-04r3: the header is ITSELF sticky (z 100), so the chip must pin just
+       BELOW it — pinning at the viewport top slid it underneath the bar,
+       which read as "scrolling out of sight". Measured live so header
+       wrapping keeps the chip clear. */
+    const hdr = this.root && this.root.querySelector ? this.root.querySelector(".ppq-header") : null;
+    tel.style.top = ((hdr && hdr.offsetHeight ? hdr.offsetHeight : 0) + 8) + "px";
     this._buildTimingRow(tel, prefs);
     const self = this;
     this._tickTiming();
@@ -2928,6 +2934,8 @@ window.PPQViewer = (function () {
     if (prefs.visibility !== "off") {
       tel.className = "ppq-timer ppq-timing ppq-timing--reveal";
       tel.style.display = "";
+      const hdr2 = this.root && this.root.querySelector ? this.root.querySelector(".ppq-header") : null;
+      tel.style.top = ((hdr2 && hdr2.offsetHeight ? hdr2.offsetHeight : 0) + 8) + "px"; /* VF-04r3 */
       tel.innerHTML = "";
       let text = "took " + this._fmtClock(spent);
       if (this._timeDiscarded) text = "time not recorded for this one";
