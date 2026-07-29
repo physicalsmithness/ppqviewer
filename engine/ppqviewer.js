@@ -2656,15 +2656,7 @@ window.PPQViewer = (function () {
        pupil which question (and which option they chose) the analysis belongs to. */
     const minBtn = this.q(".ppq-modal-min");
     minBtn.style.display = "";
-    const reminderParts = [cfg.metaLine(this.cur) || ""];
-    if (cfg.analysisReminderGroup) {
-      let groupReminder = "";
-      try { groupReminder = cfg.groupLabel(this.cur) || ""; }
-      catch (_) { groupReminder = ""; }
-      if (groupReminder) reminderParts.push(groupReminder);
-    }
-    if (chosen) reminderParts.push("you chose " + String(chosen).toUpperCase());
-    this.q(".ppq-modal-reminder").textContent = reminderParts.filter(Boolean).join("  ·  ");
+    if (this._syncAnalysisReminder) this._syncAnalysisReminder(); /* VF-13: includes the declared split */
     this._setFeedbackStatusBadge(
       this.q(".ppq-modal-feedback-status"),
       this.cur,
@@ -2953,6 +2945,7 @@ window.PPQViewer = (function () {
     const btn = this._iqBox ? this._iqBox.querySelector(".ppq-iq-postguess-btn") : null;
     if (btn) { btn.textContent = "Recorded: " + payload.candidate_options.join(", ") + " ✓"; btn.classList.add("done"); }
     this._fireReport({ status: "interrogation", qtype: "guess_declaration", extra_json: JSON.stringify(payload) });
+    if (this._syncAnalysisReminder) this._syncAnalysisReminder(); /* VF-13 */
     this._renderSelectedOptionDiagnosticV2();
     this._renderInterrogationFeedback();
   };
@@ -2973,6 +2966,39 @@ window.PPQViewer = (function () {
       this._saveStore();
     }
     this._fireReport({ status: "interrogation", qtype: "guess_declaration", extra_json: JSON.stringify(payload) });
+    if (this._syncAnalysisReminder) this._syncAnalysisReminder(); /* VF-13 */
+  };
+
+  /* VF-13 (Smith 2026-07-29): the sticky bar carries everything the pupil
+     needs while reading the analysis — question, topic, what they answered
+     (letter or self-given marks) and the split they declared ("you should be
+     able to see any other percentage that you gave"). One place, always
+     current. */
+  Viewer.prototype._syncAnalysisReminder = function () {
+    const r = this.q(".ppq-modal-reminder");
+    if (!r || !this.cur) return;
+    const cfg = this.cfg;
+    const parts = [cfg.metaLine(this.cur) || ""];
+    if (cfg.analysisReminderGroup) {
+      let g = "";
+      try { g = cfg.groupLabel(this.cur) || ""; } catch (_) { g = ""; }
+      if (g) parts.push(g);
+    }
+    if (this._chosenLabel) parts.push("you chose " + String(this._chosenLabel).toUpperCase());
+    else if (this._marksOutcome) {
+      const mo = this._marksOutcome;
+      parts.push(mo.awarded != null
+        ? ("you gave yourself " + mo.awarded + "/" + mo.max)
+        : ("you gave yourself " + mo.range[0] + "–" + mo.range[1] + "/" + mo.max));
+    }
+    const d = this._preGuessDeclaration || this._postGuessDeclaration;
+    if (d && d.candidate_options && d.candidate_options.length) {
+      const pcts = d.candidate_percentages || {};
+      parts.push("your split: " + d.candidate_options.map(function (L) {
+        return pcts[L] != null ? (L + " " + pcts[L] + "%") : L;
+      }).join(" / "));
+    }
+    r.textContent = parts.filter(Boolean).join("  ·  ");
   };
 
   /* QoderWork 2026-07-22 (analyst handoff): the v2 pupil insight, rendered
@@ -2980,11 +3006,15 @@ window.PPQViewer = (function () {
      chrome; the prose is the analysts' and is not rewritten. */
   Viewer.prototype._appendInsightV2 = function (iq, rec) {
     const pa = rec.pupil_analysis || {};
-    if (!pa.first_notice && !pa.why_it_matters && !pa.next_move) return;
+    if (!pa.first_notice && !pa.why_it_matters && !pa.next_move && !pa.check_prompt) return;
     const box = el("div", { class: "ppq-iq-insight" });
     if (pa.first_notice) box.appendChild(this._insightLine("First thing to notice", pa.first_notice));
     if (pa.why_it_matters) box.appendChild(this._insightLine("Why it matters", pa.why_it_matters));
     if (pa.next_move) box.appendChild(this._insightLine("Next move", pa.next_move));
+    /* VF-13 (Smith 2026-07-29): the check_prompt used to float near the bottom
+       as a bare question with nothing to click — "it just doesn't make sense".
+       It is part of pupil_analysis, so it reads here, once, with the insight. */
+    if (pa.check_prompt) box.appendChild(this._insightLine("Check yourself", pa.check_prompt));
     iq.appendChild(box);
   };
   Viewer.prototype._insightLine = function (label, text) {
@@ -3016,15 +3046,25 @@ window.PPQViewer = (function () {
     const referenced = new Set();
     (rec.self_report_prompts || []).forEach((p) => (p.method_refs || []).forEach((r) => referenced.add(r)));
 
-    /* Group prompts by the index of their LAST referenced method, so a single-method
-       prompt sits right after its method and a group prompt (several method_refs)
-       shows once, after the group's last member. */
+    /* Phase 1.5 kept single-ref prompts beside their method. VF-13 (Smith
+       2026-07-29, "we only ever want anyone to read something once") extends
+       that to GROUP prompts: a prompt referencing several methods no longer
+       renders once after the group (which forced re-reading the methods to
+       answer it); instead EACH referenced method's foot carries a compact ask
+       with the prompt's authored states, answered right where that method was
+       read. */
     const afterMethod = {};
+    const perMethodAsks = {};
     (rec.self_report_prompts || []).forEach((p) => {
-      let last = -1;
-      (p.method_refs || []).forEach((r) => { if (indexOf[r] !== undefined && indexOf[r] > last) last = indexOf[r]; });
-      if (last < 0) return; /* orphan (no matching method) — the self-report section picks it up */
-      (afterMethod[last] = afterMethod[last] || []).push(p);
+      const refs = (p.method_refs || []).filter((r) => indexOf[r] !== undefined);
+      if (!refs.length) return; /* orphan — the self-report section picks it up */
+      if (refs.length === 1) {
+        (afterMethod[indexOf[refs[0]]] = afterMethod[indexOf[refs[0]]] || []).push(p);
+      } else {
+        refs.forEach((r) => {
+          (perMethodAsks[indexOf[r]] = perMethodAsks[indexOf[r]] || []).push(p);
+        });
+      }
       rendered.add(p.id);
     });
 
@@ -3037,12 +3077,52 @@ window.PPQViewer = (function () {
       /* Phase 1.5 (Smith 2026-07-28): a method with an attached authored prompt
          forms ONE visually continuous card with it — read the steps, answer the
          question about them in the same place. */
-      if ((afterMethod[i] || []).length) block.classList.add("ppq-iq-method-joined");
+      if ((afterMethod[i] || []).length || (perMethodAsks[i] || []).length) block.classList.add("ppq-iq-method-joined");
       iq.appendChild(block);
+      (perMethodAsks[i] || []).forEach((p) => iq.appendChild(self._promptMethodAskV2(p, m)));
       (afterMethod[i] || []).forEach((p) => iq.appendChild(self._promptBlockV2(p, "method", true)));
     });
 
     return rendered;
+  };
+
+  /* VF-13: one referenced method's slice of a group prompt — the kind-aware ask
+     ("Did you use this route?") with the prompt's AUTHORED states, so the pupil
+     answers about the method they just read without re-reading anything. The
+     authored combined wording stays available to reviewers. Fires the same
+     self_report grammar plus method_ref; the plain prompt-id state is also kept
+     current so feedback matching keeps working. */
+  Viewer.prototype._promptMethodAskV2 = function (p, m) {
+    const self = this;
+    const splitKey = p.id + "::" + m.id;
+    const box = el("div", {
+      class: "ppq-iq-prompt ppq-iq-prompt-attached ppq-iq-prompt-permethod",
+      "data-prompt-id": p.id,
+      "data-method-ref": m.id,
+      title: p.prompt || ""
+    });
+    if (this._analysisReviewMode()) {
+      box.appendChild(el("div", { class: "ppq-iq-permethod-authored" }, analysisMathEsc(p.prompt || "")));
+    }
+    box.appendChild(el("div", { class: "ppq-iq-prompt-text" },
+      esc(this._methodAskText(m.presentation_kind || "route"))));
+    const chips = el("div", { class: "ppq-iq-prompt-states" });
+    const prior = this._promptStates ? this._promptStates[splitKey] : null;
+    (p.states || []).forEach((st) => {
+      const chip = el("button", { class: "ppq-iq-state" + (prior === st ? " sel" : ""), type: "button", "data-state": st }, self._stateLabel(st));
+      chip.addEventListener("click", () => {
+        chips.querySelectorAll(".ppq-iq-state").forEach((c) => c.classList.remove("sel"));
+        chip.classList.add("sel");
+        self._promptStates[splitKey] = st;
+        self._promptStates[p.id] = st; /* latest answer keeps feedback matching live */
+        if (self._attachResponseToAttempt) self._attachResponseToAttempt("prompts", splitKey, st);
+        self._fireReport({ status: "interrogation", qtype: "self_report", extra_json: JSON.stringify({ prompt_id: p.id, prompt_kind: "method", method_ref: m.id, state: st, attempt_id: self._attemptId || "" }) });
+        self._renderInterrogationFeedback(box);
+      });
+      chips.appendChild(chip);
+    });
+    box.appendChild(chips);
+    return box;
   };
 
   /* QoderWork 2026-07-24 (handoff #2): a single method block, styled by
@@ -3193,15 +3273,12 @@ window.PPQViewer = (function () {
     renderedIds = renderedIds || new Set();
     const srps = rec.self_report_prompts || [];
 
-    srps.filter((p) => !renderedIds.has(p.id)).forEach((p) => iq.appendChild(this._promptBlockV2(p, "method")));
+    /* VF-13: orphans read as deliberate whole-question asks, not lost furniture.
+       (The check_prompt now lives with the insight block — see _appendInsightV2.) */
+    const orphans = srps.filter((p) => !renderedIds.has(p.id));
+    if (orphans.length) iq.appendChild(el("div", { class: "ppq-iq-subhead" }, "About the whole question"));
+    orphans.forEach((p) => iq.appendChild(this._promptBlockV2(p, "method")));
 
-    /* pupil_analysis.check_prompt — a plain string question, no states */
-    const cp = (rec.pupil_analysis || {}).check_prompt;
-    if (cp) {
-      const cpBox = el("div", { class: "ppq-iq-prompt ppq-iq-checkprompt" });
-      cpBox.appendChild(el("div", { class: "ppq-iq-prompt-text" }, analysisMathEsc(cp)));
-      iq.appendChild(cpBox);
-    }
     this._appendThingsUsedV2(iq, rec);
   };
 
@@ -3288,7 +3365,9 @@ window.PPQViewer = (function () {
     const self = this;
     const items = this._thingsUsedItemsV2(rec);
     if (!items.length) return;
-    const details = el("details", { class: "ppq-iq-things" });
+    /* VF-13 (Smith 2026-07-29): open by default — "things this question used
+       should be expanded"; still collapsible. */
+    const details = el("details", { class: "ppq-iq-things", open: true });
     details.appendChild(el("summary", null, "Things this question used"));
     details.appendChild(el("div", { class: "ppq-iq-things-intro" },
       "Known is shown as the starting point. Change only the things that were not available when you needed them."));
@@ -4223,6 +4302,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.8.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.8.1" };
 })();
 // build: 0.3.0, maintained by Codex

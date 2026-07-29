@@ -110,7 +110,16 @@ their own learning record.
   supplied.
 - [ ] Review whether feedback-readiness filters are useful after real use.
 
-## Phase 4 — timing system
+## Phase 4 — timing system — **NEXT (Smith priority, 2026-07-29)**
+
+Spec sources, to be built together as one bounded feature: the handoff's VF-04
+list below, plus the ESAT architecture packet
+`inbox\2026-06-29_from-esat_timing-and-timer.md` (five modes: none / end-only /
+per-question / sweep clock / TIME BANK; per-section uniform target seeding,
+never difficulty-based up front; per-learner extra-time multiplier; silent
+capture always on; analytics joined to the interrogation layer). Confirm the
+pacing/extra-time config shape back to `ESAT Prep App\inbox\` as part of the
+build.
 
 - [ ] Build the timing-preference screen: off/background, number, ring/pie and
   time-bank modes.

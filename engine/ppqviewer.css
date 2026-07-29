@@ -358,11 +358,16 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
    full-screen/minimise behaviour remains the mobile fallback and still applies
    to image/PDF zoom. */
 @media (min-width: 1100px) {
+  /* VF-13 (Smith 2026-07-29): "loads more real estate" — the analysis sheet
+     takes most of the screen; the question column shrinks but stays visible
+     (crop scales to its narrower column) so question + your answer + your
+     declared split are all on screen at the same time. */
   .ppq.ppq-analysis-open .ppq-header,
   .ppq.ppq-analysis-open .ppq-layout {
-    margin-right: min(760px, 52vw);
+    margin-right: min(1080px, 72vw);
   }
   .ppq.ppq-analysis-open .ppq-layout { grid-template-columns: 1fr; }
+  .ppq.ppq-analysis-open { --ppq-crop-width: 97%; }
   .ppq.ppq-analysis-open .ppq-dash { display: none; }
   .ppq-modal.ppq-modal-analysis:not(.minimized) {
     background: transparent;
@@ -372,8 +377,8 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
     pointer-events: none;
   }
   .ppq-modal.ppq-modal-analysis:not(.minimized) .ppq-modal-content {
-    width: min(760px, 52vw);
-    max-width: 760px;
+    width: min(1080px, 72vw);
+    max-width: 1080px;
     max-height: 100vh;
     height: 100vh;
     border-radius: 12px 0 0 12px;
@@ -381,6 +386,7 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
     box-shadow: -8px 0 28px rgba(0,0,0,0.16);
     pointer-events: auto;
   }
+  .ppq-modal.ppq-modal-analysis:not(.minimized) .ppq-iq { max-width: 940px; }
 }
 
 /* When embedded (host sets .ppq-embed on the root) drop the fixed toolbar into flow. */
@@ -768,6 +774,11 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
    method card above it — shared walls, dashed divider, faint tint — so the
    question is visibly ABOUT the steps just read and is answered in place. */
 .ppq-iq-prompt-attached { border: 1px solid var(--ppq-line); border-top: 1px dashed var(--ppq-line); border-radius: 0 0 8px 8px; margin: 0 0 1rem; padding: 0.75rem 1rem 0.85rem; background: rgba(49, 130, 206, 0.035); }
+/* VF-13: a group prompt's per-method slice; the authored combined wording shows
+   to reviewers only. Consecutive attached blocks keep their card joined. */
+.ppq-iq-prompt-permethod { border-radius: 0 0 8px 8px; }
+.ppq-iq-method-joined + .ppq-iq-prompt-attached:not(:last-child) { margin-bottom: 1rem; }
+.ppq-iq-permethod-authored { font-size: 0.8rem; font-style: italic; color: var(--ppq-muted); margin-bottom: 0.4rem; }
 .ppq-iq-state:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
 .ppq-iq-state.sel { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; font-weight: 700; }
 

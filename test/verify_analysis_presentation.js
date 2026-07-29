@@ -191,7 +191,8 @@ const V = {}; // fake viewer holding the real methods
  "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety", "_methodAskText",
  "_elimChipsEl", "next", "prev", "_renderHistoryEntry", "_questionById",
  "_lastAttemptFor", "_reopenAttempt", "closeModal",
- "_progressStats", "_renderProgressPage", "_jumpToAttempt", "_attachResponseToAttempt"
+ "_progressStats", "_renderProgressPage", "_jumpToAttempt", "_attachResponseToAttempt",
+ "_promptMethodAskV2", "_syncAnalysisReminder"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -214,8 +215,11 @@ function makeCtx(rec) {
     _fireReport: (payload) => reports.push(payload),
     _reports: reports,
     _renderInterrogationFeedback: () => {},
+    _analysisReviewMode: () => false, /* VF-13 */
     // bind the real methods
     _appendMethodsV2: V._appendMethodsV2, _methodBlockV2: V._methodBlockV2,
+    _promptMethodAskV2: V._promptMethodAskV2, /* VF-13 */
+    _syncAnalysisReminder: () => {}, /* VF-13: no modal in this harness */
     _methodAskText: V._methodAskText, /* Phase 1.5 */
     _methodKindLabel: V._methodKindLabel, _elimChipsV2El: V._elimChipsV2El,
     _optionRailLegendEl: V._optionRailLegendEl, _appendSelfReportV2: V._appendSelfReportV2,
@@ -276,7 +280,12 @@ function renderAnalysis(rec) {
     if (cls.indexOf("ppq-iq-prompt") >= 0) {
       const text = collect(c, (n) => (n.className || "").indexOf("ppq-iq-prompt-text") >= 0)[0];
       const states = collect(c, (n) => (n.className || "").indexOf("ppq-iq-state") >= 0 && n.tagName === "BUTTON").map((b) => b.innerHTML);
-      return { type: "prompt", text: text ? text.innerHTML : "", states };
+      return {
+        type: "prompt", text: text ? text.innerHTML : "", states,
+        perMethod: cls.indexOf("ppq-iq-prompt-permethod") >= 0, /* VF-13 */
+        promptId: (c.dataset && c.dataset.promptId) || "",
+        methodRef: (c.dataset && c.dataset.methodRef) || ""
+      };
     }
     return { type: "other", cls };
   });
@@ -322,14 +331,32 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const m0 = Object.fromEntries(methods[0].letters.map((x) => x.split(":")));
   check(m0.A === "ro" && m0.B === "ro" && m0.C === "ro", "Q4 stmt1 A/B/C rules_out");
   check(m0.D === "un" && m0.E === "un" && m0.F === "un", "Q4 stmt1 D/E/F unaffected (got " + m0.D + m0.E + m0.F + ")");
-  // group prompt (neutral wording) appears once, after the 4th check (before synthesis)
+  // VF-13 (Smith 2026-07-29, read-once): the group prompt no longer interrupts
+  // as ONE standalone block after the peer group (which forced re-reading the
+  // methods to answer it); each referenced method's foot carries its own ask
+  // with the prompt's authored states.
   const prompts = blocks.filter((b) => b.type === "prompt");
-  const neutral = prompts.filter((p) => /neutral-looking/i.test(p.text));
-  check(neutral.length === 1, "Q4 neutral/time-sink group prompt appears exactly once (got " + neutral.length + ")");
-  // ordering: the 4 per-statement prompts each follow their check; neutral after 4th check
-  const idxNeutral = blocks.indexOf(neutral[0]);
+  const neutralStandalone = prompts.filter((p) => !p.perMethod && /neutral-looking/i.test(p.text));
+  check(neutralStandalone.length === 0,
+    "Q4 group prompt no longer renders as a standalone block (got " + neutralStandalone.length + ")");
+  const groupRefs = (rec.self_report_prompts || []).filter((p) => (p.method_refs || []).length > 1);
+  check(groupRefs.length >= 1, "Q4 fixture still carries a group prompt to split");
+  const gp = groupRefs[0];
+  const perMethod = prompts.filter((p) => p.perMethod && p.promptId === gp.id);
+  check(perMethod.length === (gp.method_refs || []).length,
+    "the group prompt asks at EVERY referenced method's foot (" + perMethod.length + "/" + (gp.method_refs || []).length + ")");
+  perMethod.forEach((p) => {
+    const i = blocks.indexOf(p);
+    const before = blocks.slice(0, i).reverse().find((b) => b.type === "method");
+    check(!!before && before.id === p.methodRef,
+      "a per-method ask directly follows the method it asks about (" + p.methodRef + ")");
+    check(p.states.length === (gp.states || []).length,
+      "the per-method ask carries the prompt's authored states");
+  });
   const idxSynth = blocks.indexOf(synth[0]);
-  check(idxNeutral < idxSynth, "Q4 group prompt sits before the synthesis (after the peer group)");
+  const lastPerMethod = blocks.indexOf(perMethod[perMethod.length - 1]);
+  check(lastPerMethod < idxSynth || (gp.method_refs || []).indexOf(synth[0].id) >= 0,
+    "the peer-group asks finish before the synthesis unless it too is referenced");
   // no raw proposed__ in any state label
   prompts.forEach((p) => p.states.forEach((s) => check(s.indexOf("proposed") < 0, "Q4 state label has no 'proposed': " + s)));
   // used-it hidden on methods that have local prompts (all 4 checks have prompts)
@@ -762,6 +789,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
       _commitTimer: () => {},
       _recordAttempt: () => {},
       _analysisReviewMode: () => false,
+      _syncAnalysisReminder: V._syncAnalysisReminder, /* VF-13 */
       _contentSafety: V._contentSafety, /* VSAFE-01 */
       _isV2: V._isV2,
       _guessLabel: V._guessLabel,
@@ -1598,6 +1626,45 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const wrapperHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
   check(wrapperHtml.indexOf("update-note") >= 0 && /Important update/.test(wrapperHtml),
     "the ESAT page announces the update clearly at sign-in");
+})();
+
+// VF-13 (Smith 2026-07-29): loads more real estate, everything visible at once,
+// nothing read twice.
+(function () {
+  console.log("\n=== analysis overhaul round 2 (VF-13) ===");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(css.indexOf("min(1080px, 72vw)") >= 0,
+    "the wide-screen analysis sheet takes most of the screen");
+  check(/\.ppq\.ppq-analysis-open\s*\{\s*--ppq-crop-width:\s*97%/.test(css),
+    "the shrunken question column still shows its crop at full column width");
+  check(src.indexOf('class: "ppq-iq-things", open: true') >= 0,
+    "Things this question used opens expanded");
+  check(extractFn("_appendInsightV2").toString().indexOf("check_prompt") >= 0 &&
+    extractFn("_appendSelfReportV2").toString().indexOf("checkprompt") < 0,
+    "the check question reads once with the insight, not as a floating orphan");
+  check(extractFn("_appendSelfReportV2").toString().indexOf("About the whole question") >= 0,
+    "orphan prompts read as deliberate whole-question asks");
+  const sync = extractFn("_syncAnalysisReminder").toString();
+  check(sync.indexOf("your split") >= 0 && sync.indexOf("you gave yourself") >= 0,
+    "the sticky bar can carry the declared split and marks verdicts");
+  check(extractFn("_commitPreVerdictGuess").toString().indexOf("_syncAnalysisReminder") >= 0 &&
+    extractFn("_commitPostGuess").toString().indexOf("_syncAnalysisReminder") >= 0,
+    "declaring or correcting a guess updates the sticky bar immediately");
+
+  // the sticky bar composition, functionally
+  const rNode = makeEl("div");
+  const rctx = {
+    cur: { id: "r1" },
+    cfg: { metaLine: () => "ENGAA 2023 Q23", analysisReminderGroup: true, groupLabel: () => "MM2 Sequences" },
+    _chosenLabel: "A",
+    _preGuessDeclaration: { candidate_options: ["A", "C"], candidate_percentages: { A: 60, C: 40 } },
+    q: (sel) => (sel === ".ppq-modal-reminder" ? rNode : null),
+    _syncAnalysisReminder: extractFn("_syncAnalysisReminder")
+  };
+  rctx._syncAnalysisReminder();
+  check(/you chose A/.test(rNode.textContent || rNode._text || "") &&
+    /your split: A 60% \/ C 40%/.test(rNode.textContent || rNode._text || ""),
+    "the bar shows the answer AND the declared percentages together");
 })();
 
 // VSAFE-03 (Claude 2026-07-28): the rejected pill/strikethrough option treatment

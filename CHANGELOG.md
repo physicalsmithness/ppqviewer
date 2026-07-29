@@ -2,6 +2,42 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (morning) — VF-13: analysis overhaul round 2 — read once, answer there, loads more room (v0.8.1)
+
+Engine v0.8.1, from Smith's live-use dictation ("we only ever want anyone to
+read something once… it has to all happen at the same time… loads more real
+estate").
+
+- **Real estate.** On wide screens the analysis sheet now takes
+  `min(1080px, 72vw)` (was 760px/52vw); the question column shrinks but stays
+  visible with its crop scaled to the narrower column, so question + answer +
+  analysis are on screen together.
+- **The sticky bar shows everything you committed**: question, topic, "you
+  chose A" (or "you gave yourself 5/7" for marks attempts) AND "your split:
+  A 60% / C 40%" from the guess declaration, updating the moment a declaration
+  or post-answer correction lands (new `_syncAnalysisReminder`).
+- **Group prompts split to their methods.** A prompt referencing several
+  methods no longer renders once after the group (forcing re-reading); each
+  referenced method's foot carries a compact kind-aware ask ("Did you use this
+  route?") with the prompt's AUTHORED states, answered where that method was
+  read. Events keep the same self_report grammar plus `method_ref`; the plain
+  prompt-id state stays current so conditional feedback matching is unchanged.
+  The authored combined wording remains reviewer-visible (`?review`) and in the
+  block's tooltip. Single-ref prompts keep their Phase 1.5 attached rendering.
+- **The floating check question is gone**: `pupil_analysis.check_prompt` now
+  reads once inside the insight block as "Check yourself", instead of dangling
+  optionless near the bottom ("it just doesn't make sense").
+- **"Things this question used" opens expanded** by default (still
+  collapsible). Orphan whole-question prompts sit under an explicit "About the
+  whole question" heading.
+- Acceptance suite 443/443 (Q4 group-prompt contract rewritten to the split
+  model; sheet width, crop scaling, reminder composition, check placement and
+  expansion all asserted). Content-safety 70/70.
+- Consumer notes: presentation-level only; no config changes. Analysts: the
+  per-method split reinterprets a group prompt's states per member — if any
+  group prompt's states cannot read per-method, flag it and the viewer can
+  exempt that prompt id.
+
 ## 2026-07-29 (small hours) — d012 marks self-assessment + the IB Maths teacher-only consumer (v0.8.0)
 
 Engine v0.8.0. New consumer: IB Maths (teacher-only). ESAT release unchanged.
