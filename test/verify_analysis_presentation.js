@@ -2627,6 +2627,15 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const eHtml2 = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
   check(eHtml2.indexOf("learnedScope") < 0,
     "ESAT carries no learned scope (whole-spec test prep, per Smith)");
+
+  // Six-faults quick wins (Maths seat notes, 2026-07-29)
+  check(/questionTextOf:/.test(mHtml2) && /stem_text/.test(mHtml2) && /ib-stem/.test(mHtml2) && /escHtml/.test(mHtml2),
+    "the stem reads first with labelled verbatim part text, escaped (faults 3 and 6)");
+  check(/ms_pages \|\| \[\]/.test(mHtml2) && /q\.ms_pages && q\.ms_pages\.length/.test(mHtml2),
+    "markscheme pages back up missing ms crops — no false Solution pending (fault 5)");
+  check(mHtml2.indexOf("subtopics || []).slice(0, 4)") < 0 &&
+    /families \|\| \[\]\)\.slice\(0, 2\)/.test(mHtml2),
+    "default chips thin to topic + families (fault 1)");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

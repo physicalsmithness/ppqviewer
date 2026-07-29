@@ -14,6 +14,8 @@
     body { margin: 0; background: #faf6ed; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     .ppq { --ppq-crop-width: 88%; }
     #teacher-note { background: rgba(176, 48, 48, 0.08); border-bottom: 2px solid rgba(176, 48, 48, 0.4); color: #7a2626; font-size: 0.85rem; padding: 0.45rem 1rem; text-align: center; }
+    .ib-stem { font-weight: 600; margin-bottom: 0.6rem; }
+    .ib-part { margin: 0.4rem 0; color: #4d4943; }
   </style>
 </head>
 <body>
@@ -52,18 +54,27 @@
       return m ? m[1] : String(code);
     }
 
+    function escHtml(s) {
+      return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
     /* ===== Flatten the catalogue to the practising unit: the QUESTION =====
-       Their per-part marks still carry zero-mark companion rows and aggregated
-       subpart marks (their own review_status says so), so v1 marks out of the
-       QUESTION total; parts render as stacked crops in printed order. Part-level
-       marking arrives when their mark_group refinement lands. */
+       Marks stay question-level until fault-4 part navigation ships (mark
+       groups landed today; that build is queued). Parts render as stacked
+       crops in printed order, now with the STEM first and each part's
+       verbatim text labelled with its marks (six-faults notes, 2026-07-29). */
     var questions = (window.MATHS_PPQS || []).map(function (q) {
-      var crops = [], msCrops = [], pageUrl = null;
+      var crops = [], msCrops = [], msPages = [], pageUrl = null, partTexts = [];
       (q.parts || []).forEach(function (p) {
         (p.crops || []).forEach(function (c) { crops.push(BASE + q.preview + "/" + c); });
         (p.ms_crops || []).forEach(function (c) { msCrops.push(BASE + q.preview + "/" + c); });
         if (!pageUrl && (p.pages || []).length) pageUrl = BASE + q.preview + "/" + p.pages[0];
+        if (p.text) {
+          var trustworthy = !p.marks_status && p.marks && parseInt(p.marks, 10) > 0;
+          partTexts.push({ label: p.label, marks: trustworthy ? parseInt(p.marks, 10) : null, text: p.text });
+        }
       });
+      (q.ms_pages || []).forEach(function (c) { msPages.push(BASE + q.preview + "/" + c); });
       var tnum = topicNumOf(q.aa_codes);
       var subtopics = [];
       (q.aa_codes || []).forEach(function (c) {
@@ -87,7 +98,9 @@
         topic_num: tnum,
         topic_code: tnum ? ("T" + tnum) : null,
         topic: tnum ? TOPIC_NAMES[tnum] : null,
-        crops: crops, ms_crops: msCrops, page_url: pageUrl
+        stem_text: q.stem_text || "",
+        part_texts: partTexts,
+        crops: crops, ms_crops: msCrops, ms_pages: msPages, page_url: pageUrl
       };
     });
 
@@ -197,14 +210,29 @@
           (q.time_zone && q.time_zone !== "TZ0" ? " " + q.time_zone : "") +
           " · P" + q.paper + " Q" + q.question + " · " + q.marks + " marks";
       },
+      /* Six-faults #1 ("categories are a mile thick"): default chips are ONE
+         topic + family chips only; item codes, types and themes live behind
+         the More classifications expander. */
       tagsOf: function (q) {
         var t = [];
         if (q.topic) t.push(q.topic_code + " " + q.topic);
-        (q.subtopics || []).slice(0, 4).forEach(function (s) { t.push(s); });
         (q.families || []).slice(0, 2).forEach(function (f) { t.push(f); });
         if (q.option) t.push("Option: " + q.option);
         if (q.aa_applicable && q.aa_applicable !== "Yes") t.push("AA: " + q.aa_applicable);
         return t;
+      },
+      /* Six-faults #3/#6: the stem reads FIRST, then each part's verbatim text
+         with its label and (trustworthy) marks — so a stacked-crops question is
+         answerable and the current part is at least identifiable until real
+         part navigation ships. */
+      questionTextOf: function (q) {
+        var bits = [];
+        if (q.stem_text) bits.push('<div class="ib-stem">' + escHtml(q.stem_text) + "</div>");
+        (q.part_texts || []).forEach(function (p) {
+          bits.push('<div class="ib-part"><b>' + escHtml(p.label) +
+            (p.marks ? " — " + p.marks + " marks" : "") + "</b> " + escHtml(p.text) + "</div>");
+        });
+        return bits.join("");
       },
       classificationsOf: function (q) {
         return {
@@ -222,11 +250,17 @@
       /* ===== d012: marks-based self-assessment ===== */
       questionType: function () { return "marksSelfAssess"; },
       marksOf: function (q) { return q.marks; },
-      msCropsOf: function (q) { return q.ms_crops || []; },
+      /* Six-faults #5: ms_crops where they exist, else the paper's markscheme
+         PAGES (shipped 2026-07-29) — "Solution pending" with pages available
+         was wrong and is now impossible. */
+      msCropsOf: function (q) {
+        if (q.ms_crops && q.ms_crops.length) return q.ms_crops;
+        return q.ms_pages || [];
+      },
       markschemeOf: function (q) {
-        return (q.ms_crops && q.ms_crops.length)
+        return ((q.ms_crops && q.ms_crops.length) || (q.ms_pages && q.ms_pages.length))
           ? ""
-          : "<i>The markscheme image for this question has not been extracted yet — mark from your own copy if you have one. (840 legacy questions are in this state; the extraction fix is on the Maths seat's list.)</i>";
+          : "<i>No markscheme image exists for this question yet — mark from your own copy if you have one.</i>";
       },
 
       selfAssess: {
