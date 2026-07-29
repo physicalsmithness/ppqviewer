@@ -167,6 +167,18 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
   → first publish (enable GitHub Pages on the repo at that point).
   Includes d011 (learned scope): nested tri-state tick tree over the syllabus
   spine, filters default to within-learned, master toggle, unlearned greyed.
+  - [x] d011 BUILT (2026-07-29, v0.12.0): Learned so far button + tri-state
+    tree panel (topic → topic-part → item from the observed AA codes), scope
+    filtering with empty-set pass-through, look-ahead toggle, greyed dashboard
+    groups. Maths only per Smith.
+  - [ ] SL/HL level declaration (Smith + AA guide, 2026-07-29): restricts the
+    tree to SL codes, switches pacing to the SL outline (90 min/80 marks),
+    notes per-paper question-type differences. Guides preserved:
+    `Maths Categorisation\reference\IB Maths AA Guide (Smith upload…).pdf`;
+    Chemistry + Physics 2025 guides in `PaperDatabases\reference guides\` for
+    their future consumers.
+  - [ ] Item-label prose for the tree: ask the Maths seat to ship spine
+    content text in the catalogue META (codes-only labels today).
 - [ ] Final shared-hosted-script versus vendored-copy decision.
 
 ## Implemented foundation

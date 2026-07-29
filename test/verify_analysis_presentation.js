@@ -162,6 +162,9 @@ const perfColour = extractStandaloneFn("perfColour");
 /* VF-04r: axes migration + the shared clock/preview formatter. */
 const timingModeToAxes = extractStandaloneFn("timingModeToAxes");
 const timingDisplayText = extractStandaloneFn("timingDisplayText");
+/* d011: the learned-scope tree helpers. */
+const learnedTreeState = extractStandaloneFn("learnedTreeState");
+const learnedTreeLeaves = extractStandaloneFn("learnedTreeLeaves");
 function extractFn(name) {
   const marker = "Viewer.prototype." + name + " = function";
   const start = src.indexOf(marker);
@@ -204,7 +207,8 @@ const V = {}; // fake viewer holding the real methods
  "_promptMethodAskV2", "_syncAnalysisReminder",
  "_timingPrefs", "_setTimingPrefs", "_timingModeNow", "_timingTargetMsFor",
  "_elapsedTimingMs", "_commitTiming", "_openTimingPanel", "_reducedMotion", "_fmtClock",
- "_questionScores", "_discardCommittedTime"
+ "_questionScores", "_discardCommittedTime",
+ "_questionInLearnedScope", "_learnedScopeBiting", "_openLearnedPanel", "_syncLearnedButton"
 ].forEach((n) => { V[n] = extractFn(n); });
 
 // ---- fake instance context ------------------------------------------------
@@ -1887,8 +1891,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(/timing:\s*\{[\s\S]{0,200}return 90;[\s\S]{0,200}defaultMode: "clock"/.test(esatHtml),
     "ESAT supplies uniform 90s section pacing with the quiet clock default");
   const mathsHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
-  check(/timing:\s*\{[\s\S]{0,260}q\.marks[\s\S]{0,60}\* 90;[\s\S]{0,200}defaultMode: "none"/.test(mathsHtml),
-    "IB Maths paces at 1.5 minutes per mark with timing off by default");
+  check(/timing:\s*\{[\s\S]{0,700}defaultMode: "none"/.test(mathsHtml) && /q\.marks \|\| 1\) \* perMark/.test(mathsHtml),
+    "IB Maths paces per mark from the guide with timing off by default");
   const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
   check(css.indexOf(".ppq-timing-ring-fill") >= 0 && css.indexOf(".ppq-timing-bank.neg") >= 0,
     "the ring and the in-the-red bank are styled");
@@ -2092,8 +2096,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     src.indexOf("save it to your flagged list") >= 0,
     "the flag copy describes what actually happens");
   check(src.indexOf("flags: o.flags || {}") >= 0 &&
-    src.indexOf("return { attempts: [], scores: {}, flags: {}, prefs: {} }") >= 0,
-    "flags (and prefs) are first-class persisted store state alongside attempts and scores");
+    src.indexOf("return { attempts: [], scores: {}, flags: {}, prefs: {}, learned: { set: {}, enabled: true } }") >= 0,
+    "flags, prefs and the learned set are first-class persisted store state");
   check(src.indexOf("ppq-flagged-toggle") >= 0 &&
     extractFn("_matchesQuestionFilters").toString().indexOf("_flaggedOnly") >= 0,
     "the header toggle exists and flagged-only is a real filter every view consumer shares");
@@ -2517,6 +2521,110 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(src.indexOf("post_guess_declaration = payload") >= 0,
     "the post-answer guess correction persists onto the attempt row too");
   check(src.indexOf("ppq-progress-btn") >= 0, "the header offers My progress");
+})();
+
+// d011 (Smith, "Learned so far", maths only): nested tri-state tree; filters
+// stay within the learned set once anything is ticked; unmapped questions
+// fall outside an active scope; unlearned dashboard groups grey out.
+(function () {
+  console.log("\n=== learned so far (d011) ===");
+  const tree = [
+    { code: "T1", label: "T1", children: [
+      { code: "SL 1.1", label: "SL 1.1" },
+      { code: "SL 1.2", label: "SL 1.2", children: [
+        { code: "SL1.2.1", label: "SL1.2.1" }, { code: "SL1.2.2", label: "SL1.2.2" }
+      ]}
+    ]}
+  ];
+  check(learnedTreeLeaves(tree[0]).join(",") === "SL 1.1,SL1.2.1,SL1.2.2",
+    "leaves are the tickable units (two-level codes lead their own line)");
+  check(learnedTreeState(tree[0], {}) === "none" &&
+    learnedTreeState(tree[0], { "SL 1.1": true, "SL1.2.1": true, "SL1.2.2": true }) === "all" &&
+    learnedTreeState(tree[0], { "SL1.2.1": true }) === "some",
+    "the tri-state reads all / some / none through the nesting");
+
+  function lctx(set, enabled) {
+    return {
+      cfg: { learnedScope: { tree: tree, refsOf: (q) => q.refs || [], label: "Learned so far" }, idOf: (q) => q.id },
+      store: { learned: { set: set || {}, enabled: enabled !== false } },
+      _questionInLearnedScope: V._questionInLearnedScope,
+      _learnedScopeBiting: V._learnedScopeBiting
+    };
+  }
+  check(lctx({})._questionInLearnedScope({ refs: ["SL1.2.1"] }) === true,
+    "an empty learned set never filters — the scope only bites once ticked");
+  const active = lctx({ "SL1.2.1": true, "SL1.2.2": true });
+  check(active._questionInLearnedScope({ refs: ["SL1.2.1"] }) === true &&
+    active._questionInLearnedScope({ refs: ["SL1.2.1", "SL1.2.2"] }) === true,
+    "a question is in scope when ALL its refs are learned");
+  check(active._questionInLearnedScope({ refs: ["SL1.2.1", "SL 1.1"] }) === false,
+    "one untaught ref keeps a question out (it needs something not yet learned)");
+  check(active._questionInLearnedScope({ refs: [] }) === false,
+    "unmapped questions sit outside an ACTIVE scope");
+  check(lctx({ "SL1.2.1": true }, false)._questionInLearnedScope({ refs: ["SL 1.1"] }) === true,
+    "the master toggle turns the scope off for looking ahead");
+  check(active._learnedScopeBiting() === true && lctx({})._learnedScopeBiting() === false,
+    "the biting test drives the button state and the greying");
+  check(extractFn("_matchesQuestionFilters").toString().indexOf("_questionInLearnedScope") >= 0,
+    "the scope is a real filter every view consumer shares");
+  check(src.indexOf("learned: o.learned || { set: {}, enabled: true }") >= 0,
+    "the learned set persists in the store");
+
+  // the panel: tick a topic box, everything beneath follows; save persists
+  const pNodes = {
+    ".ppq-modal-body": makeEl("div"),
+    ".ppq-modal-reminder": makeEl("div"),
+    ".ppq-modal-min": makeEl("button"),
+    ".ppq-modal-feedback-status": makeEl("span"),
+    ".ppq-modal": makeEl("div")
+  };
+  const calls = { saved: 0, closed: 0, filtered: 0, dashed: 0 };
+  const pctx = {
+    cfg: { learnedScope: { tree: tree, refsOf: (q) => q.refs || [], label: "Learned so far" }, idOf: (q) => q.id },
+    store: { learned: { set: {}, enabled: true } },
+    questions: [{ id: "q1", refs: ["SL1.2.1"] }, { id: "q2", refs: ["SL 1.1", "SL1.2.2"] }],
+    q: (sel) => pNodes[sel] || null,
+    _questionInLearnedScope: V._questionInLearnedScope,
+    _saveStore: () => { calls.saved++; },
+    _fireReport: () => {},
+    closeModal: () => { calls.closed++; },
+    _syncLearnedButton: () => {},
+    filterQuestions: () => { calls.filtered++; },
+    renderDashboard: () => { calls.dashed++; },
+    _openLearnedPanel: V._openLearnedPanel
+  };
+  check(pctx._openLearnedPanel() === true, "the Learned so far panel renders into the modal shell");
+  const topicBox = collect(pNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-ls-box") >= 0)[0];
+  topicBox.dispatchEvent({ type: "click", stopPropagation: () => {}, preventDefault: () => {} });
+  const saveBtn = collect(pNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-learned-save") >= 0)[0];
+  saveBtn.dispatchEvent({ type: "click" });
+  check(calls.saved === 1 && calls.closed === 1 && calls.filtered === 1 && calls.dashed === 1 &&
+    pctx.store.learned.set["SL 1.1"] === true && pctx.store.learned.set["SL1.2.1"] === true &&
+    pctx.store.learned.set["SL1.2.2"] === true,
+    "ticking the topic box ticks every leaf beneath it, and Save persists and refreshes");
+
+  // greying reaches the dashboard rows
+  const greyHtml = V._catHtml.call(
+    { cfg: { selfReport: { ramp: { 1: "1,1,1" }, levels: 1 }, revealCorrect: true }, groupFilter: null },
+    "T9",
+    { label: "Unlearned topic", total: 1, marks: [], ratings: { 1: 0 }, qids: [], qscores: {}, unlearned: true },
+    "ribbonHeat"
+  );
+  check(greyHtml.indexOf("ppq-cat-unlearned") >= 0,
+    "a group with nothing in scope greys out rather than vanishing");
+  check(css5011().indexOf(".ppq-cat-unlearned") >= 0 && css5011().indexOf(".ppq-ls-box.some") >= 0,
+    "the greying and the tri-state boxes are styled");
+  function css5011() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
+
+  // wrappers: maths carries the scope with guide-true pacing; ESAT does not
+  const mHtml2 = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
+  check(/learnedScope:/.test(mHtml2) && /LEARNED_TREE/.test(mHtml2) && /refsOf: function \(q\) \{ return q\.aa_codes/.test(mHtml2),
+    "IB Maths supplies the tree (from observed item codes) and refsOf");
+  check(/120 \* 60 \/ 110/.test(mHtml2) && /75 \* 60 \/ 55/.test(mHtml2),
+    "maths pacing now follows the AA guide's assessment outline (HL rates, P3 distinct)");
+  const eHtml2 = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
+  check(eHtml2.indexOf("learnedScope") < 0,
+    "ESAT carries no learned scope (whole-spec test prep, per Smith)");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

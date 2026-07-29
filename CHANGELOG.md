@@ -2,6 +2,35 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-29 (late afternoon) — d011: Learned so far, built; guide-true maths pacing (v0.12.0)
+
+Engine v0.12.0. IB Maths only per Smith ("not needed for esat").
+
+- **Learned so far** (name confirmed): a header button opens the nested
+  tri-state tree — topic → topic-part → item, built from the corpus's observed
+  AA codes — where ticking a parent ticks everything beneath and partial
+  branches show as filled squares. Once anything is ticked, every filter,
+  the finder, the counter and the dashboard operate WITHIN the learned set:
+  a question is in scope only when ALL its syllabus refs are learned; a
+  question with no AA mapping sits outside an active scope. An empty set
+  never filters, the panel's look-ahead toggle turns the scope off wholesale,
+  "Tick everything"/"Clear" exist, and the panel live-counts items ticked and
+  questions in scope. Unlearned dashboard groups grey out rather than vanish.
+  The set persists per device (`store.learned`).
+- **Maths pacing corrected from the AA guide Smith supplied** (my 1.5 min/mark
+  guess replaced): HL P1/P2 = 120 min/110 marks ≈ 65.5 s per mark; P3 = 75/55
+  ≈ 81.8 s per mark; SL rates (90/80) switch in when the SL/HL declaration
+  lands (recorded in d011 and the roadmap, with per-paper question-type notes).
+  Chemistry and Physics 2025 guides preserved in `PaperDatabases\reference
+  guides\` for their future consumers.
+- Also this hour (v0.11.x): the timer's reveal line carries its own
+  "don't record this one", striking the just-recorded time retroactively and
+  unwinding the bank credit and session tally exactly, answer kept.
+- Suites 531/531 + 70/70 (tri-state through nesting, all-refs semantics,
+  empty-set pass-through, look-ahead toggle, unmapped-question rule, panel
+  cascade + persistence, greying, wrapper wiring, guide pacing, ESAT
+  exclusion).
+
 ## 2026-07-29 (afternoon) — VF-04r: the timer becomes independent axes, sticky, with a live preview (v0.11.0)
 
 Engine v0.11.0, from Smith's first live look at the timer.

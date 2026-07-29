@@ -709,6 +709,24 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-progress-verdict.wrong { color: var(--ppq-bad); }
 .ppq-progress-chip { display: inline-block; font-size: 0.75rem; border: 1px solid var(--ppq-line); border-radius: 999px; padding: 0.1rem 0.5rem; color: var(--ppq-ink2); margin-left: 0.3rem; }
 .ppq-progress-reflection { font-style: italic; color: var(--ppq-muted); font-size: 0.88rem; margin-top: 0.3rem; }
+/* d011: Learned so far — button state, tri-state boxes, tree, greyed groups */
+.ppq-learned-btn.on { background: var(--ppq-accent); border-color: var(--ppq-accent); color: #fff; font-weight: 700; }
+.ppq-learned-summary { font-size: 0.92rem; color: var(--ppq-ink2); margin-bottom: 0.7rem; }
+.ppq-learned-enable { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.92rem; margin-bottom: 0.7rem; cursor: pointer; }
+.ppq-learned-quick { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; }
+.ppq-learned-tree { margin-bottom: 1rem; }
+.ppq-learned-topic { border: 1px solid var(--ppq-line); border-radius: 9px; margin-bottom: 0.5rem; padding: 0.15rem 0.6rem; }
+.ppq-learned-topic > summary { cursor: pointer; padding: 0.45rem 0.2rem; display: flex; align-items: center; gap: 0.55rem; font-size: 0.98rem; }
+.ppq-learned-sub { margin: 0.15rem 0 0.3rem 1.6rem; }
+.ppq-learned-sub > summary { cursor: pointer; padding: 0.3rem 0.2rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.92rem; }
+.ppq-learned-leafrow { display: flex; align-items: center; gap: 0.5rem; padding: 0.22rem 0.2rem 0.22rem 1.6rem; font-size: 0.88rem; color: var(--ppq-ink2); }
+.ppq-ls-box { width: 1.05rem; height: 1.05rem; border-radius: 4px; border: 2px solid var(--ppq-line); background: var(--ppq-bg); cursor: pointer; padding: 0; flex: none; position: relative; }
+.ppq-ls-box.all { background: var(--ppq-accent); border-color: var(--ppq-accent); }
+.ppq-ls-box.all::after { content: "✓"; color: #fff; font-size: 0.75rem; font-weight: 900; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.ppq-ls-box.some { border-color: var(--ppq-accent); }
+.ppq-ls-box.some::after { content: ""; position: absolute; inset: 3px; background: var(--ppq-accent); border-radius: 2px; }
+.ppq-cat-unlearned { opacity: 0.42; }
+
 /* VF-14r: the question cluster — one dot per available question in the
    category. Neutral until attempted; attempted dots carry the continuous
    performance colour (red 0 → pale yellow 0.2 → green 1), computed per value,

@@ -94,6 +94,32 @@
     var topicFriendly = {};
     Object.keys(TOPIC_NAMES).forEach(function (n) { topicFriendly["T" + n] = "T" + n + " " + TOPIC_NAMES[n]; });
 
+    /* ===== d011: Learned so far — tree from the observed AA item codes.
+       Labels are the codes until the Maths seat ships spine prose in the
+       catalogue META (requested). ===== */
+    var LEARNED_TREE = (function () {
+      var byTopic = {};
+      questions.forEach(function (q) {
+        (q.aa_codes || []).forEach(function (code) {
+          var m = String(code).match(/^(?:SL|AHL)(\d)/i);
+          if (!m) return;
+          var t = parseInt(m[1], 10);
+          var tp = topicPartOf(code);
+          var topic = byTopic[t] = byTopic[t] || {};
+          (topic[tp] = topic[tp] || {})[code] = true;
+        });
+      });
+      return Object.keys(byTopic).map(Number).sort().map(function (t) {
+        var parts = byTopic[t];
+        var children = Object.keys(parts).sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true }); }).map(function (tp) {
+          var items = Object.keys(parts[tp]).sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true }); });
+          if (items.length === 1 && items[0] === tp) return { code: tp, label: tp };
+          return { code: tp, label: tp, children: items.map(function (c) { return { code: c, label: c }; }) };
+        });
+        return { code: "T" + t, label: "T" + t + " " + (TOPIC_NAMES[t] || ""), children: children };
+      });
+    })();
+
     window.PPQ_CONFIG = {
       title: "IB Maths driller",
       versionLabel: "ibmaths v0.1.0 (teacher preview) · engine " + (window.PPQViewer ? PPQViewer.version : "?"),
@@ -103,12 +129,24 @@
       timingMode: "none",
       prefetchAhead: 2,
       defaultOrder: "shuffle",
-      /* d013/VF-04: IB pacing rule of thumb — 1.5 minutes per mark. Timing is
-         off by default while learning (q10 guidance); pupils opt in via the
-         Timing panel, where extra time (25%/50%/custom) also lives. */
+      /* d013/VF-04 + the AA guide's assessment outline (Smith supplied the
+         guide; SL and HL DIFFER): HL P1/P2 = 120 min / 110 marks ≈ 65.5 s per
+         mark; HL P3 = 75 min / 55 marks ≈ 81.8 s per mark. SL (90 min / 80
+         marks ≈ 67.5 s) switches in when the level declaration lands. The
+         corpus is HL, so HL rates apply, legacy MHL approximated the same.
+         Off by default while learning (q10). */
       timing: {
-        targetOf: function (q) { return (q.marks || 1) * 90; },
+        targetOf: function (q) {
+          var perMark = String(q.paper) === "3" ? (75 * 60 / 55) : (120 * 60 / 110);
+          return (q.marks || 1) * perMark;
+        },
         defaultMode: "none"
+      },
+      /* d011: Learned so far (maths only; ESAT is whole-spec test prep). */
+      learnedScope: {
+        label: "Learned so far",
+        tree: LEARNED_TREE,
+        refsOf: function (q) { return q.aa_codes || []; }
       },
 
       filters: [

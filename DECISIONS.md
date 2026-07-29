@@ -92,7 +92,9 @@ Once a learned set exists, the question filters operate WITHIN it by default: "A
 
 **Storage and future.** The learned set persists in the store (`store.learned`, code → true) per consumer storageKey — local to the pupil's device now. When real logins and classes arrive (d008, identity and classes), a teacher-set class coverage can seed or override the local set; nothing in this design blocks that.
 
-**Naming.** Smith flagged "current course coverage" as ambiguous. Pupil-facing label to be confirmed; "Learned so far" recommended.
+**Naming.** Smith confirmed **"Learned so far"** (2026-07-29).
+
+**Built 2026-07-29 (engine v0.12.0), IB Maths only — Smith: "not needed for esat".** Extension recorded the same day, from the AA guide Smith supplied: pupils should also DECLARE THEIR LEVEL (SL/HL). The declaration restricts the Learned-so-far tree (SL sees SL codes only), switches the timing baseline (guide assessment outline: SL 90 min/80 marks vs HL 120/110, P3 75/55), and notes that question types differ by paper. Not yet built; queued with the guide numbers already wired for HL.
 
 ---
 

@@ -231,6 +231,20 @@ window.PPQViewer = (function () {
        welcome: a question counts in every category it belongs to). */
     cfg.progressAxes = (Array.isArray(cfg.progressAxes) ? cfg.progressAxes : [])
       .filter(function (a) { return a && a.label && typeof a.valuesOf === "function"; });
+    /* d011 (Smith, "Learned so far"): the learner marks course position on a
+       nested tri-state tree; the filters then operate WITHIN it by default.
+       tree: [{code,label,children:[{code,label,children:[{code,label}]}]}]
+       (leaves are the tickable units); refsOf(q) -> the question's leaf codes.
+       A question is in scope only when ALL its refs are learned; a question
+       with NO refs is out of scope while the scope is active (it is not part
+       of the mapped course). An EMPTY learned set never filters — the scope
+       only bites once something is ticked. */
+    const lsIn = cfg.learnedScope || null;
+    cfg.learnedScope = (lsIn && Array.isArray(lsIn.tree) && typeof lsIn.refsOf === "function") ? {
+      tree: lsIn.tree,
+      refsOf: lsIn.refsOf,
+      label: lsIn.label || "Learned so far"
+    } : null;
     cfg.questionTextOf = cfg.questionTextOf || function (q) { return q.question_text || ""; };
     cfg.choicesOf = cfg.choicesOf || function (q) { return q.choices || []; };
     cfg.answerKeyOf = cfg.answerKeyOf || function (q) { return q.answer_key; };
@@ -266,7 +280,7 @@ window.PPQViewer = (function () {
        joins attempts and scores as first-class persisted store state.
        d013 (2026-07-29): `prefs` — per-learner, per-consumer preferences (the
        timing mode and extra-time multiplier live here) — joins them. */
-    try { const raw = localStorage.getItem(this.cfg.storageKey); if (raw) { const o = JSON.parse(raw); return { attempts: o.attempts || [], scores: o.scores || {}, flags: o.flags || {}, prefs: o.prefs || {} }; } }
+    try { const raw = localStorage.getItem(this.cfg.storageKey); if (raw) { const o = JSON.parse(raw); return { attempts: o.attempts || [], scores: o.scores || {}, flags: o.flags || {}, prefs: o.prefs || {}, learned: o.learned || { set: {}, enabled: true } }; } }
     catch (e) { /* corrupt or absent */ }
     // one-time migration from a prior storage shape (e.g. chemistry's two flat maps),
     // so pupils keep their history when a subject moves onto the shared engine.
@@ -274,7 +288,7 @@ window.PPQViewer = (function () {
       try { const seeded = this.cfg.migrate(localStorage); if (seeded) return { attempts: seeded.attempts || [], scores: seeded.scores || {}, flags: seeded.flags || {}, prefs: seeded.prefs || {} }; }
       catch (e) { /* migration is best-effort */ }
     }
-    return { attempts: [], scores: {}, flags: {}, prefs: {} };
+    return { attempts: [], scores: {}, flags: {}, prefs: {}, learned: { set: {}, enabled: true } };
   };
   Viewer.prototype._saveStore = function () { localStorage.setItem(this.cfg.storageKey, JSON.stringify(this.store)); this.renderDashboard(); };
 
@@ -362,6 +376,14 @@ window.PPQViewer = (function () {
       type: "button",
       title: "Your attempts, ratings, guesses, time, flags and reflections"
     }, "My progress"));
+    /* d011: Learned so far (only when the consumer supplies the tree). */
+    if (cfg.learnedScope) {
+      filters.appendChild(el("button", {
+        class: "ppq-btn-mini ppq-learned-btn",
+        type: "button",
+        title: "Tick what you've learned; the filters then stay inside it"
+      }, esc(cfg.learnedScope.label)));
+    }
     /* d013/VF-04: timing preferences (only when the consumer supplies timing). */
     if (cfg.timing) {
       filters.appendChild(el("button", {
@@ -766,6 +788,12 @@ window.PPQViewer = (function () {
     /* d013/VF-04: timing preferences panel. */
     const timingBtn = this.q(".ppq-timing-btn");
     if (timingBtn) timingBtn.addEventListener("click", () => self._openTimingPanel());
+    /* d011: the Learned so far panel. */
+    const learnedBtn = this.q(".ppq-learned-btn");
+    if (learnedBtn) {
+      learnedBtn.addEventListener("click", () => self._openLearnedPanel());
+      this._syncLearnedButton();
+    }
     /* VF-07 (Claude 2026-07-28): the Flagged view toggle. */
     const flagToggle = this.q(".ppq-flagged-toggle");
     if (flagToggle) {
@@ -1215,7 +1243,172 @@ window.PPQViewer = (function () {
        question must pass, so the finder, counter scope and dashboard all agree
        with the visible list. */
     if (this._flaggedOnly && !(((this.store || {}).flags) || {})[cfg.idOf(qq)]) return false;
+    /* d011: within-learned scope (only bites once something is ticked). */
+    if (this._questionInLearnedScope && !this._questionInLearnedScope(qq)) return false;
     if (this.groupFilter && cfg.groupKey(qq) !== this.groupFilter) return false;
+    return true;
+  };
+
+  /* ============================== d011: Learned so far =====================
+     The learner marks course position on a nested tri-state tree; filters then
+     operate within it by default. Engine-owned mechanism; the subject supplies
+     the tree and refsOf. Not wired for ESAT (whole-spec test prep). */
+  Viewer.prototype._questionInLearnedScope = function (q) {
+    const ls = this.cfg.learnedScope;
+    if (!ls) return true;
+    const learned = ((this.store || {}).learned) || { set: {}, enabled: true };
+    if (learned.enabled === false) return true;
+    const set = learned.set || {};
+    let any = false;
+    for (const k in set) { if (set[k]) { any = true; break; } }
+    if (!any) return true; /* nothing ticked yet — the scope does not bite */
+    let refs = [];
+    try { refs = ls.refsOf(q) || []; } catch (_) { refs = []; }
+    if (!refs.length) return false; /* unmapped content is not part of the mapped course */
+    for (let i = 0; i < refs.length; i++) if (!set[refs[i]]) return false;
+    return true;
+  };
+  Viewer.prototype._learnedScopeBiting = function () {
+    const ls = this.cfg.learnedScope;
+    if (!ls) return false;
+    const learned = ((this.store || {}).learned) || {};
+    if (learned.enabled === false) return false;
+    const set = learned.set || {};
+    for (const k in set) { if (set[k]) return true; }
+    return false;
+  };
+  Viewer.prototype._syncLearnedButton = function () {
+    const b = this.q(".ppq-learned-btn");
+    if (!b) return;
+    const ls = this.cfg.learnedScope;
+    if (!ls) { b.style.display = "none"; return; }
+    const learned = ((this.store || {}).learned) || { set: {}, enabled: true };
+    let n = 0;
+    for (const k in (learned.set || {})) { if (learned.set[k]) n++; }
+    b.textContent = ls.label + (n ? (learned.enabled === false ? " (off)" : " (" + n + ")") : "");
+    b.classList.toggle("on", this._learnedScopeBiting());
+  };
+
+  Viewer.prototype._openLearnedPanel = function () {
+    const self = this, ls = this.cfg.learnedScope;
+    if (!ls) return false;
+    const saved = ((this.store || {}).learned) || { set: {}, enabled: true };
+    const set = Object.assign({}, saved.set || {});
+    let enabled = saved.enabled !== false;
+
+    const page = el("div", { class: "ppq-progress ppq-learned-panel" });
+    page.appendChild(el("div", { class: "ppq-progress-title" }, esc(ls.label)));
+    const summary = el("div", { class: "ppq-learned-summary" });
+    page.appendChild(summary);
+
+    const enableRow = el("label", { class: "ppq-learned-enable" });
+    const enableBox = el("input", { type: "checkbox" });
+    enableBox.checked = enabled;
+    enableBox.addEventListener("change", function () { enabled = !!enableBox.checked; refreshSummary(); });
+    enableRow.appendChild(enableBox);
+    enableRow.appendChild(el("span", null, "Only show questions fully inside what you've learned (turn off to look ahead)"));
+    page.appendChild(enableRow);
+
+    const quick = el("div", { class: "ppq-learned-quick" });
+    const tickAll = el("button", { class: "ppq-btn-mini", type: "button" }, "Tick everything");
+    const clearAll = el("button", { class: "ppq-btn-mini", type: "button" }, "Clear");
+    quick.appendChild(tickAll); quick.appendChild(clearAll);
+    page.appendChild(quick);
+
+    const treeBox = el("div", { class: "ppq-learned-tree" });
+    page.appendChild(treeBox);
+
+    function setLeaves(node, on) {
+      learnedTreeLeaves(node).forEach(function (c) { if (on) set[c] = true; else delete set[c]; });
+    }
+    function allLeaves() {
+      const out = [];
+      ls.tree.forEach(function (t) { learnedTreeLeaves(t, out); });
+      return out;
+    }
+    function refreshSummary() {
+      let n = 0;
+      for (const k in set) { if (set[k]) n++; }
+      const total = allLeaves().length;
+      let inScope = 0, totalQ = (self.questions || []).length;
+      const probe = { cfg: self.cfg, store: { learned: { set: set, enabled: enabled } }, _questionInLearnedScope: self._questionInLearnedScope };
+      (self.questions || []).forEach(function (q) { if (probe._questionInLearnedScope(q)) inScope++; });
+      summary.textContent = n + " of " + total + " items ticked · " +
+        (n === 0 ? "scope not filtering yet (tick what you've learned)" :
+          (enabled ? (inScope + " of " + totalQ + " questions in scope") : "scope OFF — showing everything"));
+    }
+    function boxFor(node) {
+      const st = learnedTreeState(node, set);
+      const b = el("button", { class: "ppq-ls-box " + st, type: "button", title: st === "all" ? "Learned — click to clear" : "Click to mark all of this learned" });
+      b.addEventListener("click", function (e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        if (e && e.preventDefault) e.preventDefault();
+        setLeaves(node, learnedTreeState(node, set) !== "all");
+        renderTree();
+        refreshSummary();
+      });
+      return b;
+    }
+    function renderTree() {
+      treeBox.innerHTML = "";
+      ls.tree.forEach(function (topic) {
+        const det = el("details", { class: "ppq-learned-topic" });
+        const sum = el("summary");
+        sum.appendChild(boxFor(topic));
+        sum.appendChild(el("b", null, esc(topic.label || topic.code)));
+        det.appendChild(sum);
+        (topic.children || []).forEach(function (tp) {
+          if (!tp.children || !tp.children.length) {
+            const row = el("div", { class: "ppq-learned-leafrow" });
+            row.appendChild(boxFor(tp));
+            row.appendChild(el("span", null, esc(tp.label || tp.code)));
+            det.appendChild(row);
+            return;
+          }
+          const sub = el("details", { class: "ppq-learned-sub" });
+          const ssum = el("summary");
+          ssum.appendChild(boxFor(tp));
+          ssum.appendChild(el("span", null, esc(tp.label || tp.code)));
+          sub.appendChild(ssum);
+          (tp.children || []).forEach(function (leaf) {
+            const row = el("div", { class: "ppq-learned-leafrow" });
+            row.appendChild(boxFor(leaf));
+            row.appendChild(el("span", null, esc(leaf.label || leaf.code)));
+            sub.appendChild(row);
+          });
+          det.appendChild(sub);
+        });
+        treeBox.appendChild(det);
+      });
+    }
+    tickAll.addEventListener("click", function () { allLeaves().forEach(function (c) { set[c] = true; }); renderTree(); refreshSummary(); });
+    clearAll.addEventListener("click", function () { for (const k in set) delete set[k]; renderTree(); refreshSummary(); });
+    renderTree();
+    refreshSummary();
+
+    const save = el("button", { class: "ppq-btn ppq-primary ppq-learned-save", type: "button" }, "Save — remembered on this device");
+    save.addEventListener("click", function () {
+      self.store.learned = { set: set, enabled: enabled };
+      self._saveStore();
+      self._fireReport({ status: "learned_scope", qtype: "learned", extra_json: JSON.stringify({ ticked: Object.keys(set).length, enabled: enabled }) });
+      self.closeModal();
+      self._syncLearnedButton();
+      self.filterQuestions();
+      self.renderDashboard();
+    });
+    page.appendChild(save);
+
+    const body = this.q(".ppq-modal-body");
+    if (!body) return false;
+    body.innerHTML = "";
+    body.appendChild(page);
+    const reminder = this.q(".ppq-modal-reminder");
+    if (reminder) reminder.textContent = ls.label;
+    const minBtn = this.q(".ppq-modal-min");
+    if (minBtn) minBtn.style.display = "none";
+    const badge = this.q(".ppq-modal-feedback-status");
+    if (badge) badge.style.display = "none";
+    this.q(".ppq-modal").classList.add("show", "ppq-modal-progress");
     return true;
   };
 
@@ -1854,6 +2047,25 @@ window.PPQViewer = (function () {
      good content behind the generic shell; a false negative shows a pupil
      broken mathematics labelled "Full feedback". Content repair belongs to the
      analysis project; refusal and fallback belong here. */
+  /* d011: tri-state of a tree node against the learned set — "all", "some" or
+     "none"; a leaf reads the set directly. Self-contained for extraction. */
+  function learnedTreeState(node, set) {
+    if (!node.children || !node.children.length) return set[node.code] ? "all" : "none";
+    let all = true, none = true;
+    for (let i = 0; i < node.children.length; i++) {
+      const s = learnedTreeState(node.children[i], set);
+      if (s !== "all") all = false;
+      if (s !== "none") none = false;
+    }
+    return all ? "all" : (none ? "none" : "some");
+  }
+  function learnedTreeLeaves(node, out) {
+    out = out || [];
+    if (!node.children || !node.children.length) { out.push(node.code); return out; }
+    for (let i = 0; i < node.children.length; i++) learnedTreeLeaves(node.children[i], out);
+    return out;
+  }
+
   /* VF-14r (Smith 2026-07-29): per-question performance score. The most recent
      answer is weighted 4× all earlier ones, so score 1.0 means "right last
      time" with history agreeing, right-then-wrong lands at exactly 0.20, and
@@ -4564,9 +4776,11 @@ window.PPQViewer = (function () {
     if (facet) return this._renderDashboardFacet(facet);
     const cfg = this.cfg, groups = {};
     /* VF-14r2 (Smith): the little question boxes live here too — one per
-       question in the group, sharing the progress page's performance scores. */
+       question in the group, sharing the progress page's performance scores.
+       d011: a group entirely outside the learned scope greys out. */
     const qscores = this._questionScores();
-    this.questions.forEach((q) => { const k = cfg.groupKey(q); if (!groups[k]) groups[k] = { label: cfg.groupLabel(q), total: 0, marks: [], ratings: this._zeroRatings(), qids: [], qscores: qscores }; groups[k].total++; groups[k].qids.push(String(cfg.idOf(q))); });
+    this.questions.forEach((q) => { const k = cfg.groupKey(q); if (!groups[k]) groups[k] = { label: cfg.groupLabel(q), total: 0, marks: [], ratings: this._zeroRatings(), qids: [], qscores: qscores, inScope: 0 }; groups[k].total++; groups[k].qids.push(String(cfg.idOf(q))); if (this._questionInLearnedScope(q)) groups[k].inScope++; });
+    if (this._learnedScopeBiting()) Object.keys(groups).forEach((k) => { groups[k].unlearned = groups[k].inScope === 0; });
     this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q) return; const g = groups[cfg.groupKey(q)]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); });
     Object.keys(this.store.scores).forEach((id) => { const q = this.byId[id]; if (!q) return; const g = groups[cfg.groupKey(q)]; if (g && g.ratings[this.store.scores[id]] != null) g.ratings[this.store.scores[id]]++; });
     const keys = Object.keys(groups).sort((a, b) => { const ua = cfg.isUntagged(a), ub = cfg.isUntagged(b); if (ua !== ub) return ua ? 1 : -1; return a.localeCompare(b); });
@@ -4726,13 +4940,15 @@ window.PPQViewer = (function () {
       let heat = ""; for (let v = 1; v <= levels; v++) { const c = g.ratings[v] || 0; const op = c > 0 ? (0.2 + 0.8 * c / max) : 0.06; heat += '<div class="ppq-heat" style="background:rgba(' + (ramp[v] || "128,128,128") + "," + op + ');" title="rated ' + v + ": " + c + '"></div>'; }
       inner += '<div class="ppq-ribbon">' + ribbon + '</div><div class="ppq-heatrow">' + heat + "</div>";
     }
+    /* d011: unlearned categories stay visible but greyed. */
+    const unlearned = g.unlearned ? " ppq-cat-unlearned" : "";
     if (facet) {
       const disabled = g.total === 0 ? ' disabled aria-disabled="true"' : "";
-      return '<button class="ppq-cat ppq-facet-cat' + active + '" type="button" data-fidx="' +
+      return '<button class="ppq-cat ppq-facet-cat' + active + unlearned + '" type="button" data-fidx="' +
         facet.filterIndex + '" data-value="' + esc(k) + '"' + disabled + ">" +
         inner + "</button>";
     }
-    return '<div class="ppq-cat' + active + '" data-key="' + esc(k) + '">' + inner + "</div>";
+    return '<div class="ppq-cat' + active + unlearned + '" data-key="' + esc(k) + '">' + inner + "</div>";
   };
 
   Viewer.prototype._wireCats = function () {
@@ -4950,6 +5166,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.11.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.12.0" };
 })();
 // build: 0.3.0, maintained by Codex
