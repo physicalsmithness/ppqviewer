@@ -108,7 +108,7 @@ for (let i = 0; i < refs.length; i++) {
   fs.mkdirSync(path.dirname(dst), { recursive: true });
   fs.copyFileSync(src, dst);
   copied++;
-  if ((copied >= CHUNK) || (BUDGET_MS && copied % 25 === 0 && Date.now() - t0 > BUDGET_MS)) {
+  if ((copied >= CHUNK) || (BUDGET_MS && (i % 200 === 0 || copied % 25 === 0) && Date.now() - t0 > BUDGET_MS)) {
     console.log("chunk done: copied " + copied + ", already-present " + skipped + ", missing " + missing +
       ", remaining ~" + (refs.length - i - 1) + " — run again: node tools/assemble_ibmaths_site.js assets");
     process.exit(2);
