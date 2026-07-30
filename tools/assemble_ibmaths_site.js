@@ -52,9 +52,16 @@ function sha12(file) {
 }
 
 // ---- site files ------------------------------------------------------------
+/* Guard BOTH phases: a git worktree or partial copy of ppqviewer has no
+   deploy checkout (deploy\ is gitignored), and 2026-07-30 one such copy ran
+   the assets phase anyway, filling ~700MB of junk and then crashing on the
+   never-written index.html. Fail loud, name the real folder. */
+must(fs.existsSync(path.join(DEPLOY, ".git")),
+  "deploy checkout missing at " + DEPLOY +
+  "\n      This copy of ppqviewer has no deploy checkout (worktree or partial copy?)." +
+  "\n      Run from the real project: C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer");
 const assetsOnly = process.argv[2] === "assets";
 if (!assetsOnly) {
-  must(fs.existsSync(path.join(DEPLOY, ".git")), "deploy checkout missing at " + DEPLOY);
   let html = fs.readFileSync(WRAPPER, "utf8");
   [["<!-- PPQ-SYNC:TEACHER-ONLY-START (removed from the deployed copy) -->", "<!-- PPQ-SYNC:TEACHER-ONLY-END -->"],
    ["<!-- PPQ-SYNC:LOCAL-NOTE-START (removed from the deployed copy) -->", "<!-- PPQ-SYNC:LOCAL-NOTE-END -->"]].forEach(function (pair) {

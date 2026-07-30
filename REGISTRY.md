@@ -1,19 +1,19 @@
 # ppqviewer consumer registry
 
-Last audited: 2026-07-28
+Last audited: 2026-07-30 (Claude takeover audit)
 
 This is the drift detector and capability-awareness map. Update it on every
 consumer migration and material module change.
 
 | Consumer | Current status | Location/surface | Shared viewer state | Enabled/known capabilities |
 | --- | --- | --- | --- | --- |
-| ESAT | Public shared-engine deployment | source `example\esat-compare.html`; checkout `deploy\esatwallop`; public `physicalsmithness.github.io/esatwallop` | live v0.2.15 / API 0.3.0; source v0.2.16 / API 0.4.1 (content-safety gate + readability rework, awaiting sync + push) | image self-mark, post-question review, guesses, timer capture/display, reporting, classifications, drawing, content-safety withholding |
+| ESAT | Public shared-engine deployment | source `example\esat-compare.html`; checkout `deploy\esatwallop`; public `physicalsmithness.github.io/esatwallop` | live v0.2.17 (checkout synced + pushed 2026-07-29, in step with origin; carries content safety, history, progress, timing axes, clusters; public build-identity check owed) | image self-mark, post-question review, guesses, timer capture/display, reporting, classifications, drawing, content-safety withholding |
 | Chemistry | Live own copy; shared-engine migration not complete | `C:\Claude (not on Gdrive, nor OneDrive)\chemistrydriller` | Donor/consumer, not yet one runtime source | reference booklet, structured papers, mixed question types, maths, split dashboard |
 | Chemistry G: mirror | Stale; retire | `G:\My Drive\github local files\chemistrydriller` | Not authoritative | Do not use as source |
 | Special Relativity | Intended near-term embed | `C:\Claude (not on Gdrive, nor OneDrive)\Special Relativity Driller` | No ppqviewer adapter recorded here | Requires embedded mount |
 | IB Physics | Future consumer; no adapter recorded here | external project | Not connected | Rich tagging/error taxonomy and eventual assistance/history |
 | Economics | Future consumer; no adapter recorded here | external project | Not connected | Past-paper data exists elsewhere; adapter/status not recorded here |
-| IB Maths | PUBLISHING (d014, 2026-07-29): school-use publish approved, q12 closed; awaiting Smith's sync + push | wrapper `example\ibmaths.html` (teacher preview reads assets locally); canonical catalogue `C:\CodexProjects\PaperDatabases\Maths Categorisation\viewer\maths_catalogue.js` (their builder; 2,195 questions, both syllabi); deploy checkout `deploy\ibmathsdriller` (engine 0.13.0 + full asset set incl. complete ms pages) | engine API 0.13.0; d012 marksSelfAssess is its question type | Question-unit marks self-assessment (their per-part marks still carry aggregation quirks); filters: syllabus/AA-fit(default Yes)/topic/subtopic/family/paper/year; d012 taxonomy seeded; timer up; generic feedback shell; 840 legacy questions lack ms crops (their fix list) |
+| IB Maths | PUBLISHED (d014, pushed 2026-07-29: 12,585 assets incl. 5,633 complete ms pages at 12:57, final v0.13.0/v0.1.1 assembly at 19:09, origin up to date; Pages-serving browser check owed) | wrapper `example\ibmaths.html` (teacher preview reads assets locally); canonical catalogue `C:\CodexProjects\PaperDatabases\Maths Categorisation\viewer\maths_catalogue.js` (their builder; 2,195 questions, both syllabi); deploy checkout `deploy\ibmathsdriller` (engine 0.13.0 + full asset set incl. complete ms pages) | engine API 0.13.0; d012 marksSelfAssess is its question type | Question-unit marks self-assessment (their per-part marks still carry aggregation quirks); filters: syllabus/AA-fit(default Yes)/topic/subtopic/family/paper/year; d012 taxonomy seeded; timer up; generic feedback shell; 840 missing-ms-crop questions now served by the ms_pages fallback (VF-15) |
 | Trilogy Physics | Intended future past-paper viewer | external project | Not connected | Mapping exists elsewhere; no viewer adapter recorded here |
 | pre-IB Physics | Intended future past-paper viewer | external project | Not connected | No viewer adapter recorded here |
 

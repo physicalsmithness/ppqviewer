@@ -2,6 +2,34 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-30 — takeover audit (records only, no engine change)
+
+New maintainer chat took the seat (predecessor context-heavy). Verified from
+disk: source tree clean at `d8560c7`; suites re-run green, 556/556 + 70/70
+(bundle paths supplied via `ESAT_ANALYSIS_ROOT` / `ESAT_CATALOGUE_JS` when the
+sandbox mounts differ from the hardcoded defaults); ESAT checkout at v0.2.17,
+pushed, in step with origin; ibmathsdriller pushed IN FULL (12,585 assets incl.
+5,633 complete ms pages at 12:57, final v0.13.0/v0.1.1 assembly at 19:09 —
+Smith had already run sync + push, so the predecessor's closing "to publish"
+instruction was already satisfied when written). Owed: browser confirmation
+that GitHub Pages serves both builds.
+
+Correction for the trail (Smith flagged it): the predecessor's closing chat
+claim that the chemistry driller's 956 questions are "all Paper 1 multiple
+choice" is false — 226 are 1A MCQs, 305 are 1B and 425 are Paper 2 long-form;
+every record carries `question_text`, `markscheme_text`, `marks` and
+`page_url`, with 274 in `shared_group` multipart blocks. The RECORDS (d001,
+d010, REGISTRY) were correct throughout and no outbound packet carried the
+error; noted here so the wrong version cannot be re-inherited from the
+transcript. Chemistry's data shape remains the standard the maths experience
+is being brought up to (ms_pages fallback and stem-first shipped; fault-4
+part navigation queued next).
+
+ROADMAP/REGISTRY reconciled: ESAT v0.2.17 recorded as pushed; IB Maths moved
+PUBLISHING → PUBLISHED; fault-4 part navigation (+ fault-2 full-page toggle)
+recorded as the active next build; spine-label item closed (viewer-side
+generator); family vocabulary 26→28 noted as flowing.
+
 ## 2026-07-29 (night) — d014: IB Maths publish approved (q12 resolved); Smith's three faults fixed (v0.13.0)
 
 Engine v0.13.0; ibmaths wrapper v0.1.1.

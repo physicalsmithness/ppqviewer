@@ -8,10 +8,15 @@ echo maths catalogue, copying every referenced crop. Leaves changes for GitHub D
 echo It does not commit or push.
 echo.
 node "%~dp0tools\assemble_ibmaths_site.js"
+if not %ERRORLEVEL%==0 (
+  set "SYNC_EXIT=%ERRORLEVEL%"
+  goto report
+)
 :assets
 node "%~dp0tools\assemble_ibmaths_site.js" assets
 if %ERRORLEVEL%==2 goto assets
 set "SYNC_EXIT=%ERRORLEVEL%"
+:report
 echo.
 if not "%SYNC_EXIT%"=="0" (
   echo The sync stopped with an error. Nothing was pushed.

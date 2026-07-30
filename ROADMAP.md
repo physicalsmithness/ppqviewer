@@ -1,8 +1,11 @@
 # ppqviewer roadmap
 
-Last audited: 2026-07-28  
+Last audited: 2026-07-30 (Claude takeover audit)  
 Maintainer: Claude  
-Current public ESAT release: **v0.2.15**, build `b778d4c0d9c2`
+Current public ESAT release: **v0.2.17** (checkout synced + pushed 2026-07-29;
+public build-identity verification still owed, Phase 1)  
+IB Maths driller: **published 2026-07-29** (d014 (school-use publish)); full
+asset set incl. complete ms pages pushed; Pages-serving browser check owed
 
 Read `CLAUDE_HANDOFF_2026-07-28.md` first. It contains the evidence, exact
 requirements and known affected question IDs.
@@ -110,11 +113,16 @@ their own learning record.
 
 - [ ] Add optional before/after self-assessment.
 - [ ] Add the configurable generic error-taxonomy layer with free-text escape.
+  _(d012 (marks self-assessment) built this for marks questions, maths-first;
+  what remains open is ESAT/MCQ adoption, and Smith's recorded d012 direction
+  questions — whether categorising every error earns its keep, per-mark
+  "did you miss it?", chem/physics transfer. Techniques axis is the awaited
+  input.)_
 - [ ] Extend reviewer provenance when authoritative hashes/pass history are
   supplied.
 - [ ] Review whether feedback-readiness filters are useful after real use.
 
-## Phase 4 — timing system — **NEXT (Smith priority, 2026-07-29)**
+## Phase 4 — timing system — BUILT 2026-07-29 (d013 (timing axes) + VF-04r/r2/r3)
 
 Spec sources, to be built together as one bounded feature: the handoff's VF-04
 list below, plus the ESAT architecture packet
@@ -169,7 +177,10 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
   how-to yet), keeping timing and guess-probability machinery. Deploy:
   `deploy\ibmathsdriller` checkout of github.com/physicalsmithness/ibmathsdriller.
   Steps: catalogue builder → wrapper + config → local visual pass → sync script
-  → first publish (enable GitHub Pages on the repo at that point).
+  → first publish — ALL DONE. Published 2026-07-29: assets committed 12:57
+  (12,585 files incl. 5,633 complete ms pages), final v0.13.0/v0.1.1 assembly
+  committed 19:09, origin up to date. Owed: confirm Pages serves it in a
+  browser (GA4 then starts watching per d014).
   Includes d011 (learned scope): nested tri-state tick tree over the syllabus
   spine, filters default to within-learned, master toggle, unlearned greyed.
   - [x] d011 BUILT (2026-07-29, v0.12.0): Learned so far button + tri-state
@@ -182,8 +193,24 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
     `Maths Categorisation\reference\IB Maths AA Guide (Smith upload…).pdf`;
     Chemistry + Physics 2025 guides in `PaperDatabases\reference guides\` for
     their future consumers.
-  - [ ] Item-label prose for the tree: ask the Maths seat to ship spine
-    content text in the catalogue META (codes-only labels today).
+  - [x] Item-label prose for the tree. _(2026-07-29: generated viewer-side
+    from the syllabus spine into `example\ibmaths_spine_labels.js`; seat META
+    text remains a welcome upgrade, not a blocker.)_
+  - [ ] **NEXT — fault-4 part navigation with per-part marks** (seat's
+    correction packet, 2026-07-29): per-part framing with label + marks
+    ("(b) — 3 marks"), an active-part state the pupil steps through, per-part
+    marks entry switched by the seat's rules — part-level wherever every part
+    has a trustworthy mark (empty `marks_status`) or a resolvable
+    `mark_group` with a printed total; question-level for the 2004-07
+    structural-loss era (blank marks, no status). Fault-2's per-part
+    "show full page" toggle rides along. Catalogue prerequisites verified in
+    the DEPLOYED data 2026-07-30 (stem_text 2,195; marks_status/mark_group on
+    all 6,310 parts; paper_totals 2,195).
+  - [ ] Family vocabulary 26→28 (two mega-families split into four
+    daughters) is already flowing data-driven; on next touch, check no stored
+    filter preference pins a retired family name ("Select, substitute,
+    finish" / "Cross the representation bridge") and silently empties a
+    filter.
 - [ ] Final shared-hosted-script versus vendored-copy decision.
 
 ## Implemented foundation
