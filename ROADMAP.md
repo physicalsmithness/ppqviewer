@@ -199,19 +199,29 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
     (135) + `meta.item_content` (275), packet 2026-07-29. Adopt with fault-4:
     catalogue names win, generator fills gaps; student surfaces show name
     first, code secondary.)_
-  - [ ] **NEXT — fault-4 part navigation with per-part marks** (seat's
-    correction packet, 2026-07-29): per-part framing with label + marks
-    ("(b) — 3 marks"), an active-part state the pupil steps through, per-part
-    marks entry switched by the seat's rules — part-level wherever every part
-    has a trustworthy mark (empty `marks_status`) or a resolvable
-    `mark_group` with a printed total; question-level for the 2004-07
-    structural-loss era (blank marks, no status). Fault-2's per-part
-    "show full page" toggle rides along, as does meta.code_names adoption
-    (name first, code secondary). Per d015 (duplicate text deliberate): keep
-    stem text AND identical part text both rendered; strip only furniture
-    tokens, adding trailing □ answer-box runs to the strip list. Catalogue
-    prerequisites verified in the DEPLOYED data 2026-07-30 (stem_text 2,195;
-    marks_status/mark_group on all 6,310 parts; paper_totals 2,195).
+  - [x] **fault-4 part navigation with per-part marks — BUILT 2026-07-30**
+    (d016 (part-by-part from chemistry), engine v0.14.0, ibmaths v0.2.0).
+    Records became markable units, so chemistry's `structuredPaper` navigator
+    (in the engine since Phase 3, never switched on here) now supplies the
+    part chips with their marks, the "you are here" whole-question view and
+    the part-by-part toggle; marks entry is sized to the part. 1,459 of 2,195
+    questions get part-level marks; the 2004-07 structural-loss era stays
+    question-level per the seat's rules and flips when their Phase-2 mark
+    reconstruction lands. Markscheme pages narrowed from whole papers (mean
+    19, from the cover) to the question's own pages (mean 7.1). Capability
+    parity is now asserted by the suite, so no future consumer can quietly
+    decline a capability the engine already carries.
+  - [ ] Fault-2 residue: the per-part "show the full printed page" toggle.
+    The unit shape now makes this small; `pages` ship per part.
+  - [ ] Adopt the seat's `meta.code_names` (135) + `meta.item_content` (275)
+    in chips, weak-area labels and the Learned-so-far tree: name first, code
+    secondary, per their display ask. Supersedes the viewer-side generator.
+  - [ ] Trailing □ answer-box runs still print in extracted text (they are
+    OCR'd answer boxes). Strip as furniture; per d015 the text itself stays
+    even when it duplicates the stem.
+  - [ ] 99 records still present 10+ marks as one bar (structural-loss era);
+    1,485 records still show a whole-paper markscheme (crop-less papers).
+    Both are seat-side data asks, packeted 2026-07-30.
   - [ ] Family vocabulary 26→28 (two mega-families split into four
     daughters) is already flowing data-driven; on next touch, check no stored
     filter preference pins a retired family name ("Select, substitute,

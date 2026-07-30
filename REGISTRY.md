@@ -13,7 +13,7 @@ consumer migration and material module change.
 | Special Relativity | Intended near-term embed | `C:\Claude (not on Gdrive, nor OneDrive)\Special Relativity Driller` | No ppqviewer adapter recorded here | Requires embedded mount |
 | IB Physics | Future consumer; no adapter recorded here | external project | Not connected | Rich tagging/error taxonomy and eventual assistance/history |
 | Economics | Future consumer; no adapter recorded here | external project | Not connected | Past-paper data exists elsewhere; adapter/status not recorded here |
-| IB Maths | PUBLISHED (d014, pushed 2026-07-29: 12,585 assets incl. 5,633 complete ms pages at 12:57, final v0.13.0/v0.1.1 assembly at 19:09, origin up to date; Pages-serving browser check owed) | wrapper `example\ibmaths.html` (teacher preview reads assets locally); canonical catalogue `C:\CodexProjects\PaperDatabases\Maths Categorisation\viewer\maths_catalogue.js` (their builder; 2,195 questions, both syllabi); deploy checkout `deploy\ibmathsdriller` (engine 0.13.0 + full asset set incl. complete ms pages) | engine API 0.13.0; d012 marksSelfAssess is its question type | Question-unit marks self-assessment (their per-part marks still carry aggregation quirks); filters: syllabus/AA-fit(default Yes)/topic/subtopic/family/paper/year; d012 taxonomy seeded; timer up; generic feedback shell; 840 missing-ms-crop questions now served by the ms_pages fallback (VF-15) |
+| IB Maths | PUBLISHED (d014, pushed 2026-07-29: 12,585 assets incl. 5,633 complete ms pages at 12:57, final v0.13.0/v0.1.1 assembly at 19:09, origin up to date; Pages-serving browser check owed) | wrapper `example\ibmaths.html` (teacher preview reads assets locally); canonical catalogue `C:\CodexProjects\PaperDatabases\Maths Categorisation\viewer\maths_catalogue.js` (their builder; 2,195 questions, both syllabi); deploy checkout `deploy\ibmathsdriller` (engine 0.13.0 + full asset set incl. complete ms pages) | engine API 0.14.0; wrapper v0.2.0; d016 part-by-part live (5,368 markable-unit records from 2,195 questions; 1,459 questions part-level) | Question-unit marks self-assessment (their per-part marks still carry aggregation quirks); filters: syllabus/AA-fit(default Yes)/topic/subtopic/family/paper/year; d012 taxonomy seeded; timer up; generic feedback shell; 840 missing-ms-crop questions now served by the ms_pages fallback (VF-15) |
 | Trilogy Physics | Intended future past-paper viewer | external project | Not connected | Mapping exists elsewhere; no viewer adapter recorded here |
 | pre-IB Physics | Intended future past-paper viewer | external project | Not connected | No viewer adapter recorded here |
 
@@ -35,7 +35,14 @@ consumer migration and material module change.
 - session history navigation, review-reopen of prior attempts, persisted
   flags with a Flagged filter, and the pupil "My progress" page
   (engine 0.6.0–0.7.0);
-- marks-based self-assessment with the error taxonomy (d012, engine 0.8.0);
+- marks-based self-assessment with the error taxonomy (d012, engine 0.8.0),
+  sized to the markable unit since d016;
+- **part-by-part structured papers for ANY consumer (d016, engine 0.14.0):**
+  chemistry's `structuredPaper` navigator plus consumer hooks `partLabelOf`,
+  `partMarksOf`, `msPagesLabelOf`. A consumer whose records form part blocks
+  MUST enable it — the suite now fails otherwise (capability parity). Read
+  this row before building any new consumer: the engine already carries
+  chemistry's multipart model, and IB Maths lost a day to not using it;
 - the full timing system (d013, engine 0.9.0): six modes incl. time bank,
   learner extra time, pause, discard; subjects supply only `timing.targetOf`
   + `defaultMode`.

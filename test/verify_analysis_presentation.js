@@ -2679,7 +2679,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the pages open by themselves when there are no crops at all");
   check(css5014().indexOf(".ppq-ms-page") >= 0, "markscheme pages are styled");
   function css5014() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
-  check(src.indexOf('version: "0.13.0"') >= 0, "engine bumped to 0.13.0 for the msPagesOf API");
+  check(src.indexOf('version: "0.14.0"') >= 0, "engine bumped to 0.14.0 (msPagesOf from 0.13.0, plus the d016 part hooks)");
 
   // wrapper: crops inline, pages behind the expander, never conflated
   check(/msCropsOf: function \(q\) \{ return q\.ms_crops \|\| \[\]; \}/.test(mSrc) &&
@@ -2688,7 +2688,10 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
 
   // wrapper text cleanup + legacy topic fallback: run the real code
   const hi = mSrc.indexOf("var OMIT_RE");
-  const hj = mSrc.indexOf("/* ===== Flatten");
+  /* d016 renamed the block that follows the helpers (the flatten became the
+     markscheme locator plus the unit explode); slice to whichever exists. */
+  const hj = [mSrc.indexOf("/* ===== Markscheme page location"), mSrc.indexOf("/* ===== Flatten")]
+    .filter((n) => n > hi).sort((a, b) => a - b)[0];
   check(hi >= 0 && hj > hi, "wrapper helper block found");
   const helpers = new Function(mSrc.slice(hi, hj) +
     "; return { cleanStemText: cleanStemText, cleanPartText: cleanPartText, legacyTopicNumOf: legacyTopicNumOf };")();
@@ -2717,9 +2720,157 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     aSrc.indexOf("q.ms_pages || []).forEach(function (c) { addRef(") >= 0 &&
     aSrc.indexOf("function addRef(rel) { if (!seen[rel])") >= 0,
     "the assembler strips the local note, ships deduped ms_pages, and copies each page once");
-  check(aSrc.indexOf('versionLabel: "ibmaths v0.1.1 (teacher preview)') >= 0 &&
-    mSrc.indexOf('versionLabel: "ibmaths v0.1.1 (teacher preview)') >= 0,
-    "wrapper and assembler agree the build is tellable as v0.1.1");
+  check(aSrc.indexOf('versionLabel: "ibmaths v0.2.0 (teacher preview)') >= 0 &&
+    mSrc.indexOf('versionLabel: "ibmaths v0.2.0 (teacher preview)') >= 0,
+    "wrapper and assembler agree the build is tellable as v0.2.0");
+})();
+
+/* ===== d016 (part-by-part from chemistry's model) =========================
+   Smith, 2026-07-30: "the part question stuff is just not serving... it's like
+   the chemistry thing is being ignored." A 19-mark structured question offered
+   one 0..19 marks bar because this consumer flattened parts away, while the
+   engine had carried chemistry's structuredPaper navigator since Phase 3.
+   These assertions execute the REAL wrapper against the REAL catalogue (its
+   inline script, with PPQViewer.mount captured) so the records and config are
+   the ones a pupil gets, not a paraphrase. ========================== */
+(function () {
+  console.log("\n=== d016: markable units, part navigator, markscheme page narrowing ===");
+  const MATHS_CATALOGUE = process.env.MATHS_CATALOGUE_JS ||
+    "C:\\CodexProjects\\PaperDatabases\\Maths Categorisation\\viewer\\maths_catalogue.js";
+  if (!fs.existsSync(MATHS_CATALOGUE)) {
+    console.log("  SKIP: maths catalogue not found at " + MATHS_CATALOGUE);
+    return;
+  }
+  const html = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
+  const open = html.lastIndexOf("<script>");
+  const inline = html.slice(open + "<script>".length, html.indexOf("</script>", open));
+  const store = {};
+  const ls = {
+    getItem: (k) => (Object.prototype.hasOwnProperty.call(store, k) ? store[k] : null),
+    setItem: (k, v) => { store[k] = String(v); },
+    removeItem: (k) => { delete store[k]; }
+  };
+  const stubEl = () => ({ style: {}, dataset: {}, appendChild() {}, addEventListener() {}, setAttribute() {}, querySelector: () => null, querySelectorAll: () => [] });
+  let mounted = null;
+  const sandbox = {
+    window: { localStorage: ls },
+    localStorage: ls,
+    document: { getElementById: stubEl, createElement: stubEl, addEventListener() {} },
+    console: { log() {}, warn() {}, error() {} },
+    PPQViewer: { version: "test", mount: (root, opts) => { mounted = opts; } }
+  };
+  sandbox.window.document = sandbox.document;
+  sandbox.window.PPQViewer = sandbox.PPQViewer;
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync(MATHS_CATALOGUE, "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths_spine_labels.js"), "utf8"), sandbox);
+  try { vm.runInContext(inline, sandbox); } catch (e) { console.log("  FAIL: wrapper threw: " + e.message); }
+
+  check(!!mounted && Array.isArray(mounted.questions) && mounted.questions.length > 0,
+    "the wrapper executes and mounts records");
+  if (!mounted) return;
+  const recs = mounted.questions, cfg = mounted.config;
+  const byId = {};
+  recs.forEach((r) => { byId[r.id] = r; });
+  const source = sandbox.window.MATHS_PPQS || [];
+
+  check(recs.length > source.length,
+    "questions explode into markable units: " + recs.length + " records from " + source.length + " catalogue questions");
+  check(Object.keys(byId).length === recs.length, "every unit id is unique");
+
+  // Smith's exemplar class: a big structured question with a mid-run blank mark.
+  const q12 = recs.filter((r) => r.block_id === "2222-7107_Q12");
+  check(q12.length === 3 && q12.map((r) => r.marks).join(",") === "4,3,12",
+    "2222-7107 P2 Q12 (19 marks) becomes three markable units worth 4, 3 and 12 — not one 0..19 bar");
+  check(q12.length === 3 && /^\(c\)\(i\)–\(c\)\(v\)$/.test(q12[2].part_label),
+    "the absorbed run reads as a human part label, not a slug: " + (q12[2] ? q12[2].part_label : "?"));
+  const q10 = recs.filter((r) => r.block_id === "8822-7101_Q10");
+  check(q10.length === 4 && q10.map((r) => r.marks).join(",") === "5,7,4,4",
+    "8822-7101 Q10: the seat's mark_group makes 10(b)(i)+10(b)(ii) ONE 7-mark unit");
+  check(q10.length === 4 && q10[1].crops.length === 2,
+    "a grouped unit shows every crop it covers");
+
+  // The engine's block contract (_blockParts): id === block or starts with block + "("
+  const contractOk = recs.every((r) => r.id === r.block_id || r.id.indexOf(r.block_id + "(") === 0);
+  check(contractOk, "every unit id satisfies the engine's block-detection contract");
+  check(typeof cfg.blockKeyOf === "function" && cfg.blockKeyOf(q10[0]) === "8822-7101_Q10",
+    "blockKeyOf returns the printed question, so the navigator groups its parts");
+  const siblings = recs.filter((item) => {
+    const id = cfg.idOf ? cfg.idOf(item) : item.id;
+    return id === "8822-7101_Q10" || String(id).indexOf("8822-7101_Q10(") === 0;
+  });
+  check(siblings.length === 4, "the engine's own filter recovers all four parts of the block");
+
+  // Nothing regressed for questions that were never multipart.
+  const singles = source.filter((q) => (q.parts || []).length < 2);
+  check(singles.length > 0 && singles.every((q) => byId[q.id] && byId[q.id].is_part === false),
+    "single-part questions keep their original id, so stored history survives");
+
+  // Structural-loss era: marks unknown, so the question stays the unit (seat's rule).
+  const fellBack = source.filter((q) => (q.parts || []).length >= 2 && byId[q.id] && byId[q.id].is_part === false);
+  check(fellBack.length > 0,
+    "questions whose part marks are blank with no status stay question-level (" + fellBack.length + " of them)");
+  check(fellBack.every((q) => (q.parts || []).some((p) => !p.marks_status && !(parseInt(p.marks, 10) > 0))),
+    "every fallback has a real reason: a part with no marks and no status explaining it");
+
+  // Marks entry, timing and metadata all follow the unit, not the question.
+  check(cfg.marksOf(q10[1]) === 7 && cfg.partMarksOf(q10[1]) === 7,
+    "the marks bar is sized to the part (7), never the question total (20)");
+  check(cfg.timing.targetOf(q10[1]) < cfg.timing.targetOf(byId["8822-7101_Q10(a)"] ? q10[0] : q10[1]) * 2.1,
+    "timing paces the part, not the whole question");
+  const meta = cfg.metaLine(q10[1]);
+  check(meta.indexOf("(b)(i)–(b)(ii)") >= 0 && meta.indexOf("7 marks") >= 0,
+    "the card says which part you are on and what it is worth: " + meta.slice(meta.indexOf("· P")));
+  check(cfg.metaLine(q12[2]).indexOf("of 19 for the whole question") >= 0,
+    "the whole-question total is offered as context when the parts do add up to it (Q12: 4+3+12=19)");
+  const mismatch = recs.filter((r) => r.is_part && r.units_marks_total !== r.question_marks);
+  check(mismatch.length > 0 && mismatch.every((r) => cfg.metaLine(r).indexOf("for the whole question") < 0),
+    "no whole-question total is claimed where the seat's aggregation quirks mean the parts do not add up (" +
+      mismatch.length + " units affected)");
+  const af = cfg.attemptFields(q10[1]);
+  check(af.block_id === "8822-7101_Q10" && af.part_label === "(b)(i)–(b)(ii)" && af.marks_max === 7,
+    "attempt rows carry the block, the part and the part's maximum");
+  check(q10.every((r) => r.topic_code === q10[0].topic_code && r.subtopics.length === q10[0].subtopics.length),
+    "each unit inherits the question's classification, so filters and scope still work");
+  check(typeof cfg.partLabelOf === "function" && !/[_]/.test(cfg.partLabelOf(q12[2])),
+    "partLabelOf gives the navigator a readable label, never the id slug");
+
+  // Markscheme pages: the reveal was serving whole papers from the cover page.
+  const located = recs.filter((r) => r.ms_pages_kind === "located");
+  const bracketed = recs.filter((r) => r.ms_pages_kind === "bracketed");
+  const whole = recs.filter((r) => r.ms_pages_kind === "whole");
+  check(located.length > 0 && located.every((r) => r.ms_pages.length <= r.ms_pages_all.length),
+    "markscheme pages narrow to the ones holding the question (" + located.length + " located)");
+  check(located.length > bracketed.length + whole.length,
+    "most records are located outright, not bracketed or dumped whole");
+  const bigNarrow = located.filter((r) => r.ms_pages_all.length >= 10 && r.ms_pages.length <= 4).length;
+  check(bigNarrow > 500,
+    "a pupil revealing a markscheme gets a handful of pages, not a 30-page document (" + bigNarrow + " cases)");
+  check(recs.every((r) => r.ms_pages_all.length === 0 || r.ms_pages.length > 0),
+    "narrowing never leaves a question with no markscheme when the paper has one");
+  check(/Show the markscheme/.test(cfg.msPagesLabelOf(located[0])) &&
+    /somewhere in them/.test(bracketed.length ? cfg.msPagesLabelOf(bracketed[0]) : "somewhere in them") &&
+    (!whole.length || /from the cover/.test(cfg.msPagesLabelOf(whole[0]))),
+    "the expander's wording tells the truth about which pages it is showing");
+
+  // Capability parity: the rule that stops a solved problem being re-solved.
+  const grouped = {};
+  recs.forEach((r) => { grouped[r.block_id] = (grouped[r.block_id] || 0) + 1; });
+  const hasBlocks = Object.keys(grouped).some((k) => grouped[k] > 1);
+  check(!hasBlocks || (cfg.modules && cfg.modules.structuredPaper === true),
+    "PARITY: a consumer whose records form part blocks must enable chemistry's structuredPaper navigator");
+  check(!hasBlocks || typeof cfg.blockKeyOf === "function",
+    "PARITY: block-forming consumers must supply blockKeyOf");
+
+  // The engine hooks the navigator now depends on.
+  check(src.indexOf("cfg.partLabelOf = cfg.partLabelOf ||") >= 0 &&
+    src.indexOf("cfg.partMarksOf = cfg.partMarksOf ||") >= 0 &&
+    src.indexOf("cfg.msPagesLabelOf = cfg.msPagesLabelOf ||") >= 0,
+    "engine declares the d016 hooks as optional config with safe defaults");
+  check(src.indexOf("ppq-part-chip-marks") >= 0 && /partMarks\(p\)/.test(src),
+    "part chips carry their marks, so a pupil sees what each part is worth");
+  check(/const msLabel = \(typeof this\.cfg\.msPagesLabelOf === "function"/.test(src),
+    "the markscheme expander takes its wording from the consumer when offered");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

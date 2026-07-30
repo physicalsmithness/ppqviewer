@@ -211,6 +211,9 @@ window.PPQViewer = (function () {
     cfg.marksOf = cfg.marksOf || function (q) { return q.marks; };
     cfg.msCropsOf = cfg.msCropsOf || null;
     cfg.msPagesOf = cfg.msPagesOf || null; /* VF-15: complete markscheme pages behind an expander */
+    cfg.msPagesLabelOf = cfg.msPagesLabelOf || null; /* d016: consumer wording when it knows which pages hold the question */
+    cfg.partLabelOf = cfg.partLabelOf || null;       /* d016: consumer part label for the navigator chips */
+    cfg.partMarksOf = cfg.partMarksOf || null;       /* d016: marks per part, shown on the chips */
     const saIn = cfg.selfAssess || {};
     cfg.selfAssess = {
       taxonomy: Array.isArray(saIn.taxonomy) ? saIn.taxonomy : [],
@@ -2631,7 +2634,12 @@ window.PPQViewer = (function () {
       if (msPages.length) {
         let pg = "";
         msPages.forEach((src) => { pg += '<img class="ppq-ms-page" src="' + esc(src) + '">'; });
-        ms += '<details class="ppq-ms-full"' + (msImgs.length ? "" : " open") + '><summary>Show the complete markscheme pages <span class="ppq-spoiler">(full working; includes other questions)</span></summary>' + pg + "</details>";
+        /* d016: the consumer may know WHICH pages hold this question, so it
+           supplies the wording; the old fixed "complete markscheme pages"
+           understated a whole-paper document served from its cover page. */
+        const msLabel = (typeof this.cfg.msPagesLabelOf === "function" && this.cfg.msPagesLabelOf(this.cur)) ||
+          'Show the complete markscheme pages <span class="ppq-spoiler">(full working; includes other questions)</span>';
+        ms += '<details class="ppq-ms-full"' + (msImgs.length ? "" : " open") + '><summary>' + msLabel + "</summary>" + pg + "</details>";
       } else if (ansImg && !msImgs.length) {
         ms += '<details class="ppq-ms-full"><summary>Show full markscheme page <span class="ppq-spoiler">(may well contain spoilers for other parts)</span></summary><img src="' + esc(ansImg) + '"></details>';
       }
@@ -4729,13 +4737,20 @@ window.PPQViewer = (function () {
     const cfg = this.cfg, block = cfg.blockKeyOf(q), parts = this._blockParts(q);
     if (parts.length <= 1) return;
     const self = this;
-    const partLabel = (p) => String(cfg.idOf(p)).slice(block.length).trim() || "(whole)";
+    /* d016: prefer the consumer's own part label — derived ids can be slugged
+       ("b_i"), and a pupil must read "(b)(i)". */
+    const partLabel = (p) => (typeof cfg.partLabelOf === "function" && cfg.partLabelOf(p)) ||
+      String(cfg.idOf(p)).slice(block.length).trim() || "(whole)";
+    const partMarks = (p) => (typeof cfg.partMarksOf === "function" ? cfg.partMarksOf(p) : null);
     // mode toggle + chips
     const nav = el("div", { class: "ppq-wq-nav" });
     nav.appendChild(el("span", { class: "ppq-wq-jump" }, "Question " + esc(block) + ", jump to part:"));
     parts.forEach((p) => {
       const cur = cfg.idOf(p) === cfg.idOf(q);
-      const chip = el("button", { class: "ppq-part-chip" + (cur ? " current" : ""), "data-id": cfg.idOf(p) }, esc(partLabel(p)));
+      const m = partMarks(p);
+      const chip = el("button", { class: "ppq-part-chip" + (cur ? " current" : ""), "data-id": cfg.idOf(p) },
+        esc(partLabel(p)) + (m ? ' <span class="ppq-part-chip-marks">' + esc(String(m)) + "</span>" : ""));
+      if (m) chip.setAttribute("title", partLabel(p) + ", " + m + " mark" + (m === 1 ? "" : "s"));
       chip.addEventListener("click", () => self.goToId(chip.dataset.id));
       nav.appendChild(chip);
     });
@@ -4755,7 +4770,9 @@ window.PPQViewer = (function () {
       parts.forEach((p) => {
         const cur = cfg.idOf(p) === cfg.idOf(q);
         const box = el("div", { class: "ppq-wq-part" + (cur ? " current" : ""), "data-part-id": cfg.idOf(p) });
-        box.appendChild(el("div", { class: "ppq-wq-part-label" }, "Part " + esc(partLabel(p)) + (cur ? " (you are here)" : "")));
+        const pm = partMarks(p);
+        box.appendChild(el("div", { class: "ppq-wq-part-label" }, "Part " + esc(partLabel(p)) +
+          (pm ? ", " + esc(String(pm)) + " mark" + (pm === 1 ? "" : "s") : "") + (cur ? " (you are here)" : "")));
         cfg.cropsOf(p).forEach((s) => box.appendChild(el("img", { src: s, loading: "lazy" })));
         wrap.appendChild(box);
       });
@@ -5200,6 +5217,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.13.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.14.0" };
 })();
 // build: 0.3.0, maintained by Codex

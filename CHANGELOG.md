@@ -2,6 +2,45 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-30 — d016: part-by-part, taken from chemistry (engine v0.14.0, ibmaths v0.2.0)
+
+Smith on a 19-mark question with one `0 … 19` bar: "the part question stuff is
+just not serving… it's like the chemistry thing is being ignored… I feel like
+I'm going over the ground and having to fix problems that I previously fixed."
+Diagnosis: not a missing feature. Chemistry's `structuredPaper` navigator has
+been in this engine since Phase 3 (d001) and the IB Maths wrapper never
+enabled it, flattening every question's parts into one record.
+
+- **Records are markable units.** One record per part, except parts the seat
+  marked together (shared `mark_group`) which form one unit worth their
+  combined marks. 5,368 records from 2,195 questions; 1,459 questions get
+  part-level marks entry. Unit ids satisfy the engine's existing block
+  contract, so the part chips, the "you are here" whole-question view and the
+  part-by-part toggle all light up with no engine change. Single-part
+  questions keep their bare id, so stored history survives.
+- **Blank marks inside a marked run are absorbed** into the unit sharing their
+  part letter (2222-7107 P2 Q12: `12(c)(ii)` blank beside a 12-mark `(c)`
+  group), which lifts part-level questions 1,063 → 1,459 and 10+-mark
+  questions 425 → 763 of 862. No marks invented. The 2004-07 structural-loss
+  era stays question-level per the seat's rules: 99 records still show 10+
+  marks in one bar and flip automatically when their Phase-2 reconstruction
+  lands.
+- **Markscheme pages narrowed** from the whole paper (mean 19 pages, from the
+  cover) to the pages holding the question, derived from ms_crop page
+  provenance and bracketed from located neighbours otherwise: mean 7.1,
+  3,806 located, 77 bracketed, 1,485 still whole (crop-less papers; seat ask
+  sent). The expander says which of the three it is.
+- **Part chips carry their marks**; the card's meta line names the part and
+  its marks, and only claims the whole-question total when the parts add up
+  to it (90 units carry the seat's aggregation quirks).
+- **Capability parity is now enforced by test.** The new suite section
+  executes the real wrapper against the real catalogue (capturing
+  `PPQViewer.mount`) instead of grepping source, and fails if a consumer whose
+  records form part blocks has not enabled `structuredPaper`/`blockKeyOf`.
+  This is the mechanism against re-solving solved problems.
+- Engine 0.14.0 adds optional hooks only (`partLabelOf`, `partMarksOf`,
+  `msPagesLabelOf`); ESAT and chemistry untouched. Suites 587/587 + 70/70.
+
 ## 2026-07-30 — takeover audit (records only, no engine change)
 
 New maintainer chat took the seat (predecessor context-heavy). Verified from

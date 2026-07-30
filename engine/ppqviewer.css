@@ -464,6 +464,9 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-wq-jump { font-size: 0.8rem; font-weight: 700; color: var(--ppq-ink2); margin-right: 0.2rem; }
 .ppq-part-chip { background: var(--ppq-paper); border: 1px solid var(--ppq-line); color: var(--ppq-accent); padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
 .ppq-part-chip.current { background: var(--ppq-accent); color: #fff; border-color: var(--ppq-accent); cursor: default; }
+/* d016: marks live on the chip so a pupil can see what each part is worth before choosing it. */
+.ppq-part-chip-marks { display: inline-block; margin-left: 0.3rem; padding: 0 0.28rem; border-radius: 4px; background: rgba(0,0,0,0.08); font-size: 0.72rem; font-weight: 600; }
+.ppq-part-chip.current .ppq-part-chip-marks { background: rgba(255,255,255,0.28); }
 .ppq-mode-toggle { margin-left: auto; display: inline-flex; gap: 0.25rem; }
 .ppq-mode-btn { border: 1px solid var(--ppq-line); background: var(--ppq-paper); color: var(--ppq-ink2); padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
 .ppq-mode-btn.on { background: var(--ppq-accent); color: #fff; border-color: var(--ppq-accent); }

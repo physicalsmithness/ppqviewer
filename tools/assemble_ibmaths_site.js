@@ -76,7 +76,7 @@ if (!assetsOnly) {
   html = replaceOnce(html, '<script src="../engine/ppqviewer.js"></script>', '<script src="engine/ppqviewer.js"></script>', "engine path");
   html = replaceOnce(html, 'var BASE = "file:///C:/CodexProjects/PaperDatabases/outputs/previews/";', 'var BASE = "assets/previews/";', "asset base");
   html = replaceOnce(html, "<title>IB Maths driller — teacher preview</title>", "<title>IB Maths driller</title>", "title");
-  html = replaceOnce(html, 'versionLabel: "ibmaths v0.1.1 (teacher preview) · engine "', 'versionLabel: "ibmaths v0.1.1 · engine "', "versionLabel");
+  html = replaceOnce(html, 'versionLabel: "ibmaths v0.2.0 (teacher preview) · engine "', 'versionLabel: "ibmaths v0.2.0 · engine "', "versionLabel");
   html = replaceOnce(html, 'appVersion: "ibmaths-teacher-preview"', 'appVersion: "ibmaths-live"', "appVersion");
   html = replaceOnce(html, 'learnerId: "teacher-preview"', 'learnerId: "local"', "learnerId");
   must(/<\/html>\s*$/.test(html), "index ends with </html>");

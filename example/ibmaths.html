@@ -122,24 +122,132 @@
       return L[code] || L[String(code).replace(/^(SL|AHL)/, "$1 ")] || "";
     }
 
-    /* ===== Flatten the catalogue to the practising unit: the QUESTION =====
-       Marks stay question-level until fault-4 part navigation ships (mark
-       groups landed today; that build is queued). Parts render as stacked
-       crops in printed order, now with the STEM first and each part's
-       verbatim text labelled with its marks (six-faults notes, 2026-07-29). */
-    var questions = (window.MATHS_PPQS || []).map(function (q) {
-      var crops = [], msCrops = [], msPages = [], pageUrl = null, partTexts = [];
+    /* ===== Markscheme page location (Smith, 2026-07-30: the reveal served the
+       paper's ENTIRE markscheme "starting with the header page, completely
+       nuts"). `ms_pages` is the whole document — mean 18.7 pages, up to 38,
+       page 1 is the cover. The ms_crop filenames carry their source page
+       ("mark_scheme_1_a_v007_p007_01_x.png"), so the pages that actually hold
+       a question are DERIVABLE for the 1,355 questions with crops, and
+       bracketable between located neighbours in the same paper for the rest
+       (195 of 252 papers have at least half their questions located). No
+       guessing beyond a stated bracket; the kind is shown to the pupil. ===== */
+    var PAGE_RE = /_p(\d+)/;
+    function ownMsPageNums(q) {
+      var seen = {}, out = [];
       (q.parts || []).forEach(function (p) {
-        (p.crops || []).forEach(function (c) { crops.push(BASE + q.preview + "/" + c); });
-        (p.ms_crops || []).forEach(function (c) { msCrops.push(BASE + q.preview + "/" + c); });
-        if (!pageUrl && (p.pages || []).length) pageUrl = BASE + q.preview + "/" + p.pages[0];
-        if (p.text) {
-          var trustworthy = !p.marks_status && p.marks && parseInt(p.marks, 10) > 0;
-          var pt = cleanPartText(p.label, p.text);
-          if (pt) partTexts.push({ label: p.label, marks: trustworthy ? parseInt(p.marks, 10) : null, text: pt });
-        }
+        (p.ms_crops || []).forEach(function (c) {
+          var m = PAGE_RE.exec(c);
+          if (m) { var n = parseInt(m[1], 10); if (!seen[n]) { seen[n] = 1; out.push(n); } }
+        });
       });
-      (q.ms_pages || []).forEach(function (c) { msPages.push(BASE + q.preview + "/" + c); });
+      return out.sort(function (a, b) { return a - b; });
+    }
+    var MS_LOCATION = (function () {
+      var byPaper = {}, loc = {};
+      (window.MATHS_PPQS || []).forEach(function (q) {
+        (byPaper[q.preview] = byPaper[q.preview] || []).push(q);
+      });
+      Object.keys(byPaper).forEach(function (prev) {
+        var rows = byPaper[prev].map(function (q) {
+          return { id: q.id, num: parseInt(q.question, 10) || 0, nums: ownMsPageNums(q) };
+        }).sort(function (a, b) { return a.num - b.num; });
+        rows.forEach(function (r, i) {
+          if (r.nums.length) { loc[r.id] = { nums: r.nums, kind: "located" }; return; }
+          var before = null, after = null, j, k, n;
+          for (j = i - 1; j >= 0; j--) if (rows[j].nums.length) { before = rows[j].nums[rows[j].nums.length - 1]; break; }
+          for (k = i + 1; k < rows.length; k++) if (rows[k].nums.length) { after = rows[k].nums[0]; break; }
+          if (before != null && after != null && after >= before) {
+            var band = [];
+            for (n = before; n <= after; n++) band.push(n);
+            loc[r.id] = { nums: band, kind: "bracketed" };
+          } else loc[r.id] = { nums: [], kind: "whole" };
+        });
+      });
+      return loc;
+    })();
+
+    /* ===== Explode each question into MARKABLE UNITS =====
+       d016 (part-by-part from chemistry's model). Chemistry's past-paper
+       viewer solved structured papers long ago: one record per part, part
+       chips, a whole-question / part-by-part toggle, and marks entered part by
+       part. Maths shipped QUESTION-level records, so a 19-mark structured
+       question offered a single 0..19 bar and no way to tell which part you
+       were on (Smith, 2026-07-30: "the part question stuff is just not
+       serving"). The engine has carried chemistry's `structuredPaper` module
+       since Phase 3 (d001); this consumer simply never used it.
+
+       A UNIT is what one marks entry covers: normally one part, but parts the
+       seat marked TOGETHER become one unit worth their combined marks — e.g.
+       10(b)(i) 0 marks `unallocated_companion` + 10(b)(ii) 7 marks
+       `combined_on_sibling`, same `mark_group`, is one 7-mark unit. Per the
+       seat's switching rules (mark-groups packet, 2026-07-29) part-level entry
+       applies only where every unit carries a positive mark total; the 2004-07
+       structural-loss papers (blank marks, no status) stay question-level as a
+       single unit, and single-part questions keep their original id so their
+       stored history survives. Unit ids are `<qid>(<slug>)` so the engine's
+       block detection groups them. ===== */
+    function partSuffixOf(label, qnum) {
+      var t = String(label == null ? "" : label).trim();
+      if (qnum) t = t.replace(new RegExp("^\\s*" + qnum + "(?![0-9])"), "").trim();
+      return t;
+    }
+    function unitLabelOf(members, qnum) {
+      var bits = members.map(function (p) { return partSuffixOf(p.label, qnum); }).filter(Boolean);
+      if (!bits.length) return "";
+      return bits.length > 1 ? (bits[0] + "–" + bits[bits.length - 1]) : bits[0];
+    }
+    function partLetterOf(label) {
+      var m = /\(([A-Za-z]+)\)/.exec(String(label == null ? "" : label));
+      return m ? m[1].toLowerCase() : "";
+    }
+    function unitsOf(q) {
+      var parts = q.parts || [];
+      if (parts.length < 2) return null;
+      var order = [], byGroup = {};
+      parts.forEach(function (p, i) {
+        var key = p.mark_group ? ("g:" + p.mark_group) : ("s:" + i);
+        if (!byGroup[key]) { byGroup[key] = { members: [], marks: 0 }; order.push(byGroup[key]); }
+        byGroup[key].members.push(p);
+        byGroup[key].marks += parseInt(p.marks, 10) || 0;
+      });
+      /* A zero-mark unit sitting inside a MARKED run of the same printed part
+         is an extraction miss, not a separate task: e.g. 2222-7107 P2 Q12 has
+         12(c)(ii) blank while 12(c)(i)/(iii)/(v) share a 12-mark group, which
+         would demote the whole 19-mark question to one marks bar. Absorb it
+         into the neighbouring unit that shares its part letter. No marks are
+         invented — the group total is the printed one. This lifts part-level
+         questions from 1,063 to 1,459, and from 425 to 763 of the 862
+         questions worth 10 marks or more, which is where the pain was. */
+      var changed = true;
+      while (changed) {
+        changed = false;
+        for (var i = 0; i < order.length && !changed; i++) {
+          if (order[i].marks > 0) continue;
+          var mine = order[i].members.map(function (m) { return partLetterOf(m.label); });
+          for (var d = 0; d < 2 && !changed; d++) {
+            var j = d === 0 ? i - 1 : i + 1;
+            if (j < 0 || j >= order.length || !(order[j].marks > 0)) continue;
+            var theirs = order[j].members.map(function (m) { return partLetterOf(m.label); });
+            var shared = mine.some(function (L) { return L && theirs.indexOf(L) >= 0; });
+            if (!shared) continue;
+            order[j].members = order[j].members.concat(order[i].members).sort(function (a, b) {
+              return parts.indexOf(a) - parts.indexOf(b);
+            });
+            order.splice(i, 1);
+            changed = true;
+          }
+        }
+      }
+      if (order.length < 2) return null;
+      /* Remaining zero-mark unit = the 2004-07 structural-loss era (blank marks,
+         no status), which the seat is reconstructing in Phase 2. Question-level
+         until then; these flip to part-level with no code change when it lands. */
+      for (var k = 0; k < order.length; k++) if (!(order[k].marks > 0)) return null;
+      return order;
+    }
+
+    var questions = [];
+    (window.MATHS_PPQS || []).forEach(function (q) {
       var tnum = topicNumOf(q.aa_codes);
       if (tnum == null) tnum = legacyTopicNumOf(q.mhl_codes, q.option);
       var subtopics = [];
@@ -147,12 +255,22 @@
         var tp = topicPartOf(c);
         if (subtopics.indexOf(tp) < 0) subtopics.push(tp);
       });
-      return {
-        id: q.id,
+      var msAll = (q.ms_pages || []).map(function (c) { return BASE + q.preview + "/" + c; });
+      var where = MS_LOCATION[q.id] || { nums: [], kind: "whole" };
+      var msNarrow = msAll.filter(function (u) {
+        var m = PAGE_RE.exec(u);
+        return m && where.nums.indexOf(parseInt(m[1], 10)) >= 0;
+      });
+      var msKind = where.kind;
+      if (!msNarrow.length) { msNarrow = msAll; msKind = "whole"; }
+
+      var qnum = String(q.question == null ? "" : q.question).trim();
+      var common = {
+        block_id: q.id,
         paper_code: q.paper_code, syllabus: q.syllabus,
         year: parseInt(q.year, 10) || q.year, session: q.session, time_zone: q.time_zone,
         paper: q.paper, question: q.question,
-        marks: parseInt(q.marks, 10) || 1,
+        question_marks: parseInt(q.marks, 10) || 1,
         aa_applicable: q.aa_applicable || "",
         option: q.option || "",
         skill_demand: q.skill_demand || "",
@@ -165,9 +283,64 @@
         topic_code: tnum ? ("T" + tnum) : null,
         topic: tnum ? TOPIC_NAMES[tnum] : null,
         stem_text: cleanStemText(q.stem_text),
-        part_texts: partTexts,
-        crops: crops, ms_crops: msCrops, ms_pages: msPages, page_url: pageUrl
+        ms_crops: [], ms_pages: msNarrow, ms_pages_all: msAll, ms_pages_kind: msKind
       };
+      function textsOf(members) {
+        var out = [];
+        members.forEach(function (p) {
+          if (!p.text) return;
+          var trustworthy = !p.marks_status && p.marks && parseInt(p.marks, 10) > 0;
+          var pt = cleanPartText(p.label, p.text);
+          if (pt) out.push({ label: p.label, marks: trustworthy ? parseInt(p.marks, 10) : null, text: pt });
+        });
+        return out;
+      }
+      function assetsOf(members) {
+        var crops = [], msCrops = [], pageUrl = null, pages = [];
+        members.forEach(function (p) {
+          (p.crops || []).forEach(function (c) { crops.push(BASE + q.preview + "/" + c); });
+          (p.ms_crops || []).forEach(function (c) { msCrops.push(BASE + q.preview + "/" + c); });
+          (p.pages || []).forEach(function (c) {
+            var u = BASE + q.preview + "/" + c;
+            if (pages.indexOf(u) < 0) pages.push(u);
+          });
+        });
+        if (pages.length) pageUrl = pages[0];
+        return { crops: crops, ms_crops: msCrops, page_url: pageUrl };
+      }
+
+      var units = unitsOf(q);
+      if (!units) {
+        /* One practising unit: single-part, stemless, or the structural-loss
+           era where part marks cannot be trusted. Original id preserved. */
+        var allParts = q.parts || [];
+        var a = assetsOf(allParts);
+        var rec = Object.assign({}, common, a, {
+          id: q.id,
+          part_label: "", is_part: false,
+          marks: parseInt(q.marks, 10) || 1,
+          part_texts: textsOf(allParts)
+        });
+        rec.ms_crops = a.ms_crops;
+        questions.push(rec);
+        return;
+      }
+      var unitsTotal = 0;
+      units.forEach(function (g) { unitsTotal += g.marks; });
+      common.units_marks_total = unitsTotal;
+      units.forEach(function (g, gi) {
+        var label = unitLabelOf(g.members, qnum) || ("part " + (gi + 1));
+        var slug = label.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || ("p" + (gi + 1));
+        var a = assetsOf(g.members);
+        var rec = Object.assign({}, common, a, {
+          id: q.id + "(" + slug + ")",
+          part_label: label, is_part: true,
+          marks: g.marks,
+          part_texts: textsOf(g.members)
+        });
+        rec.ms_crops = a.ms_crops;
+        questions.push(rec);
+      });
     });
 
     var topicFriendly = {};
@@ -204,7 +377,7 @@
 
     window.PPQ_CONFIG = {
       title: "IB Maths driller",
-      versionLabel: "ibmaths v0.1.1 (teacher preview) · engine " + (window.PPQViewer ? PPQViewer.version : "?"),
+      versionLabel: "ibmaths v0.2.0 (teacher preview) · engine " + (window.PPQViewer ? PPQViewer.version : "?"),
       appVersion: "ibmaths-teacher-preview",
       storageKey: "ibmaths_ppq_v1",
       learnerId: "teacher-preview",
@@ -277,7 +450,13 @@
       metaLine: function (q) {
         return (q.syllabus === "MHL" ? "MHL " : "") + q.paper_code + " · " + q.session + " " + q.year +
           (q.time_zone && q.time_zone !== "TZ0" ? " " + q.time_zone : "") +
-          " · P" + q.paper + " Q" + q.question + " · " + q.marks + " marks";
+          " · P" + q.paper + " Q" + q.question + (q.part_label ? " " + q.part_label : "") +
+          " · " + q.marks + " marks" +
+          /* Only claim the whole-question total when the parts actually add up
+             to it: 90 questions carry the seat's known aggregation quirks, and
+             a stated total that contradicts the printed one is worse than none. */
+          (q.is_part && q.units_marks_total === q.question_marks
+            ? " (of " + q.question_marks + " for the whole question)" : "");
       },
       /* Six-faults #1 ("categories are a mile thick"): default chips are ONE
          topic + family chips only; item codes, types and themes live behind
@@ -290,16 +469,17 @@
         if (q.aa_applicable && q.aa_applicable !== "Yes") t.push("AA: " + q.aa_applicable);
         return t;
       },
-      /* Six-faults #3/#6: the stem reads FIRST, then each part's verbatim text
-         with its label and (trustworthy) marks — so a stacked-crops question is
-         answerable and the current part is at least identifiable until real
-         part navigation ships. */
+      /* Six-faults #3/#6 + d016: the stem reads FIRST as the shared context,
+         then the verbatim text of THIS unit only (the other parts are a chip
+         away). Both stem and part text render even when identical — d015: the
+         duplicate is Smith's deliberate cross-check against poor OCR and
+         diagram loss. */
       questionTextOf: function (q) {
         var bits = [];
         if (q.stem_text) bits.push('<div class="ib-stem">' + escHtml(q.stem_text) + "</div>");
         (q.part_texts || []).forEach(function (p) {
           bits.push('<div class="ib-part"><b>' + escHtml(p.label) +
-            (p.marks ? " — " + p.marks + " marks" : "") + "</b> " + escHtml(p.text) + "</div>");
+            (p.marks ? ", " + p.marks + " marks" : "") + "</b> " + escHtml(p.text) + "</div>");
         });
         return bits.join("");
       },
@@ -316,16 +496,34 @@
       answerUrlOf: function (q) { return null; },
       correctOf: function () { return ""; },
 
-      /* ===== d012: marks-based self-assessment ===== */
+      /* ===== d016: chemistry's part model. The block is the printed question;
+         units within it are the part chips and the whole-question view. ===== */
+      blockKeyOf: function (q) { return q.block_id || q.id; },
+      partLabelOf: function (q) { return q.part_label || "(whole)"; },
+      partMarksOf: function (q) { return q.marks; },
+
+      /* ===== d012: marks-based self-assessment, now per UNIT (d016) ===== */
       questionType: function () { return "marksSelfAssess"; },
       marksOf: function (q) { return q.marks; },
-      /* Six-faults #5 + VF-15 ("markscheme clearly too short"): crops inline
-         where they exist, and the COMPLETE markscheme pages always available
-         behind the engine's expander — open automatically when there are no
-         crops. Crops can truncate working (e.g. MHL 2216-7208 P3 Q4: 13 marks,
-         two thin crops), so the pages are the guarantee. */
+      /* Six-faults #5 + VF-15 ("markscheme clearly too short") + d016 page
+         narrowing (Smith 2026-07-30: the reveal was serving the paper's whole
+         markscheme from its cover). Crops inline where they exist; the pages
+         behind the expander are now the pages that hold THIS question, located
+         from ms_crop page provenance or bracketed between located neighbours,
+         with the wording saying which. */
       msCropsOf: function (q) { return q.ms_crops || []; },
       msPagesOf: function (q) { return q.ms_pages || []; },
+      msPagesLabelOf: function (q) {
+        var n = (q.ms_pages || []).length;
+        if (!n) return "";
+        if (q.ms_pages_kind === "located") {
+          return "Show the markscheme" + (n > 1 ? " (" + n + " pages)" : "");
+        }
+        if (q.ms_pages_kind === "bracketed") {
+          return "Show the markscheme (" + n + " pages; this question is somewhere in them)";
+        }
+        return "Show the paper's whole markscheme (" + n + " pages, from the cover; this question's own pages could not be located)";
+      },
       markschemeOf: function (q) {
         return ((q.ms_crops && q.ms_crops.length) || (q.ms_pages && q.ms_pages.length))
           ? ""
@@ -368,12 +566,18 @@
       },
 
       attemptFields: function (q) {
-        return { paper_code: q.paper_code, syllabus: q.syllabus, year: q.year, paper: q.paper, question: q.question, topic_code: q.topic_code };
+        return {
+          paper_code: q.paper_code, syllabus: q.syllabus, year: q.year, paper: q.paper,
+          question: q.question, topic_code: q.topic_code,
+          block_id: q.block_id, part_label: q.part_label || "", marks_max: q.marks
+        };
       },
       selfReport: { levels: 6, prompt: "How did that feel? (1 = lost, 6 = easy)" },
       /* No analysisOf: with no feedback source the readiness badge hides
          entirely (Smith: "Solution pending" on every maths question was noise). */
-      modules: { postQuestionReview: true }
+      /* d016: structuredPaper is chemistry's multipart navigator, in the engine
+         since Phase 3 (d001) and unused by this consumer until now. */
+      modules: { postQuestionReview: true, structuredPaper: true }
     };
 
     PPQViewer.mount(document.getElementById("ppq-root"), {
