@@ -194,8 +194,11 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
     Chemistry + Physics 2025 guides in `PaperDatabases\reference guides\` for
     their future consumers.
   - [x] Item-label prose for the tree. _(2026-07-29: generated viewer-side
-    from the syllabus spine into `example\ibmaths_spine_labels.js`; seat META
-    text remains a welcome upgrade, not a blocker.)_
+    from the syllabus spine into `example\ibmaths_spine_labels.js`. The seat
+    then shipped authoritative names in the catalogue: `meta.code_names`
+    (135) + `meta.item_content` (275), packet 2026-07-29. Adopt with fault-4:
+    catalogue names win, generator fills gaps; student surfaces show name
+    first, code secondary.)_
   - [ ] **NEXT — fault-4 part navigation with per-part marks** (seat's
     correction packet, 2026-07-29): per-part framing with label + marks
     ("(b) — 3 marks"), an active-part state the pupil steps through, per-part
