@@ -151,3 +151,17 @@ surface unpublicised (no index pages, no cross-links) and observable (GA4).
 ## d009 (embeddable as a bolt-on component, not only a standalone page): the viewer must run inside a larger app
 
 **Decision.** Smith (2026-07-01) on Special Relativity: it IS a consumer and wants to use this soon, but "it's only a part" of the app, "a thing to be bolted onto". So the viewer is not always the whole page; it must run as a component mounted inside a larger host app (the circuit-builder-embed pattern from ECM). This fits d003 (engine-owns-DOM into one `#ppq-root` mount): the same mount-point design serves both a standalone page and an embed. Requirement: no reliance on owning `<body>`, the header, or global singletons that would clash with a host; everything scoped to the mount and namespaced. SR is the first embed consumer, near-term.
+
+---
+
+## d015 (takeover operating rulings): duplicate text is deliberate; maintainer syncs, Smith pushes; builders on demand
+
+**Decision (Smith, 2026-07-30, on the new maintainer's takeover report).** Three rulings:
+
+1. **Maths display: render BOTH the stem text and an identical part text.** Smith: "rendering both is fine. it's a double check for poor ocr plus diagrams etc." The extracted text is a deliberate cross-check surface against the crop, not furniture to dedupe. Fault-4 keeps both; text cleanup stays limited to page-furniture tokens (leading question numbers, `[Maximum mark: n]`, duplicate part labels, trailing `[n]`, trailing `□` answer-box runs), never the prose itself.
+
+2. **Sync automation (option a).** The viewer maintainer re-assembles `deploy\ibmathsdriller` on every wake and whenever a regeneration packet lands (sha-compare the canonical catalogue against the deployed copy; run `tools\assemble_ibmaths_site.js`). Smith alone commits and pushes, via GitHub Desktop. Bulk asset spurts (hundreds of MB) finish natively via `SYNC_IBMATHS_WEBSITE.cmd`, which now fails loud when run from a worktree/partial copy. No nightly scheduled job for now (offered, not taken).
+
+3. **Roles (option a).** No standing second seat. This seat stays architect/integrator; big self-contained features may be dispatched to bounded builder chats with a packet and a returned, tested diff, on demand. Revisit if two features must run in parallel.
+
+(Recorded immediately because Smith was switching models mid-conversation; the ~700MB of junk assets in the `.codex` worktree 5040 remains in place, no ruling given.)

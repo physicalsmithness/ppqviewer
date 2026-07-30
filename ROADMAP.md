@@ -206,9 +206,12 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
     has a trustworthy mark (empty `marks_status`) or a resolvable
     `mark_group` with a printed total; question-level for the 2004-07
     structural-loss era (blank marks, no status). Fault-2's per-part
-    "show full page" toggle rides along. Catalogue prerequisites verified in
-    the DEPLOYED data 2026-07-30 (stem_text 2,195; marks_status/mark_group on
-    all 6,310 parts; paper_totals 2,195).
+    "show full page" toggle rides along, as does meta.code_names adoption
+    (name first, code secondary). Per d015 (duplicate text deliberate): keep
+    stem text AND identical part text both rendered; strip only furniture
+    tokens, adding trailing □ answer-box runs to the strip list. Catalogue
+    prerequisites verified in the DEPLOYED data 2026-07-30 (stem_text 2,195;
+    marks_status/mark_group on all 6,310 parts; paper_totals 2,195).
   - [ ] Family vocabulary 26→28 (two mega-families split into four
     daughters) is already flowing data-driven; on next touch, check no stored
     filter preference pins a retired family name ("Select, substitute,
