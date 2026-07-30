@@ -212,6 +212,8 @@ window.PPQViewer = (function () {
     cfg.msCropsOf = cfg.msCropsOf || null;
     cfg.msPagesOf = cfg.msPagesOf || null; /* VF-15: complete markscheme pages behind an expander */
     cfg.msPagesLabelOf = cfg.msPagesLabelOf || null; /* d016: consumer wording when it knows which pages hold the question */
+    cfg.msPagesAllOf = cfg.msPagesAllOf || null;     /* d017: the whole document, one click deeper than the narrowed set */
+    cfg.msPagesOpenOf = cfg.msPagesOpenOf || null;   /* d017: open the pages unasked when the crop is known to be too short */
     cfg.partLabelOf = cfg.partLabelOf || null;       /* d016: consumer part label for the navigator chips */
     cfg.partMarksOf = cfg.partMarksOf || null;       /* d016: marks per part, shown on the chips */
     const saIn = cfg.selfAssess || {};
@@ -1558,7 +1560,7 @@ window.PPQViewer = (function () {
         r.avgTimeS = r.timeN ? r.timeMs / r.timeN / 1000 : null;
       });
       rows.sort(function (a, b) { return b.attempts - a.attempts || String(a.value).localeCompare(String(b.value)); });
-      return { key: axis.key || axis.label, label: axis.label, rows: rows };
+      return { key: axis.key || axis.label, label: axis.label, labelOf: axis.labelOf || null, rows: rows };
     });
 
     return {
@@ -1682,7 +1684,11 @@ window.PPQViewer = (function () {
         const shown = axis.rows.filter(function (r) { return r.attempts > 0 || r.ratingN > 0; }).slice(0, 14);
         shown.forEach(function (r) {
           const tr = el("tr");
-          tr.appendChild(td(r.value, "", "ppq-progress-topic"));
+          /* An axis may name its values in human words (a syllabus code means
+             nothing to a pupil); the raw value stays the key. */
+          let rowLabel = r.value;
+          if (typeof axis.labelOf === "function") { try { rowLabel = axis.labelOf(r.value) || r.value; } catch (_) { rowLabel = r.value; } }
+          tr.appendChild(td(rowLabel, "", "ppq-progress-topic"));
           const dotsTd = el("td", { class: "ppq-progress-dots" });
           dotsTd.appendChild(clusterEl(r.questions));
           dotsTd.appendChild(el("div", { class: "ppq-qcluster-count" }, r.tried + " / " + r.available));
@@ -2639,7 +2645,20 @@ window.PPQViewer = (function () {
            understated a whole-paper document served from its cover page. */
         const msLabel = (typeof this.cfg.msPagesLabelOf === "function" && this.cfg.msPagesLabelOf(this.cur)) ||
           'Show the complete markscheme pages <span class="ppq-spoiler">(full working; includes other questions)</span>';
-        ms += '<details class="ppq-ms-full"' + (msImgs.length ? "" : " open") + '><summary>' + msLabel + "</summary>" + pg + "</details>";
+        /* d017: a crop can be too short to be the real answer (the consumer may
+           know this from its own data), in which case the pages open by
+           themselves rather than waiting to be found. */
+        const forceOpen = typeof this.cfg.msPagesOpenOf === "function" && this.cfg.msPagesOpenOf(this.cur);
+        ms += '<details class="ppq-ms-full"' + (msImgs.length && !forceOpen ? "" : " open") + '><summary>' + msLabel + "</summary>" + pg;
+        /* A narrowed page set can clip. The whole document stays one click
+           deeper, never as the first thing a pupil meets. */
+        const msAll = (typeof this.cfg.msPagesAllOf === "function" ? this.cfg.msPagesAllOf(this.cur) : null) || [];
+        if (msAll.length > msPages.length) {
+          let all = "";
+          msAll.forEach((src) => { all += '<img class="ppq-ms-page" src="' + esc(src) + '">'; });
+          ms += '<details class="ppq-ms-rest"><summary>Show every page of this paper\'s markscheme (' + msAll.length + ')</summary>' + all + "</details>";
+        }
+        ms += "</details>";
       } else if (ansImg && !msImgs.length) {
         ms += '<details class="ppq-ms-full"><summary>Show full markscheme page <span class="ppq-spoiler">(may well contain spoilers for other parts)</span></summary><img src="' + esc(ansImg) + '"></details>';
       }
@@ -5217,6 +5236,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.14.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.15.0" };
 })();
 // build: 0.3.0, maintained by Codex

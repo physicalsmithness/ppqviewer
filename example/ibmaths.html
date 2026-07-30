@@ -117,9 +117,22 @@
     }
     /* Smith 2026-07-29: "no way people are going to know what SL1.2 is" —
        human labels generated from the syllabus spine. */
+    /* The seat diagnosed Smith's "there is no friendly text on anything bar
+       t1t2 etc." (2026-07-30): my generated labels are ITEM level (AHL1.12.1)
+       while every surface groups at topic-part level (AHL1.12), so each lookup
+       missed and fell back to the bare code. Their `meta.code_names` (135) and
+       `meta.item_content` (275) are authoritative and ship in the catalogue;
+       the generator is now only the last resort. */
     function spineLabel(code) {
-      var L = window.IBMATHS_SPINE_LABELS || {};
-      return L[code] || L[String(code).replace(/^(SL|AHL)/, "$1 ")] || "";
+      var M = window.MATHS_META || {}, L = window.IBMATHS_SPINE_LABELS || {};
+      var CN = M.code_names || {}, IC = M.item_content || {};
+      return CN[code] || IC[code] || L[code] || L[String(code).replace(/^(SL|AHL)/, "$1 ")] || "";
+    }
+    /* Display rule the seat asked for and Smith wants on anything a student
+       sees: name first, code secondary. */
+    function codeLabel(code) {
+      var n = spineLabel(code);
+      return n ? (n + " (" + code + ")") : String(code);
     }
 
     /* ===== Markscheme page location (Smith, 2026-07-30: the reveal served the
@@ -256,12 +269,22 @@
         if (subtopics.indexOf(tp) < 0) subtopics.push(tp);
       });
       var msAll = (q.ms_pages || []).map(function (c) { return BASE + q.preview + "/" + c; });
-      var where = MS_LOCATION[q.id] || { nums: [], kind: "whole" };
-      var msNarrow = msAll.filter(function (u) {
-        var m = PAGE_RE.exec(u);
-        return m && where.nums.indexOf(parseInt(m[1], 10)) >= 0;
-      });
-      var msKind = where.kind;
+      /* The seat shipped per-question page sets on 2026-07-30 (2,021 of 2,195
+         questions, 1.8 pages on average against the whole document's 18.7),
+         which supersedes my crop-filename locator. Theirs first, mine as the
+         fallback for the 174 they could not span, whole paper last. The whole
+         document always stays available one click deeper, because a narrowed
+         set can clip (their `located-medium` is explicitly capped). */
+      var msNarrow = (q.ms_pages_this_question || []).map(function (c) { return BASE + q.preview + "/" + c; });
+      var msKind = msNarrow.length ? (q.ms_page_span_source || "located") : "";
+      if (!msNarrow.length) {
+        var where = MS_LOCATION[q.id] || { nums: [], kind: "whole" };
+        msNarrow = msAll.filter(function (u) {
+          var m = PAGE_RE.exec(u);
+          return m && where.nums.indexOf(parseInt(m[1], 10)) >= 0;
+        });
+        msKind = where.kind;
+      }
       if (!msNarrow.length) { msNarrow = msAll; msKind = "whole"; }
 
       var qnum = String(q.question == null ? "" : q.question).trim();
@@ -295,6 +318,12 @@
         });
         return out;
       }
+      function thinOf(members) {
+        /* The seat flags 788 parts whose markscheme crop is under about one
+           text line per mark (2026-07-30), which is the truncation Smith hit
+           on the 13-mark Q4 answered with data instead of my guesswork. */
+        return members.some(function (p) { return p.ms_crop_adequacy === "thin"; });
+      }
       function assetsOf(members) {
         var crops = [], msCrops = [], pageUrl = null, pages = [];
         members.forEach(function (p) {
@@ -319,7 +348,8 @@
           id: q.id,
           part_label: "", is_part: false,
           marks: parseInt(q.marks, 10) || 1,
-          part_texts: textsOf(allParts)
+          part_texts: textsOf(allParts),
+          ms_thin: thinOf(allParts)
         });
         rec.ms_crops = a.ms_crops;
         questions.push(rec);
@@ -336,7 +366,8 @@
           id: q.id + "(" + slug + ")",
           part_label: label, is_part: true,
           marks: g.marks,
-          part_texts: textsOf(g.members)
+          part_texts: textsOf(g.members),
+          ms_thin: thinOf(g.members)
         });
         rec.ms_crops = a.ms_crops;
         questions.push(rec);
@@ -345,10 +376,19 @@
 
     var topicFriendly = {};
     Object.keys(TOPIC_NAMES).forEach(function (n) { topicFriendly["T" + n] = "T" + n + " " + TOPIC_NAMES[n]; });
+    /* Every topic-part actually present in the corpus, named. Built from the
+       records so no observed code can fall through to a bare "AHL1.12 (8)". */
+    var SUBTOPIC_NAMES = (function () {
+      var out = {};
+      questions.forEach(function (r) {
+        (r.subtopics || []).forEach(function (tp) { if (!out[tp]) out[tp] = codeLabel(tp); });
+      });
+      return out;
+    })();
 
     /* ===== d011: Learned so far — tree from the observed AA item codes.
-       Labels are the codes until the Maths seat ships spine prose in the
-       catalogue META (requested). ===== */
+       Labels now come from the seat's authoritative `meta.code_names` and
+       `meta.item_content` (2026-07-30), name first and code second. ===== */
     var LEARNED_TREE = (function () {
       var byTopic = {};
       questions.forEach(function (q) {
@@ -365,10 +405,10 @@
         var parts = byTopic[t];
         var children = Object.keys(parts).sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true }); }).map(function (tp) {
           var items = Object.keys(parts[tp]).sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true }); });
-          var tpLabel = tp + (spineLabel(tp) ? " — " + spineLabel(tp) : "");
+          var tpLabel = codeLabel(tp);
           if (items.length === 1 && items[0] === tp) return { code: tp, label: tpLabel };
           return { code: tp, label: tpLabel, children: items.map(function (c) {
-            return { code: c, label: c + (spineLabel(c) ? " — " + spineLabel(c) : "") };
+            return { code: c, label: codeLabel(c) };
           }) };
         });
         return { code: "T" + t, label: "T" + t + " " + (TOPIC_NAMES[t] || ""), children: children };
@@ -408,7 +448,7 @@
         { field: "syllabus", label: "syllabus", allLabel: "AAHL + legacy MHL", values: ["AAHL", "MHL"], friendlyLabels: { AAHL: "AA HL (2021—)", MHL: "Legacy MHL (2004–20)" } },
         { field: "aa_applicable", label: "AA fit", allLabel: "Any AA fit", values: ["Yes", "Partial", "No"], default: "Yes", positiveValues: ["Yes"] },
         { field: "topic_code", label: "topic", allLabel: "All topics", values: ["T1", "T2", "T3", "T4", "T5"], friendlyLabels: topicFriendly },
-        { field: "subtopics", label: "subtopic", allLabel: "All subtopics", dependsOn: "topic_code", hideUntilParent: true, dashboardFacet: true },
+        { field: "subtopics", label: "subtopic", allLabel: "All subtopics", dependsOn: "topic_code", hideUntilParent: true, dashboardFacet: true, friendlyLabels: SUBTOPIC_NAMES },
         { field: "families", label: "family", allLabel: "All families" },
         /* VF-14: filter by lots of other categories */
         { field: "question_types", label: "type", allLabel: "All question types" },
@@ -420,7 +460,7 @@
       /* VF-14: performance by lots of the other categories, each row with its
          last-10 dots bundle (P-SLI-LAST10DOTS in The Smithy patterns gallery). */
       progressAxes: [
-        { key: "subtopic", label: "By subtopic", valuesOf: function (q) { return q.subtopics; } },
+        { key: "subtopic", label: "By subtopic", valuesOf: function (q) { return q.subtopics; }, labelOf: codeLabel },
         { key: "family", label: "By family", valuesOf: function (q) { return q.families; } },
         { key: "qtype", label: "By question type", valuesOf: function (q) { return q.question_types; } },
         { key: "theme", label: "By theme", valuesOf: function (q) { return q.themes; } },
@@ -513,21 +553,32 @@
          with the wording saying which. */
       msCropsOf: function (q) { return q.ms_crops || []; },
       msPagesOf: function (q) { return q.ms_pages || []; },
+      msPagesAllOf: function (q) { return q.ms_pages_all || []; },
+      /* Open the pages unasked when there is nothing else to read, or when the
+         seat's data says the crop is too short to be the whole answer. */
+      msPagesOpenOf: function (q) { return !!q.ms_thin || !(q.ms_crops && q.ms_crops.length); },
       msPagesLabelOf: function (q) {
         var n = (q.ms_pages || []).length;
         if (!n) return "";
-        if (q.ms_pages_kind === "located") {
+        var k = q.ms_pages_kind;
+        if (k === "aligned" || k === "located-high" || k === "located") {
           return "Show the markscheme" + (n > 1 ? " (" + n + " pages)" : "");
         }
-        if (q.ms_pages_kind === "bracketed") {
+        if (k === "located-medium") {
+          return "Show the markscheme (" + n + " pages, located approximately)";
+        }
+        if (k === "bracketed") {
           return "Show the markscheme (" + n + " pages; this question is somewhere in them)";
         }
         return "Show the paper's whole markscheme (" + n + " pages, from the cover; this question's own pages could not be located)";
       },
       markschemeOf: function (q) {
+        if (q.ms_thin && q.ms_crops && q.ms_crops.length) {
+          return "<i>The clipped markscheme below is too short to be the whole answer, so the full pages are open beneath it.</i>";
+        }
         return ((q.ms_crops && q.ms_crops.length) || (q.ms_pages && q.ms_pages.length))
           ? ""
-          : "<i>No markscheme image exists for this question yet — mark from your own copy if you have one.</i>";
+          : "<i>No markscheme image exists for this question yet; mark from your own copy if you have one.</i>";
       },
 
       selfAssess: {
@@ -559,8 +610,7 @@
         ],
         weakAreasOf: function (q) {
           return (q.subtopics || []).map(function (tp) {
-            var human = spineLabel(tp);
-            return { value: tp, label: human ? ("Not solid: " + human + " (" + tp + ")") : ("Not solid on " + tp), weak: false };
+            return { value: tp, label: "Not solid: " + codeLabel(tp), weak: false };
           });
         }
       },

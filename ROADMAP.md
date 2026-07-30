@@ -213,9 +213,20 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
     decline a capability the engine already carries.
   - [ ] Fault-2 residue: the per-part "show the full printed page" toggle.
     The unit shape now makes this small; `pages` ship per part.
-  - [ ] Adopt the seat's `meta.code_names` (135) + `meta.item_content` (275)
-    in chips, weak-area labels and the Learned-so-far tree: name first, code
-    secondary, per their display ask. Supersedes the viewer-side generator.
+  - [x] Adopt the seat's `meta.code_names` + `meta.item_content`. _(d017,
+    2026-07-30 night: lookup order fixed, all 82 observed topic-parts named,
+    name first and code second, across filters, facet, progress axis, weak-area
+    chips and the Learned tree.)_
+  - [x] Adopt the seat's `ms_pages_this_question` / `ms_crop_adequacy`.
+    _(d017: mean pages shown 19.0 → 2.9; thin crops open their pages unasked
+    and say why; whole document one click deeper.)_
+  - [ ] **NEXT — mark-point ticking as an OPT-IN mode (d017, Smith ruled (b)).**
+    `markpoints` on 6,207 parts, `markpoint_routes` on 1,195. Routes are
+    exclusive (choose a route, tick within it); `AG` means the answer was
+    printed, so render that claim differently; bracketed `(M1)` are implied
+    marks, which is what the "maybe" tick state is for. Must write the same
+    attempt row as the marks bar so promotion to default is a config change.
+    Keep it light: it may not add a step to the ordinary path.
   - [ ] Trailing □ answer-box runs still print in extracted text (they are
     OCR'd answer boxes). Strip as furniture; per d015 the text itself stays
     even when it duplicates the stem.

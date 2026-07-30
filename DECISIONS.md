@@ -184,4 +184,24 @@ He was right, and the cause was not a missing feature. Chemistry's past-paper vi
 
 **The mechanism, which matters more than the fix.** A new suite section executes the real wrapper against the real catalogue (capturing `PPQViewer.mount`) rather than grepping source, and asserts CAPABILITY PARITY: if a consumer's records form part blocks, `structuredPaper` and `blockKeyOf` must be present. A consumer can no longer quietly decline a capability the engine already carries, which is the class of error d016 exists to close. Engine 0.14.0 adds only optional hooks (`partLabelOf`, `partMarksOf`, `msPagesLabelOf`); chemistry and ESAT are untouched and their suites unchanged.
 
-**Still owed here, recorded so it is not lost:** the per-part "show the full printed page" toggle (fault 2) rides on this shape and is not yet wired; the seat's `meta.code_names` / `meta.item_content` are shipped but not yet adopted in chip and sidebar labels.
+**Still owed here, recorded so it is not lost:** the per-part "show the full printed page" toggle (fault 2) rides on this shape and is not yet wired; the seat's `meta.code_names` / `meta.item_content` are shipped but not yet adopted in chip and sidebar labels. _(Labels adopted the same night, see d017.)_
+
+---
+
+## d017 (mark-point ticking is opt-in, not the default): plus the seat's page ranges and code names adopted on arrival
+
+**Smith's ruling, 2026-07-30 night, on how the mark-point data should be used:** option **(b)**, with his words: "it may become a, but let's not make it burdensome for the moment."
+
+Context: the Maths seat shipped `markpoints` on 6,207 parts (each with `seq`, `token` M1/A1/R1/AG/N, `kind`, a short verbatim `snippet`, `route`, `source`) plus `markpoint_routes` on 1,195 parts, following Smith's steer that a pupil might tick the mark points they actually got, with a second "maybe" state. The seat argued it should supersede the marks bar, because the total then falls out of the ticks and a missed tick is a LOCATED failure that the what-went-wrong layer can name for itself.
+
+**Decision.** The part-level marks bar built in d016 (part-by-part from chemistry) stays the default self-mark. Mark-point ticking is an OPT-IN mode offered where `markpoints` exist, never forced, and it must not add a step to the ordinary path. Smith may promote it to the default later once it has been used in anger; the design should therefore keep the tick data and the marks number in the same attempt row (ticks imply a total, so a ticked attempt writes `marks_awarded` exactly as the bar does) so that promoting it is a default change, not a migration.
+
+Three properties of the seat's data the build must honour: routes are EXCLUSIVE (pick a route, then tick within it; ticking across routes double-counts), `AG` means the answer was printed so the claim is "I showed it convincingly" rather than "I got it", and bracketed tokens like `(M1)` are implied marks a pupil may not know they earned, which is exactly what the "maybe" state carries.
+
+**Adopted the same night, both live faults with the data already in the catalogue:**
+
+1. **Human names everywhere a code can surface.** Smith: "there is no friendly text on anything bar t1t2 etc." The seat diagnosed it precisely: `ibmaths_spine_labels.js` is generated from the ITEM-level spine (`AHL1.12.1`) while every surface groups at topic-part level (`AHL1.12`), so each lookup missed and fell back to the bare code, which is why only T1-T5 read properly. Lookup order is now `meta.code_names` (135, authoritative) then `meta.item_content` (275) then the generator, and the display rule is name first, code second: "Complex numbers, Cartesian form, Argand diagram (AHL1.12)". All 82 topic-parts present in the corpus are named, none falls through. Applies to the subtopic filter, the dashboard facet, the progress axis (new engine hook `axis.labelOf`, since axes previously printed raw values), the weak-area chips and the Learned-so-far tree.
+
+2. **The seat's own markscheme page ranges, which supersede my locator of a few hours earlier.** They shipped `ms_pages_this_question` (2,021 of 2,195 questions), `ms_page_span_source` (`aligned` 1,355 / `located-high` 575 / `located-medium` 91) and per-part `ms_crop_adequacy`, flagging 788 parts whose crop is under about a text line per mark. Theirs is used first, my crop-filename locator survives as the fallback, whole paper last: mean pages shown falls from 19.0 to 2.9, with only 181 records still served a whole document. A thin or crop-less part now opens its pages unasked and says why ("the clipped markscheme below is too short to be the whole answer"), `located-medium` says it is approximate, and the complete document always remains one click deeper because a narrowed set can clip.
+
+Engine 0.15.0 adds `msPagesAllOf`, `msPagesOpenOf` and `axis.labelOf`, all optional. Suites 598/598 + 70/70.

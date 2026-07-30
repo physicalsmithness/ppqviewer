@@ -2,6 +2,35 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-30 (night) — d017: the seat's names and page ranges adopted on arrival (engine v0.15.0)
+
+Two packets landed from the Maths seat while d016 was being built, and both
+overtook it. Adopted the same night; ruling recorded on the third.
+
+- **Bare syllabus codes fixed** (Smith: "there is no friendly text on anything
+  bar t1t2 etc."). The seat diagnosed it exactly: my generated labels are
+  item-level (`AHL1.12.1`), every surface groups at topic-part level
+  (`AHL1.12`), so each lookup missed. Now `meta.code_names` (135) then
+  `meta.item_content` (275) then the generator, displayed name first and code
+  second. All 82 topic-parts in the corpus are named, none bare. Reaches the
+  subtopic filter, dashboard facet, weak-area chips, the Learned-so-far tree
+  and, via a new `axis.labelOf` hook, the progress page's rows.
+- **Markscheme narrowing handed back to the seat's data.** Their
+  `ms_pages_this_question` (2,021 of 2,195 questions) plus `ms_page_span_source`
+  supersede my crop-filename locator of a few hours earlier, which survives as
+  the fallback. Mean pages shown per record: 19.0 → 2.9, with only 181 records
+  still getting a whole document. Their per-part `ms_crop_adequacy` flags 778
+  units whose crop is too short to be the real answer: those open their full
+  pages unasked and say why. `located-medium` admits it is approximate, and the
+  whole document stays one click deeper because a narrowed set can clip.
+- **Mark-point ticking: Smith ruled (b), opt-in** ("it may become a, but let's
+  not make it burdensome for the moment"). The d016 marks bar stays the
+  default; ticking will be offered where `markpoints` exist (6,207 parts) and
+  must write the same attempt row, so promoting it later is a default change
+  rather than a migration. Not built yet, spec in d017.
+- Engine 0.15.0 adds `msPagesAllOf`, `msPagesOpenOf`, `axis.labelOf`, all
+  optional. Suites 598/598 + 70/70.
+
 ## 2026-07-30 — d016: part-by-part, taken from chemistry (engine v0.14.0, ibmaths v0.2.0)
 
 Smith on a 19-mark question with one `0 … 19` bar: "the part question stuff is

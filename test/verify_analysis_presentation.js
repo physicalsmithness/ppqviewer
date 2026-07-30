@@ -2675,11 +2675,11 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(revealSrc.indexOf("ppq-ms-page") >= 0 &&
     revealSrc.indexOf("Show the complete markscheme pages") >= 0,
     "reveal offers the complete markscheme pages when the consumer supplies them");
-  check(revealSrc.indexOf('msImgs.length ? "" : " open"') >= 0,
-    "the pages open by themselves when there are no crops at all");
+  check(revealSrc.indexOf('msImgs.length && !forceOpen ? "" : " open"') >= 0,
+    "the pages open by themselves when there are no crops at all, or when the consumer says the crop is too thin (d017)");
   check(css5014().indexOf(".ppq-ms-page") >= 0, "markscheme pages are styled");
   function css5014() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
-  check(src.indexOf('version: "0.14.0"') >= 0, "engine bumped to 0.14.0 (msPagesOf from 0.13.0, plus the d016 part hooks)");
+  check(src.indexOf('version: "0.15.0"') >= 0, "engine bumped to 0.15.0 (0.13.0 msPagesOf, 0.14.0 d016 part hooks, 0.15.0 d017 page/label hooks)");
 
   // wrapper: crops inline, pages behind the expander, never conflated
   check(/msCropsOf: function \(q\) \{ return q\.ms_crops \|\| \[\]; \}/.test(mSrc) &&
@@ -2836,13 +2836,17 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "partLabelOf gives the navigator a readable label, never the id slug");
 
   // Markscheme pages: the reveal was serving whole papers from the cover page.
-  const located = recs.filter((r) => r.ms_pages_kind === "located");
+  /* Located covers the seat's own spans (aligned / located-high /
+     located-medium, adopted in d017) and my crop-filename locator, which
+     survives as the fallback for questions they could not span. */
+  const LOCATED = ["aligned", "located-high", "located-medium", "located"];
+  const located = recs.filter((r) => LOCATED.indexOf(r.ms_pages_kind) >= 0);
   const bracketed = recs.filter((r) => r.ms_pages_kind === "bracketed");
   const whole = recs.filter((r) => r.ms_pages_kind === "whole");
   check(located.length > 0 && located.every((r) => r.ms_pages.length <= r.ms_pages_all.length),
     "markscheme pages narrow to the ones holding the question (" + located.length + " located)");
-  check(located.length > bracketed.length + whole.length,
-    "most records are located outright, not bracketed or dumped whole");
+  check(located.length > (bracketed.length + whole.length) * 5,
+    "the overwhelming majority are located outright, not bracketed or dumped whole");
   const bigNarrow = located.filter((r) => r.ms_pages_all.length >= 10 && r.ms_pages.length <= 4).length;
   check(bigNarrow > 500,
     "a pupil revealing a markscheme gets a handful of pages, not a 30-page document (" + bigNarrow + " cases)");
@@ -2862,11 +2866,48 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(!hasBlocks || typeof cfg.blockKeyOf === "function",
     "PARITY: block-forming consumers must supply blockKeyOf");
 
+  /* d017: the seat's own page ranges and code names, adopted the night they
+     shipped. Smith: "there is no friendly text on anything bar t1t2 etc." */
+  const subFilter = (cfg.filters || []).filter((f) => f.field === "subtopics")[0];
+  const subNames = (subFilter && subFilter.friendlyLabels) || {};
+  const subKeys = Object.keys(subNames);
+  check(subKeys.length > 50 && subKeys.every((k) => subNames[k] !== k),
+    "every observed topic-part is named, none falls back to a bare code (" + subKeys.length + " of them)");
+  check(/^Complex numbers/.test(subNames["AHL1.12"] || "") && /\(AHL1\.12\)$/.test(subNames["AHL1.12"] || ""),
+    "the seat's code_names win and read name first, code second: " + subNames["AHL1.12"]);
+  const subAxis = (cfg.progressAxes || []).filter((a) => a.key === "subtopic")[0];
+  check(subAxis && typeof subAxis.labelOf === "function" && subAxis.labelOf("SL3.8").indexOf("trigonometric") >= 0,
+    "the progress page names its subtopic rows too, not just the filters");
+  check(/^Not solid: [A-Z]/.test(cfg.selfAssess.weakAreasOf(recs.filter((r) => r.subtopics.length)[0])[0].label),
+    "weak-area chips speak in words");
+  const aligned = recs.filter((r) => r.ms_pages_kind === "aligned" || r.ms_pages_kind === "located-high");
+  check(aligned.length > 4000,
+    "the seat's per-question page sets are used where they exist (" + aligned.length + " records)");
+  const meanPages = recs.reduce((a, r) => a + r.ms_pages.length, 0) / recs.length;
+  const meanAll = recs.reduce((a, r) => a + r.ms_pages_all.length, 0) / recs.length;
+  check(meanPages < 4 && meanAll > 15,
+    "a markscheme reveal now averages " + meanPages.toFixed(1) + " pages, not " + meanAll.toFixed(1));
+  check(recs.every((r) => r.ms_pages_all.length >= r.ms_pages.length),
+    "the whole document is always still reachable behind the narrowed set");
+  const thin = recs.filter((r) => r.ms_thin);
+  check(thin.length > 500 && thin.every((r) => cfg.msPagesOpenOf(r) === true),
+    "parts the seat flags as thin open their full pages unasked (" + thin.length + " of them)");
+  check(thin.some((r) => r.ms_crops.length) &&
+    /too short to be the whole answer/.test(cfg.markschemeOf(thin.filter((r) => r.ms_crops.length)[0])),
+    "and say why, rather than leaving a pupil to trust a truncated crop");
+  check(cfg.msPagesLabelOf(recs.filter((r) => r.ms_pages_kind === "located-medium")[0] || { ms_pages: [1], ms_pages_kind: "located-medium" })
+    .indexOf("approximately") >= 0,
+    "an approximate location says so");
+
   // The engine hooks the navigator now depends on.
   check(src.indexOf("cfg.partLabelOf = cfg.partLabelOf ||") >= 0 &&
     src.indexOf("cfg.partMarksOf = cfg.partMarksOf ||") >= 0 &&
-    src.indexOf("cfg.msPagesLabelOf = cfg.msPagesLabelOf ||") >= 0,
-    "engine declares the d016 hooks as optional config with safe defaults");
+    src.indexOf("cfg.msPagesLabelOf = cfg.msPagesLabelOf ||") >= 0 &&
+    src.indexOf("cfg.msPagesAllOf = cfg.msPagesAllOf ||") >= 0 &&
+    src.indexOf("cfg.msPagesOpenOf = cfg.msPagesOpenOf ||") >= 0,
+    "engine declares the d016/d017 hooks as optional config with safe defaults");
+  check(/labelOf: axis\.labelOf \|\| null/.test(src) && /typeof axis\.labelOf === "function"/.test(src),
+    "progress axes may name their rows without the consumer faking the values");
   check(src.indexOf("ppq-part-chip-marks") >= 0 && /partMarks\(p\)/.test(src),
     "part chips carry their marks, so a pupil sees what each part is worth");
   check(/const msLabel = \(typeof this\.cfg\.msPagesLabelOf === "function"/.test(src),
