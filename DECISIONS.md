@@ -205,3 +205,21 @@ Three properties of the seat's data the build must honour: routes are EXCLUSIVE 
 2. **The seat's own markscheme page ranges, which supersede my locator of a few hours earlier.** They shipped `ms_pages_this_question` (2,021 of 2,195 questions), `ms_page_span_source` (`aligned` 1,355 / `located-high` 575 / `located-medium` 91) and per-part `ms_crop_adequacy`, flagging 788 parts whose crop is under about a text line per mark. Theirs is used first, my crop-filename locator survives as the fallback, whole paper last: mean pages shown falls from 19.0 to 2.9, with only 181 records still served a whole document. A thin or crop-less part now opens its pages unasked and says why ("the clipped markscheme below is too short to be the whole answer"), `located-medium` says it is approximate, and the complete document always remains one click deeper because a narrowed set can clip.
 
 Engine 0.15.0 adds `msPagesAllOf`, `msPagesOpenOf` and `axis.labelOf`, all optional. Suites 598/598 + 70/70.
+
+---
+
+## d018 (the stem as printed, and chemistry's auto-open restored): a stem is an image, never OCR prose
+
+**Smith, 2026-07-31, three times over: "This was solved by chemistry."** His fault report: "we're not getting the stem. You get the WORDS of the stem, but if there's any maths in the stem, then you'll be lucky if you can understand it. If there's a graph in the stem, then you just won't see it." And: "I'm sure that chemistry would show you the stem again and again and again."
+
+He was right on both counts, and I had been fixing parts while leaving the stem alone. Three faults, all now closed.
+
+**1. The stem had no image at all.** The catalogue carries `stem_text` and nothing else: no stem crop exists, and every part crop is cropped tightly to its own part. So a stem's display maths arrives flattened (`2x2 - 5x + 2 = 0 {2, -5, 2}`), and a stem's table or graph, like the palindromic-coefficients table in 8824-9702 P3 Q2, is simply absent. Prose cannot be the account of a stem. What DOES exist is the printed question page, so the engine gains `stemPagesOf` and the card now opens with **the question as printed, with its stem, tables and figures**, above the part crop, on 5,285 of 5,368 records. The OCR text stays as the cross-check Smith asked for in d015; it is no longer the only account of the stem.
+
+**2. "Show original exam page(s)" was serving MARKSCHEME pages.** A part's `pages` array interleaves mark pages with question pages (8824-9702 Q2(a)(i) lists `mark_p016`, `mark_p017`, then `question_p005`), and the wrapper took `pages[0]`. So the control at the foot of the card, next to Reveal, really did show the answer, which is exactly how Smith read it. Question pages only now, filtered on the filename, asserted by the suite for every record.
+
+**3. Chemistry's auto-open rule had been dropped in the Phase 3 port.** Chemistry's `ppq.js` reads `const openAttr = isFirstPart ? '' : ' open'; // auto-open when earlier parts exist`, so from part (b) onwards the whole question is expanded by default and the pupil sees the stem and everything already asked, every time, without opening anything. Our port always opened it in whole mode and never in part mode, which is not the same rule. Restored verbatim in behaviour: shut on the first part (the stem is right above it), open on every part after, and the summary says which it is doing. This is the second capability found missing from the port after d016 (part-by-part), both found by Smith rather than by us, which is what the capability-parity test now exists to prevent.
+
+Engine 0.17.0. Suites 622/622 + 70/70 + 18/18.
+
+**Standing lesson, recorded because it has now cost two rounds:** when a consumer looks wrong and chemistry solved the same problem, READ `chemistrydriller\ppq.js` before designing anything. Not d001's summary of it, the code. Both misses here were visible in about forty lines of it.

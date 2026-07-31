@@ -359,14 +359,37 @@
         members.forEach(function (p) {
           (p.crops || []).forEach(function (c) { crops.push(BASE + q.preview + "/" + c); });
           (p.ms_crops || []).forEach(function (c) { msCrops.push(BASE + q.preview + "/" + c); });
+          /* A part's `pages` mixes the printed QUESTION page with MARKSCHEME
+             pages (e.g. 8824-9702 Q2(a)(i) lists mark_p016 and mark_p017 ahead
+             of question_p005). Taking pages[0] therefore fed markscheme pages
+             to "Show original exam page(s)", so that control really did show
+             the answer, which is exactly how Smith read it on 2026-07-31.
+             Question pages only here; markschemes have their own fields. */
           (p.pages || []).forEach(function (c) {
+            if (!/(^|\/)question_/.test(c)) return;
             var u = BASE + q.preview + "/" + c;
             if (pages.indexOf(u) < 0) pages.push(u);
           });
         });
         if (pages.length) pageUrl = pages[0];
-        return { crops: crops, ms_crops: msCrops, page_url: pageUrl };
+        return { crops: crops, ms_crops: msCrops, page_url: pageUrl, question_pages: pages };
       }
+
+      /* Every printed question page for the WHOLE question, in page order: the
+         stem sits above part (a) on the first of them, and is the only place a
+         stem's tables, figures and typeset maths survive at all (the catalogue
+         has no stem image, and stem_text loses them). Held at question level so
+         each part shows the same printed context. */
+      var blockPages = [];
+      (q.parts || []).forEach(function (p) {
+        (p.pages || []).forEach(function (c) {
+          if (!/(^|\/)question_/.test(c)) return;
+          var u = BASE + q.preview + "/" + c;
+          if (blockPages.indexOf(u) < 0) blockPages.push(u);
+        });
+      });
+      blockPages.sort();
+      common.question_pages_all = blockPages;
 
       var units = unitsOf(q);
       if (!units) {
@@ -567,6 +590,15 @@
 
       cropsOf: function (q) { return q.crops || []; },
       stemUrlOf: function (q) { return q.page_url; },
+      /* d018: the stem as printed. Shown for any question that HAS a shared
+         stem (every multipart one, plus singles whose stem text survived), so
+         the tables and figures the OCR dropped are on screen without hunting.
+         A single-part question's own crop already contains its figure, so it
+         is not doubled up. */
+      stemPagesOf: function (q) {
+        if (!q.is_part && !q.stem_text) return [];
+        return q.question_pages_all || [];
+      },
       answerUrlOf: function (q) { return null; },
       correctOf: function () { return ""; },
 

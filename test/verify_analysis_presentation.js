@@ -2693,7 +2693,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the pages open by themselves when there are no crops at all, or when the consumer says the crop is too thin (d017)");
   check(css5014().indexOf(".ppq-ms-page") >= 0, "markscheme pages are styled");
   function css5014() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
-  check(src.indexOf('version: "0.16.0"') >= 0, "engine bumped to 0.16.0 (0.15.0 d017 page/label hooks, 0.16.0 timer reset + historical time deletion)");
+  check(src.indexOf('version: "0.17.0"') >= 0, "engine bumped to 0.17.0 (0.16.0 timer reset + time deletion, 0.17.0 d018 printed stem)");
 
   // wrapper: crops inline, pages behind the expander, never conflated
   check(/msCropsOf: function \(q\) \{ return q\.ms_crops \|\| \[\]; \}/.test(mSrc) &&
@@ -2912,6 +2912,33 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(cfg.msPagesLabelOf(recs.filter((r) => r.ms_pages_kind === "located-medium")[0] || { ms_pages: [1], ms_pages_kind: "located-medium" })
     .indexOf("approximately") >= 0,
     "an approximate location says so");
+
+  /* d018 (the stem as printed). Smith, 2026-07-31: "we're not getting the
+     stem... you get the WORDS of the stem, but if there's any maths in the stem
+     you'll be lucky if you can understand it. If there's a graph in the stem,
+     you just won't see it." The catalogue has NO stem image; only the printed
+     page carries the stem's tables, figures and typeset maths. */
+  const stemmed = recs.filter((r) => cfg.stemPagesOf(r).length);
+  check(stemmed.length > 5000,
+    "the printed page is offered as the stem on " + stemmed.length + " of " + recs.length + " records");
+  check(recs.every((r) => cfg.stemPagesOf(r).every((u) => !/mark_/.test(u))),
+    "NO markscheme page can reach the stem or the original-pages view");
+  check(recs.every((r) => !r.page_url || !/mark_/.test(r.page_url)),
+    "stemUrlOf points at a printed QUESTION page: a part's `pages` lists mark pages first, " +
+    "so this fed markscheme pages to 'Show original exam page(s)' and really did show the answer");
+  check(cfg.stemPagesOf(recs.filter((r) => r.block_id === "8824-9702_Q2")[0]).length === 2,
+    "a P3 investigation shows every printed page its question spans");
+  check(src.indexOf("cfg.stemPagesOf = cfg.stemPagesOf ||") >= 0 &&
+    /details class="ppq-stem-pages" open/.test(src),
+    "the engine renders the printed stem at the TOP of the card, open, not parked by the answer buttons");
+  check(/if \(typeof cfg\.stemPagesOf === "function" && \(cfg\.stemPagesOf\(q\) \|\| \[\]\)\.length\) return;/.test(src),
+    "and does not then repeat the same pages in a collapsed expander at the foot");
+  /* Chemistry's own rule, lost in the Phase 3 port and restored on Smith's
+     insistence: openAttr = isFirstPart ? '' : ' open'. */
+  check(/const first = parts\[0\] && cfg\.idOf\(parts\[0\]\) === cfg\.idOf\(q\);\s*\n\s*details\.open = !first;/.test(src),
+    "the whole question opens BY ITSELF from part (b) onwards, as chemistry does, so the stem and earlier parts are always in view");
+  check(/first \? \("Whole question/.test(src) && /The stem and the earlier parts/.test(src),
+    "and says which of the two it is doing");
 
   /* Seat packet 2026-07-30 late: say what KIND of question this is BEFORE the
      attempt. A non-calculator question practised with a calculator to hand is

@@ -2,6 +2,34 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-31 (night) — d018: the stem is shown as printed, and chemistry's auto-open is back (engine v0.17.0)
+
+Smith, three times over: "This was solved by chemistry." He was right, and I
+had been fixing parts while leaving the stem as OCR prose.
+
+- **The stem now appears as the printed page**, opening the card above the part
+  crop, on 5,285 of 5,368 records. There is no stem image anywhere in the
+  catalogue and part crops are cropped tight to their own part, so a stem's
+  table (8824-9702 P3 Q2's palindromic coefficients), graph or typeset maths
+  existed nowhere on screen; `stem_text` flattens display maths and drops
+  figures entirely. The OCR text remains as the d015 cross-check.
+- **"Show original exam page(s)" was serving MARKSCHEME pages.** A part's
+  `pages` interleaves mark pages with question pages and the wrapper took
+  `pages[0]`, so that control, sitting next to Reveal, genuinely did show the
+  answer, exactly as Smith read it. Filtered to question pages, asserted for
+  every record, and no longer duplicated at the foot of the card.
+- **Chemistry's auto-open rule restored**: `openAttr = isFirstPart ? '' :
+  ' open'`. From part (b) onwards the whole question opens by itself, so the
+  stem and every earlier part are in view without a click; on the first part it
+  stays shut because the stem is directly above. Our Phase 3 port had replaced
+  this with "always open in whole mode, never in part mode".
+- Second capability found missing from the chemistry port in two days, both
+  found by Smith. Standing lesson recorded in d018: read
+  `chemistrydriller\ppq.js` itself, not our summary of it.
+- Suites 622/622 + 70/70 + 18/18, including a jsdom render proving a pupil on
+  part (b) sees the stem pages open, the earlier parts open, and no `mark_`
+  image anywhere on the card.
+
 ## 2026-07-31 (later) — timer reset per question, and historical times can be deleted (engine v0.16.0)
 
 Smith: "can we have a reset button for the timer on an individual q and a way

@@ -214,6 +214,7 @@ window.PPQViewer = (function () {
     cfg.msPagesLabelOf = cfg.msPagesLabelOf || null; /* d016: consumer wording when it knows which pages hold the question */
     cfg.msPagesAllOf = cfg.msPagesAllOf || null;     /* d017: the whole document, one click deeper than the narrowed set */
     cfg.msPagesOpenOf = cfg.msPagesOpenOf || null;   /* d017: open the pages unasked when the crop is known to be too short */
+    cfg.stemPagesOf = cfg.stemPagesOf || null;       /* d018: the printed question page(s), the only faithful account of a stem */
     cfg.partLabelOf = cfg.partLabelOf || null;       /* d016: consumer part label for the navigator chips */
     cfg.partMarksOf = cfg.partMarksOf || null;       /* d016: marks per part, shown on the chips */
     const saIn = cfg.selfAssess || {};
@@ -2461,9 +2462,26 @@ window.PPQViewer = (function () {
     let html = "";
     const text = cfg.questionTextOf(q);
     if (text) html += '<div class="ppq-qtext">' + text + "</div>";
+    /* Smith, 2026-07-31: "we're not getting the stem... you get the WORDS of
+       the stem, but if there's any maths in the stem you'll be lucky if you can
+       understand it. If there's a graph in the stem, you just won't see it."
+       Correct, and unfixable from the text: the catalogue has no stem image at
+       all, only OCR prose in which display maths is flattened and figures and
+       tables vanish outright. What DOES exist is the printed question page, so
+       the stem is shown the way chemistry shows a structured question: as the
+       page as printed, above the part, open by default. The OCR text stays as
+       the cross-check Smith asked for in d015, but it is no longer the only
+       account of the stem. */
+    const stemPages = (typeof cfg.stemPagesOf === "function" ? cfg.stemPagesOf(q) : null) || [];
+    if (stemPages.length) {
+      let pg = "";
+      stemPages.forEach((s) => { pg += '<img src="' + esc(s) + '" loading="lazy" class="ppq-crop ppq-stem-page" alt="the printed exam page">'; });
+      html += '<details class="ppq-stem-pages" open><summary>The question as printed, with its stem, tables and figures</summary>' + pg + "</details>";
+    }
     const crops = cfg.cropsOf(q);
+    if (crops.length && stemPages.length) html += '<div class="ppq-stem-partlead">The part you are on:</div>';
     crops.forEach((s) => { html += '<img src="' + esc(s) + '" loading="lazy" class="ppq-crop" alt="question crop">'; });
-    if (!text && !crops.length) html = '<div class="ppq-kb-hint">No stem image on file for this question.</div>';
+    if (!text && !crops.length && !stemPages.length) html = '<div class="ppq-kb-hint">No stem image on file for this question.</div>';
     stem.innerHTML = html;
     const self = this;
     this.qa(".ppq-crop").forEach((im) => im.addEventListener("click", () => self.openModal(im.getAttribute("src"))));
@@ -4896,8 +4914,18 @@ window.PPQViewer = (function () {
     container.appendChild(nav);
 
     if (this._structMode === "whole") {
-      const details = el("details", { class: "ppq-whole" }); details.open = true;
-      details.appendChild(el("summary", null, "Whole question (all " + parts.length + " parts)"));
+      const details = el("details", { class: "ppq-whole" });
+      /* Chemistry's rule, restored 2026-07-31 (it was lost in the Phase 3 port
+         and Smith spotted its absence): `openAttr = isFirstPart ? '' : ' open'`
+         — the whole question opens BY ITSELF whenever earlier parts exist, so
+         from part (b) onwards you are looking at the stem and everything you
+         have already been asked, every time, without opening anything. On the
+         first part it stays shut, because the stem is right there above it. */
+      const first = parts[0] && cfg.idOf(parts[0]) === cfg.idOf(q);
+      details.open = !first;
+      details.appendChild(el("summary", null,
+        first ? ("Whole question (all " + parts.length + " parts)")
+              : ("The stem and the earlier parts (all " + parts.length + " parts)")));
       const wrap = el("div", { class: "ppq-wq-parts" });
       parts.forEach((p) => {
         const cur = cfg.idOf(p) === cfg.idOf(q);
@@ -4912,7 +4940,12 @@ window.PPQViewer = (function () {
       container.appendChild(details);
     }
 
-    // original exam page(s), with the G:-copy peek-back heuristic (DECISIONS d001 note)
+    /* Original exam page(s), with the G:-copy peek-back heuristic (d001 note).
+       Skipped entirely when the consumer supplies stemPagesOf, because the card
+       now shows those pages at the TOP, open: two copies of the same pages, one
+       of them collapsed at the foot of the page beside Reveal, is what led
+       Smith to read "Show original exam page(s)" as "show the answer". */
+    if (typeof cfg.stemPagesOf === "function" && (cfg.stemPagesOf(q) || []).length) return;
     let pages = parts.map((p) => cfg.stemUrlOf(p)).filter(Boolean);
     const first = parts[0];
     if (first) {
@@ -5349,6 +5382,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.16.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.17.0" };
 })();
 // build: 0.3.0, maintained by Codex

@@ -245,6 +245,12 @@
    it is the same kind of "the clock is wrong for reasons off the page" act. */
 .ppq-timing-reset { border: 1px solid var(--ppq-line); border-radius: 6px; background: var(--ppq-bg); color: var(--ppq-ink2); font-size: 0.8rem; line-height: 1; padding: 0.15rem 0.4rem; cursor: pointer; }
 .ppq-timing-reset:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
+/* d018: the stem as printed. It leads the card, so it reads as the question
+   rather than as an afterthought parked by the answer buttons. */
+.ppq-stem-pages { border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-paper); margin: 0.5rem 0 0.75rem; padding: 0.35rem 0.6rem; }
+.ppq-stem-pages > summary { cursor: pointer; font-weight: 600; color: var(--ppq-ink2); font-size: 0.85rem; padding: 0.15rem 0; }
+.ppq-stem-pages img.ppq-stem-page { display: block; width: 100%; max-width: var(--ppq-crop-width, 92%); margin: 0.5rem auto; border: 1px solid var(--ppq-line); border-radius: 6px; }
+.ppq-stem-partlead { font-weight: 700; color: var(--ppq-accent); font-size: 0.85rem; margin: 0.75rem 0 0.25rem; }
 /* Historical time deletion on the progress page. */
 .ppq-progress-times td.ppq-progress-stem { text-align: left; color: var(--ppq-ink2); font-size: 0.85rem; max-width: 26rem; }
 .ppq-time-del { white-space: nowrap; }
