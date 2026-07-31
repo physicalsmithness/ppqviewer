@@ -134,6 +134,30 @@
       var n = spineLabel(code);
       return n ? (n + " (" + code + ")") : String(code);
     }
+    /* Seat packet, 2026-07-30 late: say what KIND of question this is before
+       the student starts. An investigation or an option-booklet build is a
+       different exercise from a Paper 2 question, and practising a
+       non-calculator question with a calculator to hand is not the same task.
+       paper_role is the richer field; calculator carries the rest. */
+    var ROLE_LABEL = {
+      no_calculator: "No calculator",
+      calculator: "Calculator",
+      option: "Option booklet",
+      investigation: "Paper 3 investigation"
+    };
+    function paperKindOf(q) {
+      if (ROLE_LABEL[q.paper_role]) {
+        /* An option or investigation still needs the calculator rule saying. */
+        if (q.paper_role === "option" || q.paper_role === "investigation") {
+          if (q.calculator === "not_permitted") return ROLE_LABEL[q.paper_role] + ", no calculator";
+          if (q.calculator === "required") return ROLE_LABEL[q.paper_role] + ", calculator";
+        }
+        return ROLE_LABEL[q.paper_role];
+      }
+      if (q.calculator === "not_permitted") return "No calculator";
+      if (q.calculator === "required") return "Calculator";
+      return "";
+    }
 
     /* ===== Markscheme page location (Smith, 2026-07-30: the reveal served the
        paper's ENTIRE markscheme "starting with the header page, completely
@@ -297,6 +321,12 @@
         aa_applicable: q.aa_applicable || "",
         option: q.option || "",
         skill_demand: q.skill_demand || "",
+        /* Seat packet, 2026-07-30 late: "a non-calculator question practised
+           with a calculator to hand is not the same exercise", and a P3
+           investigation is not a long P2 question. Shown before the attempt,
+           not only as a filter. */
+        calculator: q.calculator || "",
+        paper_role: q.paper_role || "",
         aa_codes: q.aa_codes || [], mhl_codes: q.mhl_codes || [],
         subtopics: subtopics,
         families: q.families || [],
@@ -455,6 +485,8 @@
         { field: "themes", label: "theme", allLabel: "All themes" },
         { field: "command_terms", label: "command", allLabel: "All command terms" },
         { field: "paper", label: "paper", allLabel: "All papers", values: ["1", "2", "3"], friendlyLabels: { "1": "Paper 1 (non-calc on AAHL)", "2": "Paper 2", "3": "Paper 3" } },
+        { field: "paper_role", label: "kind", allLabel: "Any kind of question",
+          values: ["no_calculator", "calculator", "option", "investigation"], friendlyLabels: ROLE_LABEL },
         { field: "year", label: "year", allLabel: "All years" }
       ],
       /* VF-14: performance by lots of the other categories, each row with its
@@ -488,7 +520,9 @@
       analysisReminderGroup: true,
 
       metaLine: function (q) {
-        return (q.syllabus === "MHL" ? "MHL " : "") + q.paper_code + " · " + q.session + " " + q.year +
+        var kind = paperKindOf(q);
+        return (kind ? kind + " · " : "") +
+          (q.syllabus === "MHL" ? "MHL " : "") + q.paper_code + " · " + q.session + " " + q.year +
           (q.time_zone && q.time_zone !== "TZ0" ? " " + q.time_zone : "") +
           " · P" + q.paper + " Q" + q.question + (q.part_label ? " " + q.part_label : "") +
           " · " + q.marks + " marks" +

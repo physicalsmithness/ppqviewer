@@ -1,6 +1,14 @@
 /* Headless test for the shared engine's chemistry consumer (question types, modules,
    split dashboard, migration). Requires jsdom. Run: node test/test_chem.js
-   Layout assumed: ppqviewer\ sibling of chemistrydriller\ (which supplies ppqs.js). */
+   Layout assumed: ppqviewer\ sibling of chemistrydriller\ (which supplies ppqs.js).
+
+   jsdom is NOT vendored here, so this suite silently stopped being run and its
+   one stale assertion went unnoticed for over a week (2026-07-30). If `require
+   ("jsdom")` fails, install it anywhere and point NODE_PATH at it, e.g.
+     npm install jsdom --prefix %TEMP%\ppqjs
+     set NODE_PATH=%TEMP%\ppqjs\node_modules && node test\test_chem.js
+   Chemistry is the donor of the multipart model the whole engine leans on, so
+   this suite matters more than its run frequency suggested. */
 const { JSDOM } = require("jsdom");
 const fs = require("fs");
 const path = require("path");
@@ -33,7 +41,17 @@ try {
   check("migrate: score seeded from v1", v.store.scores["25N.1A.SL.TZ1.1"] === 5);
   check("migrate: mcq history seeded as attempt", v.store.attempts.some((a) => a.id === "25N.1A.SL.TZ1.1" && a.correct === true));
   check("2 filters + order = 3 selects", root.querySelectorAll(".ppq-select").length === 3);
-  check("split dashboard (2 columns)", root.querySelector(".ppq-dash-content.split") && root.querySelectorAll(".ppq-dash-col").length === 2);
+  /* The split dashboard moved to two FLANKING panels on 2026-07-22 (left =
+     column 0, question centre, right = column 1), restoring the original
+     chemistry three-column shape. This assertion still described the older
+     one-sidebar DOM (.ppq-dash-content.split / .ppq-dash-col) and so had been
+     failing against a feature that works. Corrected 2026-07-30 to the current
+     contract; verified failing identically on the pre-d016 engine first, so it
+     was never a regression. */
+  check("split dashboard (2 flanking panels)",
+    root.querySelector(".ppq-layout-split") && root.querySelectorAll(".ppq-dash-split-panel").length === 2 &&
+    Array.prototype.every.call(root.querySelectorAll(".ppq-dash-split-panel"),
+      (p) => p.querySelector(".ppq-dash-content") && p.querySelector("h3")));
   check("split has rating boxes + ribbon/heat", root.querySelector(".ppq-lhs-box") && root.querySelector(".ppq-heat"));
 
   const mcqQ = window.CHEM_PPQS.find((q) => q.paper === "1A" && q.choices && q.answer_key);

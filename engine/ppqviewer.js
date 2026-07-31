@@ -1347,19 +1347,38 @@ window.PPQViewer = (function () {
         (n === 0 ? "scope not filtering yet (tick what you've learned)" :
           (enabled ? (inScope + " of " + totalQ + " questions in scope") : "scope OFF — showing everything"));
     }
+    /* Smith, 2026-07-30: "any tick/untick recollapses the view so unticking
+       three in a row is a right pain." Ticking used to rebuild the whole tree,
+       which threw away every open <details> and the scroll position. The DOM
+       is now built ONCE and a tick only repaints the boxes whose state can
+       have changed, so open branches, scroll and focus all survive. */
+    const boxes = [];
+    function boxTitle(st) {
+      return st === "all" ? "Learned; click to clear" :
+        (st === "some" ? "Partly learned; click to mark all of this learned" : "Click to mark all of this learned");
+    }
+    function refreshBoxes() {
+      boxes.forEach(function (x) {
+        const st = learnedTreeState(x.node, set);
+        x.el.className = "ppq-ls-box " + st;
+        x.el.title = boxTitle(st);
+      });
+    }
     function boxFor(node) {
       const st = learnedTreeState(node, set);
-      const b = el("button", { class: "ppq-ls-box " + st, type: "button", title: st === "all" ? "Learned — click to clear" : "Click to mark all of this learned" });
+      const b = el("button", { class: "ppq-ls-box " + st, type: "button", title: boxTitle(st) });
+      boxes.push({ node: node, el: b });
       b.addEventListener("click", function (e) {
         if (e && e.stopPropagation) e.stopPropagation();
         if (e && e.preventDefault) e.preventDefault();
         setLeaves(node, learnedTreeState(node, set) !== "all");
-        renderTree();
+        refreshBoxes();
         refreshSummary();
       });
       return b;
     }
     function renderTree() {
+      boxes.length = 0;
       treeBox.innerHTML = "";
       ls.tree.forEach(function (topic) {
         const det = el("details", { class: "ppq-learned-topic" });
@@ -1391,8 +1410,8 @@ window.PPQViewer = (function () {
         treeBox.appendChild(det);
       });
     }
-    tickAll.addEventListener("click", function () { allLeaves().forEach(function (c) { set[c] = true; }); renderTree(); refreshSummary(); });
-    clearAll.addEventListener("click", function () { for (const k in set) delete set[k]; renderTree(); refreshSummary(); });
+    tickAll.addEventListener("click", function () { allLeaves().forEach(function (c) { set[c] = true; }); refreshBoxes(); refreshSummary(); });
+    clearAll.addEventListener("click", function () { for (const k in set) delete set[k]; refreshBoxes(); refreshSummary(); });
     renderTree();
     refreshSummary();
 

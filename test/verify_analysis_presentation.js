@@ -2899,6 +2899,34 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     .indexOf("approximately") >= 0,
     "an approximate location says so");
 
+  /* Seat packet 2026-07-30 late: say what KIND of question this is BEFORE the
+     attempt. A non-calculator question practised with a calculator to hand is
+     not the same exercise. */
+  const kinds = {};
+  recs.forEach((r) => { kinds[r.paper_role || ""] = (kinds[r.paper_role || ""] || 0) + 1; });
+  check(!kinds[""] && kinds.no_calculator > 0 && kinds.investigation > 0,
+    "every record knows its paper role (no_calculator " + kinds.no_calculator + ", calculator " +
+      kinds.calculator + ", option " + kinds.option + ", investigation " + kinds.investigation + ")");
+  check(/^No calculator · /.test(cfg.metaLine(recs.filter((r) => r.paper_role === "no_calculator")[0])),
+    "the no-calculator rule leads the line a pupil reads before starting");
+  check(/^Paper 3 investigation/.test(cfg.metaLine(recs.filter((r) => r.paper_role === "investigation")[0])),
+    "an investigation announces itself rather than looking like a long Paper 2 question");
+  check(/^Option booklet, (calculator|no calculator) · /.test(cfg.metaLine(recs.filter((r) => r.paper_role === "option")[0])),
+    "an option-booklet question still states its calculator rule");
+  check((cfg.filters || []).some((f) => f.field === "paper_role"),
+    "and it is filterable as well as visible");
+
+  /* Smith, 2026-07-30: "any tick/untick recollapses the view so unticking
+     three in a row is a right pain." */
+  check(/const boxes = \[\];/.test(src) && /function refreshBoxes\(\)/.test(src),
+    "the learned tree keeps a box register so a tick can repaint without rebuilding");
+  check(!/setLeaves\(node, learnedTreeState\(node, set\) !== "all"\);\s*\n\s*renderTree\(\);/.test(src) &&
+    /setLeaves\(node, learnedTreeState\(node, set\) !== "all"\);\s*\n\s*refreshBoxes\(\);/.test(src),
+    "ticking a box no longer rebuilds the tree, so open branches and scroll survive");
+  check(/allLeaves\(\)\.forEach\(function \(c\) \{ set\[c\] = true; \}\); refreshBoxes\(\)/.test(src) &&
+    !/for \(const k in set\) delete set\[k\]; renderTree\(\)/.test(src),
+    "Tick everything and Clear repaint in place too");
+
   // The engine hooks the navigator now depends on.
   check(src.indexOf("cfg.partLabelOf = cfg.partLabelOf ||") >= 0 &&
     src.indexOf("cfg.partMarksOf = cfg.partMarksOf ||") >= 0 &&

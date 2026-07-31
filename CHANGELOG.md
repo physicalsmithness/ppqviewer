@@ -2,6 +2,29 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-31 — learned-tree ticking fixed; paper kind shown up front; chemistry's suite green again
+
+- **"Any tick/untick recollapses the view so unticking three in a row is a
+  right pain"** (Smith). Ticking rebuilt the entire tree DOM, discarding every
+  open branch and the scroll position. The tree is now built once and a tick
+  repaints only the boxes whose state can have changed, so open branches,
+  scroll and focus survive; Tick everything and Clear repaint in place too.
+- **The kind of question is stated before the attempt** (seat packet): "No
+  calculator", "Calculator", "Option booklet, calculator", "Paper 3
+  investigation" lead the meta line, and `paper_role` joins the filters. All
+  5,368 records carry it (1,708 non-calculator, 1,934 calculator, 1,374 option,
+  352 investigation).
+- **Chemistry's regression suite runs again and is green (18/18).** It needs
+  jsdom, which is not vendored, so it had quietly stopped being run and one
+  assertion had gone stale: it still described the pre-22-July single-sidebar
+  split dashboard (`.ppq-dash-content.split`) rather than the two flanking
+  panels that replaced it. Confirmed the same failure on the pre-d016 engine
+  before touching it, so this was a stale test and never a regression; the
+  header now says how to run it. Chemistry being the donor of the multipart
+  model, an unrun chemistry suite is exactly the blind spot that let d016's
+  fault develop.
+- Suites: 606/606 presentation + 70/70 safety + 18/18 chemistry.
+
 ## 2026-07-30 (night) — d017: the seat's names and page ranges adopted on arrival (engine v0.15.0)
 
 Two packets landed from the Maths seat while d016 was being built, and both
