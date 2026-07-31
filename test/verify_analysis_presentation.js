@@ -204,6 +204,7 @@ const V = {}; // fake viewer holding the real methods
  "_elimChipsEl", "next", "prev", "_renderHistoryEntry", "_questionById",
  "_lastAttemptFor", "_reopenAttempt", "closeModal",
  "_progressStats", "_renderProgressPage", "_jumpToAttempt", "_attachResponseToAttempt",
+ "_deleteRecordedTime", "_stemSnippet",
  "_promptMethodAskV2", "_syncAnalysisReminder",
  "_timingPrefs", "_setTimingPrefs", "_timingModeNow", "_timingTargetMsFor",
  "_elapsedTimingMs", "_commitTiming", "_openTimingPanel", "_reducedMotion", "_fmtClock",
@@ -1998,7 +1999,13 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _progressStats: V._progressStats,
     _feedbackReadiness: () => ({ code: "pending", label: "Solution pending" }),
     _jumpToAttempt: () => {},
-    _renderProgressPage: V._renderProgressPage
+    _renderProgressPage: V._renderProgressPage,
+    /* Recorded-times table (Smith, 2026-07-31) */
+    _stemSnippet: V._stemSnippet,
+    _deleteRecordedTime: V._deleteRecordedTime,
+    _fmtClock: V._fmtClock,
+    _fireReport: () => {},
+    _saveStore: () => {}
   });
   aPage._renderProgressPage();
   const axisTables = collect(aNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-progress-axis") >= 0);
@@ -2444,7 +2451,14 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     q: (sel) => nodes[sel] || null,
     _progressStats: V._progressStats,
     _feedbackReadiness: () => ({ code: "pending", label: "Solution pending" }),
-    _jumpToAttempt: (qid) => jumps.push(qid)
+    _jumpToAttempt: (qid) => jumps.push(qid),
+    /* Recorded-times table (Smith, 2026-07-31) */
+    _stemSnippet: V._stemSnippet,
+    _deleteRecordedTime: V._deleteRecordedTime,
+    _fmtClock: V._fmtClock,
+    _fireReport: () => {},
+    _saveStore: () => {},
+    _renderProgressPage: function () { return V._renderProgressPage.call(this); }
   });
   check(V._renderProgressPage.call(pageCtx) === true, "the progress page renders into the modal shell");
   const body = nodes[".ppq-modal-body"];
@@ -2679,7 +2693,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the pages open by themselves when there are no crops at all, or when the consumer says the crop is too thin (d017)");
   check(css5014().indexOf(".ppq-ms-page") >= 0, "markscheme pages are styled");
   function css5014() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
-  check(src.indexOf('version: "0.15.0"') >= 0, "engine bumped to 0.15.0 (0.13.0 msPagesOf, 0.14.0 d016 part hooks, 0.15.0 d017 page/label hooks)");
+  check(src.indexOf('version: "0.16.0"') >= 0, "engine bumped to 0.16.0 (0.15.0 d017 page/label hooks, 0.16.0 timer reset + historical time deletion)");
 
   // wrapper: crops inline, pages behind the expander, never conflated
   check(/msCropsOf: function \(q\) \{ return q\.ms_crops \|\| \[\]; \}/.test(mSrc) &&
@@ -2915,6 +2929,27 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "an option-booklet question still states its calculator rule");
   check((cfg.filters || []).some((f) => f.field === "paper_role"),
     "and it is filterable as well as visible");
+
+  /* Smith, 2026-07-31: a reset for this question's clock, and a way to delete
+     historical timings ("q, stem, time, delete time"). */
+  check(/class: "ppq-timing-reset"/.test(src) && /self\.shownAt = Date\.now\(\);/.test(src),
+    "the timer row carries a reset that restarts this question's clock");
+  check(/reset\.addEventListener[\s\S]{0,400}self\._pauseStartedAt = null;/.test(src),
+    "reset also clears a pause in progress, so the clock actually runs again");
+  check(/Viewer\.prototype\._deleteRecordedTime = function/.test(src) &&
+    /row\.time_ms = null;\s*\n\s*row\.time_discarded = true;/.test(src),
+    "a historical time can be struck, leaving the answer and rating in place");
+  check(/row\.attempt_id === this\._attemptId\) \{\s*\n\s*this\._discardCommittedTime\(\);/.test(src),
+    "striking THIS session's just-recorded time delegates to the exact bank unwind, never double-counting");
+  check(/ppq-progress-times/.test(src) && /headerRow\(\["Question", "What it asked", "Time", ""\]\)/.test(src),
+    "the progress page lists recorded times with the question, what it asked, and the time");
+  check(/ppq-time-del-all/.test(src) && /Delete every recorded time/.test(src),
+    "and offers to clear them all at once");
+  check(/Viewer\.prototype\._stemSnippet = function/.test(src) && /replace\(\/<\[\^>\]\*>\/g, " "\)/.test(src),
+    "the stem snippet strips consumer HTML rather than trusting it");
+  const cssSrc016 = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(cssSrc016.indexOf(".ppq-timing-reset") >= 0 && cssSrc016.indexOf(".ppq-progress-times") >= 0,
+    "both are styled");
 
   /* Smith, 2026-07-30: "any tick/untick recollapses the view so unticking
      three in a row is a right pain." */

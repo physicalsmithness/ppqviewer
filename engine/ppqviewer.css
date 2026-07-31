@@ -241,6 +241,14 @@
 .ppq-timing-bank.neg { color: var(--ppq-bad); }
 .ppq-timing-pause { border: 1px solid var(--ppq-line); border-radius: 6px; background: var(--ppq-bg); color: var(--ppq-ink2); font-size: 0.7rem; padding: 0.15rem 0.45rem; cursor: pointer; }
 .ppq-timing-pause:hover { border-color: var(--ppq-accent); }
+/* Reset this question's clock (Smith, 2026-07-31): same weight as pause, since
+   it is the same kind of "the clock is wrong for reasons off the page" act. */
+.ppq-timing-reset { border: 1px solid var(--ppq-line); border-radius: 6px; background: var(--ppq-bg); color: var(--ppq-ink2); font-size: 0.8rem; line-height: 1; padding: 0.15rem 0.4rem; cursor: pointer; }
+.ppq-timing-reset:hover { border-color: var(--ppq-accent); color: var(--ppq-accent); }
+/* Historical time deletion on the progress page. */
+.ppq-progress-times td.ppq-progress-stem { text-align: left; color: var(--ppq-ink2); font-size: 0.85rem; max-width: 26rem; }
+.ppq-time-del { white-space: nowrap; }
+.ppq-time-del-all { margin-top: 0.6rem; }
 .ppq-timing-discard { border: none; background: transparent; color: var(--ppq-muted); font-size: 0.72rem; text-decoration: underline dotted; cursor: pointer; padding: 0; }
 .ppq-timing-discard.on { color: var(--ppq-accent); text-decoration: none; font-weight: 700; }
 /* the preferences panel */

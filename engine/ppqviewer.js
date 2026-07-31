@@ -1784,6 +1784,51 @@ window.PPQViewer = (function () {
         });
         page.appendChild(list);
       }
+
+      /* Smith, 2026-07-31: "a way to delete historical timings — q, stem, time,
+         delete time". A time recorded while you were interrupted is worse than
+         no time at all, because it silently drags every average and pace figure
+         that reads it. The answer, rating and everything else on the row stay;
+         only the clock goes. */
+      const timed = ((this.store || {}).attempts || []).filter(function (r) { return r.time_ms != null; });
+      if (timed.length) {
+        const head = el("div", { class: "ppq-progress-subhead" }, "Recorded times");
+        page.appendChild(head);
+        page.appendChild(el("div", { class: "ppq-progress-more" },
+          "Delete a time that does not reflect the work (interrupted, looked something up, walked away). " +
+          "The answer and rating stay; only the time is struck, exactly as “don't record this one” does."));
+        const table = el("table", { class: "ppq-progress-table ppq-progress-times" });
+        table.appendChild(headerRow(["Question", "What it asked", "Time", ""]));
+        const tbody = el("tbody");
+        timed.slice(-60).reverse().forEach(function (row) {
+          const q = self._questionById(row.id);
+          const tr = el("tr");
+          tr.appendChild(td(q ? cfg.metaLine(q) : String(row.id), "", "ppq-progress-topic"));
+          tr.appendChild(td(q ? self._stemSnippet(q) : "", "", "ppq-progress-stem"));
+          tr.appendChild(td(self._fmtClock(row.time_ms)));
+          const actionTd = el("td");
+          const del = el("button", { class: "ppq-btn-mini ppq-time-del", type: "button", title: "Strike this time" }, "delete time");
+          del.addEventListener("click", function () {
+            self._deleteRecordedTime(row);
+            self._renderProgressPage();
+          });
+          actionTd.appendChild(del);
+          tr.appendChild(actionTd);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        page.appendChild(table);
+        const delAll = el("button", { class: "ppq-btn ppq-time-del-all", type: "button" },
+          "Delete every recorded time (" + timed.length + ")");
+        delAll.addEventListener("click", function () {
+          if (typeof confirm === "function" && !confirm("Strike the time from all " + timed.length +
+            " attempts? Answers and ratings are kept.")) return;
+          timed.forEach(function (r) { self._deleteRecordedTime(r, true); });
+          if (self._saveStore) self._saveStore();
+          self._renderProgressPage();
+        });
+        page.appendChild(delAll);
+      }
     }
 
     const body = this.q(".ppq-modal-body");
@@ -2926,6 +2971,24 @@ window.PPQViewer = (function () {
       self._tickTiming();
     });
     tel.appendChild(pause);
+    /* Smith, 2026-07-31: a reset for THIS question's clock. The interruption
+       case is the point (someone came in, you looked something up), so it
+       restarts the question's elapsed time from zero without touching the
+       answer, the bank or anything already recorded: nothing is committed
+       until the answer lands, so there is nothing to unwind. Also clears a
+       pause in progress, since resuming into a stale pause would freeze a
+       clock the pupil has just asked to run again. */
+    const reset = el("button", { class: "ppq-timing-reset", type: "button", title: "Start this question's clock again from zero" }, "↺");
+    reset.addEventListener("click", function () {
+      self.shownAt = Date.now();
+      self._pausedMs = 0;
+      self._pauseStartedAt = null;
+      pause.textContent = "❚❚"; pause.title = "Pause the clock";
+      tel.classList.remove("ppq-timing--paused");
+      self._tickTiming();
+      self._fireReport({ status: "timing_prefs", qtype: "timing", extra_json: JSON.stringify({ time_reset: true }) });
+    });
+    tel.appendChild(reset);
     const discard = el("button", { class: "ppq-timing-discard", type: "button", title: "Don't keep a record of the time for this one" }, "don't record this one");
     discard.addEventListener("click", function () {
       self._timeDiscarded = !self._timeDiscarded;
@@ -3019,6 +3082,37 @@ window.PPQViewer = (function () {
     } else {
       tel.style.display = "none";
     }
+  };
+
+  /* Smith, 2026-07-31: delete a HISTORICAL time from the progress page, long
+     after the attempt. Same effect on the row as the retro discard, but it
+     cannot unwind a bank credit that belongs to a finished session, so when the
+     row IS this session's last commit it delegates to the exact unwind instead
+     of double-counting. `bulk` defers the store write to the caller. */
+  Viewer.prototype._deleteRecordedTime = function (row, bulk) {
+    if (!row || row.time_ms == null) return;
+    const last = this._lastCommitTiming;
+    if (last && this._attemptId && row.attempt_id === this._attemptId) {
+      this._discardCommittedTime();
+      return;
+    }
+    row.time_ms = null;
+    row.time_discarded = true;
+    if (!bulk && this._saveStore) this._saveStore();
+    this._fireReport({
+      status: "timing_prefs", qtype: "timing",
+      extra_json: JSON.stringify({ time_deleted_historical: true, attempt_id: row.attempt_id || "", item_id: row.id || "" })
+    });
+  };
+
+  /* A few words of the question, so a row in the times table is recognisable
+     without opening it. Consumer text may be HTML (maths markup), so it is
+     stripped rather than trusted. */
+  Viewer.prototype._stemSnippet = function (q) {
+    let t = "";
+    try { t = this.cfg.questionTextOf(q) || ""; } catch (_) { t = ""; }
+    t = String(t).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    return t.length > 90 ? t.slice(0, 88).replace(/\s+\S*$/, "") + "…" : t;
   };
 
   /* VF-04r2 (Smith 2026-07-29): retroactive time discard, straight after
@@ -5255,6 +5349,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.15.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.16.0" };
 })();
 // build: 0.3.0, maintained by Codex

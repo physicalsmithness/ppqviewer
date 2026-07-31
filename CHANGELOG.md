@@ -2,6 +2,29 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-07-31 (later) — timer reset per question, and historical times can be deleted (engine v0.16.0)
+
+Smith: "can we have a reset button for the timer on an individual q and a way
+to delete historical timings. q stem time delete time."
+
+- **Reset (↺) in the timer row.** Restarts this question's clock from zero for
+  the interruption case, clearing any pause in progress so the clock actually
+  runs again. Nothing is committed until the answer lands, so there is no bank
+  or tally to unwind and the answer is untouched.
+- **"Recorded times" on the progress page**: a table of question, what it
+  asked (a stripped stem snippet), the time, and a per-row "delete time", plus
+  "Delete every recorded time (n)" behind a confirm. Striking a time nulls
+  `time_ms` and sets `time_discarded`, exactly as "don't record this one" does;
+  the answer, rating, flags and reflections all stay. A time recorded while
+  someone was interrupted is worse than no time, because every pace and average
+  downstream silently reads it.
+- Deleting THIS session's just-recorded time delegates to the existing retro
+  discard so the bank credit and session tally unwind precisely rather than
+  being double-counted; older rows only strike the row, since a finished
+  session's bank is not live to adjust.
+- Suites 614/614 + 70/70 + 18/18. Two harness contexts in the presentation
+  suite needed the new methods registered, which is why the count jumped.
+
 ## 2026-07-31 — learned-tree ticking fixed; paper kind shown up front; chemistry's suite green again
 
 - **"Any tick/untick recollapses the view so unticking three in a row is a
