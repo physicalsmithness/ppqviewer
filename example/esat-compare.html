@@ -191,13 +191,59 @@
         return base + (q && q.part ? ("_" + q.part) : "");
       }
 
-      /* Overlay the bounded classification passes without changing the official
-         broad-topic catalogue. A reroute stays in its current topic for now, but
-         the filter and question tags say clearly where the first pass would move
-         it. Later passes can replace this generated bundle without viewer edits. */
+      var SURFACE_AREA_2018_ADVISORY = {
+        title: "Known wording error in the printed question",
+        message: "As printed, the surface area has no maximum, so none of the options is correct. The official result is obtained by reading “maximum” as “minimum”. Continue using that intended wording."
+      };
+      var SOURCE_ADVISORIES = {
+        "esat_engaa_2018_s1_Q53": SURFACE_AREA_2018_ADVISORY,
+        "esat_nsaa_2018_s1_Q89": SURFACE_AREA_2018_ADVISORY,
+        "esat_engaa_2016_s1_Q52": {
+          title: "Ambiguous wording in the printed question",
+          message: "The wording is unclear about whether the speed is relative to the spacecraft before or after the burst. This viewer follows the official key and takes it to mean the pre-burst spacecraft. Reading it as the post-burst spacecraft instead leads to option F."
+        }
+      };
+      var PRESENTATION_BENCHMARK_IDS = [
+        "esat_engaa_2022_s1_Q09",
+        "esat_engaa_2016_s1_Q11",
+        "esat_engaa_2023_s1_Q29",
+        "esat_engaa_2022_s1_Q27",
+        "esat_engaa_2017_s1_Q46",
+        "esat_engaa_2019_s1_Q40",
+        "esat_engaa_2018_s1_Q53",
+        "esat_engaa_2016_s1_Q52"
+      ];
+      var presentationBenchmark = /(?:^|[?&])presentation-benchmark(?:[=&]|$)/
+        .test(window.location.search || "");
+      var benchmarkOrder = {};
+      PRESENTATION_BENCHMARK_IDS.forEach(function (id, index) { benchmarkOrder[id] = index; });
+
+      /* Overlay the approved teaching taxonomy without overwriting the historical
+         catalogue fields retained for audit. */
       var CLASSIFICATION = window.ESAT_CLASSIFICATION || {};
       var CLASSIFICATION_BY_ID = CLASSIFICATION.by_id || {};
       var CLASSIFICATION_SWEEPS = CLASSIFICATION.sweep_topics || {};
+      var CANONICAL_FAMILY_BY_KEY = {};
+      Object.keys(CLASSIFICATION_BY_ID).forEach(function (id) {
+        var family = CLASSIFICATION_BY_ID[id] && CLASSIFICATION_BY_ID[id].canonical_primary_family;
+        if (family) CANONICAL_FAMILY_BY_KEY[String(family).toLowerCase()] = family;
+      });
+      function isBoundaryLabel(value) {
+        var text = String(value || "").trim();
+        return !text || /^not(?:\s|$)/i.test(text) || /(?:catalogue|classification)\s+boundary/i.test(text);
+      }
+      function safeFamilyOf(rec) {
+        if (rec.canonical_primary_family && !isBoundaryLabel(rec.canonical_primary_family)) return rec.canonical_primary_family;
+        if (rec.primary_subtopic && !isBoundaryLabel(rec.primary_subtopic)) return rec.primary_subtopic;
+        if (rec.multilabel_source_primary_subtopic && !isBoundaryLabel(rec.multilabel_source_primary_subtopic)) return rec.multilabel_source_primary_subtopic;
+        return "Family pending";
+      }
+      function sweepTopicLabel(sweep) {
+        var codes = sweep.topic_codes || [];
+        if (codes.length === 1) return codes[0] + " " + (topicName[codes[0]] || sweep.label || "");
+        return sweep.label || "Teaching topic pending";
+      }
+      function pushUnique(target, value) { if (value && target.indexOf(value) < 0) target.push(value); }
       (window.ESAT_QUESTIONS || []).forEach(function (q) {
         var rec = CLASSIFICATION_BY_ID[recordIdOf(q)] || CLASSIFICATION_BY_ID[baseRecordIdOf(q)];
         if (!rec) return;
@@ -209,30 +255,33 @@
         q.classification = rec;
         q.classification_needs_move = needsMove;
         q.classification_target = moveTarget;
-        /* A completed multi-label sidecar owns the compact pupil-facing family
-           name. The retained sweep primary remains in the searchable membership
-           array, so this improves the RHS hierarchy without discarding any older
-           classification evidence. */
-        q.classification_family =
-          rec.multilabel_source_primary_subtopic || rec.primary_subtopic;
-        q.classification_subtopic = needsMove
-          ? ("Needs moving \u2192 " + moveTarget)
-          : q.classification_family;
-        /* Keep every useful classification axis. A question may legitimately
-           appear under more than one subtopic; the shared engine now matches
-           array-valued filters by membership rather than forcing one bucket. */
-        q.classification_subtopics = [];
-        [q.classification_subtopic, q.classification_family, rec.primary_subtopic]
-          .concat(rec.syllabus_subtopics || [])
-          .concat(rec.secondary_subtopics || [])
-          .concat(rec.also_seen_in || [])
+        q.classification_family = safeFamilyOf(rec);
+        q.classification_subtopic = q.classification_family;
+        q.teaching_topic_key = needsMove || !q.topic_code || /^unknown$/i.test(q.topic || "")
+          ? sweepTopicLabel(sweep)
+          : q.topic_code + " " + (q.topic || topicName[q.topic_code] || "");
+        q.teaching_topic_label = q.teaching_topic_key;
+        q.classification_related_families = [];
+        q.classification_fine_topics = [];
+        [rec.primary_subtopic, rec.multilabel_source_primary_subtopic]
+          .concat(rec.syllabus_subtopics || []).concat(rec.secondary_subtopics || [])
           .forEach(function (value) {
-            if (value && q.classification_subtopics.indexOf(value) < 0) q.classification_subtopics.push(value);
+            if (!value || isBoundaryLabel(value)) return;
+            var canonical = CANONICAL_FAMILY_BY_KEY[String(value).toLowerCase()];
+            if (canonical && canonical !== q.classification_family) pushUnique(q.classification_related_families, canonical);
+            else if (!canonical) pushUnique(q.classification_fine_topics, value);
           });
-        q.classification_tags = [];
+        q.classification_related_topics = [];
+        (rec.also_seen_in || []).forEach(function (sweepKey) {
+          var relatedLabel = sweepTopicLabel(CLASSIFICATION_SWEEPS[sweepKey] || {});
+          if (relatedLabel !== q.teaching_topic_key) pushUnique(q.classification_related_topics, relatedLabel);
+        });
+        q.classification_subtopics = [q.classification_family].concat(q.classification_related_families);
+        q.classification_search_terms = [];
         (rec.technique_tags || []).concat(rec.representation_tags || []).concat(rec.filter_tags || [])
-          .forEach(function (value) {
-            if (value && q.classification_tags.indexOf(value) < 0) q.classification_tags.push(value);
+          .concat(rec.calculation_or_reasoning_mode || []).concat(q.classification_fine_topics)
+          .concat(q.classification_related_topics).forEach(function (value) {
+            pushUnique(q.classification_search_terms, value);
           });
       });
 
@@ -271,13 +320,16 @@
       function stableClassificationFamilies(source) {
         var seen = {};
         (source || []).forEach(function (q) {
-          var rec = q.classification || {};
-          var family = q.classification_family ||
-            rec.multilabel_source_primary_subtopic ||
-            rec.primary_subtopic || "";
-          if (family && (q.classification_subtopics || []).indexOf(family) >= 0) {
-            seen[family] = true;
-          }
+          if (q.classification_family) seen[q.classification_family] = true;
+        });
+        return Object.keys(seen).sort(function (a, b) {
+          return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+        });
+      }
+      function stableTeachingTopics(source) {
+        var seen = {};
+        (source || []).forEach(function (q) {
+          if (q.teaching_topic_key) seen[q.teaching_topic_key] = true;
         });
         return Object.keys(seen).sort(function (a, b) {
           return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
@@ -285,8 +337,8 @@
       }
 
       window.PPQ_CONFIG = {
-        title: "ESAT Past-Paper Viewer",
-        versionLabel: "ppqviewer v0.2.17 · timing, clusters, bigger analysis",
+        title: presentationBenchmark ? "ESAT presentation benchmark" : "ESAT Past-Paper Viewer",
+        versionLabel: "ppqviewer v0.18.1 · teaching catalogue integration",
         appVersion: "ppqviewer-esat-compare",
         storageKey: "esat_ppq_COMPARE",
         /* QoderWork 2026-07-22: login may be null (fallback gate mode). */
@@ -301,18 +353,18 @@
            future test mode; ESAT does not set it. */
 
         /* QoderWork 2026-07-22 (v0.2.4): shuffle is the standard order (Smith). */
-        defaultOrder: "shuffle",
+        defaultOrder: presentationBenchmark ? "ordered" : "shuffle",
 
         filters: [
           /* QoderWork 2026-07-22 (v0.2.4): subject is a multi-select defaulting to
              Maths + Physics (Smith teaches both now); Chemistry and Biology stay
              choosable from the same dropdown. */
-          { field: "subject", label: "subject", allLabel: "All subjects", values: META.subjects, friendlyLabels: subjectLabels, multi: true, default: ["maths", "physics"] },
-          { field: "assessment", label: "source", allLabel: "All sources", values: META.assessments },
-          { field: "year", label: "year", allLabel: "All years" },
-          { field: "topic_code", label: "topic", allLabel: "All topics", values: (META.topics || []).map(function (t) { return t.code; }), friendlyLabels: topicFriendly },
-          { field: "classification_subtopics", label: "subtopic", allLabel: "All subtopics", dependsOn: "topic_code", hideUntilParent: true, dashboardFacet: true, values: stableClassificationFamilies },
-          { field: "esat_in_spec", label: "spec", allLabel: "In spec + out of spec", values: META.specs, friendlyLabels: { in_spec: "In spec", out_of_spec: "Out of Spec" }, default: "in_spec", positiveValues: ["in_spec"] }
+          { field: "subject", label: "Subject", allLabel: "All subjects", values: META.subjects, friendlyLabels: subjectLabels, multi: true, default: ["maths", "physics"] },
+          { field: "teaching_topic_key", label: "Topic", allLabel: "All teaching topics", values: stableTeachingTopics },
+          { field: "classification_family", label: "Family / subtopic", allLabel: "All families", dependsOn: "teaching_topic_key", hideUntilParent: true, dashboardFacet: true, values: stableClassificationFamilies, facetNoun: "families", facetSubtitle: "Choose a main family to practise it; choose it again to show the whole topic.", facetNote: "Each question is counted once in its main teaching family. Additional relevance stays searchable." },
+          { field: "assessment", label: "Source", allLabel: "All sources", values: META.assessments },
+          { field: "year", label: "Year", allLabel: "All years" },
+          { field: "esat_in_spec", label: "Spec", allLabel: "In spec + out of spec", values: META.specs, friendlyLabels: { in_spec: "In spec", out_of_spec: "Out of Spec" }, default: presentationBenchmark ? "ALL" : "in_spec", positiveValues: ["in_spec"] }
         ],
         /* The initial 613 is the in-spec slice, not the size of the Maths/Physics
            estate. Show both counts, and keep the comparison responsive to every
@@ -332,19 +384,20 @@
 
         idOf: function (q) { return q.id; },
         sort: function (a, b) {
+          if (presentationBenchmark) return benchmarkOrder[baseRecordIdOf(a)] - benchmarkOrder[baseRecordIdOf(b)];
           return a.slug.localeCompare(b.slug) ||
             (parseInt(a.question_number, 10) - parseInt(b.question_number, 10)) ||
             String(a.part).localeCompare(String(b.part));
         },
 
-        groupKey: function (q) { return q.topic_code ? q.topic_code : ("UT_" + q.subject); },
+        groupKey: function (q) { return q.teaching_topic_key || ("UT_" + q.subject); },
         groupLabel: function (q) {
-          if (q.topic_code) return q.topic_code + " " + (q.topic || topicName[q.topic_code] || "");
+          if (q.teaching_topic_label) return q.teaching_topic_label;
           return "Untagged · " + (subjectLabels[q.subject] || q.subject);
         },
         isUntagged: function (k) { return String(k).indexOf("UT_") === 0; },
 
-        dashboardTitle: "Topic mastery",
+        dashboardTitle: "Teaching topic progress",
         dashboardLayout: "single",
         analysisReminderGroup: true,
 
@@ -354,32 +407,22 @@
         },
         tagsOf: function (q) {
           var t = [subjectLabels[q.subject] || q.subject];
-          if (q.topic) t.push(q.topic_code + " " + q.topic);
-          if (q.classification) {
-            t.push(q.classification_family ||
-              q.classification_subtopic ||
-              q.classification.primary_subtopic);
-            if (q.classification_needs_move) {
-              t.push("Review \u2192 " + q.classification_target);
-            }
-          }
-          if (q.q_type) t.push(q.q_type);
+          if (q.teaching_topic_label) t.push(q.teaching_topic_label);
+          if (q.classification_family) t.push(q.classification_family);
           if (q.esat_in_spec) t.push(q.esat_in_spec === "in_spec" ? "In spec" : "Out of Spec");
           return t;
         },
         classificationsOf: function (q) {
           var rec = q.classification || {};
-          var primary = q.classification_family ||
-            q.classification_subtopic ||
-            rec.primary_subtopic;
           return {
-            syllabus: (q.classification_subtopics || []).filter(function (label) {
-              return label && label !== primary;
-            }),
-            techniques: rec.technique_tags || rec.filter_tags || [],
+            relatedFamilies: q.classification_related_families || [],
+            relatedTopics: q.classification_related_topics || [],
+            syllabus: q.classification_fine_topics || [],
+            techniques: rec.technique_tags || [],
             representations: rec.representation_tags || []
           };
         },
+        searchTermsOf: function (q) { return q.classification_search_terms || []; },
 
         cropsOf: function (q) {
           if (!q.crops || !q.crops.length) return [];
@@ -388,6 +431,15 @@
 
         options: { mode: "labels" },
         optionsLeft: true, /* QoderWork 2026-07-22: letter picker in a left rail, no long scroll to answer */
+        presentation: {
+          enabled: true,
+          compactMobileFilters: true,
+          guidedReview: true,
+          compactAlternativeMethods: true,
+          collapseKnowledgeChecks: true,
+          plainGuessLanguage: true,
+          plainStatusLabels: true
+        },
         /* d013/VF-04 (2026-07-29): the full timing system replaces the old
            count-up timer. Pacing per the ESAT architecture packet: uniform per
            section, S1 = 60 min / 40 questions = 90 s per question. The learner
@@ -401,7 +453,15 @@
         correctOf: function (q) { return q.correct_answer || ""; },
 
         attemptFields: function (q) {
-          return { slug: q.slug, question_number: q.question_number, part: q.part, subject: q.subject, topic_code: q.topic_code };
+          return {
+            slug: q.slug,
+            question_number: q.question_number,
+            part: q.part,
+            subject: q.subject,
+            topic_code: q.topic_code,
+            teaching_topic: q.teaching_topic_key,
+            teaching_family: q.classification_family
+          };
         },
 
         selfReport: { levels: 6, prompt: "How did that feel? (1 = lost, 6 = easy)" },
@@ -414,6 +474,7 @@
           var byId = bundle.feedback_status_by_id || {};
           return byId[baseRecordIdOf(q)] || null;
         },
+        sourceAdvisoryOf: function (q) { return SOURCE_ADVISORIES[baseRecordIdOf(q)] || null; },
         /* VSAFE-01 (Claude 2026-07-28): explicit suppression of records with
            damaged pupil-facing content. The engine's damage heuristics run as
            well (they independently catch five of these seven), but every
@@ -432,14 +493,20 @@
             "esat_engaa_2023_s1_Q16": "analysis owner lists as damaged/missing mathematical presentation (RS-01); analysis text byte-identical to nsaa_2023_Q36's, suspected missing values in method steps",
             "esat_nsaa_2023_s1_Q36": "analysis owner lists as damaged/missing mathematical presentation (RS-01); analysis text byte-identical to engaa_2023_Q16's, suspected missing values in method steps",
             "esat_engaa_2019_s1_Q12": "found by viewer damage scan 2026-07-28: 'row?s', '?Z = ?10' (Delta and minus lost); marked reviewed; same corruption class as the 2020 pair; reported to analysis owner",
-            "esat_nsaa_2019_s1_Q30": "found by viewer damage scan 2026-07-28: byte-identical damaged analysis to engaa_2019_Q12; marked reviewed; reported to analysis owner"
+            "esat_nsaa_2019_s1_Q30": "found by viewer damage scan 2026-07-28: byte-identical damaged analysis to engaa_2019_Q12; marked reviewed; reported to analysis owner",
+            "esat_engaa_2016_s1_Q12": "release scan 2026-07-29: pupil-facing wave calculations contain standalone narrow spaces where amplitudes, frequencies and values/units are missing",
+            "esat_nsaa_2016_s1_Q27": "release scan 2026-07-29: duplicate of engaa_2016_Q12 with missing pupil-facing amplitudes, frequencies and values/units",
+            "esat_engaa_2018_s1_Q18": "release scan 2026-07-29: pupil-facing wave method steps contain standalone narrow spaces where numerical values and units are missing",
+            "esat_nsaa_2018_s1_Q29": "release scan 2026-07-29: duplicate of engaa_2018_Q18 with missing pupil-facing numerical values and units",
+            "esat_nsaa_2019_s1_Q19": "release scan 2026-07-29: pupil-facing wave analysis contains standalone narrow spaces where amplitude, wavelength and calculated values are missing"
           }
         },
         modules: { postQuestionReview: true },
 
         /* VF-14: performance axes for My progress, each with last-10 dots. */
         progressAxes: [
-          { key: "subtopic", label: "By subtopic", valuesOf: function (q) { return q.classification_subtopics || []; } },
+          { key: "teaching_topic", label: "By teaching topic", valuesOf: function (q) { return q.teaching_topic_key ? [q.teaching_topic_key] : []; } },
+          { key: "teaching_family", label: "By main family", valuesOf: function (q) { return q.classification_family ? [q.classification_family] : []; } },
           { key: "source", label: "By source", valuesOf: function (q) { return [q.assessment]; } },
           { key: "year", label: "By year", valuesOf: function (q) { return [String(q.year)]; } },
           { key: "spec", label: "By spec status", valuesOf: function (q) { return [q.esat_in_spec === "in_spec" ? "In spec" : "Out of spec"]; } }
@@ -452,11 +519,19 @@
         guessDefaults: (window.ESAT_ANALYSIS_V2 && window.ESAT_ANALYSIS_V2.interaction_defaults && window.ESAT_ANALYSIS_V2.interaction_defaults.guess_declaration) || null
       };
 
+      var questionsForViewer = window.ESAT_QUESTIONS;
+      if (presentationBenchmark) {
+        questionsForViewer = (window.ESAT_QUESTIONS || []).filter(function (q) {
+          return Object.prototype.hasOwnProperty.call(benchmarkOrder, baseRecordIdOf(q));
+        }).sort(function (a, b) {
+          return benchmarkOrder[baseRecordIdOf(a)] - benchmarkOrder[baseRecordIdOf(b)];
+        });
+      }
       PPQViewer.mount(document.getElementById("ppq-root"), {
         config: window.PPQ_CONFIG,
-        questions: window.ESAT_QUESTIONS,
+        questions: questionsForViewer,
         meta: window.ESAT_META,
-        report: report
+        report: presentationBenchmark ? null : report
       });
     }
   })();

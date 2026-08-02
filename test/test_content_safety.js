@@ -3,7 +3,7 @@
    Verifies, against BOTH synthetic records and the real analysis_v2 bundle:
    - a damaged record can never present as Full or Provisional (any status source);
    - unsafe analysis falls back to the generic shell (withheld == absent, for pupils);
-   - the seven known-damaged records are pinned in the ESAT wrapper and all gate;
+   - all twelve known-damaged records are pinned in the ESAT wrapper and all gate;
    - the damage heuristics catch what they are known to catch, with no false
      positives across the live corpus (new flags are reported, not failed —
      the runtime auto-withholds them, which is the safe direction);
@@ -37,16 +37,20 @@ const KNOWN_DAMAGED = [
   "esat_engaa_2023_s1_Q16",
   "esat_nsaa_2023_s1_Q36",
   "esat_engaa_2019_s1_Q12",
-  "esat_nsaa_2019_s1_Q30"
+  "esat_nsaa_2019_s1_Q30",
+  "esat_engaa_2016_s1_Q12",
+  "esat_nsaa_2016_s1_Q27",
+  "esat_engaa_2018_s1_Q18",
+  "esat_nsaa_2018_s1_Q29",
+  "esat_nsaa_2019_s1_Q19"
 ];
 /* Subset with a text-level damage signature the heuristics must detect
    (the 2023 draft pair's damage is duplication/missing values — list-only). */
-const HEURISTIC_DETECTABLE = [
-  "esat_engaa_2020_s1_Q04",
-  "esat_nsaa_2020_s1_Q25",
-  "esat_nsaa_2023_s1_Q27",
-  "esat_engaa_2019_s1_Q12",
-  "esat_nsaa_2019_s1_Q30"
+const HEURISTIC_DETECTABLE = KNOWN_DAMAGED.slice();
+const SOURCE_ADVISORY_IDS = [
+  "esat_engaa_2018_s1_Q53",
+  "esat_nsaa_2018_s1_Q89",
+  "esat_engaa_2016_s1_Q52"
 ];
 
 // ---- extraction (same idiom as verify_analysis_presentation.js) ------------
@@ -83,6 +87,7 @@ function extractFn(name) {
 /* Module-scope binding: extracted _contentSafety resolves its free reference
    to scanAnalysisRecordForDamage against THIS name. */
 const scanAnalysisRecordForDamage = extractStandaloneFn("scanAnalysisRecordForDamage");
+const analysisRecordResolution = extractStandaloneFn("analysisRecordResolution");
 const _contentSafety = extractFn("_contentSafety");
 const _feedbackReadiness = extractFn("_feedbackReadiness");
 
@@ -142,6 +147,22 @@ check(scanAnalysisRecordForDamage(rec("a", "value is \uFFFD J")).length > 0,
   "replacement character is flagged");
 check(scanAnalysisRecordForDamage({ identity: { id: "a", crop: "crops/q?4.png" } }).length === 0,
   "URL-ish keys are skipped");
+check(scanAnalysisRecordForDamage(rec("a", "value \u202f is missing")).length > 0,
+  "standalone narrow-space damage is flagged");
+check(scanAnalysisRecordForDamage(rec("a", "Use {{missing_value}} here")).length > 0,
+  "unreplaced template placeholders are flagged");
+
+section("record resolvability");
+check(analysisRecordResolution(null).resolvable === false, "a missing/non-object record is not resolvable");
+check(analysisRecordResolution({ schema_version: "2.0.0", pupil_analysis: { first_notice: "Text" } }).resolvable === false,
+  "deep-v2 requires an identity block");
+check(analysisRecordResolution({ schema_version: "2.0.0", identity: { id: "x", correct_answer: "A" },
+  pupil_analysis: {}, options: [], methods: [], self_report_prompts: [], feedback: [] }).resolvable === false,
+  "deep-v2 presence without pupil-facing analysis is not readiness");
+check(analysisRecordResolution(rec("x", "Useful pupil analysis")).resolvable === true,
+  "a structurally valid deep-v2 record with pupil text resolves");
+check(analysisRecordResolution({ id: "legacy", probe: { text: "Useful legacy explanation" }, methods: [] }).resolvable === true,
+  "the supported legacy analysis shape still resolves");
 
 // ---- synthetic: _contentSafety precedence ---------------------------------
 section("content-safety precedence");
@@ -249,12 +270,23 @@ section("engine/wrapper/css wiring");
   check(riSrc.indexOf("hasAuthoredAnalysis ? authoredRec :") >= 0,
     "withheld records take the generic fallback shell");
   check(src.indexOf("cfg.contentSafety") >= 0, "config normalisation carries contentSafety");
+  check(src.indexOf("analysisRecordResolution(rec)") >= 0,
+    "the safety gate validates resolvability rather than record presence");
   check(cssSrc.indexOf(".ppq-feedback-status-withheld") >= 0, "css styles the withheld badge");
   check(/contentSafety:\s*\{/.test(wrapperSrc) && /heuristics:\s*true/.test(wrapperSrc),
     "ESAT wrapper enables the gate with heuristics on");
   KNOWN_DAMAGED.forEach(function (id) {
     check(wrapperSrc.indexOf('"' + id + '"') >= 0, "wrapper pins " + id);
   });
+  const withheldStart = wrapperSrc.indexOf("withheld: {");
+  const withheldEnd = wrapperSrc.indexOf("\n          }", withheldStart);
+  const withheldSrc = wrapperSrc.slice(withheldStart, withheldEnd);
+  SOURCE_ADVISORY_IDS.forEach(function (id) {
+    check(wrapperSrc.indexOf('"' + id + '"') >= 0, "wrapper advises " + id);
+    check(withheldSrc.indexOf(id) < 0, id + " is advisory-only and remains playable");
+  });
+  check(src.indexOf("cfg.sourceAdvisoryOf") >= 0 && cssSrc.indexOf(".ppq-source-advisory") >= 0,
+    "engine exposes and styles the amber source-advisory contract");
 })();
 
 // ---- real bundle -----------------------------------------------------------

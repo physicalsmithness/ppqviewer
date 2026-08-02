@@ -150,6 +150,7 @@ const allocateLargestRemainder = extractStandaloneFn("allocateLargestRemainder")
 /* VSAFE-01 (2026-07-28): module-scope binding — the extracted _contentSafety
    resolves its free reference to scanAnalysisRecordForDamage against this. */
 const scanAnalysisRecordForDamage = extractStandaloneFn("scanAnalysisRecordForDamage");
+const analysisRecordResolution = extractStandaloneFn("analysisRecordResolution");
 /* VF-02 (2026-07-29): shading helper, and the binding the extracted progress
    page resolves against. */
 const shadeCell = extractStandaloneFn("shadeCell");
@@ -200,7 +201,8 @@ const V = {}; // fake viewer holding the real methods
  "_setDashboardFacetValue", "_clearDashboardFacet", "_zeroRatings",
  "_renderDashboardFacet", "_catHtml",
  "_buildGuessPicker", "_renderInterrogation", "_isV2", "_guessLabel", "_guessPrompt",
- "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety", "_methodAskText",
+ "_feedbackReadiness", "_setFeedbackStatusBadge", "_contentSafety",
+ "_sourceAdvisory", "_setSourceAdvisory", "_sourceAdvisoryEl", "_methodAskText",
  "_elimChipsEl", "next", "prev", "_renderHistoryEntry", "_questionById",
  "_lastAttemptFor", "_reopenAttempt", "closeModal",
  "_progressStats", "_renderProgressPage", "_jumpToAttempt", "_attachResponseToAttempt",
@@ -554,10 +556,10 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "knowledge section renders every atom with no four-item cap (" + rows.length + ")");
   const stateButtons = rows[0].querySelectorAll(".ppq-iq-thing-state");
   check(stateButtons.map((b) => b.dataset.state).join("|") ===
-    "secure_before_question|knew_but_did_not_retrieve|sketchy_on_this|still_unclear",
+    "secure_before_question|knew_but_did_not_retrieve|knew_but_did_not_need|sketchy_on_this|still_unclear",
     "knowledge states have the fixed semantic order");
   check(stateButtons.map((b) => b.innerHTML).join("|") ===
-    "Known|Known, but did not think of it|Sketchy|Not known",
+    "Known|Known, but did not think of it|Known, but did not need it|Sketchy|Not known",
     "knowledge states have the agreed pupil copy");
   check(stateButtons[0].classList.contains("sel") && stateButtons[0].classList.contains("implicit"),
     "Known is visibly preselected as an implicit default");
@@ -575,6 +577,12 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(knowledgeCue && knowledgeCue.origin === rows[0] &&
     knowledgeCue.text === "Recorded" && knowledgeCue.delay === 220,
     "an explicit knowledge response visibly fires in its own row after 220 ms");
+  stateButtons[2].click();
+  check(ctx._thingsUsedStates[rows[0].dataset.thingId] === "knew_but_did_not_need",
+    "the distinct known-but-unneeded route is stored without conflation");
+  const unneededPayload = JSON.parse(ctx._reports[ctx._reports.length - 1].extra_json);
+  check(unneededPayload.availability_state === "knew_but_did_not_need",
+    "the known-but-unneeded event records its own canonical availability state");
 
   const confirm = section.querySelector(".ppq-iq-things-confirm");
   let confirmCue = null;
@@ -912,7 +920,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the no-analysis fallback still passes through the guess declaration page");
   check(renderSource.indexOf("Question-specific suggestions are still being prepared.") >= 0,
     "the fallback explains the absence of question-specific suggestions without inventing any");
-  check((renderSource.match(/this\._appendFreeformReflectionV2\(restPage, rec\)/g) || []).length === 1 &&
+  check((renderSource.match(/this\._appendFreeformReflectionV2\(finishTarget, rec\)/g) || []).length === 1 &&
     renderSource.indexOf("ppq-iq-rate") >= 0,
     "every schema path shares exactly one freeform feedback box and the self-rating");
 
@@ -1096,17 +1104,22 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   if (feedbackReadiness) {
     const ctx = {
       cfg: {
-        analysisOf: (q) => q.analysis || null
+        analysisOf: (q) => q.analysis || null,
+        contentSafety: { withheld: {}, heuristics: true },
+        presentation: {}
       },
       _contentSafety: V._contentSafety /* VSAFE-01 */
     };
+    const analysis = function (id, status) {
+      return { id: id, review: { status: status }, probe: { text: "Useful pupil explanation." }, options: [], methods: [], self_report_prompts: [], feedback: [] };
+    };
     const full = feedbackReadiness.call(ctx, {
       id: "reviewed-question",
-      analysis: { review: { status: "reviewed" } }
+      analysis: analysis("reviewed-question", "reviewed")
     });
     const provisional = feedbackReadiness.call(ctx, {
       id: "draft-question",
-      analysis: { review: { status: "draft" } }
+      analysis: analysis("draft-question", "draft")
     });
     const pending = feedbackReadiness.call(ctx, {
       id: "missing-question",
@@ -1131,7 +1144,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     V._setFeedbackStatusBadge.call(
       badgeCtx,
       modalBadge,
-      { id: "reviewed-question", analysis: { review: { status: "reviewed" } } },
+      { id: "reviewed-question", analysis: analysis("reviewed-question", "reviewed") },
       "ppq-modal-feedback-status"
     );
     check(/full feedback/i.test(modalBadge.textContent) &&
@@ -1148,6 +1161,34 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the analysis top bar reuses the shared feedback badge instead of duplicating status logic");
 })();
 
+// Source defects and genuine ambiguity are warnings, not withholding. The
+// configurable engine banner appears before answering and is repeated in review.
+(function () {
+  console.log("\n=== source advisory contract ===");
+  const advisory = {
+    title: "Known wording error",
+    message: "Use minimum rather than maximum."
+  };
+  const ctx = {
+    cur: { id: "source-warning" },
+    cfg: { sourceAdvisoryOf: () => advisory },
+    _sourceAdvisory: V._sourceAdvisory,
+    _setSourceAdvisory: V._setSourceAdvisory
+  };
+  const before = makeEl("div");
+  V._setSourceAdvisory.call(ctx, before, ctx.cur);
+  check(before.style.display === "" && /⚠ Known wording error/.test(textOf(before)) &&
+    /Use minimum rather than maximum/.test(textOf(before)),
+    "the amber advisory contains a warning sign, plain title and pupil message before answering");
+  const review = V._sourceAdvisoryEl.call(ctx, ctx.cur);
+  check(!!review && review.classList.contains("ppq-source-advisory-review") &&
+    /Use minimum rather than maximum/.test(textOf(review)),
+    "the same advisory is preserved in the after-answer review");
+  check(extractFn("render").toString().indexOf(".ppq-card > .ppq-source-advisory") >= 0 &&
+    extractFn("_renderInterrogation").toString().indexOf("_sourceAdvisoryEl") >= 0,
+    "the question render and review render both invoke the engine-level advisory hook");
+})();
+
 // The ESAT controls default to the launch-safe in-spec estate, distinguish
 // source from year, and offer a direct finder rather than forcing pupils to
 // navigate several filters just to reach a known paper/question.
@@ -1157,7 +1198,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const specAt = html.indexOf('field: "esat_in_spec"');
   const specConfig = specAt >= 0 ? html.slice(specAt, specAt + 500) : "";
   check(/allLabel:\s*"In spec \+ out of spec"/.test(specConfig) &&
-    /default:\s*"in_spec"/.test(specConfig),
+    /default:\s*presentationBenchmark\s*\?\s*"ALL"\s*:\s*"in_spec"/.test(specConfig),
     "spec filter defaults to In spec and names the combined choice clearly");
   check(/positiveValues:\s*\[\s*"in_spec"\s*\]/.test(specConfig),
     "the in-spec selection is declared as the positive/green filter state");
@@ -1320,7 +1361,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
 
   const html = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
   check(html.indexOf("dist/esat_classification.js") >= 0 &&
-    html.indexOf('dependsOn: "topic_code"') >= 0,
+    html.indexOf('dependsOn: "teaching_topic_key"') >= 0,
     "ESAT page loads the generated classification overlay and wires the dependent filter");
   let inlineSyntaxError = "";
   const inlineScripts = Array.from(html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi));
@@ -1657,8 +1698,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the wide-screen analysis sheet takes most of the screen");
   check(/\.ppq\.ppq-analysis-open\s*\{\s*--ppq-crop-width:\s*97%/.test(css),
     "the shrunken question column still shows its crop at full column width");
-  check(src.indexOf('class: "ppq-iq-things", open: true') >= 0,
-    "Things this question used opens expanded");
+  check(src.indexOf('open: collapse ? false : true') >= 0,
+    "Things this question used remains expanded by default and can collapse in the presentation contract");
   check(extractFn("_appendInsightV2").toString().indexOf("check_prompt") >= 0 &&
     extractFn("_appendSelfReportV2").toString().indexOf("checkprompt") < 0,
     "the check question reads once with the insight, not as a floating orphan");
@@ -2031,7 +2072,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(/progressAxes:/.test(mHtml) && /By family/.test(mHtml) && /By command term/.test(mHtml),
     "IB Maths supplies its performance axes");
   const eHtml = fs.readFileSync(path.join(PROJECT_ROOT, "example", "esat-compare.html"), "utf8");
-  check(/progressAxes:/.test(eHtml) && /By subtopic/.test(eHtml) && /By spec status/.test(eHtml),
+  check(/progressAxes:/.test(eHtml) && /By teaching topic/.test(eHtml) &&
+    /By main family/.test(eHtml) && /By spec status/.test(eHtml),
     "ESAT supplies its performance axes");
   const css = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
   check(css.indexOf(".ppq-qcluster") >= 0 && css.indexOf(".ppq-qdot.untried") >= 0,

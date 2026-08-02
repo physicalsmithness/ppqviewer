@@ -202,6 +202,7 @@ window.PPQViewer = (function () {
     cfg.correctOf = cfg.correctOf || function (q) { return (q.correct_answer || q.answer_key || "").toString(); };
     cfg.metaLine = cfg.metaLine || function (q) { return cfg.idOf(q); };
     cfg.tagsOf = cfg.tagsOf || function () { return []; };
+    cfg.searchTermsOf = cfg.searchTermsOf || function () { return []; };
     cfg.attemptFields = cfg.attemptFields || function () { return {}; };
     cfg.answerUrlOf = cfg.answerUrlOf || function (q) { return q.answer_url || null; };
     cfg.stemUrlOf = cfg.stemUrlOf || function (q) { return q.page_url || null; };
@@ -270,6 +271,24 @@ window.PPQViewer = (function () {
     cfg._hasFeedbackSource = !!(cfg.analysisOf || cfg.feedbackStatusOf);
     cfg.analysisOf = cfg.analysisOf || function () { return null; };
     cfg.feedbackStatusOf = cfg.feedbackStatusOf || null;
+    /* A consumer can flag a defect or ambiguity in the printed source without
+       disabling the question. The same advisory is shown before answering and
+       inside the completed-question review. */
+    cfg.sourceAdvisoryOf = typeof cfg.sourceAdvisoryOf === "function"
+      ? cfg.sourceAdvisoryOf
+      : null;
+    /* Presentation improvements remain opt-in because this engine is shared by
+       consumers with different card and marking journeys. */
+    const prIn = cfg.presentation || {};
+    cfg.presentation = {
+      enabled: !!prIn.enabled,
+      compactMobileFilters: !!prIn.compactMobileFilters,
+      guidedReview: !!prIn.guidedReview,
+      compactAlternativeMethods: !!prIn.compactAlternativeMethods,
+      collapseKnowledgeChecks: !!prIn.collapseKnowledgeChecks,
+      plainGuessLanguage: !!prIn.plainGuessLanguage,
+      plainStatusLabels: !!prIn.plainStatusLabels
+    };
     /* VSAFE-01 (Claude 2026-07-28): content-safety gate. A damaged analysis
        record must not render merely because it exists. `withheld` maps record
        id -> reason (the consumer's explicit suppression list); `heuristics`
@@ -282,6 +301,14 @@ window.PPQViewer = (function () {
       heuristics: csIn.heuristics !== false
     };
     cfg.classificationsOf = cfg.classificationsOf || null;
+    cfg.classificationLabels = Object.assign({
+      relatedFamilies: "Also relevant to",
+      relatedTopics: "Related teaching topics",
+      syllabus: "Fine topic links",
+      techniques: "Ways to solve it",
+      representations: "Question format"
+    }, cfg.classificationLabels || {});
+    cfg.classificationSummaryLabel = cfg.classificationSummaryLabel || "More topic details";
     cfg.questionFinder = !!cfg.questionFinder;
     return cfg;
   };
@@ -333,10 +360,20 @@ window.PPQViewer = (function () {
   Viewer.prototype._buildDom = function () {
     const cfg = this.cfg;
     this.root.classList.add("ppq");
+    if (cfg.presentation.enabled) this.root.classList.add("ppq-presentation");
+    if (cfg.presentation.compactMobileFilters) this.root.classList.add("ppq-compact-mobile-filters");
+    if (cfg.presentation.guidedReview) this.root.classList.add("ppq-guided-review");
     this.root.innerHTML = "";
 
     const header = el("div", { class: "ppq-header" });
     header.appendChild(el("div", { class: "ppq-title" }, esc(cfg.title) + (cfg.versionLabel ? ' <span class="ppq-ver">' + esc(cfg.versionLabel) + "</span>" : "")));
+    if (cfg.presentation.compactMobileFilters) {
+      header.appendChild(el("button", {
+        class: "ppq-filter-toggle",
+        type: "button",
+        ariaExpanded: false
+      }, "Filters and finder"));
+    }
     const filters = el("div", { class: "ppq-filters" });
     if (cfg.headerButtons) cfg.headerButtons.forEach((hb, i) => {
       const b = el("button", { class: "ppq-btn-mini ppq-headbtn", "data-hb": i }, esc(hb.label));
@@ -350,14 +387,18 @@ window.PPQViewer = (function () {
            other two from the dropdown"). f.default lists the pre-ticked values. */
         this._multiSel[i] = f.default ? new Set(f.default.map(String)) : null;
         const wrap = el("div", { class: "ppq-multifilter", "data-fidx": i });
+        if (f.label) wrap.appendChild(el("span", { class: "ppq-filter-label" }, esc(f.label)));
         wrap.appendChild(el("button", { class: "ppq-multi-btn", type: "button" }));
         wrap.appendChild(el("div", { class: "ppq-multi-panel", style: "display:none;" }));
         filters.appendChild(wrap);
         return;
       }
-      const sel = el("select", { class: "ppq-select", "data-fidx": i });
+      const wrap = el("label", { class: "ppq-filter-control" });
+      if (f.label) wrap.appendChild(el("span", { class: "ppq-filter-label" }, esc(f.label)));
+      const sel = el("select", { class: "ppq-select", "data-fidx": i, ariaLabel: f.label || f.field });
       sel.appendChild(el("option", { value: "ALL" }, esc(f.allLabel || ("All " + (f.label || f.field)))));
-      filters.appendChild(sel);
+      wrap.appendChild(sel);
+      filters.appendChild(wrap);
     });
     if (cfg.questionFinder) {
       const finder = el("div", { class: "ppq-finder" });
@@ -424,6 +465,11 @@ window.PPQViewer = (function () {
     card.appendChild(el("div", { class: "ppq-meta" },
       '<span class="ppq-qid"></span><span class="ppq-feedback-status"></span>' +
       '<span class="ppq-tags"></span><span class="ppq-classification-details"></span>'));
+    card.appendChild(el("div", {
+      class: "ppq-source-advisory",
+      role: "note",
+      style: "display:none;"
+    }));
     /* QoderWork 2026-07-23: Previous at the TOP — Smith: "there's often a lot of
        white space at the bottom of these questions." The bottom controls stay too. */
     card.appendChild(el("button", { class: "ppq-btn ppq-prev ppq-prev-top", type: "button" }, "← Previous"));
@@ -637,6 +683,8 @@ window.PPQViewer = (function () {
     const firstFill = sel.dataset.ppqFilled !== "1";
     const oldValue = sel.value || "ALL";
     const parentValue = this._parentFilterValue(f);
+    const wrap = sel.parentNode && sel.parentNode.classList &&
+      sel.parentNode.classList.contains("ppq-filter-control") ? sel.parentNode : null;
     sel.innerHTML = "";
     sel.appendChild(el("option", { value: "ALL" }, esc(f.allLabel || ("All " + (f.label || f.field)))));
 
@@ -644,10 +692,12 @@ window.PPQViewer = (function () {
       sel.value = "ALL";
       sel.disabled = true;
       sel.style.display = "none";
+      if (wrap) wrap.style.display = "none";
       return;
     }
     sel.disabled = false;
     sel.style.display = "";
+    if (wrap) wrap.style.display = "";
 
     let source = this.questions;
     if (f.dependsOn && parentValue !== "ALL") {
@@ -771,6 +821,15 @@ window.PPQViewer = (function () {
 
   Viewer.prototype._wireControls = function () {
     const self = this;
+    const filterToggle = this.q(".ppq-filter-toggle");
+    if (filterToggle) {
+      filterToggle.addEventListener("click", () => {
+        const header = self.q(".ppq-header");
+        const open = header.classList.toggle("ppq-mobile-filters-open");
+        filterToggle.ariaExpanded = String(open);
+        filterToggle.textContent = open ? "Hide filters" : "Filters and finder";
+      });
+    }
     this.qa(".ppq-select").forEach((s) => {
       if (s.classList.contains("ppq-order")) return;
       s.addEventListener("change", () => {
@@ -934,6 +993,7 @@ window.PPQViewer = (function () {
       q.topic_code,
       q.topic,
       (cfg.tagsOf(q) || []).join(" "),
+      (cfg.searchTermsOf(q) || []).join(" "),
       classifications
     ].filter((v) => v != null && String(v) !== "").join(" ").toLowerCase();
   };
@@ -1011,6 +1071,13 @@ window.PPQViewer = (function () {
     this.goToId(id);
     const card = this.q(".ppq-card");
     if (card) {
+      const header = this.q(".ppq-header");
+      const filterToggle = this.q(".ppq-filter-toggle");
+      if (header) header.classList.remove("ppq-mobile-filters-open");
+      if (filterToggle) {
+        filterToggle.ariaExpanded = "false";
+        filterToggle.textContent = "Filters and finder";
+      }
       card.scrollIntoView({ behavior: "smooth", block: "start" });
       card.classList.remove("ppq-question-fired");
       void card.offsetWidth;
@@ -1053,12 +1120,22 @@ window.PPQViewer = (function () {
      is revealed). Smith: "but reword." — simpler, more natural language. */
   Viewer.prototype._guessPrompt = function (stage) {
     const d = this.cfg.guessDefaults && this.cfg.guessDefaults[stage];
+    if (this.cfg.presentation && this.cfg.presentation.plainGuessLanguage) {
+      if (stage === "pre_verdict") return "Tick any other answers you seriously considered. Leave just your answer selected if you were certain.";
+      if (stage === "pre_answer") return "Tick the answers you are choosing between.";
+      return "Which other answers did you seriously consider?";
+    }
     if (stage === "pre_verdict") return (d && d.candidate_prompt) || "Tick the options you think it could be.";
     if (stage === "pre_answer") return (d && d.candidate_prompt) || "Tick the options you think it could be.";
     return (d && d.candidate_prompt) || "Which options were still in the running?";
   };
   Viewer.prototype._guessLabel = function (stage) {
     const d = this.cfg.guessDefaults && this.cfg.guessDefaults[stage];
+    if (this.cfg.presentation && this.cfg.presentation.plainGuessLanguage) {
+      if (stage === "pre_verdict") return "How certain were you?";
+      if (stage === "pre_answer") return "I am choosing between answers";
+      return "I was choosing between answers";
+    }
     if (stage === "pre_verdict") return (d && d.label) || "Want to declare a bit of a guess?";
     if (stage === "pre_answer") return (d && d.label) || "I'm guessing";
     return (d && d.label) || "Actually, it was a guess";
@@ -1156,8 +1233,11 @@ window.PPQViewer = (function () {
     });
 
     const actions = el("div", { class: "ppq-gpick-actions" });
-    const done = el("button", { class: "ppq-gpick-done", type: "button" }, "Done");
-    const skip = el("button", { class: "ppq-gpick-skip", type: "button" }, "Skip");
+    const plainGuess = this.cfg.presentation && this.cfg.presentation.plainGuessLanguage;
+    const done = el("button", { class: "ppq-gpick-done", type: "button" },
+      plainGuess ? "Save uncertainty" : "Done");
+    const skip = el("button", { class: "ppq-gpick-skip", type: "button" },
+      plainGuess ? "I was certain" : "Skip");
     actions.appendChild(done);
     actions.appendChild(skip);
     panel.appendChild(actions);
@@ -1169,7 +1249,12 @@ window.PPQViewer = (function () {
     function submitGuess() {
       if (settled) return true;
       const c = checked();
-      if (c.length < MIN_OPTIONS) { showMsg("Pick at least " + MIN_OPTIONS + " options, or Skip."); return false; }
+      if (c.length < MIN_OPTIONS) {
+        showMsg(plainGuess
+          ? "Tick at least two answers, or choose “I was certain”."
+          : ("Pick at least " + MIN_OPTIONS + " options, or Skip."));
+        return false;
+      }
       const payload = {
         guess_declared: true,
         declared_stage: opts.stage,
@@ -1615,6 +1700,16 @@ window.PPQViewer = (function () {
     const s = this._progressStats();
     const page = el("div", { class: "ppq-progress" });
     page.appendChild(el("div", { class: "ppq-progress-title" }, "My progress"));
+    const appendProgressTable = function (table) {
+      const scroll = el("div", {
+        class: "ppq-progress-table-scroll",
+        role: "region",
+        tabIndex: 0,
+        ariaLabel: "Progress table; scroll sideways for more columns"
+      });
+      scroll.appendChild(table);
+      page.appendChild(scroll);
+    };
 
     function td(text, style, cls) {
       return el("td", { style: style || "", class: cls || "" }, text == null ? "—" : String(text));
@@ -1671,7 +1766,7 @@ window.PPQViewer = (function () {
           tbody.appendChild(tr);
         });
         table.appendChild(tbody);
-        page.appendChild(table);
+        appendProgressTable(table);
       }
 
       /* VF-14r: one table per configured axis. Each category carries its
@@ -1724,7 +1819,7 @@ window.PPQViewer = (function () {
           tbody.appendChild(tr);
         });
         table.appendChild(tbody);
-        page.appendChild(table);
+        appendProgressTable(table);
         if (axis.rows.length > shown.length) {
           page.appendChild(el("div", { class: "ppq-progress-more" },
             "Showing the " + shown.length + " most-practised of " + axis.rows.length + " categories."));
@@ -1747,7 +1842,7 @@ window.PPQViewer = (function () {
           tbody.appendChild(tr);
         });
         table.appendChild(tbody);
-        page.appendChild(table);
+        appendProgressTable(table);
       }
 
       const recentAttempts = ((this.store || {}).attempts || []).slice(-40).reverse();
@@ -2191,6 +2286,10 @@ window.PPQViewer = (function () {
       [/\d\s+\?\s+\d/, "'?' between numbers (lost operator)"],
       [/\?\?+/, "repeated '?' (lost maths/nuclide notation)"],
       [/[A-Za-z0-9]\?s\b/, "'?s' (lost apostrophe)"],
+      [/\u202f{2,}/, "adjacent narrow spaces (missing mathematical value or unit)"],
+      [/(?:^|[ \t])\u202f(?:[ \t]|$)/, "standalone narrow space (missing mathematical value or unit)"],
+      [/\{\{[^{}\r\n]{1,80}\}\}/, "unreplaced template placeholder"],
+      [/\b(?:TODO|TBD|FIXME|PLACEHOLDER)\b/i, "unreplaced authoring placeholder"],
       [/â€|Ã—|Ã¢/, "UTF-8 mojibake"]
     ];
     const SKIP_KEYS = /crop|url|src|image|path|file|href/i;
@@ -2219,6 +2318,66 @@ window.PPQViewer = (function () {
     return found;
   }
 
+  /* Presence is not readiness. A record must match a supported structural
+     shape and contain pupil-facing analysis before it can outrank the safe
+     generic review shell. */
+  function analysisRecordResolution(rec) {
+    const reasons = [];
+    if (!rec || typeof rec !== "object" || Array.isArray(rec)) {
+      return { resolvable: false, kind: "unknown", reasons: ["record is not an object"] };
+    }
+    const schema = String(rec.schema_version || "");
+    const looksV2 = /^2(?:\.|$)/.test(schema) || !!rec.identity || !!rec.pupil_analysis;
+    const arrayFields = ["options", "methods", "self_report_prompts", "feedback"];
+    function nonEmpty(value) { return typeof value === "string" && value.trim().length > 0; }
+    function containsText(value) {
+      if (nonEmpty(value)) return true;
+      if (Array.isArray(value)) return value.some(containsText);
+      if (!value || typeof value !== "object") return false;
+      return Object.keys(value).some(function (key) { return containsText(value[key]); });
+    }
+    if (looksV2) {
+      if (!rec.identity || typeof rec.identity !== "object" || Array.isArray(rec.identity)) {
+        reasons.push("deep-v2 identity block is missing");
+      } else {
+        if (!nonEmpty(rec.identity.id)) reasons.push("deep-v2 identity.id is missing");
+        if (!nonEmpty(rec.identity.correct_answer)) reasons.push("deep-v2 identity.correct_answer is missing");
+      }
+      if (!rec.pupil_analysis || typeof rec.pupil_analysis !== "object" || Array.isArray(rec.pupil_analysis)) {
+        reasons.push("deep-v2 pupil_analysis block is missing");
+      }
+      arrayFields.forEach(function (key) {
+        if (rec[key] != null && !Array.isArray(rec[key])) reasons.push("deep-v2 " + key + " must be an array");
+      });
+      const requirements = rec.requirements || {};
+      const pupilFacing = [
+        rec.pupil_analysis,
+        (Array.isArray(rec.methods) ? rec.methods : []).map(function (method) { return method && [method.title, method.pupil_steps, method.useful_when]; }),
+        (Array.isArray(rec.self_report_prompts) ? rec.self_report_prompts : []).map(function (prompt) { return prompt && prompt.prompt; }),
+        (Array.isArray(rec.feedback) ? rec.feedback : []).map(function (feedback) { return feedback && feedback.text; }),
+        (Array.isArray(requirements.knowledge_atoms) ? requirements.knowledge_atoms : []).map(function (atom) { return atom && atom.statement; }),
+        (Array.isArray(requirements.technique_atoms) ? requirements.technique_atoms : []).map(function (atom) { return atom && atom.statement; }),
+        (Array.isArray(requirements.principles) ? requirements.principles : []).map(function (principle) { return principle && principle.statement; }),
+        (Array.isArray(requirements.post_question_checks) ? requirements.post_question_checks : []).map(function (check) { return check && check.prompt; })
+      ];
+      if (!containsText(pupilFacing)) reasons.push("deep-v2 record has no pupil-facing analysis text");
+      return { resolvable: reasons.length === 0, kind: "deep-v2", reasons: reasons };
+    }
+    if (!nonEmpty(rec.id)) reasons.push("legacy record id is missing");
+    arrayFields.forEach(function (key) {
+      if (rec[key] != null && !Array.isArray(rec[key])) reasons.push("legacy " + key + " must be an array");
+    });
+    const legacyPupilFacing = [
+      rec.probe && rec.probe.text,
+      (Array.isArray(rec.methods) ? rec.methods : []).map(function (method) { return method && [method.title, method.description, method.pupil_steps, method.useful_when]; }),
+      (Array.isArray(rec.self_report_prompts) ? rec.self_report_prompts : []).map(function (prompt) { return prompt && prompt.prompt; }),
+      (Array.isArray(rec.feedback) ? rec.feedback : []).map(function (feedback) { return feedback && feedback.text; }),
+      (Array.isArray(rec.options) ? rec.options : []).map(function (option) { return option && option.error_path; })
+    ];
+    if (!containsText(legacyPupilFacing)) reasons.push("legacy record has no pupil-facing analysis text");
+    return { resolvable: reasons.length === 0, kind: "legacy", reasons: reasons };
+  }
+
   /* VSAFE-01: is this record safe to show? Precedence: a safety state declared
      by the content build (`content_safety`), then the consumer's withheld list,
      then the damage heuristics. Memoised per record id — records are static for
@@ -2240,6 +2399,12 @@ window.PPQViewer = (function () {
     }
     if (id && cs.withheld && Object.prototype.hasOwnProperty.call(cs.withheld, id)) {
       reasons.push("withheld by consumer: " + (cs.withheld[id] || "no reason recorded"));
+    }
+    const resolution = analysisRecordResolution(rec);
+    if (!resolution.resolvable) {
+      resolution.reasons.forEach(function (reason) {
+        reasons.push("unresolvable " + resolution.kind + " record: " + reason);
+      });
     }
     if (cs.heuristics) {
       const scan = scanAnalysisRecordForDamage(rec);
@@ -2296,15 +2461,15 @@ window.PPQViewer = (function () {
     if (rec && /^(reviewed|full|full_feedback|full_review|complete|completed)$/.test(raw)) {
       return {
         code: "full",
-        label: "Full feedback",
-        title: "This question has detailed feedback that has completed review."
+        label: (this.cfg.presentation && this.cfg.presentation.plainStatusLabels) ? "Detailed help" : "Full feedback",
+        title: "This question has a detailed checked explanation."
       };
     }
     if (rec && !/^(pending|feedback_pending|none|missing|not_started)$/.test(raw)) {
       return {
         code: "provisional",
-        label: "Provisional feedback",
-        title: "This question has a useful first-pass solution and prompts; it has not completed review."
+        label: (this.cfg.presentation && this.cfg.presentation.plainStatusLabels) ? "Guided help" : "Provisional feedback",
+        title: "This question has a guided explanation and prompts."
       };
     }
     return {
@@ -2328,6 +2493,42 @@ window.PPQViewer = (function () {
     node.title = readiness.title || "";
     node.style.display = "";
     return readiness;
+  };
+
+  Viewer.prototype._sourceAdvisory = function (q) {
+    const hook = this.cfg.sourceAdvisoryOf;
+    if (typeof hook !== "function") return null;
+    let raw = null;
+    try { raw = hook(q || this.cur); } catch (_) { return null; }
+    if (!raw) return null;
+    if (typeof raw === "string") raw = { message: raw };
+    const message = String(raw.message || raw.text || "").trim();
+    if (!message) return null;
+    return {
+      title: String(raw.title || "Source advisory").trim() || "Source advisory",
+      message: message
+    };
+  };
+
+  Viewer.prototype._setSourceAdvisory = function (node, q) {
+    if (!node) return null;
+    node.innerHTML = "";
+    node.style.display = "none";
+    const advisory = this._sourceAdvisory(q);
+    if (!advisory) return null;
+    const title = el("strong", { class: "ppq-source-advisory-title" });
+    title.textContent = "⚠ " + advisory.title;
+    const message = el("span", { class: "ppq-source-advisory-message" });
+    message.textContent = advisory.message;
+    node.appendChild(title);
+    node.appendChild(message);
+    node.style.display = "";
+    return advisory;
+  };
+
+  Viewer.prototype._sourceAdvisoryEl = function (q) {
+    const node = el("div", { class: "ppq-source-advisory ppq-source-advisory-review", role: "note" });
+    return this._setSourceAdvisory(node, q) ? node : null;
   };
 
   Viewer.prototype.render = function (explicitQ) {
@@ -2364,6 +2565,7 @@ window.PPQViewer = (function () {
         (cfg.modules.postQuestionReview && this._lastAttemptFor(this.cur)) ? "inline-block" : "none";
     }
     this._setFeedbackStatusBadge(this.q(".ppq-feedback-status"), this.cur);
+    this._setSourceAdvisory(this.q(".ppq-card > .ppq-source-advisory"), this.cur);
     /* In/out-of-spec status remains visible and semantically coloured. */
     this.q(".ppq-tags").innerHTML = (cfg.tagsOf(this.cur) || []).map((t) => {
       const text = String(t);
@@ -2381,11 +2583,7 @@ window.PPQViewer = (function () {
       if (groups) {
         const sections = [];
         let total = 0;
-        const labels = {
-          syllabus: "Syllabus links",
-          techniques: "Techniques",
-          representations: "Representations"
-        };
+        const labels = cfg.classificationLabels || {};
         Object.keys(labels).forEach((key) => {
           const values = (Array.isArray(groups[key]) ? groups[key] : [groups[key]])
             .map((value) => value == null ? "" : String(value)).filter(Boolean);
@@ -2396,7 +2594,7 @@ window.PPQViewer = (function () {
         });
         if (sections.length) {
           classificationDetails.innerHTML =
-            '<details class="ppq-classification-more"><summary>More classifications' +
+            '<details class="ppq-classification-more"><summary>' + esc(cfg.classificationSummaryLabel) +
             (total ? " (" + total + ")" : "") + '</summary><div class="ppq-classification-panel">' +
             sections.join("") + "</div></details>";
         }
@@ -3460,6 +3658,8 @@ window.PPQViewer = (function () {
     const isV2 = this._isV2(rec);
     const reviewMode = this._analysisReviewMode();
     const iq = el("div", { class: "ppq-iq" });
+    const sourceAdvisory = this._sourceAdvisoryEl ? this._sourceAdvisoryEl(this.cur) : null;
+    if (sourceAdvisory) iq.appendChild(sourceAdvisory);
 
     /* --- QoderWork 2026-07-23 (analyst request #4): reviewer-only analysis strip.
        Visible only with ?review in the URL. Distinguishes "the analysts ignored
@@ -3595,16 +3795,35 @@ window.PPQViewer = (function () {
       this._appendErrorTaxonomy(restPage);
     }
 
+    let finishTarget = restPage;
     if (isV2) {
+      let diagnosisTarget = restPage;
+      let methodsTarget = restPage;
+      let checksTarget = restPage;
+      if (cfg.presentation && cfg.presentation.guidedReview) {
+        diagnosisTarget = el("section", { class: "ppq-iq-section ppq-iq-section-diagnosis", ariaLabel: "What to notice" });
+        diagnosisTarget.appendChild(el("h2", { class: "ppq-iq-section-title" }, "What to notice"));
+        restPage.appendChild(diagnosisTarget);
+        methodsTarget = el("section", { class: "ppq-iq-section ppq-iq-section-methods", ariaLabel: "Ways to solve it" });
+        methodsTarget.appendChild(el("h2", { class: "ppq-iq-section-title" }, "Ways to solve it"));
+        methodsTarget.appendChild(el("p", { class: "ppq-iq-section-intro" }, "Start with the first route. Open another route only if it helps."));
+        restPage.appendChild(methodsTarget);
+        checksTarget = el("section", { class: "ppq-iq-section ppq-iq-section-checks", ariaLabel: "Check your understanding" });
+        checksTarget.appendChild(el("h2", { class: "ppq-iq-section-title" }, "Check your understanding"));
+        restPage.appendChild(checksTarget);
+        finishTarget = el("section", { class: "ppq-iq-section ppq-iq-section-finish", ariaLabel: "Reflect and finish" });
+        finishTarget.appendChild(el("h2", { class: "ppq-iq-section-title" }, "Reflect and finish"));
+        restPage.appendChild(finishTarget);
+      }
       /* The pupil sees only the diagnostic question for the option they chose.
          The full reconstructed distractor table is available in review mode. */
-      restPage.appendChild(el("div", { class: "ppq-iq-selected-diagnostic" }));
+      diagnosisTarget.appendChild(el("div", { class: "ppq-iq-selected-diagnostic" }));
       /* --- 3. the pupil insight (first_notice / why_it_matters / next_move) --- */
-      this._appendInsightV2(restPage, rec);
+      this._appendInsightV2(diagnosisTarget, rec);
       /* --- 4. methods + the prompts that sit beside them (handoff #2 + #4) --- */
-      const renderedPrompts = this._appendMethodsV2(restPage, rec);
+      const renderedPrompts = this._appendMethodsV2(methodsTarget, rec);
       /* --- 5. remaining self-report: orphan prompts + knowledge checks --- */
-      this._appendSelfReportV2(restPage, rec, renderedPrompts);
+      this._appendSelfReportV2(checksTarget, rec, renderedPrompts);
     } else {
       if (hasAuthoredAnalysis) {
         /* legacy analysis-store path: probe + free-prose methods */
@@ -3619,10 +3838,10 @@ window.PPQViewer = (function () {
     }
     /* This belongs to the attempt-feedback shell, not to any analysis schema.
        Show it exactly once for v2, legacy and no-analysis questions alike. */
-    this._appendFreeformReflectionV2(restPage, rec);
+    this._appendFreeformReflectionV2(finishTarget, rec);
 
     /* --- feedback lands here (reacts to the self-report + guess declaration) --- */
-    restPage.appendChild(el("div", { class: "ppq-iq-feedback" }));
+    finishTarget.appendChild(el("div", { class: "ppq-iq-feedback" }));
 
     /* --- the 1-6 self-rating, INSIDE the pop-up (was "back outside") --- */
     const rate = el("div", { class: "ppq-iq-rate" });
@@ -3657,7 +3876,7 @@ window.PPQViewer = (function () {
       iqNext.style.display = "inline-block"; iqNext.focus();
     });
     rate.appendChild(iqNext);
-    restPage.appendChild(rate);
+    finishTarget.appendChild(rate);
 
     /* --- VF-07 (Claude 2026-07-28): the flag is REAL now — persisted per
        question in the store and surfaced through the header's Flagged filter.
@@ -4124,9 +4343,19 @@ window.PPQViewer = (function () {
          forms ONE visually continuous card with it — read the steps, answer the
          question about them in the same place. */
       if ((afterMethod[i] || []).length || (perMethodAsks[i] || []).length) block.classList.add("ppq-iq-method-joined");
-      iq.appendChild(block);
-      (perMethodAsks[i] || []).forEach((p) => iq.appendChild(self._promptMethodAskV2(p, m)));
-      (afterMethod[i] || []).forEach((p) => iq.appendChild(self._promptBlockV2(p, "method", true)));
+      let methodTarget = iq;
+      if (i > 0 && this.cfg.presentation && this.cfg.presentation.compactAlternativeMethods) {
+        const disclosure = el("details", { class: "ppq-iq-method-disclosure", "data-method-id": m.id || "" });
+        disclosure.appendChild(el("summary", null,
+          "Another " + (m.presentation_kind === "independent_check" ? "check" : "method") +
+          ": " + esc(m.title || m.id)));
+        methodTarget = el("div", { class: "ppq-iq-method-disclosure-body" });
+        disclosure.appendChild(methodTarget);
+        iq.appendChild(disclosure);
+      }
+      methodTarget.appendChild(block);
+      (perMethodAsks[i] || []).forEach((p) => methodTarget.appendChild(self._promptMethodAskV2(p, m)));
+      (afterMethod[i] || []).forEach((p) => methodTarget.appendChild(self._promptBlockV2(p, "method", true)));
     });
 
     return rendered;
@@ -4353,6 +4582,7 @@ window.PPQViewer = (function () {
     return [
       ["secure_before_question", "Known"],
       ["knew_but_did_not_retrieve", "Known, but did not think of it"],
+      ["knew_but_did_not_need", "Known, but did not need it"],
       ["sketchy_on_this", "Sketchy"],
       ["still_unclear", "Not known"]
     ];
@@ -4413,8 +4643,10 @@ window.PPQViewer = (function () {
     if (!items.length) return;
     /* VF-13 (Smith 2026-07-29): open by default — "things this question used
        should be expanded"; still collapsible. */
-    const details = el("details", { class: "ppq-iq-things", open: true });
-    details.appendChild(el("summary", null, "Things this question used"));
+    const collapse = this.cfg.presentation && this.cfg.presentation.collapseKnowledgeChecks;
+    const details = el("details", { class: "ppq-iq-things", open: collapse ? false : true });
+    details.appendChild(el("summary", null,
+      collapse ? ("Knowledge and techniques (" + items.length + ")") : "Things this question used"));
     details.appendChild(el("div", { class: "ppq-iq-things-intro" },
       "Known is shown as the starting point. Change only the things that were not available when you needed them."));
     const rows = el("div", { class: "ppq-iq-things-rows" });
@@ -4644,6 +4876,7 @@ window.PPQViewer = (function () {
     const settled = {
       secure_before_question: "Known",
       knew_but_did_not_retrieve: "Known, but did not think of it",
+      knew_but_did_not_need: "Known, but did not need it",
       sketchy_on_this: "Sketchy",
       still_unclear: "Not known",
       yes_that_was_it: "Yes, that was it",
@@ -5115,14 +5348,17 @@ window.PPQViewer = (function () {
     const parentLabel = representative
       ? cfg.groupLabel(representative)
       : ((facet.parent.friendlyLabels && facet.parent.friendlyLabels[facet.parentValue]) || facet.parentValue);
-    if (title) title.textContent = parentLabel + " subtopics";
-    if (subtitle) subtitle.textContent = "Click a family to practise it; click it again to show the whole topic.";
+    const facetNoun = filter.facetNoun || "subtopics";
+    if (title) title.textContent = parentLabel + " " + facetNoun;
+    if (subtitle) subtitle.textContent = filter.facetSubtitle ||
+      ("Click a " + facetNoun.replace(/s$/, "") + " to practise it; click it again to show the whole topic.");
 
     const active = childSel.value || "ALL";
     let html = '<div class="ppq-dash-path"><button class="ppq-dash-back" type="button">All topics</button>' +
       '<span aria-hidden="true">&rsaquo;</span><strong>' + esc(parentLabel) + "</strong></div>" +
-      '<div class="ppq-dash-overlap-note"><b>' + source.length +
-      " questions.</b> A question may appear in more than one subtopic, so the counts below can overlap.</div>";
+      '<div class="ppq-dash-overlap-note"><b>' + source.length + " questions.</b> " +
+      esc(filter.facetNote || "A question may appear in more than one subtopic, so the counts below can overlap.") +
+      "</div>";
     if (active !== "ALL") {
       html += '<button class="ppq-facet-clear" type="button">Show all ' + esc(parentLabel) + "</button>";
     }
@@ -5133,7 +5369,8 @@ window.PPQViewer = (function () {
           active: active === value
         })).join("");
     } else {
-      html += '<div class="ppq-facet-empty">No reviewed subtopics are available for this topic yet.</div>';
+      html += '<div class="ppq-facet-empty">No reviewed ' + esc(facetNoun) +
+        " are available for this topic yet.</div>";
     }
     content.className = "ppq-dash-content ppq-dash-facet-content";
     content.innerHTML = html;

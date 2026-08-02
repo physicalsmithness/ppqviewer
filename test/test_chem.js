@@ -13,7 +13,9 @@ const { JSDOM } = require("jsdom");
 const fs = require("fs");
 const path = require("path");
 const PV = path.join(__dirname, "..");
-const CHEM_DATA = path.join(PV, "..", "chemistrydriller", "ppqs.js");
+const CHEM_ROOT = process.env.CHEMISTRYDRILLER_ROOT ||
+  "C:\\Claude (not on Gdrive, nor OneDrive)\\chemistrydriller";
+const CHEM_DATA = path.join(CHEM_ROOT, "ppqs.js");
 
 const dom = new JSDOM(`<!doctype html><html><body><div id="ppq-root"></div></body></html>`,
   { runScripts: "outside-only", pretendToBeVisual: true, url: "https://localhost/" });

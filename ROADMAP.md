@@ -38,10 +38,10 @@ shows Solution pending. Do not use the old 46/692/0 roadmap figures.
   _(2026-07-28, engine v0.4.0: `contentSafety` config + `_contentSafety` gate;
   withheld renders the generic shell, badge says Solution pending, `?review`
   shows the reason.)_
-- [x] Suppress the known damaged records until repaired. _(Seven, not five: the
-  damage scan found `esat_engaa_2019_s1_Q12` and `esat_nsaa_2019_s1_Q30` beyond
-  the RS-01 list; all pinned in `example\esat-compare.html`, reported to Codex
-  in `analysis_v2\VIEWER_DAMAGE_REPORT_2026-07-28.md`.)_
+- [x] Suppress the known damaged records until repaired. _(Twelve are pinned in
+  `example\esat-compare.html`: the RS-01 five plus seven deterministic
+  viewer-release findings. Questions remain playable; only damaged guided
+  explanation content is suppressed.)_
 - [x] Test readiness precedence: unsafe or missing content cannot show Full or
   Provisional. _(2026-07-28: `test/test_content_safety.js`, 70 assertions, a
   sync publish gate; 281-suite still green. Post-gate public estate:
@@ -50,13 +50,18 @@ shows Solution pending. Do not use the old 46/692/0 roadmap figures.
   the engine at render time and swept across the full bundle by the safety
   suite on every sync. Placeholder/missing-value patterns still wanted once
   real examples exist — kept below.)_
-- [ ] Add unreplaced-placeholder and missing-value/unit checks when the
-  analysis project can characterise them (VSAFE-04 residue).
+- [x] Add unreplaced-placeholder and missing-value/unit checks. _(The release
+  scan covers narrow-space missing values/units, authoring placeholders and the
+  earlier damaged-notation signatures across all 720 records.)_
 - [x] Remove, isolate or prove unreachable the legacy pill/strikethrough option
   presentation (VSAFE-03). _(2026-07-28, v0.5.0: pill CSS deleted; legacy
   eliminations render through the deep-v2 letter rail; suite asserts no pill
   classes or struck-through text can return.)_
-- [ ] Run representative desktop and 320 px interaction checks.
+- [x] Run representative desktop and 320 px interaction checks on the exact
+  assembled integration preview. _(2026-08-03: local-only build
+  `f13c2ea7d3657643`; eight-question benchmark checked at 1280 x 900 and
+  320 x 800 with no horizontal overflow, undersized visible controls or browser
+  errors. This is release preparation only; it was not deployed.)_
 - [ ] Verify the exact public build and asset identities after deployment.
 
 Exit: unsafe content cannot render and every readiness badge describes the

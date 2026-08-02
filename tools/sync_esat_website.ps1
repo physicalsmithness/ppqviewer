@@ -61,6 +61,7 @@ $SourceHtml = Join-Path $ProjectRoot "example\esat-compare.html"
 $LoginJs = Join-Path $ProjectRoot "example\ppq-login.js"
 $PresentationTest = Join-Path $ProjectRoot "test\verify_analysis_presentation.js"
 $ContentSafetyTest = Join-Path $ProjectRoot "test\test_content_safety.js"
+$CatalogueIntegrationTest = Join-Path $ProjectRoot "test\test_categorisation_integration.js"
 
 $CatalogueJs = Join-Path $EsatPrepRoot "app\data\esat_catalogue.js"
 $LegacyAnalysisRoot = Join-Path $EsatPrepRoot "data\analysis"
@@ -118,6 +119,7 @@ Write-Host ""
     @{ Path = $LoginJs; Label = "Login module" },
     @{ Path = $PresentationTest; Label = "Analysis presentation test" },
     @{ Path = $ContentSafetyTest; Label = "Content-safety test (VSAFE-01/02)" },
+    @{ Path = $CatalogueIntegrationTest; Label = "ESAT catalogue integration test" },
     @{ Path = $CatalogueJs; Label = "ESAT catalogue" },
     @{ Path = $LegacyAnalysisRoot; Label = "Legacy analysis folder" },
     @{ Path = $CropRoot; Label = "Question crop folder" },
@@ -233,7 +235,9 @@ $AnalysisHash = Get-ShortHash -LiteralPath $AnalysisBundle
 $ClassificationHash = Get-ShortHash -LiteralPath $ClassificationBundle
 $CatalogueHash = Get-ShortHash -LiteralPath $CatalogueJs
 $LoginHash = Get-ShortHash -LiteralPath $LoginJs
-$BuildId = $EngineHash.Substring(0, 4) + $AnalysisHash.Substring(0, 4) + $ClassificationHash.Substring(0, 4)
+$SourceHtmlHash = Get-ShortHash -LiteralPath $SourceHtml
+$BuildId = $EngineHash.Substring(0, 4) + $AnalysisHash.Substring(0, 4) +
+    $ClassificationHash.Substring(0, 4) + $SourceHtmlHash.Substring(0, 4)
 
 $Html = [System.IO.File]::ReadAllText($SourceHtml)
 $RequiredReplacements = @(
@@ -269,9 +273,10 @@ $Banner = @(
     '  Do not hand-edit this deployed index; run SYNC_ESAT_WEBSITE.cmd.'
     '  ============================================================ -->'
 ) -join "`r`n"
-$Html = $Html.Replace("<!DOCTYPE html>", $Banner + "`r`n<!DOCTYPE html>")
+$Html = [regex]::Replace($Html, '<!doctype html>', $Banner + "`r`n<!doctype html>", 'IgnoreCase')
 $HeadReplacement = '<head>' + "`r`n" +
     '  <meta name="ppq-build" content="' + $BuildId + '">' + "`r`n" +
+    '  <meta name="ppq-source-html" content="' + $SourceHtmlHash + '">' + "`r`n" +
     '  <meta name="ppq-maintainer" content="Codex">'
 $Html = $Html.Replace(
     "<head>",
@@ -282,6 +287,7 @@ $DistIndex = Join-Path $DistRoot "index.html"
 $DeployIndex = Join-Path $DeployRoot "index.html"
 Write-Utf8NoBom -LiteralPath $DistIndex -Content $Html
 Copy-ExactFile -Source $DistIndex -Destination $DeployIndex
+$IndexHash = Get-ShortHash -LiteralPath $DistIndex
 
 $RecordCount = (Select-String -LiteralPath $AnalysisBundle -SimpleMatch -Pattern '"identity": {').Count
 $ClassificationPrefix = "window.ESAT_CLASSIFICATION = "
@@ -306,6 +312,9 @@ $BuildInfo = [ordered]@{
     analysis_sha256_12 = $AnalysisHash
     classification_sha256_12 = $ClassificationHash
     catalogue_sha256_12 = $CatalogueHash
+    login_sha256_12 = $LoginHash
+    source_html_sha256_12 = $SourceHtmlHash
+    index_sha256_12 = $IndexHash
     source_analysis = "PaperDatabases/Esat Categorisation/analysis_v2"
 }
 $BuildInfoJson = $BuildInfo | ConvertTo-Json
@@ -323,6 +332,8 @@ if ($LASTEXITCODE -ne 0) { throw "Deployed classification JavaScript syntax chec
 if ($LASTEXITCODE -ne 0) { throw "Analysis presentation acceptance test failed." }
 & node $ContentSafetyTest
 if ($LASTEXITCODE -ne 0) { throw "Content-safety test failed (VSAFE-01/02): do not publish." }
+& node $CatalogueIntegrationTest --analysis-root $AnalysisRoot --esat-root $EsatPrepRoot
+if ($LASTEXITCODE -ne 0) { throw "ESAT catalogue integration test failed: do not publish." }
 
 Write-Host "[7/7] Website prepared for GitHub Desktop." -ForegroundColor Green
 Write-Host ""

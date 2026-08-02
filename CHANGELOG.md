@@ -2,6 +2,31 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-03 — ESAT safety, advisories, presentation and teaching catalogue reconciled locally
+
+- Reconciled the isolated ESAT work onto main `f48abc3` without replacing the
+  v0.18.x card composition, printed-page/crop work, IB Maths part/mark behavior,
+  chemistry auto-open behavior or current sync routing.
+- Content readiness now requires a valid, resolvable analysis record. Twelve
+  damaged guided explanations are explicitly suppressed while questions remain
+  playable through the generic review shell.
+- Added the configurable amber source-advisory contract and the three approved
+  ESAT advisories, preserved before answering and after answering.
+- Added the opt-in eight-question presentation benchmark, guided review sections,
+  compact alternative methods, plain pupil labels, 44 px targets and contained
+  320 px progress tables.
+- ESAT now uses the canonical main family and resolved teaching topic for its
+  Subject → Topic → Family hierarchy, filters, dashboard and progress. Extra
+  family/topic relevance and all retrieval tags remain searchable.
+- Current 720-record bundle behavior is release-pinned: polygon option testing,
+  scanner ordered-option bounds and the distinct `knew_but_did_not_need` state.
+- Added exact local assembly/identity verification and the 738-item catalogue
+  integration suite. No public/generated deployment files were changed.
+- Final local gates: 2,283 assertions passed across shared viewer, presentation
+  (including current IB Maths contracts), ESAT safety/catalogue and chemistry;
+  exact preview build `f13c2ea7d3657643` passed 12/12 identity checks and the
+  1280 px/320 px browser pass with no console errors or horizontal overflow.
+
 ## 2026-08-02 (later) — the deploy never shipped the printed pages; crop sizing corrected (engine v0.18.1)
 
 Smith on 0.18.0: "we still have the first thing not appearing... A1 is

@@ -15,6 +15,9 @@ than in subject forks.
    filename is historical.
 4. `REGISTRY.md` — consumers and enabled capabilities.
 5. `CHANGELOG.md` — implemented changes.
+6. `VSAFE_RELEASE_CHECKS.md` — repeatable safety, assembly and release gate.
+7. `PRESENTATION_BENCHMARK.md` and `CATEGORISATION_INTEGRATION.md` — the
+   bounded pupil-journey standard and ESAT teaching-catalogue contract.
 
 `KICKOFF.md`, `DESIGN.md`, `DECISIONS.md`, `OPEN_QUESTIONS.md` and the exported
 viewer chats preserve architectural and decision history. They are not a
@@ -32,9 +35,9 @@ substitute for the current handoff and roadmap.
 - Classification: 738/738
 - Acceptance suite: 281 passed, 0 failed
 
-This release is not content-safe merely because its structural tests pass.
-Known damaged mathematical content and the absence of an invalid/withheld state
-are recorded in the current handoff and are the first maintenance priority.
+The integration branch adds the completed local safety, advisory, presentation
+and teaching-catalogue work on top of the v0.18.x shared engine. It is not a
+public release: no generated deployment files are changed by that work.
 
 ## Canonical sources
 
@@ -57,6 +60,10 @@ Run `SYNC_ESAT_WEBSITE.cmd` from this folder after canonical viewer or analysis
 changes. It validates and rebuilds analysis, assembles current assets, writes
 cache-busting build information and runs the presentation suite. It does not
 stage, commit or push.
+
+For release preparation and browser checking without touching generated public
+files, follow `VSAFE_RELEASE_CHECKS.md` and assemble into a fresh temporary
+folder with `tools\assemble_esat_preview.js`.
 
 Review `deploy\esatwallop` in GitHub Desktop, commit intentionally and push
 `main`. Then verify the exact served build rather than assuming Pages has

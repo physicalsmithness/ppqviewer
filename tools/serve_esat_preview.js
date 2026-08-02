@@ -8,9 +8,14 @@ const fs = require("fs");
 const http = require("http");
 const path = require("path");
 
+function arg(name, fallback) {
+  const at = process.argv.indexOf(name);
+  return at >= 0 && process.argv[at + 1] ? process.argv[at + 1] : fallback;
+}
 const projectRoot = path.resolve(__dirname, "..");
-const root = path.join(projectRoot, "deploy", "esatwallop");
-const port = Number(process.env.ESAT_PREVIEW_PORT || 8765);
+const selectedRoot = arg("--root", process.env.ESAT_PREVIEW_ROOT || "");
+const root = selectedRoot ? path.resolve(selectedRoot) : path.join(projectRoot, "deploy", "esatwallop");
+const port = Number(arg("--port", process.env.ESAT_PREVIEW_PORT || "8765"));
 
 const mime = {
   ".css": "text/css; charset=utf-8",

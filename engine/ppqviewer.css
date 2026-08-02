@@ -982,3 +982,116 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
    bottom controls so it doesn't dominate the card header area. */
 .ppq-prev-top { font-size: 0.78rem; padding: 0.25rem 0.6rem; margin-bottom: 0.4rem; opacity: 0.75; }
 .ppq-prev-top:hover { opacity: 1; }
+
+/* Opt-in presentation and catalogue integration. Kept at the end so newer
+   shared card/printed-page rules continue to own the base composition. */
+.ppq-centre { min-width: 0; }
+.ppq-filter-toggle {
+  display: none; min-height: 44px; padding: 0.55rem 0.75rem;
+  border: 1px solid var(--ppq-line); border-radius: 8px;
+  background: var(--ppq-bg); color: var(--ppq-ink); font: inherit;
+  font-size: 0.82rem; font-weight: 750; cursor: pointer;
+}
+.ppq-filter-control, .ppq-multifilter {
+  display: inline-flex; flex-direction: column; align-items: stretch; gap: 0.18rem;
+}
+.ppq-filter-label {
+  color: var(--ppq-muted); font-size: 0.68rem; font-weight: 800;
+  line-height: 1; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.ppq-meta, .ppq-tags, .ppq-tag { min-width: 0; }
+.ppq-tag { overflow-wrap: anywhere; }
+.ppq-source-advisory {
+  display: grid; gap: 0.32rem; padding: 0.85rem 1rem;
+  border: 1px solid #c48708; border-left: 5px solid #b87300;
+  border-radius: 10px; background: #fff4cf; color: #563b00;
+  line-height: 1.5; overflow-wrap: anywhere;
+}
+.ppq-source-advisory-title { color: #744d00; font-size: 0.92rem; font-weight: 900; }
+.ppq-source-advisory-message { font-size: 0.95rem; }
+.ppq-source-advisory-review { margin: 0 0 1rem; }
+.ppq-progress-table-scroll {
+  max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.ppq-progress-table-scroll:focus { outline: 2px solid var(--ppq-accent); outline-offset: 2px; }
+
+.ppq-presentation .ppq-prev-top { align-self: flex-start; width: auto; min-height: 44px; margin-bottom: 0; }
+.ppq-presentation .ppq-meta { align-items: center; justify-content: flex-start; }
+.ppq-presentation .ppq-qid { margin-right: auto; color: var(--ppq-ink2); font-weight: 800; }
+.ppq-presentation .ppq-tags { flex: 1 1 100%; }
+.ppq-presentation .ppq-option,
+.ppq-presentation .ppq-btn,
+.ppq-presentation .ppq-btn-mini,
+.ppq-presentation .ppq-multi-btn,
+.ppq-presentation .ppq-select,
+.ppq-presentation .ppq-find-input,
+.ppq-presentation .ppq-iq-state,
+.ppq-presentation .ppq-iq-used,
+.ppq-presentation .ppq-iq-thing-state,
+.ppq-presentation .ppq-iq-things-confirm,
+.ppq-presentation .ppq-iq-reflection-save,
+.ppq-presentation .ppq-iq-diagnostic-choice,
+.ppq-presentation .ppq-iq-flag,
+.ppq-presentation .ppq-scale-btn,
+.ppq-presentation .ppq-gpick-done,
+.ppq-presentation .ppq-gpick-skip,
+.ppq-presentation .ppq-timing-pause,
+.ppq-presentation .ppq-timing-reset,
+.ppq-presentation .ppq-timing-discard { min-height: 44px; }
+.ppq-presentation .ppq-timing-pause,
+.ppq-presentation .ppq-timing-reset { min-width: 44px; }
+.ppq-presentation .ppq-modal-min, .ppq-presentation .ppq-modal-close { width: 44px; height: 44px; }
+.ppq-presentation .ppq-gpick-choice {
+  min-width: 44px; min-height: 44px; padding: 0.3rem 0.45rem;
+  border: 1px solid var(--ppq-line); border-radius: 8px;
+}
+.ppq-presentation .ppq-gpick-row input[type="checkbox"] { width: 1.35rem; height: 1.35rem; }
+.ppq-presentation .ppq-card { scroll-margin-top: 5.25rem; }
+
+.ppq-compact-mobile-filters .ppq-header {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem; padding: 0.55rem 1rem; align-items: center;
+}
+.ppq-compact-mobile-filters .ppq-filter-toggle { display: inline-block; }
+.ppq-compact-mobile-filters .ppq-filters {
+  display: none; grid-column: 1 / -1; width: 100%; gap: 0.5rem; padding-top: 0.35rem;
+}
+.ppq-compact-mobile-filters .ppq-header.ppq-mobile-filters-open .ppq-filters { display: flex; }
+
+.ppq-guided-review .ppq-iq-section { margin-top: 1.35rem; padding-top: 0.15rem; scroll-margin-top: 1rem; }
+.ppq-guided-review .ppq-iq-section + .ppq-iq-section { padding-top: 1.15rem; border-top: 1px solid var(--ppq-line); }
+.ppq-guided-review .ppq-iq-section-title { margin: 0 0 0.75rem; color: var(--ppq-ink); font-size: 1.22rem; line-height: 1.25; }
+.ppq-guided-review .ppq-iq-section-intro { margin: -0.35rem 0 0.8rem; color: var(--ppq-muted); font-size: 0.88rem; line-height: 1.5; }
+.ppq-guided-review .ppq-iq-method-disclosure { margin: 0 0 0.85rem; border: 1px solid var(--ppq-line); border-radius: 9px; background: var(--ppq-paper); }
+.ppq-guided-review .ppq-iq-method-disclosure > summary { min-height: 44px; padding: 0.75rem 0.9rem; color: var(--ppq-ink2); cursor: pointer; font-weight: 750; line-height: 1.4; }
+.ppq-guided-review .ppq-iq-method-disclosure[open] > summary { border-bottom: 1px solid var(--ppq-line); }
+.ppq-guided-review .ppq-iq-method-disclosure-body { padding: 0.85rem 0.85rem 0; }
+.ppq-guided-review .ppq-iq-method-disclosure-body > .ppq-iq-method:last-child { margin-bottom: 0.85rem; }
+.ppq-guided-review .ppq-iq-things > summary { min-height: 44px; }
+
+@media (max-width: 640px) {
+  .ppq-header { padding: 0.75rem 0.6rem; align-items: flex-start; }
+  .ppq-title, .ppq-filters, .ppq-finder, .ppq-find-results { min-width: 0; max-width: 100%; }
+  .ppq-finder { flex: 1 1 100%; }
+  .ppq-select, .ppq-start { max-width: 100%; }
+  .ppq-filter-control, .ppq-multifilter { flex: 1 1 9rem; min-width: 0; max-width: 100%; }
+  .ppq-filter-control .ppq-select, .ppq-multifilter .ppq-multi-btn { width: 100%; }
+  .ppq-layout { padding: 0.75rem 0.45rem; gap: 0.75rem; min-width: 0; }
+  .ppq-card, .ppq-dash { min-width: 0; width: 100%; }
+  .ppq-card { padding: 0.9rem; border-radius: 12px; }
+  .ppq-classification-group span { overflow-wrap: anywhere; }
+  .ppq-compact-mobile-filters .ppq-header {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0.55rem 0.6rem;
+  }
+  .ppq-compact-mobile-filters .ppq-title { font-size: 1rem; line-height: 1.2; }
+  .ppq-compact-mobile-filters .ppq-filter-toggle { width: 100%; }
+  .ppq-compact-mobile-filters .ppq-ver { display: none; }
+  .ppq-presentation .ppq-draw-container { max-width: 100%; }
+  .ppq-presentation .ppq-card { gap: 0.8rem; }
+  .ppq-presentation .ppq-source-advisory { padding: 0.7rem 0.75rem; }
+  .ppq-presentation .ppq-source-advisory-message { font-size: 0.9rem; }
+  .ppq-guided-review .ppq-iq-section-title { font-size: 1.08rem; }
+  .ppq-guided-review .ppq-iq-method-disclosure-body { padding: 0.7rem 0.6rem 0; }
+}

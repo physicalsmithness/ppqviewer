@@ -10,7 +10,8 @@ const fs = require("fs");
 const path = require("path");
 
 const PV = path.join(__dirname, "..");
-const ESAT_DATA = path.join(PV, "..", "ESAT Prep App", "app", "data", "esat_catalogue.js");
+const ESAT_DATA = process.env.ESAT_CATALOGUE_PATH ||
+  "C:\\Claude (not on Gdrive, nor OneDrive)\\ESAT Prep App\\app\\data\\esat_catalogue.js";
 
 const dom = new JSDOM(`<!doctype html><html><body><div id="ppq-root"></div></body></html>`,
   { runScripts: "outside-only", pretendToBeVisual: true, url: "https://localhost/" });

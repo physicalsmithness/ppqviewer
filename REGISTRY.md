@@ -7,7 +7,7 @@ consumer migration and material module change.
 
 | Consumer | Current status | Location/surface | Shared viewer state | Enabled/known capabilities |
 | --- | --- | --- | --- | --- |
-| ESAT | Public shared-engine deployment | source `example\esat-compare.html`; checkout `deploy\esatwallop`; public `physicalsmithness.github.io/esatwallop` | live v0.2.17 (checkout synced + pushed 2026-07-29, in step with origin; carries content safety, history, progress, timing axes, clusters; public build-identity check owed) | image self-mark, post-question review, guesses, timer capture/display, reporting, classifications, drawing, content-safety withholding |
+| ESAT | Public deployment unchanged; local integration prepared | source `example\esat-compare.html`; checkout `deploy\esatwallop`; public `physicalsmithness.github.io/esatwallop` | local v0.18.x integration carries resolvable-content safety, 12 suppressions, 3 source advisories, the presentation benchmark and canonical teaching catalogue; public build remains unchanged | image self-mark, post-question review, guesses, timing, reporting, drawing, Subject → Topic → Family filter/progress/search, content-safety withholding, source advisories |
 | Chemistry | Live own copy; shared-engine migration not complete | `C:\Claude (not on Gdrive, nor OneDrive)\chemistrydriller` | Donor/consumer, not yet one runtime source | reference booklet, structured papers, mixed question types, maths, split dashboard |
 | Chemistry G: mirror | Stale; retire | `G:\My Drive\github local files\chemistrydriller` | Not authoritative | Do not use as source |
 | Special Relativity | Intended near-term embed | `C:\Claude (not on Gdrive, nor OneDrive)\Special Relativity Driller` | No ppqviewer adapter recorded here | Requires embedded mount |
@@ -31,6 +31,8 @@ consumer migration and material module change.
 - content-safety gate (engine 0.4.0): consumer withheld list + damage
   heuristics; unsafe analysis falls back to the generic shell and can never
   present as Full/Provisional.
+- configurable source advisories that keep a question playable and persist in
+  review; opt-in guided presentation; and a finder `searchTermsOf` hook.
 
 - session history navigation, review-reopen of prior attempts, persisted
   flags with a Flagged filter, and the pupil "My progress" page
