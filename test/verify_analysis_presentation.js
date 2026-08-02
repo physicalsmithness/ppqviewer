@@ -2693,7 +2693,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the pages open by themselves when there are no crops at all, or when the consumer says the crop is too thin (d017)");
   check(css5014().indexOf(".ppq-ms-page") >= 0, "markscheme pages are styled");
   function css5014() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
-  check(src.indexOf('version: "0.18.0"') >= 0, "engine bumped to 0.18.0 (0.17.0 d018 printed stem, 0.18.0 card composition)");
+  check(src.indexOf('version: "0.18.1"') >= 0, "engine bumped to 0.18.1 (0.18.0 card composition, 0.18.1 crop sizing)");
 
   // wrapper: crops inline, pages behind the expander, never conflated
   check(/msCropsOf: function \(q\) \{ return q\.ms_crops \|\| \[\]; \}/.test(mSrc) &&
@@ -2939,6 +2939,27 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the whole question opens BY ITSELF from part (b) onwards, as chemistry does, so the stem and earlier parts are always in view");
   check(/first \? \("Whole question/.test(src) && /The stem and the earlier parts/.test(src),
     "and says which of the two it is doing");
+
+  /* The deploy must SHIP the printed pages, or d018's flagship image is a
+     broken-image icon on the live site (Smith, 2026-08-02, and my omission:
+     the assembler copied crops, ms crops and ms pages but never the question
+     pages the stem depends on). */
+  const asmSrc = fs.readFileSync(path.join(PROJECT_ROOT, "tools", "assemble_ibmaths_site.js"), "utf8");
+  check(/\(p\.pages \|\| \[\]\)\.forEach\(function \(c\) \{\s*\n\s*if \(\/\(\^\|\\\/\)question_\/\.test\(c\)\) addRef/.test(asmSrc),
+    "the assembler ships the printed QUESTION pages, not only crops and markscheme pages");
+  check(asmSrc.indexOf("mark_* pages; those come in") >= 0,
+    "and says why mark pages are excluded from that copy, so nobody re-adds them");
+
+  /* Sizing: capping without upscaling. `width: 100%` stretched a one-line
+     clipping to full width and so rendered it in bigger type than a clipping
+     holding a whole part plus a diagram. */
+  const cssStem = fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8");
+  check(/\.ppq-stem \.ppq-crop \{[^}]*width: auto;[^}]*max-width: 100%/.test(cssStem),
+    "question images cap at the card width but are never upscaled");
+  /* NB the naive negative match hits `max-width: 100%` in its own rule; the
+     declaration that must be absent is a bare `width: 100%`. */
+  check(!/\.ppq-stem \.ppq-crop \{[^}]*[^-]width: 100%;/.test(cssStem),
+    "the stretched-crop rule that made a short clipping look enormous is gone");
 
   /* Seat packet 2026-07-30 late: say what KIND of question this is BEFORE the
      attempt. A non-calculator question practised with a calculator to hand is

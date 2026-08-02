@@ -249,11 +249,16 @@
    rather than as an afterthought parked by the answer buttons. */
 .ppq-stem-pages { border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-paper); margin: 0.5rem 0 0.75rem; padding: 0.35rem 0.6rem; }
 .ppq-stem-pages > summary { cursor: pointer; font-weight: 600; color: var(--ppq-ink2); font-size: 0.85rem; padding: 0.15rem 0; }
-/* One width rule for every question image on the card, so a clipping and a
-   printed page cannot arrive at wildly different sizes (Smith, 2026-08-02:
-   "massive size issues between them"). */
+/* One rule for every question image on the card (Smith, 2026-08-02: "massive
+   size issues between them"). NOT `width: 100%`: that was the first attempt and
+   it made things worse, because a clipping of one short line was stretched to
+   full width and so rendered in far bigger type than a clipping containing a
+   whole part plus its diagram. Smith, seeing 0.18.0: "A1 is appearing more with
+   a greater size than A1 and A2 together." Crops share a source DPI, so at
+   natural size their type matches; capping without upscaling is what makes them
+   agree. */
 .ppq-stem-pages img.ppq-stem-page,
-.ppq-stem .ppq-crop { display: block; width: 100%; max-width: 100%; margin: 0.5rem auto; border: 1px solid var(--ppq-line); border-radius: 6px; }
+.ppq-stem .ppq-crop { display: block; width: auto; max-width: 100%; margin: 0.5rem auto; border: 1px solid var(--ppq-line); border-radius: 6px; }
 .ppq-stem-partlead { font-weight: 700; color: var(--ppq-accent); font-size: 0.85rem; margin: 0.9rem 0 0.25rem; padding-top: 0.6rem; border-top: 1px dashed var(--ppq-line); }
 /* The whole-question block as a MAP (rows, no second copy of every clipping)
    when the printed pages are already on the card. */

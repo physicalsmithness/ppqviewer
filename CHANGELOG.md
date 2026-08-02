@@ -2,6 +2,30 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-02 (later) — the deploy never shipped the printed pages; crop sizing corrected (engine v0.18.1)
+
+Smith on 0.18.0: "we still have the first thing not appearing... A1 is
+appearing more with a greater size than A1 and A2 together."
+
+- **The broken image was mine, in the assembler.** It copies crops, ms crops
+  and ms pages, and never the printed QUESTION pages, so d018's stem block, the
+  one thing the whole fix rests on, resolved to a broken-image icon on the
+  deployed site. The source files were all present; they were simply never
+  copied. Adds 1,965 files, about 123MB. The suite now asserts the assembler
+  ships them, because a fix whose asset never deploys is not a fix.
+- **Crop sizing was made worse by my first attempt.** `width: 100%` stretched a
+  one-line clipping to full card width, so it rendered in far larger type than
+  a clipping holding a whole part plus its diagram, which is exactly the "(a)(i)
+  bigger than (a)(i)+(a)(ii)" Smith saw. Crops share a source DPI, so capping
+  without upscaling (`width: auto; max-width: 100%`) is what makes their type
+  agree. Asserted both ways.
+- **Taxonomy, from his words:** "Didn't read the question carefully" joins
+  Annoying slips, and a new "Working and communication" group covers "got the
+  answer but didn't show enough working", missed method marks, unstated
+  conclusions and unjustified steps: a maths mark is routinely lost with the
+  right answer on the page, and no existing group could say so.
+- Suites 626/626 + 70/70 + 18/18.
+
 ## 2026-08-02 — card composition rebuilt from Smith's screen recording (engine v0.18.0)
 
 Smith recorded a full scroll through MHL 8819-7202 P2 Q9 and listed what he met

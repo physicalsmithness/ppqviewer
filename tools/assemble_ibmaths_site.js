@@ -108,6 +108,15 @@ function addRef(rel) { if (!seen[rel]) { seen[rel] = 1; refs.push(rel); } }
     (p.crops || []).concat(p.ms_crops || []).forEach(function (c) {
       addRef(q.preview + "/" + c);
     });
+    /* d018: the PRINTED QUESTION PAGES. The stem exists nowhere else (the
+       catalogue has no stem image and part crops are cropped tight), so the
+       card opens with these. They were not in this list, which shipped a
+       deploy whose flagship image was a broken-image icon — found by Smith on
+       2026-08-02, my omission. `pages` also lists mark_* pages; those come in
+       through ms_pages below, so only question pages are added here. */
+    (p.pages || []).forEach(function (c) {
+      if (/(^|\/)question_/.test(c)) addRef(q.preview + "/" + c);
+    });
   });
   (q.ms_pages || []).forEach(function (c) { addRef(q.preview + "/" + c); });
 });
