@@ -223,3 +223,15 @@ He was right on both counts, and I had been fixing parts while leaving the stem 
 Engine 0.17.0. Suites 622/622 + 70/70 + 18/18.
 
 **Standing lesson, recorded because it has now cost two rounds:** when a consumer looks wrong and chemistry solved the same problem, READ `chemistrydriller\ppq.js` before designing anything. Not d001's summary of it, the code. Both misses here were visible in about forty lines of it.
+
+---
+
+## d019 (mark-point ticking, built first as opt-in, then judged on a real question): Smith's (c)
+
+**Decision (Smith, 2026-08-02):** option **(c)**. Build mark-point ticking as an opt-in mode, look at it on a real question, and only then decide whether it replaces the marks bar and shrinks the generic taxonomy. This supersedes nothing in d017 (mark-point ticking opt-in); it sets what happens next after the looking.
+
+Context for the reversal-that-isn't: d017 recorded "(b), it may become a, but let's not make it burdensome". On 2026-08-02, having met the generic error list on a question it did not fit, Smith went further: "How can you give a possible 'why I got it wrong' option on all of them?… I think we just need a complete redesign of all this stuff." The redesign is available in data rather than in vocabulary: `markpoints` on 6,207 parts gives the credited steps in the markscheme's own words, so a pupil ticks what they got instead of choosing a cause from a list I wrote. A missed tick is a LOCATED failure on a named step; the total falls out of the ticks, which also dissolves the out-of-N problem d016 only halved. (c) is the honest order: build it, look at it, then rule.
+
+**Build constraints, carried forward from d017 and the seat's cautions:** routes are exclusive (choose a route, then tick within it; ticking across routes double-counts); `AG` means the answer was printed, so "I got it" is a different claim there and must render differently; bracketed tokens like `(M1)` are implied marks a pupil may not know they earned, which is what the "maybe" state carries; the tick data and the marks number share one attempt row, so promoting ticking to the default later is a config change and not a migration; and about 15% of the seat's 28,313 steps are symbol-heavy or OCR wreckage, so any step whose snippet is mostly symbols falls back to the crop until their rewrite pass lands.
+
+**Interim taxonomy additions (same day, from Smith's words):** "Didn't read the question carefully" belongs in Annoying slips, and a new group "Working and communication" covers getting the answer but not showing enough working, missing a method mark, not stating the conclusion, and not justifying a step. A maths mark is routinely lost with the right answer on the page and nothing in the old list could say so. These stay until ticking proves it can say it better.

@@ -1,18 +1,35 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+
+rem --- Run from the right copy, whichever one was double-clicked -------------
+rem  Backups and Codex worktrees look identical in Explorer but have no deploy
+rem  checkout (deploy\ is gitignored), so double-clicking one used to fail with
+rem  an error and nothing else. It now hands over to the real project instead.
+rem  Written with GOTO rather than IF-blocks on purpose: the canonical path
+rem  contains brackets, which break parenthesised IF blocks in batch.
+set "REAL=C:\Claude (not on Gdrive, nor OneDrive)\ppqviewer"
+if exist "%~dp0deploy\ibmathsdriller\.git" goto here
+if not exist "%REAL%\SYNC_IBMATHS_WEBSITE.cmd" goto here
 echo.
-echo NOTE (2026-07-31): you usually do NOT need to run this by hand any more.
-echo Claude reassembles the site files every session and after every catalogue
-echo regeneration, and all 16,850 referenced crops/pages are already in the
-echo checkout. Normally: open GitHub Desktop, commit, push. Run this when the
-echo Maths seat announces NEW images (a fresh extraction), or if the site looks
-echo stale and you want to be sure.
+echo This copy of ppqviewer has no deploy checkout, so it cannot publish.
+echo Handing over to the live project:
+echo    %REAL%
 echo.
-echo IB Maths website update - viewer maintained by Claude; catalogue owned by the Maths seat
+call "%REAL%\SYNC_IBMATHS_WEBSITE.cmd"
+exit /b %ERRORLEVEL%
+:here
+
+echo.
+echo IB Maths website update. Viewer maintained by Claude; catalogue owned by the Maths seat.
 echo Assembles deploy\ibmathsdriller from the engine, the wrapper and the canonical
-echo maths catalogue, copying every referenced crop. Leaves changes for GitHub Desktop.
-echo It does not commit or push.
+echo maths catalogue, copying every crop and printed page it references.
+echo It copies only what is missing, and it does not commit or push.
+echo.
+echo When you need this: after Claude reports new IMAGES (a fresh extraction, or
+echo a viewer change that starts using pages it did not use before). Claude
+echo reassembles the small site files itself every session, so a metadata-only
+echo regeneration usually needs nothing here: just commit and push.
 echo.
 node "%~dp0tools\assemble_ibmaths_site.js"
 if not %ERRORLEVEL%==0 (

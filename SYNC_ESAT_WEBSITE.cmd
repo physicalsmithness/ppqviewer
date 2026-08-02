@@ -1,6 +1,23 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+
+rem --- Run from the right copy, whichever one was double-clicked -------------
+rem  Same hazard as the IB Maths sync: backups and Codex worktrees have no
+rem  deploy checkout (deploy\ is gitignored). GOTO, not IF-blocks: the
+rem  canonical path contains brackets, which break parenthesised IF blocks.
+set "REAL=C:\Claude (not on Gdrive, nor OneDrive)\ppqviewer"
+if exist "%~dp0deploy\esatwallop\.git" goto here
+if not exist "%REAL%\SYNC_ESAT_WEBSITE.cmd" goto here
+echo.
+echo This copy of ppqviewer has no deploy checkout, so it cannot publish.
+echo Handing over to the live project:
+echo    %REAL%
+echo.
+call "%REAL%\SYNC_ESAT_WEBSITE.cmd" %*
+exit /b %ERRORLEVEL%
+:here
+
 echo.
 echo ESAT website update - viewer maintained by Claude; analysis owned by Codex
 echo This validates PaperDatabases, rebuilds the analysis bundle,
