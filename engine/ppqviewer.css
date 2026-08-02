@@ -249,8 +249,22 @@
    rather than as an afterthought parked by the answer buttons. */
 .ppq-stem-pages { border: 1px solid var(--ppq-line); border-radius: 8px; background: var(--ppq-paper); margin: 0.5rem 0 0.75rem; padding: 0.35rem 0.6rem; }
 .ppq-stem-pages > summary { cursor: pointer; font-weight: 600; color: var(--ppq-ink2); font-size: 0.85rem; padding: 0.15rem 0; }
-.ppq-stem-pages img.ppq-stem-page { display: block; width: 100%; max-width: var(--ppq-crop-width, 92%); margin: 0.5rem auto; border: 1px solid var(--ppq-line); border-radius: 6px; }
-.ppq-stem-partlead { font-weight: 700; color: var(--ppq-accent); font-size: 0.85rem; margin: 0.75rem 0 0.25rem; }
+/* One width rule for every question image on the card, so a clipping and a
+   printed page cannot arrive at wildly different sizes (Smith, 2026-08-02:
+   "massive size issues between them"). */
+.ppq-stem-pages img.ppq-stem-page,
+.ppq-stem .ppq-crop { display: block; width: 100%; max-width: 100%; margin: 0.5rem auto; border: 1px solid var(--ppq-line); border-radius: 6px; }
+.ppq-stem-partlead { font-weight: 700; color: var(--ppq-accent); font-size: 0.85rem; margin: 0.9rem 0 0.25rem; padding-top: 0.6rem; border-top: 1px dashed var(--ppq-line); }
+/* The whole-question block as a MAP (rows, no second copy of every clipping)
+   when the printed pages are already on the card. */
+.ppq-wq-parts.ppq-wq-map { gap: 0.35rem; }
+.ppq-wq-map .ppq-wq-part { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.4rem 0.6rem; }
+.ppq-wq-map .ppq-wq-part-label { margin-bottom: 0; text-transform: none; font-size: 0.85rem; color: var(--ppq-ink2); }
+.ppq-wq-map .ppq-wq-part.current .ppq-wq-part-label { color: var(--ppq-accent); }
+/* The OCR transcription, demoted below the printed pages it transcribes. */
+.ppq-transcript { margin-top: 1rem; border-top: 1px dashed var(--ppq-line); padding-top: 0.5rem; }
+.ppq-transcript > summary { cursor: pointer; font-size: 0.78rem; color: var(--ppq-muted); }
+.ppq-transcript .ppq-qtext { margin-top: 0.5rem; }
 /* Historical time deletion on the progress page. */
 .ppq-progress-times td.ppq-progress-stem { text-align: left; color: var(--ppq-ink2); font-size: 0.85rem; max-width: 26rem; }
 .ppq-time-del { white-space: nowrap; }

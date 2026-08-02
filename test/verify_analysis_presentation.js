@@ -2693,7 +2693,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the pages open by themselves when there are no crops at all, or when the consumer says the crop is too thin (d017)");
   check(css5014().indexOf(".ppq-ms-page") >= 0, "markscheme pages are styled");
   function css5014() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
-  check(src.indexOf('version: "0.17.0"') >= 0, "engine bumped to 0.17.0 (0.16.0 timer reset + time deletion, 0.17.0 d018 printed stem)");
+  check(src.indexOf('version: "0.18.0"') >= 0, "engine bumped to 0.18.0 (0.17.0 d018 printed stem, 0.18.0 card composition)");
 
   // wrapper: crops inline, pages behind the expander, never conflated
   check(/msCropsOf: function \(q\) \{ return q\.ms_crops \|\| \[\]; \}/.test(mSrc) &&

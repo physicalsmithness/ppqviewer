@@ -489,7 +489,8 @@ window.PPQViewer = (function () {
     const controls = el("div", { class: "ppq-controls" });
     controls.innerHTML =
       '<button class="ppq-btn ppq-prev">Previous (←)</button>' +
-      '<button class="ppq-btn ppq-reveal">Reveal (Enter)</button>' +
+      /* Smith, 2026-08-02: "'reveal' should be show mark scheme anyway." */
+      '<button class="ppq-btn ppq-reveal">Show markscheme (Enter)</button>' +
       '<button class="ppq-btn ppq-skip">Skip (S)</button>' +
       '<button class="ppq-btn ppq-review-attempt" style="display:none;" title="Reopen the verdict, guess declaration, responses and analysis from your last attempt">Review your last answer</button>';
     card.appendChild(controls);
@@ -2461,7 +2462,13 @@ window.PPQViewer = (function () {
     const stem = this.q(".ppq-stem");
     let html = "";
     const text = cfg.questionTextOf(q);
-    if (text) html += '<div class="ppq-qtext">' + text + "</div>";
+    /* Order matters (Smith, 2026-08-02, reading top to bottom and finding the
+       graph only at the very end): where printed pages exist they are the
+       question, so they lead, then the part being asked, then the OCR
+       transcription as a labelled cross-check. Consumers with no printed pages
+       keep the original order, text first. */
+    const pagesFirst = typeof cfg.stemPagesOf === "function" && (cfg.stemPagesOf(q) || []).length > 0;
+    if (text && !pagesFirst) html += '<div class="ppq-qtext">' + text + "</div>";
     /* Smith, 2026-07-31: "we're not getting the stem... you get the WORDS of
        the stem, but if there's any maths in the stem you'll be lucky if you can
        understand it. If there's a graph in the stem, you just won't see it."
@@ -2476,11 +2483,28 @@ window.PPQViewer = (function () {
     if (stemPages.length) {
       let pg = "";
       stemPages.forEach((s) => { pg += '<img src="' + esc(s) + '" loading="lazy" class="ppq-crop ppq-stem-page" alt="the printed exam page">'; });
-      html += '<details class="ppq-stem-pages" open><summary>The question as printed, with its stem, tables and figures</summary>' + pg + "</details>";
+      html += '<details class="ppq-stem-pages" open><summary>The whole question as printed, with its stem, tables and figures</summary>' + pg + "</details>";
     }
+    /* Smith, 2026-08-02: "no intro to question clippings", "massive size issues
+       between them", "hard for someone to realise that they're being given
+       9(b)(i)... but oh, they're not, it's 9(b)(i)-(iii)". Every image block now
+       says what it is, and the part being asked is named ON the clipping rather
+       than only in the meta line above. */
     const crops = cfg.cropsOf(q);
-    if (crops.length && stemPages.length) html += '<div class="ppq-stem-partlead">The part you are on:</div>';
-    crops.forEach((s) => { html += '<img src="' + esc(s) + '" loading="lazy" class="ppq-crop" alt="question crop">'; });
+    if (crops.length) {
+      const partName = (typeof cfg.partLabelOf === "function" && cfg.partLabelOf(q)) || "";
+      const marks = (typeof cfg.partMarksOf === "function" && cfg.partMarksOf(q)) || null;
+      const lead = stemPages.length
+        ? ("The part you are answering now" + (partName && partName !== "(whole)" ? ": " + esc(partName) : "") +
+           (marks ? ", " + marks + " mark" + (marks === 1 ? "" : "s") : ""))
+        : ("This question" + (marks ? ", " + marks + " mark" + (marks === 1 ? "" : "s") : ""));
+      html += '<div class="ppq-stem-partlead">' + lead + "</div>";
+      crops.forEach((s) => { html += '<img src="' + esc(s) + '" loading="lazy" class="ppq-crop" alt="question clipping">'; });
+    }
+    if (text && pagesFirst) {
+      html += '<details class="ppq-transcript"><summary>The words, transcribed (the printed pages above are the authority)</summary>' +
+        '<div class="ppq-qtext">' + text + "</div></details>";
+    }
     if (!text && !crops.length && !stemPages.length) html = '<div class="ppq-kb-hint">No stem image on file for this question.</div>';
     stem.innerHTML = html;
     const self = this;
@@ -4926,14 +4950,28 @@ window.PPQViewer = (function () {
       details.appendChild(el("summary", null,
         first ? ("Whole question (all " + parts.length + " parts)")
               : ("The stem and the earlier parts (all " + parts.length + " parts)")));
-      const wrap = el("div", { class: "ppq-wq-parts" });
+      /* Smith, 2026-08-02, on seeing the same pictures four times over: "all of
+         this we've had before, some of it many times." When the consumer shows
+         the printed pages at the top of the card, EVERY crop here is a second
+         copy of something already on screen, so this becomes what it is useful
+         as: a map of the question, one row per part with its marks, naming
+         where you are. Where there are no printed pages (chemistry) it keeps
+         the donor's crop stack unchanged. */
+      const pagesShown = typeof cfg.stemPagesOf === "function" && (cfg.stemPagesOf(q) || []).length > 0;
+      const wrap = el("div", { class: "ppq-wq-parts" + (pagesShown ? " ppq-wq-map" : "") });
       parts.forEach((p) => {
         const cur = cfg.idOf(p) === cfg.idOf(q);
         const box = el("div", { class: "ppq-wq-part" + (cur ? " current" : ""), "data-part-id": cfg.idOf(p) });
         const pm = partMarks(p);
         box.appendChild(el("div", { class: "ppq-wq-part-label" }, "Part " + esc(partLabel(p)) +
           (pm ? ", " + esc(String(pm)) + " mark" + (pm === 1 ? "" : "s") : "") + (cur ? " (you are here)" : "")));
-        cfg.cropsOf(p).forEach((s) => box.appendChild(el("img", { src: s, loading: "lazy" })));
+        if (!pagesShown) cfg.cropsOf(p).forEach((s) => box.appendChild(el("img", { src: s, loading: "lazy" })));
+        if (pagesShown) {
+          const jump = el("button", { class: "ppq-btn-mini", type: "button", "data-id": cfg.idOf(p) }, cur ? "you are here" : "go to this part");
+          if (cur) jump.disabled = true;
+          else jump.addEventListener("click", () => self.goToId(cfg.idOf(p)));
+          box.appendChild(jump);
+        }
         wrap.appendChild(box);
       });
       details.appendChild(wrap);
@@ -5382,6 +5420,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.17.0" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.18.0" };
 })();
 // build: 0.3.0, maintained by Codex

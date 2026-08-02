@@ -2,6 +2,42 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-02 — card composition rebuilt from Smith's screen recording (engine v0.18.0)
+
+Smith recorded a full scroll through MHL 8819-7202 P2 Q9 and listed what he met
+in order. The deployed site he was recording is engine 0.14.0, so it predates
+the stem fix, but most of his list was composition and stands regardless.
+
+- **Printed pages LEAD the card.** He reached the graph only at the very end
+  ("first time we're seeing the graph... but confusing"), because the OCR
+  transcription came first. Where printed pages exist they are the question:
+  pages, then the part being answered, then the transcription demoted into a
+  collapsed "The words, transcribed (the printed pages above are the
+  authority)". Consumers with no printed pages are unchanged.
+- **Every block says what it is** ("no introduction to stem, bstem, etc.", "no
+  intro to question clippings"): the transcription carries per-block labels
+  ("The question says", "9(b)(iii), 6 marks asks"), the clipping carries "The
+  part you are answering now: (b)(i)-(b)(v), 6 marks", which also answers "hard
+  for someone to realise... it's 9bi-iii, if you look at the top".
+- **Missing figures are declared.** A bare "…" in the transcription now reads
+  "A diagram, graph or table here is not in the transcription. It is in the
+  printed page above."
+- **The whole-question block became a MAP**, one row per part with its marks
+  and a jump, instead of a second copy of every clipping ("all of this we've
+  had before, some of it many times"). Card image count on his exemplar falls
+  from a dozen-plus to six.
+- **One width rule** for every question image ("massive size issues between
+  them").
+- **"Reveal" now reads "Show markscheme"** (his words).
+- Four faults were catalogue-side and are packeted to the seat: part labels
+  numbered by position so (b) reads (i), (iii), (v); the (b) lead-in attached
+  to the last part instead of heading them; continuation crops containing only
+  IB's "Do not write solutions on this page." banner; and a request for a typed
+  missing-figure marker. No viewer heuristic was added for the banner: the only
+  signals here are aspect ratio and page position, and both would eventually
+  eat a real continuation.
+- Suites 622/622 + 70/70 + 18/18.
+
 ## 2026-07-31 (night) — d018: the stem is shown as printed, and chemistry's auto-open is back (engine v0.17.0)
 
 Smith, three times over: "This was solved by chemistry." He was right, and I

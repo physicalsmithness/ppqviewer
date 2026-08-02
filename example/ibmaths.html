@@ -17,8 +17,15 @@
     body { margin: 0; background: #faf6ed; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     .ppq { --ppq-crop-width: 88%; }
     #teacher-note { background: rgba(176, 48, 48, 0.08); border-bottom: 2px solid rgba(176, 48, 48, 0.4); color: #7a2626; font-size: 0.85rem; padding: 0.45rem 1rem; text-align: center; }
-    .ib-stem { font-weight: 600; margin-bottom: 0.6rem; }
-    .ib-part { margin: 0.4rem 0; color: #4d4943; }
+    .ib-stem { font-weight: 600; }
+    .ib-part { color: #4d4943; }
+    /* Every transcription block says what it is and stands apart (Smith,
+       2026-08-02: "no introduction to stem, bstem, etc.", and the stem running
+       into the part text with no break "looks odd"). */
+    .ib-block { margin: 0 0 0.85rem; padding-left: 0.7rem; border-left: 3px solid #e6e1d8; }
+    .ib-block + .ib-block { margin-top: 0.85rem; }
+    .ib-block-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8377; margin-bottom: 0.25rem; }
+    .ib-omitted { font-size: 0.8rem; color: #8a6d3b; background: #fdf6e3; border-radius: 5px; padding: 0.2rem 0.45rem; margin-top: 0.3rem; display: inline-block; }
   </style>
 </head>
 <body>
@@ -68,6 +75,10 @@
        words (conditions, definitions) still read. Real inline maths in the
        catalogue text is the seat-side fix (packet sent). */
     var OMIT_RE = /\s*\[[^\]]*(?:omitted|see source clipping)[^\]]*\]\s*/gi;
+    /* The cleaned text keeps a quiet "…" where the extractor dropped a figure.
+       Smith, 2026-08-02: "no note of diagram missing" — so say it plainly
+       instead of leaving an ellipsis the reader cannot interpret. */
+    var OMITTED_RE = /…/;
     function cleanStemText(s) {
       var t = String(s || "").replace(OMIT_RE, " … ")
         .replace(/\[\s*maximum mark:?\s*\d+\s*\]\s*/gi, "")   /* header already says the marks */
@@ -571,12 +582,28 @@
          away). Both stem and part text render even when identical — d015: the
          duplicate is Smith's deliberate cross-check against poor OCR and
          diagram loss. */
+      /* Smith, 2026-08-02: "No introduction to stem, bstem, etc.", and the stem
+         running straight into the part text with no break "looks odd". Each
+         block now says what it is and stands apart. This text is the OCR
+         transcription and is labelled as such: the printed pages above are the
+         authority, and where the transcription has dropped a figure it now
+         says so rather than leaving a silent gap. */
       questionTextOf: function (q) {
         var bits = [];
-        if (q.stem_text) bits.push('<div class="ib-stem">' + escHtml(q.stem_text) + "</div>");
+        if (q.stem_text) {
+          bits.push('<div class="ib-block"><div class="ib-block-label">The question says</div>' +
+            '<div class="ib-stem">' + escHtml(q.stem_text) + "</div>" +
+            (OMITTED_RE.test(q.stem_text)
+              ? '<div class="ib-omitted">A diagram, graph or table here is not in the transcription. It is in the printed page above.</div>'
+              : "") + "</div>");
+        }
         (q.part_texts || []).forEach(function (p) {
-          bits.push('<div class="ib-part"><b>' + escHtml(p.label) +
-            (p.marks ? ", " + p.marks + " marks" : "") + "</b> " + escHtml(p.text) + "</div>");
+          bits.push('<div class="ib-block"><div class="ib-block-label">' + escHtml(p.label) +
+            (p.marks ? ", " + p.marks + " mark" + (p.marks === 1 ? "" : "s") : "") + " asks</div>" +
+            '<div class="ib-part">' + escHtml(p.text) + "</div>" +
+            (OMITTED_RE.test(p.text)
+              ? '<div class="ib-omitted">A diagram or graph here is not in the transcription. See the printed page above.</div>'
+              : "") + "</div>");
         });
         return bits.join("");
       },
