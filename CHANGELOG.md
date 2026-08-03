@@ -2,6 +2,34 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-03 (later) — d021: multi-consumer operating model; the foreign commits adopted; records reconciled
+
+No engine change. Governance and records, after Smith's ruling of today.
+
+- **`OPERATING_MODEL.md` created** and put at the top of the wake list:
+  single-writer seat map (architect owns engine/tests/tools/records; builders
+  own exactly what their packet names; content seats never commit here; Smith
+  owns every push), per-seat git author strings, the inbox packet channel,
+  and one release train per consumer. Recorded as d021 (multi-consumer
+  operating model), with d020 (default to the practisable subset) backfilled
+  into DECISIONS at the same time.
+- **The 3 August foreign commits (`f48abc3`, `a4891a2`) reviewed and
+  adopted.** All engine additions are opt-in config; no deployed file was
+  touched; the full gate re-run from disk this session passes at 2,292
+  assertions across the five suites (19 + 18 + 112 + 640 + 1,503). The
+  near-miss and its rule are written into OPERATING_MODEL; the stand-down
+  and continuing content remit for the Codex side are in
+  `CODEX_BRIEF_2026-08-03.md` for Smith to deliver.
+- **README reconciled**: the stale v0.2.15 public baseline (repeated on
+  2026-08-03 from the 07-28 handoff) corrected to the pushed v0.2.17 with
+  post-gate readiness counts; OPERATING_MODEL added to Read-first.
+- **IB Maths deploy re-assembled** (d015, maintainer syncs on wake): site
+  files now carry the tested `93a0177` state (engine 462669fc40c7), replacing
+  the mid-session 00:53 snapshot that Smith's 00:54 commit shipped;
+  `build-info.json` still needs its native re-stamp via
+  `SYNC_IBMATHS_WEBSITE.cmd` (the sandbox cannot finish the 17k-asset
+  verification walk inside its timeout), then Smith reviews and pushes.
+
 ## 2026-08-03 — ESAT safety, advisories, presentation and teaching catalogue reconciled locally
 
 - Reconciled the isolated ESAT work onto main `f48abc3` without replacing the
