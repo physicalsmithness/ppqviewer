@@ -184,7 +184,13 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
 - [ ] Cross-consumer teacher analytics.
 - [ ] Chemistry shared-engine migration.
 - [ ] Special Relativity embed.
-- [ ] IB Physics, Economics, Trilogy Physics and pre-IB Physics adapters.
+- [ ] IB Physics, Trilogy Physics and pre-IB Physics adapters.
+- [ ] **Economics adapter — ACTIVATING (2026-08-03).** The content seat is
+  building `economics_catalogue.js` in its own tree to the maths contract
+  (green-light + contract packet exchanged; fit flag runs as a d020-style
+  default filter, not the safety list). Viewer wrapping follows the current
+  engine queue, likely as the first bounded builder dispatch; Smith needed at
+  publish time for the deploy repo and the IB-content ruling.
 - [ ] **IB Maths adapter — ACTIVE (Smith, 2026-07-29).** Source:
   `PaperDatabases\Maths Categorisation` masters + AAHL flat export + previews.
   Profile: chemistry-style reveal-markscheme + examiner comments (no authored
