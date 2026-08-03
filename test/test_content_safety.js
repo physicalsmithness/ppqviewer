@@ -28,8 +28,11 @@ const src = fs.readFileSync(ENGINE, "utf8");
 const cssSrc = fs.readFileSync(CSS, "utf8");
 const wrapperSrc = fs.readFileSync(WRAPPER, "utf8");
 
-/* The analysis owner's RS-01 five plus the two records the viewer damage scan
-   found on 2026-07-28. Every one must be pinned in the wrapper AND gate unsafe. */
+/* The RS-01 five plus the seven scan findings. ALL TWELVE were repaired by
+   PACKET_E01 (2026-08-03, evidence in returns\PACKET_E01\FEEDBACK_E01.md) and
+   are heuristic-clean; they stay pinned until the analysis side clears
+   `data\withheld_ids.json` and the architect reviews the release (the
+   suppression-shrinks-in-step contract). */
 const KNOWN_DAMAGED = [
   "esat_engaa_2020_s1_Q04",
   "esat_nsaa_2020_s1_Q25",
@@ -44,9 +47,20 @@ const KNOWN_DAMAGED = [
   "esat_nsaa_2018_s1_Q29",
   "esat_nsaa_2019_s1_Q19"
 ];
-/* Subset with a text-level damage signature the heuristics must detect
-   (the 2023 draft pair's damage is duplication/missing values — list-only). */
-const HEURISTIC_DETECTABLE = KNOWN_DAMAGED.slice();
+/* The E03 calibration's five disqualifying records (2026-08-03, evidence in
+   returns\PACKET_E03\FEEDBACK_E03.md): semantic defects (wrong arithmetic,
+   wrong sign law, missing derivations) plus one scanner-evading corruption.
+   No scanner can catch these classes; they are pinned on human review. */
+const E03_PINNED = [
+  "esat_engaa_2017_s1_Q14",
+  "esat_nsaa_2018_s1_Q11",
+  "esat_nsaa_2017_s1_Q90",
+  "esat_engaa_2021_s1_Q37",
+  "esat_nsaa_2023_s1_Q35"
+];
+/* Everything the wrapper must pin, exactly: set-equality is asserted against
+   the wrapper source, so a pin can be neither dropped nor added silently. */
+const PINNED = KNOWN_DAMAGED.concat(E03_PINNED);
 const SOURCE_ADVISORY_IDS = [
   "esat_engaa_2018_s1_Q53",
   "esat_nsaa_2018_s1_Q89",
@@ -275,12 +289,18 @@ section("engine/wrapper/css wiring");
   check(cssSrc.indexOf(".ppq-feedback-status-withheld") >= 0, "css styles the withheld badge");
   check(/contentSafety:\s*\{/.test(wrapperSrc) && /heuristics:\s*true/.test(wrapperSrc),
     "ESAT wrapper enables the gate with heuristics on");
-  KNOWN_DAMAGED.forEach(function (id) {
+  PINNED.forEach(function (id) {
     check(wrapperSrc.indexOf('"' + id + '"') >= 0, "wrapper pins " + id);
   });
   const withheldStart = wrapperSrc.indexOf("withheld: {");
   const withheldEnd = wrapperSrc.indexOf("\n          }", withheldStart);
   const withheldSrc = wrapperSrc.slice(withheldStart, withheldEnd);
+  const wrapperPinIds = [];
+  withheldSrc.replace(/"(esat_[A-Za-z0-9_]+)"\s*:/g, function (all, id) { wrapperPinIds.push(id); return all; });
+  check(wrapperPinIds.length === PINNED.length &&
+    wrapperPinIds.every(function (id) { return PINNED.indexOf(id) >= 0; }),
+    "the wrapper's pin list matches the suite's expected set exactly (" +
+    wrapperPinIds.length + " vs " + PINNED.length + ")");
   SOURCE_ADVISORY_IDS.forEach(function (id) {
     check(wrapperSrc.indexOf('"' + id + '"') >= 0, "wrapper advises " + id);
     check(withheldSrc.indexOf(id) < 0, id + " is advisory-only and remains playable");
@@ -307,9 +327,9 @@ section("real analysis_v2 bundle");
 
   // Wrapper-equivalent config: the pinned list + heuristics.
   const withheld = {};
-  KNOWN_DAMAGED.forEach(function (id) { withheld[id] = "pinned"; });
+  PINNED.forEach(function (id) { withheld[id] = "pinned"; });
 
-  KNOWN_DAMAGED.forEach(function (id) {
+  PINNED.forEach(function (id) {
     const r = byId[id];
     check(!!r, id + " present in bundle (else this list is stale — re-audit)");
     if (!r) return;
@@ -324,10 +344,28 @@ section("real analysis_v2 bundle");
     check(ready.label === "Solution pending", id + " shows pupils Solution pending");
   });
 
-  HEURISTIC_DETECTABLE.forEach(function (id) {
+  /* Layered accounting per pin, replacing the pre-repair "heuristics must
+     catch each" assertions (stale once PACKET_E01 landed): a pin is
+     legitimate when the record is still heuristic-flagged, OR the analysis
+     side still bakes it withheld in the ledger, OR it is a semantic pin
+     (human-review evidence the scanners cannot see). The classification is
+     printed so a graduated pin is visible at every gate run. */
+  const layers = { heuristic: [], ledger_withheld: [], semantic_pin: [] };
+  PINNED.forEach(function (id) {
     const r = byId[id];
     if (!r) return;
-    check(scanAnalysisRecordForDamage(r).length > 0, "heuristics independently catch " + id);
+    if (scanAnalysisRecordForDamage(r).length) layers.heuristic.push(id);
+    else if (ledger[id] === "withheld") layers.ledger_withheld.push(id);
+    else layers.semantic_pin.push(id);
+  });
+  console.log("  pin accounting: " + layers.heuristic.length + " heuristic-flagged, " +
+    layers.ledger_withheld.length + " ledger-withheld (repaired, awaiting release review), " +
+    layers.semantic_pin.length + " semantic pins (human-review evidence)");
+  check(layers.heuristic.length + layers.ledger_withheld.length + layers.semantic_pin.length === PINNED.length,
+    "every pinned ID present in the bundle is accounted for by a suppression layer");
+  E03_PINNED.forEach(function (id) {
+    check(layers.semantic_pin.indexOf(id) >= 0 || layers.heuristic.indexOf(id) >= 0,
+      id + " (E03) is pinned by evidence, not by the ledger: the pin must survive analysis-side regeneration");
   });
 
   // Corpus sweep: report (not fail) anything newly flagged beyond the known set —
@@ -336,8 +374,7 @@ section("real analysis_v2 bundle");
   Object.keys(byId).forEach(function (id) {
     if (scanAnalysisRecordForDamage(byId[id]).length) flagged.push(id);
   });
-  const unexpected = flagged.filter(function (id) { return KNOWN_DAMAGED.indexOf(id) < 0; });
-  check(flagged.length >= HEURISTIC_DETECTABLE.length, "corpus sweep finds at least the known signatures");
+  const unexpected = flagged.filter(function (id) { return PINNED.indexOf(id) < 0; });
   if (unexpected.length) {
     console.log("  ATTENTION: heuristics flag " + unexpected.length +
       " record(s) beyond the known-damaged list (auto-withheld at runtime; report to the analysis owner):");
@@ -350,7 +387,7 @@ section("real analysis_v2 bundle");
 
   // Safety must not have eaten clean Full records: a known-clean reviewed record still presents Full.
   const cleanFull = Object.keys(byId).filter(function (id) {
-    return KNOWN_DAMAGED.indexOf(id) < 0 &&
+    return PINNED.indexOf(id) < 0 &&
       byId[id].review && byId[id].review.status === "reviewed" &&
       scanAnalysisRecordForDamage(byId[id]).length === 0;
   });

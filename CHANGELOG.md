@@ -2,6 +2,37 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-04 (small hours) — the gate caught the E01 repairs, not damage; E03's five disqualifiers pinned
+
+Smith's release-train run stopped at the content-safety suite: thirteen
+"failures" that were in fact the twelve PACKET_E01 repairs landing (all
+twelve records rebuilt from crop + official key on the analysis side,
+2026-08-03 evening, evidence in `returns\PACKET_E01\FEEDBACK_E01.md`). The
+suite's pre-repair expectation that each pinned ID is still damaged had gone
+stale. Verified and closed:
+
+- **The twelve stay suppressed pending a deliberate release**: the analysis
+  side's `withheld_ids.json` bakes them withheld in the bundle ledger, the
+  viewer pins remain, and both come off together when the analysis side
+  clears its list by packet. Release is a decision, not a side effect.
+- **PACKET_E03's calibration falsified the reviewed/full flag** (both
+  sampled "full" records failed). Its five disqualifying records are now
+  pinned with their evidence as reasons: Q14 (scanner-evading `?`-for-minus
+  corruption), Q11 (wrong arithmetic in a diagnosis), Q90 (wrong sign law),
+  Q37 (missing derivation), Q35 (unsupported landing). Material-defect
+  records ship under the already-softened "Detailed help"/"Guided help"
+  labels and wait for remediation.
+- **Safety suite redesigned** from asserted damage to layered pin
+  accounting (heuristic-flagged / ledger-withheld / semantic pin), exact
+  set-equality between wrapper pins and the suite's expected list, and an
+  assertion that semantic pins survive analysis-side regeneration.
+  Gates: 126/126 safety, 1,503/1,503 catalogue integration, 647/647
+  presentation. Scanner gap noted: Q14's corruption class evades the
+  signatures; human review remains the quality layer.
+- Wrapper pin list: 12 repaired-held + 5 E03 = 17. Inter-chat note filed in
+  the ESAT project; ledger alignment (adding the five to withheld_ids)
+  requested there.
+
 ## 2026-08-03 (later still) — maths examiner reports live, default-on (B(a) first item)
 
 Wrapper + suite only; the engine's `examinerOf` panel already fired on the
