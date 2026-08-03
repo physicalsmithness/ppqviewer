@@ -74,7 +74,11 @@
        is authoritative, so the marker becomes a quiet ellipsis; the surviving
        words (conditions, definitions) still read. Real inline maths in the
        catalogue text is the seat-side fix (packet sent). */
-    var OMIT_RE = /\s*\[[^\]]*(?:omitted|see source clipping)[^\]]*\]\s*/gi;
+    /* Since the 2026-08-03 regeneration the marker is the stable typed token
+       `[figure]` (or `[graph]`), documented in meta.figure_marker, with
+       per-part `has_figure_omitted` flags. The verbose alternation stays so a
+       stale catalogue still cleans. */
+    var OMIT_RE = /\s*\[[^\]]*(?:omitted|see source clipping)[^\]]*\]\s*|\s*\[(?:figure|graph)\]\s*/gi;
     /* The cleaned text keeps a quiet "…" where the extractor dropped a figure.
        Smith, 2026-08-02: "no note of diagram missing" — so say it plainly
        instead of leaving an ellipsis the reader cannot interpret. */
@@ -255,6 +259,36 @@
       var m = /\(([A-Za-z]+)\)/.exec(String(label == null ? "" : label));
       return m ? m[1].toLowerCase() : "";
     }
+    /* Seat packet 2026-08-03: 126 questions across 86 papers carry the
+       roman-gap signature ((i)/(iii)/(v) with the even romans missing), a
+       part-LABEL extraction fault. Where that signature is present, a
+       blank-mark part is itself suspect, so absorbing it into a marked
+       neighbour (below) would mask corruption rather than repair an
+       extraction miss. Gate: such questions stay question-level until the
+       seat's X03 label repair ships. */
+    var ROMAN_VAL = { i: 1, ii: 2, iii: 3, iv: 4, v: 5, vi: 6, vii: 7, viii: 8, ix: 9, x: 10 };
+    function romanGapIn(parts) {
+      var byLetter = {};
+      (parts || []).forEach(function (p) {
+        var toks = String(p.label == null ? "" : p.label).match(/\(([A-Za-z]+)\)/g) || [];
+        toks = toks.map(function (t) { return t.replace(/[()]/g, "").toLowerCase(); });
+        var letter = "";
+        for (var i = 0; i < toks.length; i++) {
+          if (!ROMAN_VAL[toks[i]]) { letter = toks[i]; break; }
+        }
+        toks.forEach(function (t) {
+          if (t !== letter && ROMAN_VAL[t]) {
+            (byLetter[letter] = byLetter[letter] || []).push(ROMAN_VAL[t]);
+          }
+        });
+      });
+      return Object.keys(byLetter).some(function (L) {
+        var seen = {}, vs = [];
+        byLetter[L].forEach(function (v) { if (!seen[v]) { seen[v] = 1; vs.push(v); } });
+        vs.sort(function (a, b) { return a - b; });
+        return vs.length > 0 && vs[vs.length - 1] > vs.length;
+      });
+    }
     function unitsOf(q) {
       var parts = q.parts || [];
       if (parts.length < 2) return null;
@@ -273,6 +307,8 @@
          invented — the group total is the printed one. This lifts part-level
          questions from 1,063 to 1,459, and from 425 to 763 of the 862
          questions worth 10 marks or more, which is where the pain was. */
+      var anyBlank = order.some(function (u) { return !(u.marks > 0); });
+      if (anyBlank && romanGapIn(parts)) return null; /* gated: labels corrupt, packet 2026-08-03 */
       var changed = true;
       while (changed) {
         changed = false;
@@ -304,9 +340,14 @@
     var questions = [];
     (window.MATHS_PPQS || []).forEach(function (q) {
       var tnum = topicNumOf(q.aa_codes);
+      /* Seat packet 2026-08-03 (L02): `aa_codes_today` carries the judged
+         lineage codes for 1,272 legacy questions. Judged codes beat the MHL
+         heuristic; the heuristic survives only as the fallback for the 460
+         still-provisional questions and dies when batch D lands. */
+      if (tnum == null) tnum = topicNumOf(q.aa_codes_today);
       if (tnum == null) tnum = legacyTopicNumOf(q.mhl_codes, q.option);
       var subtopics = [];
-      (q.aa_codes || []).forEach(function (c) {
+      ((q.aa_codes && q.aa_codes.length) ? q.aa_codes : (q.aa_codes_today || [])).forEach(function (c) {
         var tp = topicPartOf(c);
         if (subtopics.indexOf(tp) < 0) subtopics.push(tp);
       });
@@ -361,6 +402,8 @@
         marking_differs: q.marking_differs || "",
         marking_note: (q.marking_note || "").trim(),
         marking_era: q.marking_era || "",
+        aa_codes_today: q.aa_codes_today || [],
+        practice_value: q.practice_value || "",
         origin_note: (q.origin_note || "").trim(),
         aa_codes: q.aa_codes || [], mhl_codes: q.mhl_codes || [],
         subtopics: subtopics,

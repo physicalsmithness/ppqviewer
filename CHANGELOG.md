@@ -2,6 +2,35 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-03 (night) — the seat's three packets consumed; d022 deck and d023 redesign recorded; mock-ups delivered
+
+No engine change; wrapper + suite + records. Catalogue regenerated twice
+tonight by the Maths seat (17:31 and 20:07) and consumed on arrival.
+
+- **`[figure]`/`[graph]` typed token** cleaned in `cleanStemText` (the verbose
+  marker match stays as a stale-data fallback); suite asserts the token can
+  never reach a pupil.
+- **Roman-gap absorption gate**: a question with a blank-mark unit AND gapped
+  romans in a letter group stays question-level rather than absorbing (126
+  questions, label corruption per the seat's measurement; 2222-7107 P2 Q12 is
+  the pinned exemplar, reversing its old absorbed expectation). Flips back
+  automatically when the seat's X03 label repair ships. Record count moves
+  5,368 → 5,054; the stem-pages assertion made proportional accordingly.
+- **`aa_codes_today` routing**: judged lineage codes now place legacy
+  questions in topics and subtopic filters; the MHL heuristic survives only
+  for the 460 provisional questions. `practice_value` carried, unsurfaced.
+- **Examiner shape confirmed to the seat by reply packet**: keep
+  `examiner_comment`/`meta.paper_reports` as shipped; the engine's
+  `examinerOf` panel is the landing point; maths build queued NEXT.
+- **d022 (unseen-first deck)** and **d023 (post-question redesign direction)**
+  recorded from Smith's dictation; layout mock-ups delivered at
+  `mockups\feedback_redesign_2026-08-03.html`; d019 ticking paused into d023.
+- Housekeeping: the stale f48 worktree registration pruned (its branch tip
+  `a4891a2` is merged; the 20MB folder in CodexProjects is inert); the
+  `.codex\worktrees\5040` folder was found already deleted host-side.
+- Presentation suite 642/642; ESAT gates re-verified against the 18:30
+  Codex-side bundle rebuild (112/112, 1,503/1,503).
+
 ## 2026-08-03 (later) — d021: multi-consumer operating model; the foreign commits adopted; records reconciled
 
 No engine change. Governance and records, after Smith's ruling of today.

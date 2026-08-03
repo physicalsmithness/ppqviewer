@@ -253,3 +253,25 @@ _Backfilled 2026-08-03: built and committed in `93a0177` (engine v0.19.0) on 202
 **Mechanism.** `OPERATING_MODEL.md`, new and on every seat's wake list: single-writer areas per seat (architect: engine, tests, tools, records; builders: exactly what their packet names; content seats: their own trees and never this repository; Smith: every push), per-seat git author strings (`Claude (ppq architect)`, `Claude builder (<consumer>)`), the inbox packet channel unchanged, and one release train per consumer with the suites as gates and Smith's push as the only publishing act.
 
 **Trigger and disposition.** The trigger was the 2026-08-03 near-miss: Codex-tasked chats committed `f48abc3` and `a4891a2` into this repository under the maintainer's author name while the maintainer was mid-session in the same tree (details in `OPERATING_MODEL.md`). The work itself was reviewed this session and **adopted**: all engine additions are opt-in config (`presentation` block, `sourceAdvisoryOf`, `searchTermsOf`, `classificationLabels`, the record-resolvability readiness check), no deployed file was touched, and the full gate now passes at 2,292 assertions across the five suites, re-run from disk this session. The two Codex-side viewer workstreams are closed by Smith's brief (`CODEX_BRIEF_2026-08-03.md`); Codex retains ESAT analysis content: categorisation completion and exception reporting, damaged-record repair against the twelve suppressed IDs, and the remediation programme for the 674 provisional records.
+
+---
+
+## d022 (the deck serves what you have not met): unseen questions are the default pool, repeats are declared
+
+**Decision (Smith, dictated 2026-08-03; "big and tricky to get right", so recorded fully before building).** The default serving order stays a shuffle, but the DECK it shuffles is the pool of questions the pupil has not met before. Changing any filter rebuilds the deck over the newly filtered pool, still excluding met questions by default. The pupil can switch pool, three options: **unseen only** (default); **unseen plus questions rated below 4** (met questions whose latest 1-6 self-rating was 3 or lower return to the deck); **all questions**. And whenever a previously-met question IS served, from any pool, it announces itself: "Met this before: got it right/wrong, rated N", from the latest attempt row.
+
+**Build notes (engine-wide, every consumer).** "Met" means an attempt row exists for the record (answered, or marks entered, or markscheme revealed on a reveal-type question); a skipped question is not met. The pool is computed per storageKey from the attempts log, so it needs no new storage; the pool CHOICE persists in `store.prefs`. Exhausting the pool must say so plainly and offer the next pool rather than silently reshuffling repeats in. Interactions to hold: session history and "Review your last answer" (VF-03) operate on attempts regardless of pool; the Learned-so-far scope (d011) and syllabus default (d020) compose with the pool as intersections; the timing bank is indifferent. `practice_value` (maths L02) may later refine "all questions". Sequencing per Smith: ahead of the post-question redesign build; the examiner rendering (small, already ruled, data shipped) goes first.
+
+---
+
+## d023 (post-question feedback, redesign direction): first instinct first, three doors, detail behind them
+
+**Direction (Smith, dictated 2026-08-03; mock-ups commissioned rather than a build, "so we could talk about it without ever having to build them").** The present post-question surface overloads one screen; pupils rate 1-6 and read little. The redesign starts from what a pupil actually wants to SAY first, three doors:
+
+1. **"A silly mistake"** (the first instinct; "so annoying"): didn't read the question properly / mental arithmetic / algebra slip. Quick in, quick out.
+2. **"Got the idea, couldn't get to the answer"**: opens the stuck-algebraically vocabulary (d012) and the "now you've seen it" ladder.
+3. **"Didn't see what the question was about"**: opens the same ladder plus the question's own content elements.
+
+The ladder under doors 2 and 3: I see it now / I sort of get it now / I don't really get it / I don't get it at all. The "how to do it" surface becomes a DEDICATED screen, viewable before or after the door detail: direct methods on one half, narrowing methods on the other, "used it" beside each, faster routes highlighted, with "did you find the quickest way?" as its question. Everyone, right or wrong, gets "Would you get a similar question right tomorrow?" (definitely / probably / maybe / probably not). Skipping past any of it is always allowed and never nagged.
+
+Open for the mock-up conversation: one-thing-per-screen versus three-panels-on-one-screen (mocked both); where the methods screen sits in each; whether d019's mark-point ticking lives behind door 2 or stays its own opt-in reveal step (d019's build is paused until this conversation rules). Mock-ups: `mockups\feedback_redesign_2026-08-03.html`.

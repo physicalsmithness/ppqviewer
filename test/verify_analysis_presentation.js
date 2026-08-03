@@ -2834,12 +2834,17 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "questions explode into markable units: " + recs.length + " records from " + source.length + " catalogue questions");
   check(Object.keys(byId).length === recs.length, "every unit id is unique");
 
-  // Smith's exemplar class: a big structured question with a mid-run blank mark.
+  // The old exemplar REVERSED by the seat's 2026-08-03 packet: 2222-7107 P2
+  // Q12's mid-run blank sits under roman-gap label corruption ((i)/(iii)/(v)
+  // with the even romans missing; 126 questions carry the signature), so
+  // absorption is GATED there and the question stays one unit until the
+  // seat's X03 label repair ships.
   const q12 = recs.filter((r) => r.block_id === "2222-7107_Q12");
-  check(q12.length === 3 && q12.map((r) => r.marks).join(",") === "4,3,12",
-    "2222-7107 P2 Q12 (19 marks) becomes three markable units worth 4, 3 and 12 — not one 0..19 bar");
-  check(q12.length === 3 && /^\(c\)\(i\)–\(c\)\(v\)$/.test(q12[2].part_label),
-    "the absorbed run reads as a human part label, not a slug: " + (q12[2] ? q12[2].part_label : "?"));
+  check(q12.length === 1 && q12[0].is_part === false,
+    "2222-7107 P2 Q12 (roman-gap labels + blank mark) is gated to question-level, not absorbed: " +
+    q12.length + " unit(s)");
+  check(q12.length === 1 && (q12[0].question_marks === 19 || q12[0].marks === 19),
+    "the gated question still carries its printed 19 marks");
   const q10 = recs.filter((r) => r.block_id === "8822-7101_Q10");
   check(q10.length === 4 && q10.map((r) => r.marks).join(",") === "5,7,4,4",
     "8822-7101 Q10: the seat's mark_group makes 10(b)(i)+10(b)(ii) ONE 7-mark unit");
@@ -2869,6 +2874,27 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(fellBack.every((q) => (q.parts || []).some((p) => !p.marks_status && !(parseInt(p.marks, 10) > 0))),
     "every fallback has a real reason: a part with no marks and no status explaining it");
 
+  // Seat packet 2026-08-03: the typed [figure]/[graph] token never reaches a pupil.
+  const tokenLeak = recs.filter((r) =>
+    /\[(?:figure|graph)\]/i.test(r.stem_text || "") ||
+    (r.part_texts || []).some((p) => /\[(?:figure|graph)\]/i.test(p.text || "")));
+  check(tokenLeak.length === 0,
+    "the typed [figure]/[graph] token is cleaned from every rendered text (" + tokenLeak.length + " leaks)");
+
+  // Seat packet 2026-08-03 (L02): judged lineage codes route legacy questions.
+  const judged = source.filter((q) => (!q.aa_codes || !q.aa_codes.length) && (q.aa_codes_today || []).length);
+  if (judged.length) {
+    const routed = judged.filter((q) => {
+      const rec = byId[q.id] || recs.find((r) => r.block_id === q.id);
+      return rec && rec.topic_num != null;
+    });
+    check(routed.length > 0,
+      "aa_codes_today routes judged legacy questions into real topics (" +
+      routed.length + " of " + judged.length + " judged)");
+  } else {
+    check(true, "no aa_codes_today in this catalogue build; heuristic path remains");
+  }
+
   // Marks entry, timing and metadata all follow the unit, not the question.
   check(cfg.marksOf(q10[1]) === 7 && cfg.partMarksOf(q10[1]) === 7,
     "the marks bar is sized to the part (7), never the question total (20)");
@@ -2877,8 +2903,9 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const meta = cfg.metaLine(q10[1]);
   check(meta.indexOf("(b)(i)–(b)(ii)") >= 0 && meta.indexOf("7 marks") >= 0,
     "the card says which part you are on and what it is worth: " + meta.slice(meta.indexOf("· P")));
-  check(cfg.metaLine(q12[2]).indexOf("of 19 for the whole question") >= 0,
-    "the whole-question total is offered as context when the parts do add up to it (Q12: 4+3+12=19)");
+  const addsUp = recs.find((r) => r.is_part && r.units_marks_total === r.question_marks);
+  check(!!addsUp && cfg.metaLine(addsUp).indexOf("of " + (addsUp ? addsUp.question_marks : 0) + " for the whole question") >= 0,
+    "the whole-question total is offered as context when the parts do add up to it: " + (addsUp ? addsUp.id : "none found"));
   const mismatch = recs.filter((r) => r.is_part && r.units_marks_total !== r.question_marks);
   check(mismatch.length > 0 && mismatch.every((r) => cfg.metaLine(r).indexOf("for the whole question") < 0),
     "no whole-question total is claimed where the seat's aggregation quirks mean the parts do not add up (" +
@@ -2888,7 +2915,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "attempt rows carry the block, the part and the part's maximum");
   check(q10.every((r) => r.topic_code === q10[0].topic_code && r.subtopics.length === q10[0].subtopics.length),
     "each unit inherits the question's classification, so filters and scope still work");
-  check(typeof cfg.partLabelOf === "function" && !/[_]/.test(cfg.partLabelOf(q12[2])),
+  check(typeof cfg.partLabelOf === "function" && !/[_]/.test(cfg.partLabelOf(q10[1])),
     "partLabelOf gives the navigator a readable label, never the id slug");
 
   // Markscheme pages: the reveal was serving whole papers from the cover page.
@@ -2961,7 +2988,9 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
      you just won't see it." The catalogue has NO stem image; only the printed
      page carries the stem's tables, figures and typeset maths. */
   const stemmed = recs.filter((r) => cfg.stemPagesOf(r).length);
-  check(stemmed.length > 5000,
+  /* Proportional, not absolute: the roman-gap gate (2026-08-03) legitimately
+     collapses 126 questions to question-level, so the record count moves. */
+  check(stemmed.length > recs.length * 0.95,
     "the printed page is offered as the stem on " + stemmed.length + " of " + recs.length + " records");
   check(recs.every((r) => cfg.stemPagesOf(r).every((u) => !/mark_/.test(u))),
     "NO markscheme page can reach the stem or the original-pages view");

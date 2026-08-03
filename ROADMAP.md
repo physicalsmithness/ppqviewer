@@ -110,6 +110,15 @@ content they ask about.
   config; IB Maths adds type/theme/command filters + seven axes; ESAT adds
   four axes.)_
 - [ ] Add canonical analysis-ID support to question finding.
+- [ ] **d022 (unseen-first deck): the next ENGINE build, after the maths
+  examiner work.** Default pool excludes met questions; three pool options
+  (unseen / unseen + rated below 4 / all); any served repeat announces
+  "Met this before: right/wrong, rated N". Full spec in d022. Smith,
+  2026-08-03: higher priority than the post-question redesign, "big and
+  tricky to get right".
+- [ ] d023 (post-question feedback redesign): mock-ups delivered 2026-08-03
+  (`mockups\feedback_redesign_2026-08-03.html`); the build waits on Smith's
+  read of them. d019's ticking build is paused into this conversation.
 
 Exit: a pupil can report a problem centrally, revisit previous work and inspect
 their own learning record.
@@ -225,7 +234,20 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
   - [x] Adopt the seat's `ms_pages_this_question` / `ms_crop_adequacy`.
     _(d017: mean pages shown 19.0 → 2.9; thin crops open their pages unasked
     and say why; whole document one click deeper.)_
-  - [ ] **NEXT — mark-point ticking as an OPT-IN mode (d017, Smith ruled (b)).**
+  - [ ] **NEXT — examiner reports, default-on (seat packets 2026-08-03; Smith's
+    ruling recorded their side).** The engine pattern already exists
+    (`examinerOf` + the reveal panel); maths maps `examiner_comment` with the
+    part-level comment beating the question-level one, `examiner_match_note`
+    as a quiet provenance line, and `meta.paper_reports` one click deeper.
+    Shape confirmed back to the seat by packet; no regeneration needed.
+  - [x] Consume the three 08-03 packets: `[figure]`/`[graph]` token cleaned
+    (suite-asserted it can never reach a pupil), blank-mark absorption GATED
+    on the roman-gap signature (126 corrupt-label questions stay
+    question-level until X03), `aa_codes_today` routing adopted with the MHL
+    heuristic demoted to fallback for the 460 provisional, `practice_value`
+    carried. _(2026-08-03 night; presentation suite 642/642.)_
+  - [ ] **PAUSED into d023 (post-question redesign) — mark-point ticking as an
+    OPT-IN mode (d017, Smith ruled (b); d019 ruled build-then-judge).**
     `markpoints` on 6,207 parts, `markpoint_routes` on 1,195. Routes are
     exclusive (choose a route, tick within it); `AG` means the answer was
     printed, so render that claim differently; bracketed `(M1)` are implied

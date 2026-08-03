@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Post-question feedback: redesign mock-ups (2026-08-03)</title>
+<style>
+  :root {
+    --ink: #23303b; --mut: #6b7a87; --line: #dde5ea; --wash: #f5f8fa;
+    --accent: #1c6e8c; --accent-wash: #e8f2f6; --warn: #8a6d3b; --warn-wash: #fdf6e3;
+    --good: #2e7d4f; --good-wash: #e9f5ee; --bad: #b23a3a; --bad-wash: #fbecec;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.55 "Segoe UI", system-ui, sans-serif; color: var(--ink); background: #fff; padding: 1.2rem 1.4rem 4rem; }
+  h1 { font-size: 1.25rem; margin: 0 0 0.2rem; }
+  .sub { color: var(--mut); font-size: 0.85rem; margin-bottom: 1rem; }
+  .tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+  .tabs button { font: inherit; padding: 0.45rem 0.9rem; border: 1px solid var(--line); background: var(--wash); border-radius: 999px; cursor: pointer; }
+  .tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  section.variant { display: none; }
+  section.variant.on { display: block; }
+  .note { color: var(--mut); font-size: 0.82rem; max-width: 60rem; margin: 0.4rem 0 1.1rem; }
+  .note b { color: var(--ink); }
+
+  .row { display: flex; gap: 1.1rem; flex-wrap: wrap; align-items: flex-start; }
+  .phone { width: 300px; border: 2px solid var(--ink); border-radius: 18px; padding: 0.8rem 0.8rem 0.9rem; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .desk { max-width: 860px; border: 2px solid var(--ink); border-radius: 12px; padding: 1rem 1.1rem; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .cap { text-align: center; font-size: 0.78rem; color: var(--mut); margin-top: 0.4rem; }
+  .ctx { font-size: 0.72rem; color: var(--mut); border-bottom: 1px solid var(--line); padding-bottom: 0.4rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; gap: 0.5rem; }
+  .awarded { color: var(--bad); font-weight: 600; }
+  .screen-q { font-size: 0.98rem; font-weight: 600; margin: 0.2rem 0 0.7rem; }
+
+  .door { display: block; width: 100%; text-align: left; font: inherit; border: 1.5px solid var(--line); border-radius: 12px; background: var(--wash); padding: 0.65rem 0.8rem; margin-bottom: 0.55rem; cursor: pointer; }
+  .door .d-title { font-weight: 600; }
+  .door .d-sub { font-size: 0.78rem; color: var(--mut); }
+  .door.open { border-color: var(--accent); background: var(--accent-wash); }
+
+  .chip { display: inline-block; font-size: 0.82rem; border: 1px solid var(--line); border-radius: 999px; padding: 0.28rem 0.65rem; margin: 0 0.3rem 0.35rem 0; background: #fff; cursor: pointer; }
+  .chip.onc { border-color: var(--accent); background: var(--accent-wash); font-weight: 600; }
+  .chip.weak { border-color: var(--warn); background: var(--warn-wash); }
+  .group-label { font-size: 0.78rem; color: var(--mut); margin: 0.55rem 0 0.25rem; }
+
+  .ladder { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.3rem; }
+  .ladder button { font: inherit; font-size: 0.86rem; text-align: left; padding: 0.4rem 0.65rem; border: 1px solid var(--line); border-radius: 9px; background: #fff; cursor: pointer; }
+  .ladder button.onc { border-color: var(--accent); background: var(--accent-wash); font-weight: 600; }
+
+  .skip { display: inline-block; margin-top: 0.6rem; font-size: 0.8rem; color: var(--mut); text-decoration: none; border-bottom: 1px dotted var(--mut); }
+  .fwd { float: right; font-size: 0.8rem; color: var(--accent); text-decoration: none; font-weight: 600; }
+
+  .split { display: flex; gap: 1rem; }
+  .half { flex: 1; border: 1px solid var(--line); border-radius: 10px; padding: 0.7rem 0.8rem; background: var(--wash); }
+  .half h4 { margin: 0 0 0.15rem; font-size: 0.95rem; }
+  .half .h-sub { font-size: 0.76rem; color: var(--mut); margin-bottom: 0.6rem; }
+  .method { border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 8px; background: #fff; padding: 0.5rem 0.6rem; margin-bottom: 0.5rem; font-size: 0.85rem; }
+  .method.fast { border-left-color: var(--good); }
+  .m-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+  .m-title { font-weight: 600; }
+  .fasttag { font-size: 0.68rem; color: var(--good); background: var(--good-wash); border-radius: 4px; padding: 0.05rem 0.35rem; font-weight: 700; letter-spacing: 0.03em; }
+  .m-steps { color: var(--mut); font-size: 0.8rem; margin: 0.25rem 0; }
+  .used { font-size: 0.78rem; }
+  .used input { vertical-align: -2px; }
+
+  .tomorrow { border-top: 1px solid var(--line); margin-top: 0.7rem; padding-top: 0.7rem; }
+  .tomorrow .t-q { font-weight: 600; font-size: 0.92rem; margin-bottom: 0.4rem; }
+  .t-opts { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+  .t-opts button { font: inherit; font-size: 0.84rem; padding: 0.35rem 0.7rem; border: 1px solid var(--line); border-radius: 999px; background: #fff; cursor: pointer; }
+  .t-opts button:hover { border-color: var(--accent); }
+
+  .met { border: 1px solid var(--warn); background: var(--warn-wash); border-radius: 9px; padding: 0.5rem 0.7rem; font-size: 0.86rem; margin-bottom: 0.7rem; }
+  .pool { border: 1px solid var(--line); border-radius: 10px; padding: 0.7rem 0.9rem; background: var(--wash); max-width: 430px; }
+  .pool label { display: block; font-size: 0.88rem; margin-bottom: 0.35rem; cursor: pointer; }
+  .stepstrip { font-size: 0.72rem; color: var(--mut); text-align: center; margin-bottom: 0.5rem; letter-spacing: 0.02em; }
+  .stepstrip b { color: var(--accent); }
+  .rightpath { font-size: 0.78rem; color: var(--good); background: var(--good-wash); border-radius: 7px; padding: 0.35rem 0.55rem; margin-top: 0.55rem; }
+</style>
+</head>
+<body>
+
+<h1>Post-question feedback: redesign mock-ups</h1>
+<div class="sub">Internal design surface, nothing wired, no data recorded. d023 (post-question redesign direction), 2026-08-03. The worked example throughout: a 6-mark binomial part where the pupil awarded themselves 2.</div>
+
+<div class="tabs">
+  <button class="on" data-v="va">A · One thing per screen</button>
+  <button data-v="vb">B · Three panels, one screen</button>
+  <button data-v="vc">C · The "How to do it" screen</button>
+  <button data-v="vd">D · "Met this before" (d022 deck)</button>
+</div>
+
+<!-- ===================== VARIANT A ===================== -->
+<section class="variant on" id="va">
+  <p class="note"><b>One decision per screen, in the order a pupil actually thinks.</b> First screen is the three doors; whichever door they pick becomes screen two; the how-to-do-it screen and the tomorrow question follow. Skip is always there and never nagged. Typical journey is two or three taps. The risk is that it can feel like a corridor when a pupil wants out, which is why every screen carries the same quiet skip and the whole thing tolerates being abandoned.</p>
+
+  <div class="row">
+    <div>
+      <div class="phone">
+        <div class="stepstrip"><b>1 What happened?</b> · 2 · 3 · 4</div>
+        <div class="ctx"><span>Q7 · 8823-7102 P1 · Binomial theorem</span><span class="awarded">2 of 6</span></div>
+        <div class="screen-q">What happened?</div>
+        <button class="door"><span class="d-title">A silly mistake</span><br><span class="d-sub">Knew it, fumbled it. So annoying.</span></button>
+        <button class="door open"><span class="d-title">Got the idea, couldn't get to the answer</span><br><span class="d-sub">Right start, wrong end.</span></button>
+        <button class="door"><span class="d-title">Didn't see what it was about</span><br><span class="d-sub">No way in.</span></button>
+        <a class="skip" href="#">Skip this bit →</a>
+        <div class="rightpath">Got it right? Screens 1 and 2 are skipped entirely: straight to "How to do it" (optional) and the tomorrow question.</div>
+      </div>
+      <div class="cap">Screen 1: the three doors</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="stepstrip">1 · <b>2 Where exactly?</b> · 3 · 4</div>
+        <div class="ctx"><span>Got the idea, couldn't get there</span><span class="awarded">2 of 6</span></div>
+        <div class="group-label">Where did it go? (tap any that apply)</div>
+        <span class="chip onc">Didn't see I had to gather terms</span>
+        <span class="chip">Didn't spot factorising</span>
+        <span class="chip">Took an unhelpful route</span>
+        <span class="chip">Didn't spot the hidden quadratic</span>
+        <span class="chip">Didn't spot taking logs</span>
+        <span class="chip">Stuck on the algebra</span>
+        <div class="group-label">Now you've seen the answer:</div>
+        <div class="ladder">
+          <button class="onc">I see it now</button>
+          <button>I sort of get it now</button>
+          <button>I don't really get it</button>
+          <button>I don't get it at all</button>
+        </div>
+        <a class="skip" href="#">Skip this bit →</a>
+        <a class="fwd" href="#">Next →</a>
+      </div>
+      <div class="cap">Screen 2: the opened door (door 2 shown; door 1 shows its three slip chips instead and goes straight to screen 4)</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="stepstrip">1 · 2 · <b>3 How to do it</b> · 4</div>
+        <div class="ctx"><span>Ways through Q7</span><span>your route?</span></div>
+        <div class="method fast">
+          <div class="m-head"><span class="m-title">General term, straight down</span><span class="fasttag">FASTER</span></div>
+          <div class="m-steps">Write the general term, set the power of x, read the coefficient off.</div>
+          <label class="used"><input type="checkbox" checked> I used this</label>
+        </div>
+        <div class="method">
+          <div class="m-head"><span class="m-title">Expand the first four terms</span></div>
+          <div class="m-steps">Longer but safe: expand, collect, compare.</div>
+          <label class="used"><input type="checkbox"> I used this</label>
+        </div>
+        <div class="group-label">Did you find the quickest way?</div>
+        <div class="t-opts"><button>Yes</button><button>No, took a longer way</button><button>Didn't finish</button></div>
+        <a class="skip" href="#">Skip this bit →</a>
+        <a class="fwd" href="#">Next →</a>
+      </div>
+      <div class="cap">Screen 3: how to do it (compressed here; variant C is this screen given a full width)</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="stepstrip">1 · 2 · 3 · <b>4 Tomorrow</b></div>
+        <div class="ctx"><span>Last one</span><span class="awarded">2 of 6</span></div>
+        <div class="screen-q">Would you get a similar question right tomorrow?</div>
+        <div class="ladder">
+          <button>Definitely</button>
+          <button class="onc">Probably</button>
+          <button>Maybe</button>
+          <button>Probably not</button>
+        </div>
+        <div class="group-label" style="margin-top:0.8rem">Shown whether the answer was right or wrong. Replaces the bare 1-6 as the closing thought; one tap and the next question loads.</div>
+        <a class="fwd" href="#">Next question →</a>
+      </div>
+      <div class="cap">Screen 4: the tomorrow question</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VARIANT B ===================== -->
+<section class="variant" id="vb">
+  <p class="note"><b>Everything on one screen, but held apart as three doors.</b> The panels sit side by side and only the tapped one expands in place, so the pupil scans three headlines rather than a wall of prompts. The tomorrow question is pinned at the foot. Strength: nothing is hidden behind a step, one glance shows the whole offer. Risk: on a phone the three panels stack and this drifts back towards the overload it is replacing; the compact headline-only collapse is what has to hold the line.</p>
+
+  <div class="desk">
+    <div class="ctx"><span>Q7 · 8823-7102 P1 · Binomial theorem · 6 marks</span><span class="awarded">You awarded yourself 2 of 6</span><a class="skip" href="#" style="margin:0">Skip →</a></div>
+    <div class="split">
+      <div class="half">
+        <h4>A silly mistake</h4>
+        <div class="h-sub">Knew it, fumbled it</div>
+        <span class="chip">Didn't read the question properly</span>
+        <span class="chip">Mental arithmetic</span>
+        <span class="chip">Algebra slip</span>
+      </div>
+      <div class="half" style="border-color: var(--accent); background: var(--accent-wash);">
+        <h4>Got the idea, couldn't get to the answer</h4>
+        <div class="h-sub">Right start, wrong end — expanded</div>
+        <span class="chip onc">Didn't see I had to gather terms</span>
+        <span class="chip">Didn't spot factorising</span>
+        <span class="chip">Took an unhelpful route</span>
+        <span class="chip">Hidden quadratic</span>
+        <div class="group-label">Now you've seen the answer:</div>
+        <div class="ladder">
+          <button class="onc">I see it now</button>
+          <button>I sort of get it now</button>
+          <button>I don't really get it</button>
+          <button>I don't get it at all</button>
+        </div>
+      </div>
+      <div class="half">
+        <h4>Didn't see what it was about</h4>
+        <div class="h-sub">No way in</div>
+        <div class="group-label">It was really about:</div>
+        <span class="chip weak">Binomial theorem, general term (AHL1.10)</span>
+        <span class="chip">Laws of exponents (SL1.5)</span>
+      </div>
+    </div>
+    <div class="tomorrow">
+      <div class="t-q">Would you get a similar question right tomorrow?</div>
+      <div class="t-opts"><button>Definitely</button><button>Probably</button><button>Maybe</button><button>Probably not</button>
+        <a class="skip" href="#" style="margin:0 0 0 auto">How to do it →</a></div>
+    </div>
+  </div>
+  <div class="cap" style="text-align:left">The unexpanded panels show ONLY their headline and chips; the ladder and elements appear inside whichever door is tapped. "How to do it" (variant C) opens from the link, before or after answering here — Smith's "viewable before or after".</div>
+</section>
+
+<!-- ===================== VARIANT C ===================== -->
+<section class="variant" id="vc">
+  <p class="note"><b>The dedicated methods screen, whichever variant wins.</b> Direct routes on one half, narrowing routes on the other, "used it" beside each, the faster route flagged rather than preached. Its own question is "did you find the quickest way?", which is a different thing from "what went wrong". Reachable before or after doors 2 and 3 give their detail, and skippable like everything else.</p>
+
+  <div class="desk">
+    <div class="ctx"><span>How to do Q7 · two kinds of route</span><a class="skip" href="#" style="margin:0">Skip this bit →</a></div>
+    <div class="split">
+      <div class="half">
+        <h4>Straight there</h4>
+        <div class="h-sub">Direct methods: they produce the answer</div>
+        <div class="method fast">
+          <div class="m-head"><span class="m-title">General term, straight down</span><span class="fasttag">FASTER</span></div>
+          <div class="m-steps">General term ⇒ set the power of x to 3 ⇒ coefficient falls out. About four lines.</div>
+          <label class="used"><input type="checkbox"> I used this</label>
+        </div>
+        <div class="method">
+          <div class="m-head"><span class="m-title">Expand the first four terms</span></div>
+          <div class="m-steps">Full expansion, collect terms, compare. Safe, slower, more slips available.</div>
+          <label class="used"><input type="checkbox" checked> I used this</label>
+        </div>
+      </div>
+      <div class="half">
+        <h4>Narrowing down</h4>
+        <div class="h-sub">When you cannot go straight there: bound it, sanity-check it</div>
+        <div class="method">
+          <div class="m-head"><span class="m-title">Sign and size check</span></div>
+          <div class="m-steps">Odd power of a negative term ⇒ the coefficient must be negative; that alone kills half the slips.</div>
+          <label class="used"><input type="checkbox"> I used this</label>
+        </div>
+        <div class="method">
+          <div class="m-head"><span class="m-title">Small-x sanity value</span></div>
+          <div class="m-steps">Substitute a small x into both forms; they should agree to leading order.</div>
+          <label class="used"><input type="checkbox"> I used this</label>
+        </div>
+      </div>
+    </div>
+    <div class="tomorrow">
+      <div class="t-q">Did you find the quickest way?</div>
+      <div class="t-opts"><button>Yes</button><button>No, took a longer way</button><button>Didn't finish</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VARIANT D ===================== -->
+<section class="variant" id="vd">
+  <p class="note"><b>The d022 deck surfaces, shown for completeness.</b> The banner appears whenever a previously-met question is served, from any pool; the pool control is a quiet preference, not a nag. This is an engine build, sequenced ahead of the redesign build.</p>
+
+  <div class="row">
+    <div>
+      <div class="phone">
+        <div class="ctx"><span>Q3 · 2019 P2 · Vectors</span><span>7 marks</span></div>
+        <div class="met">Met this before: got it <b>wrong</b>, rated <b>3</b>, three weeks ago.</div>
+        <div style="border:1px dashed var(--line); border-radius:8px; padding:1.2rem 0.8rem; text-align:center; color:var(--mut); font-size:0.85rem;">question card as normal</div>
+      </div>
+      <div class="cap">The repeat announces itself before work begins</div>
+    </div>
+    <div>
+      <div class="pool">
+        <div style="font-weight:600; margin-bottom:0.4rem">Which questions should the shuffle serve?</div>
+        <label><input type="radio" name="pool" checked> Ones I haven't met <span style="color:var(--mut)">(default)</span></label>
+        <label><input type="radio" name="pool"> Unmet, plus ones I rated below 4</label>
+        <label><input type="radio" name="pool"> Everything</label>
+        <div class="group-label" style="margin-top:0.5rem">Changing any filter reshuffles the deck over the new pool. When a pool runs out, the viewer says so and offers the next one rather than quietly repeating.</div>
+      </div>
+      <div class="cap" style="text-align:left">The pool preference, per pupil per subject</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll(".tabs button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll(".tabs button").forEach(function (x) { x.classList.remove("on"); });
+      document.querySelectorAll("section.variant").forEach(function (s) { s.classList.remove("on"); });
+      b.classList.add("on");
+      document.getElementById(b.dataset.v).classList.add("on");
+    });
+  });
+</script>
+</body>
+</html>
