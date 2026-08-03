@@ -27,6 +27,46 @@ Universal engine changes are recorded here and notified into each consumer's inb
   exact preview build `f13c2ea7d3657643` passed 12/12 identity checks and the
   1280 px/320 px browser pass with no console errors or horizontal overflow.
 
+## 2026-08-03 — d020: the driller defaults to what a pupil can still be examined on (engine v0.19.0)
+
+Two seat packets of 2026-08-01, built against the catalogue they regenerated
+this evening (`spec_status`, `usable_if`, `marking_note`, all 2,195 questions).
+
+- **Default subset.** The syllabus filter is multi-select and starts on
+  current + close + mixed, with off-syllabus OFF: 3,696 of 5,368 records
+  served by default. Their argument is the right one: "a pupil revising should
+  not have to know that the Sets, Relations and Groups option existed in order
+  to avoid it." Off-syllabus stays one tick away, never hidden.
+- **The status is on the QUESTION**, above everything, not in a chip: an
+  off-syllabus question says so and says why it is still here ("the reasoning
+  is still worth doing, but this exact content will not be examined"); a mixed
+  one says which way to read it; a current one says nothing, because it needs
+  nothing. `usable_if` (their sentence turning a skippable question into a
+  usable one) takes precedence over my generic wording the moment it is
+  populated; it ships empty today by design.
+- **The markscheme carries its era warning at the reveal**: 315 questions from
+  2004-07 were marked under conventions since abolished, and without the note
+  the scheme looks broken and the pupil stops trusting it.
+- **The origin flag stays a quiet chip**, per their correction that it is
+  interest and not a warning.
+- Two new engine hooks, deliberately generic: `noticesOf` (anything a pupil
+  must know before working) and `markschemeNoteOf` (anything they need while
+  reading a scheme). Physics hit the same era problem (their d024), so this is
+  the surface both subjects can use.
+- Suites 640/640 presentation + 112/112 safety + 18/18 chemistry.
+
+**Coordination note, and it matters more than the feature.** A second seat
+committed `a4891a2` into this repo at 00:56 today under the same author name,
+touching the engine, the ESAT wrapper, four test files and adding three docs.
+Nothing was lost: `git status` showed every one of their files as modified only
+because the mount writes LF where they committed CRLF, and `git diff
+--ignore-cr-at-eol` confirmed the sole real changes were my four files. This
+commit therefore names its files explicitly rather than `git add -A`, which
+would have rewritten the line endings of their work. Their `test_chem.js` now
+takes `CHEMISTRYDRILLER_ROOT` from the environment, which is the right shape.
+Two seats on one live repo is the hazard the estate protocol exists to
+manage; flagged to Smith for a ruling.
+
 ## 2026-08-02 (later) — the deploy never shipped the printed pages; crop sizing corrected (engine v0.18.1)
 
 Smith on 0.18.0: "we still have the first thing not appearing... A1 is

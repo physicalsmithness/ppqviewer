@@ -2735,7 +2735,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the pages open by themselves when there are no crops at all, or when the consumer says the crop is too thin (d017)");
   check(css5014().indexOf(".ppq-ms-page") >= 0, "markscheme pages are styled");
   function css5014() { return fs.readFileSync(path.join(PROJECT_ROOT, "engine", "ppqviewer.css"), "utf8"); }
-  check(src.indexOf('version: "0.18.1"') >= 0, "engine bumped to 0.18.1 (0.18.0 card composition, 0.18.1 crop sizing)");
+  check(src.indexOf('version: "0.19.0"') >= 0, "engine bumped to 0.19.0 (0.18.1 crop sizing, 0.19.0 d020 notices + markscheme era note)");
 
   // wrapper: crops inline, pages behind the expander, never conflated
   check(/msCropsOf: function \(q\) \{ return q\.ms_crops \|\| \[\]; \}/.test(mSrc) &&
@@ -2981,6 +2981,41 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "the whole question opens BY ITSELF from part (b) onwards, as chemistry does, so the stem and earlier parts are always in view");
   check(/first \? \("Whole question/.test(src) && /The stem and the earlier parts/.test(src),
     "and says which of the two it is doing");
+
+  /* d020 (spec-status axis). Seat packets 2026-08-01, from Smith's ruling on
+     their side: a pupil revising for the current exam must be told ON the
+     question whether it is still examinable, and the driller must default to
+     the practisable subset rather than serving twenty years of everything. */
+  const statuses = {};
+  recs.forEach((r) => { statuses[r.spec_status || ""] = (statuses[r.spec_status || ""] || 0) + 1; });
+  check(!statuses[""] && statuses.current > 0 && statuses.out > 0,
+    "every record carries a syllabus status (current " + statuses.current + ", out " + statuses.out +
+      ", mixed " + (statuses.mixed || 0) + ", close " + (statuses.close || 0) + ")");
+  const specFilter = (cfg.filters || []).filter((f) => f.field === "spec_status")[0];
+  check(specFilter && specFilter.multi === true &&
+    specFilter.default.join(",") === "current,close,mixed" && specFilter.default.indexOf("out") < 0,
+    "the default subset is what a pupil can still be examined on; off-syllabus is reachable but not served by default");
+  const outRec = recs.filter((r) => r.spec_status === "out")[0];
+  const outNotices = cfg.noticesOf(outRec);
+  check(outNotices.length > 0 && outNotices[0].tone === "warn" && /Off the current syllabus/.test(outNotices[0].label),
+    "an off-syllabus question says so on the question itself, not only in a filter chip");
+  check(/not be examined|worth doing/.test(outNotices.map((n) => n.text).join(" ")),
+    "and says why it is still here, so a pupil is not left wondering");
+  check(cfg.noticesOf(recs.filter((r) => r.spec_status === "current")[0]).length === 0,
+    "a current question is not cluttered with a notice it does not need");
+  const mdRec = recs.filter((r) => r.marking_differs === "yes")[0];
+  check(mdRec && /Older marking rules/.test(cfg.markschemeNoteOf(mdRec)),
+    "a scheme written under abolished conventions warns the pupil AT THE REVEAL, or it just looks broken");
+  check(cfg.markschemeNoteOf(recs.filter((r) => r.marking_differs !== "yes")[0]) === "",
+    "and nothing is said where the conventions still hold");
+  check(src.indexOf("cfg.noticesOf = cfg.noticesOf || null") >= 0 &&
+    src.indexOf("cfg.markschemeNoteOf = cfg.markschemeNoteOf || null") >= 0 &&
+    /notices\.forEach/.test(src),
+    "the engine hooks are generic: any consumer can put a notice above a question or beside a scheme");
+  const originRec = recs.filter((r) => r.origin_note)[0];
+  check(originRec && cfg.tagsOf(originRec).some((t) => t === originRec.origin_note) &&
+    !cfg.noticesOf(originRec).some((n) => (n.text || "").indexOf(originRec.origin_note) >= 0),
+    "the origin flag stays a quiet chip, per the seat's correction that it is interest and not a warning");
 
   /* The deploy must SHIP the printed pages, or d018's flagship image is a
      broken-image icon on the live site (Smith, 2026-08-02, and my omission:

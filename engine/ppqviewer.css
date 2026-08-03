@@ -266,6 +266,11 @@
 .ppq-wq-map .ppq-wq-part { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.4rem 0.6rem; }
 .ppq-wq-map .ppq-wq-part-label { margin-bottom: 0; text-transform: none; font-size: 0.85rem; color: var(--ppq-ink2); }
 .ppq-wq-map .ppq-wq-part.current .ppq-wq-part-label { color: var(--ppq-accent); }
+/* d020: things a pupil must know before working, or while reading a scheme. */
+.ppq-notice { border-radius: 7px; padding: 0.45rem 0.7rem; margin: 0 0 0.6rem; font-size: 0.88rem; line-height: 1.5; border: 1px solid; }
+.ppq-notice-info { background: #eef5fb; border-color: #c7dcef; color: #24506f; }
+.ppq-notice-warn { background: #fdf4e3; border-color: #ecd9ac; color: #7a5b16; }
+.ppq-notice b { font-weight: 700; }
 /* The OCR transcription, demoted below the printed pages it transcribes. */
 .ppq-transcript { margin-top: 1rem; border-top: 1px dashed var(--ppq-line); padding-top: 0.5rem; }
 .ppq-transcript > summary { cursor: pointer; font-size: 0.78rem; color: var(--ppq-muted); }

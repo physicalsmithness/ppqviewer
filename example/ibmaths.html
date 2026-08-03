@@ -156,6 +156,13 @@
       option: "Option booklet",
       investigation: "Paper 3 investigation"
     };
+    /* Seat ask 2: say it on the question, in words a student can act on. */
+    var SPEC_STATUS_LABEL = {
+      current: "On the current syllabus",
+      close: "Not a current syllabus line, but the maths is",
+      mixed: "Parts of this are off the current syllabus",
+      out: "Off the current syllabus"
+    };
     function paperKindOf(q) {
       if (ROLE_LABEL[q.paper_role]) {
         /* An option or investigation still needs the calculator rule saying. */
@@ -338,6 +345,23 @@
            not only as a filter. */
         calculator: q.calculator || "",
         paper_role: q.paper_role || "",
+        /* Seat packets, 2026-08-01: is this still on the syllabus, and if not,
+           can it still be used? Smith's ruling on their side: a pupil revising
+           for the current exam must be told on the question, and the driller
+           must default to the practisable subset instead of serving twenty
+           years of everything. `usable_if` (empty for now, populated by the
+           packet they are cutting) is the sentence that turns a question a
+           pupil would skip into one they can use. */
+        spec_status: q.spec_status || "",
+        spec_status_source: q.spec_status_source || "",
+        usable_if: (q.usable_if || "").trim(),
+        /* A separate axis: content can be squarely current and yet marked under
+           conventions since abolished. 315 questions, all 2004-07. Without the
+           note the scheme looks broken and the pupil stops trusting the reveal. */
+        marking_differs: q.marking_differs || "",
+        marking_note: (q.marking_note || "").trim(),
+        marking_era: q.marking_era || "",
+        origin_note: (q.origin_note || "").trim(),
         aa_codes: q.aa_codes || [], mhl_codes: q.mhl_codes || [],
         subtopics: subtopics,
         families: q.families || [],
@@ -511,6 +535,14 @@
       filters: [
         { field: "syllabus", label: "syllabus", allLabel: "AAHL + legacy MHL", values: ["AAHL", "MHL"], friendlyLabels: { AAHL: "AA HL (2021—)", MHL: "Legacy MHL (2004–20)" } },
         { field: "aa_applicable", label: "AA fit", allLabel: "Any AA fit", values: ["Yes", "Partial", "No"], default: "Yes", positiveValues: ["Yes"] },
+        /* Seat ask 1: default to the practisable subset. "A pupil revising
+           should not have to know that the Sets, Relations and Groups option
+           existed in order to avoid it." Multi-select so the default can be
+           three of the four values, with `out` reachable deliberately. */
+        { field: "spec_status", label: "syllabus", allLabel: "On the syllabus now",
+          values: ["current", "close", "mixed", "out"], multi: true,
+          default: ["current", "close", "mixed"],
+          friendlyLabels: SPEC_STATUS_LABEL, positiveValues: ["current"] },
         { field: "topic_code", label: "topic", allLabel: "All topics", values: ["T1", "T2", "T3", "T4", "T5"], friendlyLabels: topicFriendly },
         { field: "subtopics", label: "subtopic", allLabel: "All subtopics", dependsOn: "topic_code", hideUntilParent: true, dashboardFacet: true, friendlyLabels: SUBTOPIC_NAMES },
         { field: "families", label: "family", allLabel: "All families" },
@@ -574,7 +606,13 @@
         if (q.topic) t.push(q.topic_code + " " + q.topic);
         (q.families || []).slice(0, 2).forEach(function (f) { t.push(f); });
         if (q.option) t.push("Option: " + q.option);
-        if (q.aa_applicable && q.aa_applicable !== "Yes") t.push("AA: " + q.aa_applicable);
+        /* The seat asked for the origin flag to be demoted to a footnote at
+           most ("it is not a warning and does not deserve a badge"), so it
+           rides here among the ordinary chips, not in the notices above. */
+        if (q.origin_note) t.push(q.origin_note);
+        /* aa_applicable is superseded by spec_status for the question a pupil
+           actually asks; keep it only where it disagrees with a current status. */
+        if (q.aa_applicable && q.aa_applicable !== "Yes" && q.spec_status === "current") t.push("AA: " + q.aa_applicable);
         return t;
       },
       /* Six-faults #3/#6 + d016: the stem reads FIRST as the shared context,
@@ -606,6 +644,36 @@
               : "") + "</div>");
         });
         return bits.join("");
+      },
+      /* Seat packets, 2026-08-01, in their stated display priority: spec_status
+         first, then usable_if where present, then the marking-era note, then
+         the origin clause "if you show it at all" (their words: it is for
+         interest, not a warning, so it is a quiet last line and never a badge).
+         An `out` question must say plainly that it is off-syllabus AND why it
+         is still here, or a pupil rightly wonders why they are being served it. */
+      noticesOf: function (q) {
+        var out = [];
+        if (q.spec_status === "out") {
+          out.push({ tone: "warn", label: "Off the current syllabus.",
+            text: q.usable_if ? "" : "Kept for practice: the reasoning is still worth doing, but this exact content will not be examined." });
+        } else if (q.spec_status === "close") {
+          out.push({ tone: "info", label: "Not a current syllabus line.",
+            text: q.usable_if ? "" : "The mathematics you would actually do here is current." });
+        } else if (q.spec_status === "mixed") {
+          out.push({ tone: "info", label: "Parts of this question are off the current syllabus.",
+            text: q.usable_if ? "" : "Worth doing for the parts that are current." });
+        }
+        if (q.usable_if) out.push({ tone: "info", label: "How to use it:", text: q.usable_if });
+        if (q.marking_differs === "yes" && !q.marking_note) {
+          out.push({ tone: "warn", label: "Older marking rules.",
+            text: "This scheme was written under conventions that no longer apply, so it will not look like a modern one." });
+        }
+        return out;
+      },
+      /* Shown WITH the markscheme rather than before the question: it explains
+         the scheme, and a pupil only needs it at the reveal. 315 questions. */
+      markschemeNoteOf: function (q) {
+        return q.marking_differs === "yes" ? (q.marking_note || "") : "";
       },
       classificationsOf: function (q) {
         return {

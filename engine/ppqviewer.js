@@ -216,6 +216,16 @@ window.PPQViewer = (function () {
     cfg.msPagesAllOf = cfg.msPagesAllOf || null;     /* d017: the whole document, one click deeper than the narrowed set */
     cfg.msPagesOpenOf = cfg.msPagesOpenOf || null;   /* d017: open the pages unasked when the crop is known to be too short */
     cfg.stemPagesOf = cfg.stemPagesOf || null;       /* d018: the printed question page(s), the only faithful account of a stem */
+    /* d020: things a pupil must know BEFORE working, in the consumer's words.
+       Each notice is { tone: "info"|"warn", text } and renders above the
+       question. Kept general: the maths case is "this is off the current
+       syllabus, and here is how to use it anyway", but an era note, a rubric
+       change or a withheld-content reason all belong in the same place. */
+    cfg.noticesOf = cfg.noticesOf || null;
+    /* d020: something to read WITH the markscheme, e.g. that this scheme was
+       written under marking conventions since abolished, so it will look wrong
+       against a modern one. */
+    cfg.markschemeNoteOf = cfg.markschemeNoteOf || null;
     cfg.partLabelOf = cfg.partLabelOf || null;       /* d016: consumer part label for the navigator chips */
     cfg.partMarksOf = cfg.partMarksOf || null;       /* d016: marks per part, shown on the chips */
     const saIn = cfg.selfAssess || {};
@@ -2666,6 +2676,15 @@ window.PPQViewer = (function () {
        transcription as a labelled cross-check. Consumers with no printed pages
        keep the original order, text first. */
     const pagesFirst = typeof cfg.stemPagesOf === "function" && (cfg.stemPagesOf(q) || []).length > 0;
+    /* d020: notices come FIRST, above everything. A pupil who needs to be told
+       that a question is off-syllabus, or how to use it anyway, needs telling
+       before they spend twenty minutes on it, not in a chip they may not read. */
+    const notices = (typeof cfg.noticesOf === "function" ? cfg.noticesOf(q) : null) || [];
+    notices.forEach((n) => {
+      if (!n || !n.text) return;
+      html += '<div class="ppq-notice ppq-notice-' + esc(n.tone === "warn" ? "warn" : "info") + '">' +
+        (n.label ? '<b>' + esc(n.label) + "</b> " : "") + esc(n.text) + "</div>";
+    });
     if (text && !pagesFirst) html += '<div class="ppq-qtext">' + text + "</div>";
     /* Smith, 2026-07-31: "we're not getting the stem... you get the WORDS of
        the stem, but if there's any maths in the stem you'll be lucky if you can
@@ -2934,6 +2953,10 @@ window.PPQViewer = (function () {
       this._commitTimer();
       let ms = this._formatMarkscheme(this.cfg.markschemeOf(this.cur));
       const msImgs = (typeof this.cfg.msCropsOf === "function" ? this.cfg.msCropsOf(this.cur) : null) || [];
+      /* d020: a scheme written under abolished conventions looks broken to a
+         pupil who does not know that. Say so above it, not in a footnote. */
+      const msNote = (typeof this.cfg.markschemeNoteOf === "function" && this.cfg.markschemeNoteOf(this.cur)) || "";
+      if (msNote) ms = '<div class="ppq-notice ppq-notice-warn">' + esc(msNote) + "</div>" + ms;
       msImgs.forEach((src) => { ms += '<img class="ppq-ms-crop" src="' + esc(src) + '">'; });
       /* VF-15 (Smith, 2026-07-29: "markscheme clearly too short"): cropped
          markschemes can truncate the working, so when the consumer supplies
@@ -5657,6 +5680,6 @@ window.PPQViewer = (function () {
   Viewer.prototype.setDrawColor = function (color) { if (this._ctx) this._ctx.strokeStyle = color; this.qa(".ppq-color").forEach((b) => b.classList.remove("active")); const c = this.q('.ppq-color[data-color="' + color + '"]'); if (c) c.classList.add("active"); };
   Viewer.prototype.setDrawThickness = function (v) { this._drawThickness = parseInt(v, 10); if (this._ctx) this._ctx.lineWidth = this._drawThickness; };
 
-  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.18.1" };
+  return { mount: function (root, opts) { opts = opts || {}; return new Viewer(root, opts.config, opts.questions, opts.meta, opts.report).init(); }, version: "0.19.0" };
 })();
 // build: 0.3.0, maintained by Codex
