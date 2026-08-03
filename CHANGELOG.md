@@ -2,6 +2,23 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-03 (later still) — maths examiner reports live, default-on (B(a) first item)
+
+Wrapper + suite only; the engine's `examinerOf` panel already fired on the
+maths reveal path, so wiring the config IS the feature.
+
+- Question-level `examiner_comment` (1,131 questions) renders at the reveal;
+  on a part unit the part's own commentary (147 parts) leads and the
+  whole-question comment sits behind "The examiners on the whole question".
+- `examiner_match_note` renders as a quiet provenance line, never a claim.
+- `meta.paper_reports` (general comments / difficult areas / well-prepared
+  areas, 107 papers) joins by preview key as a closed details block:
+  "What examiners said about this whole paper".
+- Five suite assertions pin default-on reach (900+ records), part-beats-
+  question ordering, paper-report reachability and the provenance line.
+  Presentation suite 647/647. Deploy site files re-assembled; Smith's cmd
+  run and push publish it.
+
 ## 2026-08-03 (night) — the seat's three packets consumed; d022 deck and d023 redesign recorded; mock-ups delivered
 
 No engine change; wrapper + suite + records. Catalogue regenerated twice

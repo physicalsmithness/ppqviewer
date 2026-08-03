@@ -26,6 +26,11 @@
     .ib-block + .ib-block { margin-top: 0.85rem; }
     .ib-block-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8377; margin-bottom: 0.25rem; }
     .ib-omitted { font-size: 0.8rem; color: #8a6d3b; background: #fdf6e3; border-radius: 5px; padding: 0.2rem 0.45rem; margin-top: 0.3rem; display: inline-block; }
+    .ib-ex-comment { margin: 0.2rem 0 0.35rem; }
+    .ib-ex-note { font-size: 0.78rem; color: #7a8794; margin-top: 0.3rem; }
+    .ib-ex-more, .ib-ex-paper { margin-top: 0.45rem; font-size: 0.92em; }
+    .ib-ex-more summary, .ib-ex-paper summary { cursor: pointer; color: #1c6e8c; }
+    .ib-ex-paper p { margin: 0.35rem 0; }
   </style>
 </head>
 <body>
@@ -404,6 +409,12 @@
         marking_era: q.marking_era || "",
         aa_codes_today: q.aa_codes_today || [],
         practice_value: q.practice_value || "",
+        /* Examiner layer (seat packets 2026-08-03; Smith's ruling their side:
+           default-on, chemistry's pattern). Question-level commentary plus
+           match provenance; the paper-level subject report joins from meta. */
+        examiner_comment: (q.examiner_comment || "").trim(),
+        examiner_match_note: (q.examiner_match_note || "").trim(),
+        paper_report: (((window.MATHS_META || {}).paper_reports) || {})[q.preview] || null,
         origin_note: (q.origin_note || "").trim(),
         aa_codes: q.aa_codes || [], mhl_codes: q.mhl_codes || [],
         subtopics: subtopics,
@@ -431,6 +442,16 @@
            text line per mark (2026-07-30), which is the truncation Smith hit
            on the 13-mark Q4 answered with data instead of my guesswork. */
         return members.some(function (p) { return p.ms_crop_adequacy === "thin"; });
+      }
+      /* Per-part examiner text (147 parts carry it, packet 2026-08-03): a
+         unit speaks with the comments of its own members. */
+      function examinerOfParts(members) {
+        var bits = [];
+        (members || []).forEach(function (p) {
+          var c = (p.examiner_comment || "").trim();
+          if (c && bits.indexOf(c) < 0) bits.push(c);
+        });
+        return bits.join(" ");
       }
       function assetsOf(members) {
         var crops = [], msCrops = [], pageUrl = null, pages = [];
@@ -480,6 +501,7 @@
           part_label: "", is_part: false,
           marks: parseInt(q.marks, 10) || 1,
           part_texts: textsOf(allParts),
+          part_examiner: examinerOfParts(allParts),
           ms_thin: thinOf(allParts)
         });
         rec.ms_crops = a.ms_crops;
@@ -498,6 +520,7 @@
           part_label: label, is_part: true,
           marks: g.marks,
           part_texts: textsOf(g.members),
+          part_examiner: examinerOfParts(g.members),
           ms_thin: thinOf(g.members)
         });
         rec.ms_crops = a.ms_crops;
@@ -717,6 +740,39 @@
          the scheme, and a pupil only needs it at the reveal. 315 questions. */
       markschemeNoteOf: function (q) {
         return q.marking_differs === "yes" ? (q.marking_note || "") : "";
+      },
+      /* Examiner reports, default-on (seat packets 2026-08-03; Smith:
+         chemistry "had it sussed", port the pattern). The engine's panel
+         shows whenever this returns text. Part commentary beats the
+         question-level comment on a part unit, with the whole-question
+         comment kept one click deeper; the match note is quiet provenance;
+         the paper-level subject report is a closed details block so the
+         reveal stays uncluttered. */
+      examinerOf: function (q) {
+        var bits = [];
+        var part = (q.part_examiner || "").trim();
+        var whole = (q.examiner_comment || "").trim();
+        var lead = part || whole;
+        if (lead) bits.push('<div class="ib-ex-comment">' + escHtml(lead) + "</div>");
+        if (part && whole && part !== whole) {
+          bits.push('<details class="ib-ex-more"><summary>The examiners on the whole question</summary><div>' +
+            escHtml(whole) + "</div></details>");
+        }
+        if (lead && q.examiner_match_note) {
+          bits.push('<div class="ib-ex-note">' + escHtml(q.examiner_match_note) + "</div>");
+        }
+        var pr = q.paper_report;
+        if (pr) {
+          var inner = "";
+          if (pr.general_comments) inner += "<p><b>In general:</b> " + escHtml(pr.general_comments) + "</p>";
+          if (pr.difficult_areas) inner += "<p><b>Found difficult:</b> " + escHtml(pr.difficult_areas) + "</p>";
+          if (pr.well_prepared_areas) inner += "<p><b>Well prepared:</b> " + escHtml(pr.well_prepared_areas) + "</p>";
+          if (inner) {
+            bits.push('<details class="ib-ex-paper"><summary>What examiners said about this whole paper</summary>' +
+              inner + "</details>");
+          }
+        }
+        return bits.join("");
       },
       classificationsOf: function (q) {
         return {

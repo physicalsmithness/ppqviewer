@@ -234,12 +234,14 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
   - [x] Adopt the seat's `ms_pages_this_question` / `ms_crop_adequacy`.
     _(d017: mean pages shown 19.0 → 2.9; thin crops open their pages unasked
     and say why; whole document one click deeper.)_
-  - [ ] **NEXT — examiner reports, default-on (seat packets 2026-08-03; Smith's
-    ruling recorded their side).** The engine pattern already exists
-    (`examinerOf` + the reveal panel); maths maps `examiner_comment` with the
-    part-level comment beating the question-level one, `examiner_match_note`
-    as a quiet provenance line, and `meta.paper_reports` one click deeper.
-    Shape confirmed back to the seat by packet; no regeneration needed.
+  - [x] **Examiner reports, default-on — BUILT 2026-08-03 night** (seat
+    packets 2026-08-03; Smith's ruling recorded their side; B(a) first item).
+    No engine change needed: the maths reveal path already fires the
+    `examinerOf` panel. The config now maps `examiner_comment` with the
+    part's own commentary leading on a part unit and the whole-question
+    comment one click deeper, `examiner_match_note` as quiet provenance, and
+    `meta.paper_reports` (general / difficult / well-prepared) as a closed
+    details block. Suite: five new assertions, 647/647.
   - [x] Consume the three 08-03 packets: `[figure]`/`[graph]` token cleaned
     (suite-asserted it can never reach a pupil), blank-mark absorption GATED
     on the roman-gap signature (126 corrupt-label questions stay

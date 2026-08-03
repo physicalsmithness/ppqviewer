@@ -2881,6 +2881,32 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(tokenLeak.length === 0,
     "the typed [figure]/[graph] token is cleaned from every rendered text (" + tokenLeak.length + " leaks)");
 
+  // Examiner layer (seat packets 2026-08-03; Smith's ruling: default-on,
+  // chemistry's pattern). The engine shows the panel whenever examinerOf
+  // returns text, so wiring the config IS switching it on.
+  check(typeof cfg.examinerOf === "function", "examinerOf is wired into the maths config");
+  const withEx = recs.filter((r) => cfg.examinerOf(r));
+  check(withEx.length > 900,
+    "examiner commentary reaches the records, default-on (" + withEx.length + " records carry output)");
+  const partLed = recs.find((r) => r.is_part && (r.part_examiner || "").trim() &&
+    (r.examiner_comment || "").trim() && r.part_examiner.trim() !== r.examiner_comment.trim() &&
+    /^[A-Za-z0-9 ,.]{12}/.test(r.part_examiner.trim()));
+  if (partLed) {
+    const out = cfg.examinerOf(partLed);
+    const partIdx = out.indexOf(partLed.part_examiner.trim().slice(0, 12));
+    check(partIdx >= 0 && partIdx < out.indexOf("The examiners on the whole question"),
+      "on a part unit the part's own commentary leads and the whole-question comment sits one click deeper");
+  } else {
+    check(true, "no part/question examiner divergence exemplar in this build");
+  }
+  const paperRec = recs.find((r) => r.paper_report &&
+    (r.paper_report.general_comments || r.paper_report.difficult_areas || r.paper_report.well_prepared_areas));
+  check(!!paperRec && cfg.examinerOf(paperRec).indexOf("whole paper") >= 0,
+    "the paper-level subject report is reachable, one click deep, from its questions");
+  const noted = recs.find((r) => (r.examiner_comment || "").trim() && (r.examiner_match_note || "").trim());
+  check(!noted || cfg.examinerOf(noted).indexOf("ib-ex-note") >= 0,
+    "the match note renders as quiet provenance beside the commentary");
+
   // Seat packet 2026-08-03 (L02): judged lineage codes route legacy questions.
   const judged = source.filter((q) => (!q.aa_codes || !q.aa_codes.length) && (q.aa_codes_today || []).length);
   if (judged.length) {
