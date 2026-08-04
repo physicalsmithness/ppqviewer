@@ -2293,6 +2293,7 @@ window.PPQViewer = (function () {
     const PATTERNS = [
       [/�/, "replacement character"],
       [/\?\d/, "'?' fused to a digit (lost minus/times/Delta)"],
+      [/\?[A-Za-z]/, "'?' fused to a letter (lost quote, apostrophe or operator)"],
       [/\d\s+\?\s+\d/, "'?' between numbers (lost operator)"],
       [/\?\?+/, "repeated '?' (lost maths/nuclide notation)"],
       [/[A-Za-z0-9]\?s\b/, "'?s' (lost apostrophe)"],
@@ -2302,13 +2303,18 @@ window.PPQViewer = (function () {
       [/\b(?:TODO|TBD|FIXME|PLACEHOLDER)\b/i, "unreplaced authoring placeholder"],
       [/â€|Ã—|Ã¢/, "UTF-8 mojibake"]
     ];
-    const SKIP_KEYS = /crop|url|src|image|path|file|href/i;
+    /* Skip asset-reference fields only. "path" used to be in this regex and
+       silently exempted `error_path` (pupil-facing diagnosis text!) from the
+       scan, which is how Q14's `?not?` corruption survived every sweep
+       (found via PACKET_E03, 2026-08-04). Exact key "path" is still skipped. */
+    const SKIP_KEYS = /crop|url|src|image|file|href/i;
+    const SKIP_EXACT = { path: true, pages: true };
     const found = [];
     const seen = {};
     (function walk(node, key) {
       if (node == null || found.length >= 4) return;
       if (typeof node === "string") {
-        if (SKIP_KEYS.test(key || "")) return;
+        if (SKIP_KEYS.test(key || "") || SKIP_EXACT[String(key || "").toLowerCase()]) return;
         for (let i = 0; i < PATTERNS.length; i++) {
           const label = PATTERNS[i][1];
           if (seen[label]) continue;
@@ -2464,6 +2470,19 @@ window.PPQViewer = (function () {
       (rec && rec.review && rec.review.status) ||
       ""
     ).toLowerCase().replace(/[\s-]+/g, "_");
+    /* Two-key withholding (2026-08-04): a status SOURCE saying withheld is
+       itself sufficient to withhold, exactly as a consumer pin is. Before
+       this, an analysis-side ledger "withheld" with no matching pin fell
+       through to Guided help, so safety depended on the consumer remembering
+       to pin. Either authority now suffices; release requires both to clear. */
+    if (/^(withheld|invalid|unsafe|damaged)$/.test(raw)) {
+      return {
+        code: "withheld",
+        label: "Solution pending",
+        title: "Question-specific feedback for this question is being repaired; guess, reflection and rating still work.",
+        withheldReasons: ["status source declares " + raw]
+      };
+    }
     /* VSAFE-02: Full and Provisional both require content the viewer actually
        resolves. A ledger row, catalogue field or hook string on its own can
        promote nothing — the 18 held launch-only questions stay Solution

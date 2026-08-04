@@ -175,8 +175,14 @@ console.log("\n=== integrated safety, advisories and presentation ===");
 const wrapper = fs.readFileSync(FILES.wrapper, "utf8");
 const engine = fs.readFileSync(path.join(ROOT, "engine", "ppqviewer.js"), "utf8");
 const css = fs.readFileSync(path.join(ROOT, "engine", "ppqviewer.css"), "utf8");
-check((wrapper.match(/release scan 2026-07-29/g) || []).length === 5 && /contentSafety:\s*\{/.test(wrapper),
-  "all twelve content-safety suppressions remain configured");
+/* 2026-08-04: the original twelve pins were repaired (PACKET_E01), verified
+   and un-pinned; the pin set is now the E03 five plus the scan-found twin.
+   The authoritative pin contract lives in test_content_safety.js (exact
+   set-equality with the wrapper); here we assert the mechanism plus the
+   current count so a silent wholesale removal still fails this suite. */
+check(/contentSafety:\s*\{/.test(wrapper) && /heuristics:\s*true/.test(wrapper) &&
+  (wrapper.match(/"esat_[A-Za-z0-9_]+"\s*:/g) || []).length >= 6,
+  "content-safety suppression mechanism and current pins remain configured");
 check(/esat_engaa_2018_s1_Q53/.test(wrapper) && /esat_nsaa_2018_s1_Q89/.test(wrapper) &&
   /esat_engaa_2016_s1_Q52/.test(wrapper), "all three source advisories remain configured");
 check(/PRESENTATION_BENCHMARK_IDS/.test(wrapper) && /presentation-benchmark/.test(wrapper) &&

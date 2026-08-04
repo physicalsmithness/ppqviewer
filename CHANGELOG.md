@@ -2,6 +2,33 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-04 — the twelve verified and un-pinned (two-key release); the scanner's blind spot found; Q14's twin caught
+
+Responding to the ESAT planning seat's relay (E01 accepted; E04 fired; E05
+awaiting viewer confirmation).
+
+- **The twelve repaired records: independently verified and UN-PINNED.**
+  Verification beyond the seat's own: the records themselves read back with
+  correct restored mathematics (real minus signs, correct decay chains,
+  correct wave arithmetic), heuristic-clean, resolvable, validator clean.
+  Release is two-key: the analysis ledger still withholds them until
+  PACKET_E05 fires, so un-pinning changes nothing pupil-visible until the
+  analysis side turns its key and the next sync ships.
+- **Two-key withholding hardened in the engine**: a status source saying
+  `withheld`/`invalid` now gates on its own, exactly as a consumer pin does.
+  Before this, a ledger "withheld" with no matching pin fell through to
+  Guided help, so safety depended on the consumer remembering to pin.
+- **The scanner's blind spot**: `SKIP_KEYS` included `path`, which silently
+  exempted `error_path` (pupil-facing diagnosis text) from every damage
+  sweep. That is how Q14's `?not?` corruption survived. Fixed (exact-key
+  skip only), plus the seat's proposed `?`-fused-to-letter signature.
+- **The widened scan immediately found Q14's damage twin**,
+  `esat_nsaa_2017_s1_Q27`, corrupted identically and previously invisible:
+  pinned, and reported to the analysis side for the repair queue. Pin set is
+  now six (E03's five + the twin).
+- Codex's integration suite updated where it release-pinned the old
+  twelve-pin state. Full gate green: 19 + 18 + 101 + 1,503 + 647.
+
 ## 2026-08-04 (small hours) — the gate caught the E01 repairs, not damage; E03's five disqualifiers pinned
 
 Smith's release-train run stopped at the content-safety suite: thirteen

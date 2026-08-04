@@ -28,12 +28,14 @@ const src = fs.readFileSync(ENGINE, "utf8");
 const cssSrc = fs.readFileSync(CSS, "utf8");
 const wrapperSrc = fs.readFileSync(WRAPPER, "utf8");
 
-/* The RS-01 five plus the seven scan findings. ALL TWELVE were repaired by
-   PACKET_E01 (2026-08-03, evidence in returns\PACKET_E01\FEEDBACK_E01.md) and
-   are heuristic-clean; they stay pinned until the analysis side clears
-   `data\withheld_ids.json` and the architect reviews the release (the
-   suppression-shrinks-in-step contract). */
-const KNOWN_DAMAGED = [
+/* The original RS-01 five plus the seven scan findings: repaired by
+   PACKET_E01 (2026-08-03, evidence in returns\PACKET_E01\FEEDBACK_E01.md),
+   independently verified viewer-side (record reads, clean rescans) and
+   UN-PINNED on 2026-08-04. They stay listed here so the suite can assert the
+   two-key release: while the analysis-side ledger still says withheld they
+   must gate; once the ledger releases them (PACKET_E05) they must be
+   heuristic-clean, else the release was wrong and this fails loudly. */
+const REPAIRED_RELEASED = [
   "esat_engaa_2020_s1_Q04",
   "esat_nsaa_2020_s1_Q25",
   "esat_nsaa_2023_s1_Q27",
@@ -50,7 +52,8 @@ const KNOWN_DAMAGED = [
 /* The E03 calibration's five disqualifying records (2026-08-03, evidence in
    returns\PACKET_E03\FEEDBACK_E03.md): semantic defects (wrong arithmetic,
    wrong sign law, missing derivations) plus one scanner-evading corruption.
-   No scanner can catch these classes; they are pinned on human review. */
+   Scanners cannot see most of these classes; they are pinned on human review
+   and a pin must survive any analysis-side regeneration. */
 const E03_PINNED = [
   "esat_engaa_2017_s1_Q14",
   "esat_nsaa_2018_s1_Q11",
@@ -58,9 +61,14 @@ const E03_PINNED = [
   "esat_engaa_2021_s1_Q37",
   "esat_nsaa_2023_s1_Q35"
 ];
+/* Found by the widened viewer scan on 2026-08-04, the moment error_path
+   fields stopped being skipped: Q14's exact damage twin. */
+const SCAN_PINNED = [
+  "esat_nsaa_2017_s1_Q27"
+];
 /* Everything the wrapper must pin, exactly: set-equality is asserted against
    the wrapper source, so a pin can be neither dropped nor added silently. */
-const PINNED = KNOWN_DAMAGED.concat(E03_PINNED);
+const PINNED = E03_PINNED.concat(SCAN_PINNED);
 const SOURCE_ADVISORY_IDS = [
   "esat_engaa_2018_s1_Q53",
   "esat_nsaa_2018_s1_Q89",
@@ -363,9 +371,33 @@ section("real analysis_v2 bundle");
     layers.semantic_pin.length + " semantic pins (human-review evidence)");
   check(layers.heuristic.length + layers.ledger_withheld.length + layers.semantic_pin.length === PINNED.length,
     "every pinned ID present in the bundle is accounted for by a suppression layer");
-  E03_PINNED.forEach(function (id) {
-    check(layers.semantic_pin.indexOf(id) >= 0 || layers.heuristic.indexOf(id) >= 0,
-      id + " (E03) is pinned by evidence, not by the ledger: the pin must survive analysis-side regeneration");
+  /* The E03 pins' survival across analysis-side regeneration is enforced by
+     the wrapper/suite set-equality check in the wiring section: the pins live
+     in wrapper SOURCE, which no data rebuild can touch. The layer accounting
+     above shows which layers currently also cover them (since PACKET_E04 the
+     analysis ledger withholds all five as well: two keys, converged). */
+
+  /* Two-key release check on the repaired twelve (un-pinned 2026-08-04):
+     while the analysis-side ledger still withholds one, it must gate to
+     withheld with NO consumer pin; once the ledger releases it, it must be
+     heuristic-clean and resolvable, or the release was wrong. */
+  REPAIRED_RELEASED.forEach(function (id) {
+    const r = byId[id];
+    check(!!r, id + " (repaired) present in bundle");
+    if (!r) return;
+    if (ledger[id] === "withheld") {
+      const ctx = makeCtx({
+        analysisOf: function () { return r; },
+        feedbackStatusOf: function () { return ledger[id]; },
+        contentSafety: { withheld: {} }
+      });
+      const ready = readinessOf(ctx, { id: id });
+      check(ready.code === "withheld",
+        id + " gates on the ledger ALONE, with no consumer pin (two-key withholding)");
+    } else {
+      check(scanAnalysisRecordForDamage(r).length === 0,
+        id + " was released by the ledger and must therefore be heuristic-clean");
+    }
   });
 
   // Corpus sweep: report (not fail) anything newly flagged beyond the known set —

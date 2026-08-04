@@ -477,33 +477,28 @@
         sourceAdvisoryOf: function (q) { return SOURCE_ADVISORIES[baseRecordIdOf(q)] || null; },
         /* VSAFE-01 (Claude 2026-07-28): explicit suppression of records with
            damaged pupil-facing content. The engine's damage heuristics run as
-           well (they independently catch five of these seven), but every
-           KNOWN-damaged record is pinned here so safety never depends on a
-           heuristic. Remove an entry ONLY when the analysis project ships a
-           repaired record and the damage scan comes back clean.
-           The first five are the analysis owner's RS-01 list
-           (PROJECT_CONTROL_2026-07-28.md); the last two were found by the
-           viewer damage scan on 2026-07-28 and reported back. */
+           well, and since 2026-08-04 an analysis-side ledger "withheld" also
+           gates on its own (two-key withholding), but every known-bad record
+           is pinned here so safety never depends on any one layer. Remove an
+           entry ONLY when the analysis project ships a repaired record, the
+           damage scan comes back clean, and the architect has reviewed the
+           release. HISTORY: the original twelve (RS-01 five + seven scan
+           findings, pinned 2026-07-28/29) were repaired by PACKET_E01 and
+           un-pinned 2026-08-04 after independent verification (evidence:
+           Esat Categorisation\returns\PACKET_E01\FEEDBACK_E01.md; viewer-side
+           record reads and clean rescans; ledger release follows via
+           PACKET_E05). The five below are the E03 calibration's disqualifying
+           findings, pinned on human review; scanners cannot see most of
+           these classes. */
         contentSafety: {
           heuristics: true,
           withheld: {
-            "esat_engaa_2020_s1_Q04": "encoding loss: '?' where minus signs should be ('mass number ?4', '238 ? 206'); marked reviewed/full despite corruption (RS-01)",
-            "esat_nsaa_2020_s1_Q25": "same damaged decay-table analysis as engaa_2020_Q04 ('?4', '8 ? 2'); marked reviewed/full despite corruption (RS-01)",
-            "esat_nsaa_2023_s1_Q27": "nuclide pre-scripts collapsed to '???X'/'???Z' and lost apostrophes ('helium-3?s'); marked reviewed/full despite corruption (RS-01)",
-            "esat_engaa_2023_s1_Q16": "analysis owner lists as damaged/missing mathematical presentation (RS-01); analysis text byte-identical to nsaa_2023_Q36's, suspected missing values in method steps",
-            "esat_nsaa_2023_s1_Q36": "analysis owner lists as damaged/missing mathematical presentation (RS-01); analysis text byte-identical to engaa_2023_Q16's, suspected missing values in method steps",
-            "esat_engaa_2019_s1_Q12": "found by viewer damage scan 2026-07-28: 'row?s', '?Z = ?10' (Delta and minus lost); marked reviewed; same corruption class as the 2020 pair; reported to analysis owner",
-            "esat_nsaa_2019_s1_Q30": "found by viewer damage scan 2026-07-28: byte-identical damaged analysis to engaa_2019_Q12; marked reviewed; reported to analysis owner",
-            "esat_engaa_2016_s1_Q12": "release scan 2026-07-29: pupil-facing wave calculations contain standalone narrow spaces where amplitudes, frequencies and values/units are missing",
-            "esat_nsaa_2016_s1_Q27": "release scan 2026-07-29: duplicate of engaa_2016_Q12 with missing pupil-facing amplitudes, frequencies and values/units",
-            "esat_engaa_2018_s1_Q18": "release scan 2026-07-29: pupil-facing wave method steps contain standalone narrow spaces where numerical values and units are missing",
-            "esat_nsaa_2018_s1_Q29": "release scan 2026-07-29: duplicate of engaa_2018_Q18 with missing pupil-facing numerical values and units",
-            "esat_nsaa_2019_s1_Q19": "release scan 2026-07-29: pupil-facing wave analysis contains standalone narrow spaces where amplitude, wavelength and calculated values are missing",
-            "esat_engaa_2017_s1_Q14": "E03 calibration 2026-08-03: literal '?' replacing essential minus signs in the sole pupil method despite reviewed/full; the shape evades the scanner, pinned on human review",
+            "esat_engaa_2017_s1_Q14": "E03 calibration 2026-08-03: literal '?' replacing essential minus signs in the sole pupil method despite reviewed/full; pinned on human review (now also caught by the ?-letter signature, 2026-08-04)",
             "esat_nsaa_2018_s1_Q11": "E03 calibration 2026-08-03: option-D error path computes 2.25p - 0.40p = 33p/20; the value is 37p/20, wrong arithmetic taught as diagnosis",
             "esat_nsaa_2017_s1_Q90": "E03 calibration 2026-08-03: option-D path calls mv - mu the momentum change after reversal; the signed magnitude is mv + mu",
             "esat_engaa_2021_s1_Q37": "E03 calibration 2026-08-03: the only pupil route asserts the chains telescope but never shows the surviving endpoints or derives H",
-            "esat_nsaa_2023_s1_Q35": "E03 calibration 2026-08-03: the only pupil route never writes or solves the cycle-count equation producing 20L yet claims to land on E"
+            "esat_nsaa_2023_s1_Q35": "E03 calibration 2026-08-03: the only pupil route never writes or solves the cycle-count equation producing 20L yet claims to land on E",
+            "esat_nsaa_2017_s1_Q27": "viewer scan 2026-08-04: '?not?' corruption in error_path text, the exact twin of engaa_2017_Q14's damage; found the moment the scanner stopped skipping error_path fields"
           }
         },
         modules: { postQuestionReview: true },
