@@ -105,6 +105,25 @@ explicit act.
 
 ## On wake (any seat)
 
-Read `README.md`, then this file, then `ROADMAP.md` and your `inbox\`.
-Derive state from disk in the same turn you claim it; a remembered number
-about a live estate rots in hours (estate law, Linguics pilot 2026-07-19).
+Run `node tools\state.js` FIRST, before reading anything. It derives, in one
+command, what three successive sessions each spent an hour reconstructing:
+head commit, engine version, every deployment's build against head, any pin
+that is live at head but missing from a deployment, unpushed checkouts, and
+the newest inbox packets. Then read `README.md`, this file, `ROADMAP.md` and
+your `inbox\`. Derive state from disk in the same turn you claim it; a
+remembered number about a live estate rots in hours (estate law, Linguics
+pilot 2026-07-19).
+
+Two standing hazards the script exists to catch:
+
+- **Published is not tested.** Assembly, push and further source commits are
+  three separate acts hours apart. On 2026-08-04 three engine commits landed
+  after Smith's push, so the live ESAT site served an unpinned corrupt record
+  while head was clean and green at 2,288 assertions. Nothing announced it.
+  The script's DEPLOYMENTS block is the announcement; read it before telling
+  Smith anything is safe.
+- **Never run `git add -A` in this repository.** The working copy is CRLF and
+  several blobs are LF, so nine files show as wholly modified when they are
+  not; a blanket add rewrites another seat's work as a line-ending flip and
+  buries the real diff. Commit by name. The script separates the phantoms
+  from real edits so you can see which is which.
