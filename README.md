@@ -12,13 +12,16 @@ than in subject forks.
    (d021). Every chat touching this project reads it on wake.
 2. `CLAUDE_HANDOFF_2026-07-28.md` — the takeover evidence and requirements
    (historical baseline; current state is ROADMAP's).
-3. `ROADMAP.md` — active work and phase exits.
-4. `CODEX_OWNERSHIP.md` — source locations and the repeatable update path; the
+3. `CATALOGUE_CONTRACT.md` — what a subject ships to the viewer, and how a
+   content seat asks for something the contract does not yet cover. Every
+   content seat reads this before building a catalogue.
+4. `ROADMAP.md` — active work and phase exits.
+5. `CODEX_OWNERSHIP.md` — source locations and the repeatable update path; the
    filename is historical.
-5. `REGISTRY.md` — consumers and enabled capabilities.
-6. `CHANGELOG.md` — implemented changes.
-7. `VSAFE_RELEASE_CHECKS.md` — repeatable safety, assembly and release gate.
-8. `PRESENTATION_BENCHMARK.md` and `CATEGORISATION_INTEGRATION.md` — the
+6. `REGISTRY.md` — consumers and enabled capabilities.
+7. `CHANGELOG.md` — implemented changes.
+8. `VSAFE_RELEASE_CHECKS.md` — repeatable safety, assembly and release gate.
+9. `PRESENTATION_BENCHMARK.md` and `CATEGORISATION_INTEGRATION.md` — the
    bounded pupil-journey standard and ESAT teaching-catalogue contract.
 
 `KICKOFF.md`, `DESIGN.md`, `DECISIONS.md`, `OPEN_QUESTIONS.md` and the exported
