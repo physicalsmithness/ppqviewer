@@ -63,7 +63,7 @@ pieces ships as `parts[]`, each part carrying at minimum:
 | Field | Meaning |
 | --- | --- |
 | `label` | the printed label, e.g. `(b)(ii)` |
-| `part_id` | stable identifier; never renumbered once published |
+| `part_id` | stable identifier, and it must be shaped `<record id>(<label>)`, e.g. `22M.P2.HL.Q1(a_ii)`. The engine's part navigator finds a question's siblings by matching `record id + "("`, so any other separator makes the navigator silently render nothing. Never renumbered once published: attempts are keyed on it |
 | `text` | the printed part text, verbatim |
 | `lead_in` | the group introduction, repeated on every sibling in the group; the viewer deduplicates and renders it once above the group |
 | `marks` | marks for this part |
@@ -74,27 +74,48 @@ pieces ships as `parts[]`, each part carrying at minimum:
 If your records form part blocks, you must ship them; the suite fails a
 consumer that declines a capability the engine already carries.
 
-**2. Asset filenames carry their kind and their page number.** Pages are named
-`question_pNNN` and `mark_pNNN`. This is not cosmetic: a mixed `pages` array
-once caused the viewer to serve markscheme pages to pupils labelled "original
-exam pages" (fixed in d018, show the stem as printed). The prefix is what
-stops that. Assets stay in your corpus as bare filenames; the record carries
-its `preview` folder, and URLs build as `BASE + preview + "/" + filename`. The
-site assembler copies every referenced asset into the deployment, so the
-published site is self-contained.
+**2. Asset filenames carry their kind and their page number, and the layout is
+declared not guessed.** Pages are named `question_pNNN` and `mark_pNNN`. This
+is not cosmetic: a mixed `pages` array once caused the viewer to serve
+markscheme pages to pupils labelled "original exam pages" (fixed in d018, show
+the stem as printed). The prefix is what stops that.
 
-**3. Omitted figures are a typed token, not prose.** Where extraction dropped
-a diagram, put the literal token `[figure]` (or `[graph]`) in the text and set
-`has_figure_omitted` on that part. Declare the token in `meta.figure_marker`.
-The viewer renders it as a quiet ellipsis with the crop as the authority. Free
-prose like "[diagram omitted]" reaches pupils as noise; the suite now asserts
-that no such token can.
+Assets stay in your corpus as bare filenames and the record carries its
+`preview` folder, but the folder layout underneath differs by seat: maths
+writes everything flat as `<preview>/<filename>`, economics separates
+`<preview>/crops/` from `<preview>/pages/`. Both are fine; guessing is not.
+Declare yours in `meta.asset_layout` as either `"flat"` or
+`"crops_and_pages"`. The Economics build lost a pass to this in August 2026:
+the dispatch assumed flat and every image would have 404'd had the builder not
+checked the corpus itself. The site assembler copies every referenced asset
+into the deployment, so the published site is self-contained.
 
-**4. Human names for every code.** Ship a code-to-name map as
-`meta.code_names`. Pupils see the name first and the code second, everywhere:
-filters, progress axes, weak-area chips. Without the map the viewer either
-shows a pupil "SL3.6" (which means nothing to them) or the architect
-hand-maintains a lookup that rots.
+**3. Every extraction artefact is a declared typed token, not prose.** Where
+extraction dropped a diagram, put the literal token `[figure]` (or `[graph]`)
+in the text and set `has_figure_omitted` on that part. Free prose like
+"[diagram omitted]" reaches pupils as noise; the suite asserts that no such
+token can.
+
+This extends past figures. Declare **every** token and boilerplate family your
+extraction leaves in pupil-facing text, in `meta.text_tokens`: answer-space
+placeholders, mark allocations like `[4]` or `[4 marks]`, copyright-redaction
+notices, answer-box runs. Economics shipped four such families in August 2026
+with only the figure token declared; the builder found the rest by reading
+6,000 occurrences out of the corpus. An undeclared token is one that reaches a
+pupil on the day nobody is looking.
+
+**4. Human names for every code, at every level of the tree.** Ship a
+code-to-name map as `meta.code_names`. Pupils see the name first and the code
+second, everywhere: filters, progress axes, weak-area chips. Without the map
+the viewer either shows a pupil "SL3.6" (which means nothing to them) or the
+architect hand-maintains a lookup that rots.
+
+Name the intermediate levels too, not only the leaves. Economics shipped 518
+leaf codes and no unit or topic names, so the viewer could offer units (which
+the builder supplied by hand) and leaves, but the 32 topic headings between
+them had to be dropped: a bare "3.4" is exactly what this rule forbids, and
+there was nothing else to show. If your syllabus has three tiers, name three
+tiers.
 
 ### Tier 2: what makes the difference between usable and good
 

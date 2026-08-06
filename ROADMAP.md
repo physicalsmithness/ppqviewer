@@ -185,12 +185,21 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
 - [ ] Chemistry shared-engine migration.
 - [ ] Special Relativity embed.
 - [ ] IB Physics, Trilogy Physics and pre-IB Physics adapters.
-- [ ] **Economics adapter — ACTIVATING (2026-08-03).** The content seat is
-  building `economics_catalogue.js` in its own tree to the maths contract
-  (green-light + contract packet exchanged; fit flag runs as a d020-style
-  default filter, not the safety list). Viewer wrapping follows the current
-  engine queue, likely as the first bounded builder dispatch; Smith needed at
-  publish time for the deploy repo and the IB-content ruling.
+- [x] **Economics adapter — WRAPPED 2026-08-06, not published.** The content
+  seat delivered `economics_catalogue.js` (1,021 records, 3,498 parts) on
+  2026-08-03; the wrapper and its 91-assertion suite were built by the first
+  bounded builder dispatch (`dispatch\2026-08-06_builder_economics-wrapper.md`)
+  with no engine change. Remaining, in order: the seat's data asks (unit and
+  topic names, real `part_id`s, marks for 127 part records, narrowed
+  `marking_differs`); the essay criteria checklist, deliberately paused into
+  d023 (post-question redesign) so economics criteria and maths mark-point
+  ticking land as one surface; then publication, which needs Smith for the
+  deploy repository name and the school-served content ruling (the d014
+  question), plus the estate web kit's analytics and feedback widget.
+  Unverified in the build: the timing rates (180 / 157.5 / 105 seconds per
+  mark, taken from the IB assessment outline and corroborated by nothing in
+  the corpus). Timing is off by default; confirm before it is ever defaulted
+  on.
 - [ ] **IB Maths adapter — ACTIVE (Smith, 2026-07-29).** Source:
   `PaperDatabases\Maths Categorisation` masters + AAHL flat export + previews.
   Profile: chemistry-style reveal-markscheme + examiner comments (no authored

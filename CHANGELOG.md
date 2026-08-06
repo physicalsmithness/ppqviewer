@@ -2,6 +2,36 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-06 — IB Economics wrapped; the first bounded builder dispatch; the catalogue contract published and then corrected by its own first use
+
+- **`CATALOGUE_CONTRACT.md`** (Smith's ruling, 2026-08-05): one public spec for
+  every content seat, replacing the private bilateral negotiation that held for
+  two seats and would not hold for six. Its first section, at Smith's
+  instruction, is that seats may ask for anything: new fields, new question
+  shapes, new pupil interactions, capabilities the engine lacks. Flag rather
+  than bend. Delivered by packet to the Maths, Economics and ESAT seats.
+- **IB Economics wrapper and suite**, built by a bounded builder chat under
+  `dispatch\2026-08-06_builder_economics-wrapper.md`, the first use of the
+  builder seat in d021 (multi-consumer operating model). 1,021 records and
+  3,498 parts exploded into markable units; 73 auto-marked MCQ, 3,298 marks
+  self-assessment, 127 flashcard; eight filters, eight progress axes, examiner
+  panel default-on, syllabus status defaulting to the practisable subset per
+  d020. 91 assertions against the real catalogue. The builder touched only its
+  two named files, requested no engine change, and committed nothing. Gates at
+  head: 19 + 18 + 101 + 1,503 + 647 + 91 = 2,379, none failing.
+- **The dispatch packet was wrong in five places and the builder said so**,
+  which is the outcome the seat split is for. Three corrections are general and
+  are now in the contract: asset folder layout differs by seat and must be
+  declared (`meta.asset_layout`) rather than assumed; `part_id` must be shaped
+  `<record id>(<label>)` because the engine's part navigator matches on that
+  prefix and any other separator renders nothing, silently; and every
+  extraction token family must be declared, not just figures.
+- **Data asks returned to the Economics seat** (packet 2026-08-06): unit and
+  topic names in `code_names`, real `part_id`s, marks for the 127 part records
+  that have none, `marking_differs` narrowed from 86% of records to where it
+  means something, the seven OCR-scrambled MCQ option tables, and the
+  truncated paper-report prose.
+
 ## 2026-08-04 — the twelve verified and un-pinned (two-key release); the scanner's blind spot found; Q14's twin caught
 
 Responding to the ESAT planning seat's relay (E01 accepted; E04 fired; E05
