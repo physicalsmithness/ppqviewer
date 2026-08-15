@@ -64,6 +64,28 @@ phase.
 Decision required only if the host-side data model makes the pupil-first slice
 impractical.
 
+## q13 — should IB Maths and Economics report to the estate pulse?
+
+Found 2026-08-06 while fixing the pulse transport. Only `esat-compare.html` and
+the chemistry comparison page load `ppq-login.js` and pass a `report` function
+to the engine, so **the published IB Maths driller has sent no attempt data
+since it went live on 2026-07-29**, and the new Economics wrapper sends none
+either. GA4 page analytics are on IB Maths (d014, publish approved); the
+attempt pulse is a different thing and is absent.
+
+This is a product decision, not a defect, which is why it is here rather than
+on the roadmap. Reporting requires sign-in (`report()` returns early when not
+signed in), so wiring it means putting the estate's honour sign-in gate in
+front of the maths driller, which changes what a pupil meets on arrival.
+
+The options: (a) wire both to the pulse now, accepting the sign-in gate;
+(b) wait for Google sign-in (expedited under d014, publish approved for
+school use) and wire all consumers to that in one pass; (c) leave IB Maths and
+Economics deliberately unreported and say so in the registry.
+
+`test\test_pulse.js` asserts the current state, so the day a consumer is wired
+the suite fails and this question gets answered rather than drifting.
+
 ## Previously resolved
 
 - **q12 — IB-content public exclusion gate. RESOLVED by Smith, 2026-07-29

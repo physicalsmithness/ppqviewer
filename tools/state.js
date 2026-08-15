@@ -185,12 +185,14 @@ say();
 
 /* -------------------------------------------------------------------- gates */
 
-say("GATES  (run all five before telling Smith anything is releasable)");
+say("GATES  (run all seven before telling Smith anything is releasable)");
 say("  node test/test_ppqviewer.js                  # engine contract");
 say("  node test/test_chem.js                       # donor capability parity");
 say("  node test/test_content_safety.js             # pin accounting + corpus sweep");
 say("  node test/verify_analysis_presentation.js    # pupil journey, ESAT + maths");
 say("  node test/test_categorisation_integration.js # ESAT teaching catalogue");
+say("  node test/test_economics.js                  # economics consumer");
+say("  node test/test_pulse.js                      # attempt-pulse transport");
 say();
 say("  Sandbox note: jsdom resolved across a Windows mount takes minutes.");
 say("  Copy engine/ test/ example/ tools/ and node_modules to local disk and");

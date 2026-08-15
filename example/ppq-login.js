@@ -79,8 +79,55 @@
         anonymous_id: id.anonymous_id, display_name: id.display_name, cohort: id.cohort,
         google_email: "", session_id: sessionId() };
     }
-    /* Merge identity under the engine's event payload (the engine's fields win). */
-    function report(partial) { if (!signedIn()) return; post(Object.assign(basePayload(), partial || {})); }
+    /* The seventeen columns the estate workbook's Apps Script recognises. Any
+       OTHER top-level key in the POST body is what the script sweeps into its
+       own `extra_json` column: the column is built server-side and a
+       client-built `extra_json` field is discarded. */
+    var FIXED_COLUMNS = {
+      project: 1, timestamp: 1, anonymous_id: 1, display_name: 1, cohort: 1,
+      google_email: 1, session_id: 1, item_id: 1, topic: 1, qtype: 1, mode: 1,
+      level: 1, status: 1, picked_id: 1, misconception_id: 1, received_at: 1,
+      extra_json: 1
+    };
+
+    /* Merge identity under the engine's event payload (the engine's fields win),
+       then FLATTEN the engine's extra bundle to top-level scalars.
+
+       Why (EdTech Overview packet 2026-08-06, verified in this code): the
+       engine stringifies its per-event detail into `extra_json` at 26 firing
+       sites, and the deployed script throws that key away, so every rated,
+       interrogation, timing_prefs, flag_review and learned_scope row has been
+       landing with its entire informational content missing, and every
+       answered row losing correct/time_ms/time_pressure. Nothing showed it: a
+       no-cors POST resolves on dispatch, so the pill said "sent" when it meant
+       "dispatched". Linguics hit the same thing live on 2026-07-21 and fixed
+       it the same way; their rows have populated since.
+
+       Three properties this must keep: never shadow a fixed column; pre-
+       stringify nested values, because the sweep writes scalars; never lose a
+       malformed payload silently. */
+    function report(partial) {
+      if (!signedIn()) return;
+      var p = Object.assign(basePayload(), partial || {});
+      var extra = p.extra_json;
+      delete p.extra_json;
+      if (extra) {
+        try {
+          var o = (typeof extra === "string") ? JSON.parse(extra) : extra;
+          if (o && typeof o === "object") {
+            Object.keys(o).forEach(function (k) {
+              if (FIXED_COLUMNS[k] || Object.prototype.hasOwnProperty.call(p, k)) return;
+              var v = o[k];
+              var nested = (v !== null && typeof v === "object");
+              p[nested ? (k + "_json") : k] = nested ? JSON.stringify(v) : v;
+            });
+          } else {
+            p.extra_raw = String(extra);
+          }
+        } catch (e) { p.extra_raw = String(extra); }
+      }
+      post(p);
+    }
     function sendSessionStart() {
       var p = basePayload();
       p.item_id = ""; p.topic = ""; p.qtype = ""; p.mode = "ppq_viewer"; p.level = "";

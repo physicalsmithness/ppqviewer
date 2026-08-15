@@ -88,10 +88,11 @@ been adopted into this repository (see d021).
 Nothing publishes because a suite went green; deployment is always Smith's
 explicit act.
 
-- **Gates (all trains):** `node --check` on the engine, then the five suites
+- **Gates (all trains):** `node --check` on the engine, then the seven suites
   (`test_ppqviewer`, `test_chem`, `test_content_safety`,
-  `verify_analysis_presentation`, `test_categorisation_integration`),
-  plus the consumer's own checks (`VSAFE_RELEASE_CHECKS.md` for ESAT).
+  `verify_analysis_presentation`, `test_categorisation_integration`,
+  `test_economics`, `test_pulse`), plus the consumer's own checks
+  (`VSAFE_RELEASE_CHECKS.md` for ESAT).
 - **ESAT:** architect confirms gates; Smith runs `SYNC_ESAT_WEBSITE.cmd`,
   reviews `deploy\esatwallop` in GitHub Desktop, pushes; the served build ID
   is verified afterwards.

@@ -2,6 +2,39 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-06 (later) — the attempt pulse has been throwing away its payload since it was wired
+
+Acting on the EdTech Overview seat's correction packet, diagnosis verified in
+this code before changing anything.
+
+- **The bug.** The engine stringifies each event's detail into `extra_json` at
+  26 firing sites. The deployed Apps Script builds the `extra_json` COLUMN
+  itself, by sweeping unrecognised TOP-LEVEL keys, and discards a client-built
+  `extra_json` field. So every `rated`, `interrogation`, `timing_prefs`,
+  `flag_review` and `learned_scope` row has been landing with its entire
+  informational content missing, and every `answered` row losing `correct`,
+  `time_ms` and `time_pressure`. Invisible by construction: a `no-cors` POST
+  resolves on dispatch, so the status pill said "sent" when it knew only
+  "dispatched". Linguics hit this live on 2026-07-21 and fixed it the same way.
+- **Fixed in one place**, `example\ppq-login.js`'s `report()`, not at the 26
+  engine sites: the extra bundle is flattened to top-level scalars, nested
+  values pre-stringified under a `_json` name, fixed columns never shadowed,
+  and a malformed bundle degrades to `extra_raw` rather than vanishing.
+- **`test\test_pulse.js`, 15 assertions, a new gate.** Behavioural, not
+  pattern-matching: it executes the real `report()` with `fetch` stubbed and
+  inspects the object that would have gone to the network. The assertion is
+  worth more than the fix, because this failure class shows no symptom.
+- **Correction back to the EdTech seat**: their packet said both ESAT and IB
+  Maths were affected. Only ESAT reports at all. IB Maths and Economics load
+  no `ppq-login.js` and pass the engine no report function, so **the published
+  IB Maths driller has sent no attempt data since 2026-07-29**. Recorded as
+  q13 (should IB Maths and Economics report?), a product decision for Smith
+  since reporting requires the sign-in gate; the suite asserts today's state
+  so wiring one forces the question rather than drifting.
+- Gates at head: 19 + 18 + 101 + 1,503 + 647 + 91 + 15 = 2,394, none failing.
+  The fix is in a deployed ESAT file, so it reaches pupils only on the next
+  sync and push.
+
 ## 2026-08-06 — IB Economics wrapped; the first bounded builder dispatch; the catalogue contract published and then corrected by its own first use
 
 - **`CATALOGUE_CONTRACT.md`** (Smith's ruling, 2026-08-05): one public spec for
