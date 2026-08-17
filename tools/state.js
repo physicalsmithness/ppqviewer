@@ -160,10 +160,42 @@ CONSUMERS.forEach((c) => {
       (missing.length ? "   *** " + missing.length + " PINNED AT HEAD BUT LIVE TO PUPILS: " + missing.join(", ") + " ***" : "   (no pin is missing from the deployment)"));
   }
 
+  /* "Pushed" is not the same as "nothing owed". The architect re-assembles
+     site files; Smith runs the native sync (which verifies assets and stamps
+     build-info) and pushes. Between those two acts the checkout holds a fresh
+     index.html under a stale stamp, and a plain commit check calls that
+     clean. Comparing the assembled index against the hash the stamp claims is
+     cheap and says exactly what is owed. */
+  const STAMPED = [
+    ["index_sha256_12", "index.html"],
+    ["engine_sha256_12", path.join("engine", "ppqviewer.js")],
+    ["css_sha256_12", path.join("engine", "ppqviewer.css")],
+    ["login_sha256_12", "ppq-login.js"]
+  ];
+  const restamp = STAMPED.filter(([key, rel]) => {
+    const want = info[key];
+    if (!want) return false;
+    const got = sha12(path.join(dep, rel));
+    return got && got !== want;
+  }).map(([, rel]) => rel);
+  say("    assembly    " + (restamp.length
+    ? "*** RE-ASSEMBLED SINCE THE LAST STAMP (" + restamp.join(", ") + "): Smith owes a sync + push ***"
+    : (STAMPED.some(([k]) => info[k]) ? "matches its build stamp" : "no stamp to compare")));
+
+  /* A shared consumer file can drift even when the deployed index does not,
+     because it is a separate file with its own stamp. The ESAT pulse fix of
+     2026-08-06 lived entirely in ppq-login.js and would have looked clean on
+     an index-only check. */
+  const sharedLogin = path.join(ROOT, "example", "ppq-login.js");
+  const depLogin = path.join(dep, "ppq-login.js");
+  if (exists(depLogin) && exists(sharedLogin) && sha12(sharedLogin) !== sha12(depLogin)) {
+    say("    sign-in     *** deployed ppq-login.js is BEHIND canonical ***");
+  }
+
   const local = sh("git rev-parse --short HEAD", dep);
   const remote = sh("git rev-parse --short origin/main", dep);
   const ahead = sh("git rev-list --count origin/main..HEAD", dep);
-  say("    checkout    " + (local || "?") + (local && remote ? (local === remote ? " = origin/main (pushed)" : " *** " + ahead + " commit(s) NOT PUSHED ***") : " (origin unknown)"));
+  say("    checkout    " + (local || "?") + (local && remote ? (local === remote ? " = origin/main (last commit pushed)" : " *** " + ahead + " commit(s) NOT PUSHED ***") : " (origin unknown)"));
 });
 say();
 
