@@ -2676,7 +2676,10 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
 
   // wrappers: maths carries the scope with guide-true pacing; ESAT does not
   const mHtml2 = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
-  check(/learnedScope:/.test(mHtml2) && /LEARNED_TREE/.test(mHtml2) && /refsOf: function \(q\) \{ return q\.aa_codes/.test(mHtml2),
+  /* refsOf moved off the raw historical field on 2026-08-17 (judged codes win;
+     see the 08-17 section below), so this asserts the scope exists and reads
+     the shared helper rather than pinning the old expression. */
+  check(/learnedScope:/.test(mHtml2) && /LEARNED_TREE/.test(mHtml2) && /refsOf: function \(q\) \{ return currentCodes\(q\); \}/.test(mHtml2),
     "IB Maths supplies the tree (from observed item codes) and refsOf");
   check(/120 \* 60 \/ 110/.test(mHtml2) && /75 \* 60 \/ 55/.test(mHtml2),
     "maths pacing now follows the AA guide's assessment outline (HL rates, P3 distinct)");
@@ -2963,7 +2966,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "narrowing never leaves a question with no markscheme when the paper has one");
   check(/Show the markscheme/.test(cfg.msPagesLabelOf(located[0])) &&
     /somewhere in them/.test(bracketed.length ? cfg.msPagesLabelOf(bracketed[0]) : "somewhere in them") &&
-    (!whole.length || /from the cover/.test(cfg.msPagesLabelOf(whole[0]))),
+    (!whole.length || /could not find this question's own markscheme pages/.test(cfg.msPagesLabelOf(whole[0]))),
     "the expander's wording tells the truth about which pages it is showing");
 
   // Capability parity: the rule that stops a solved problem being re-solved.
@@ -3155,6 +3158,125 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "part chips carry their marks, so a pupil sees what each part is worth");
   check(/const msLabel = \(typeof this\.cfg\.msPagesLabelOf === "function"/.test(src),
     "the markscheme expander takes its wording from the consumer when offered");
+})();
+
+/* ============================================================================
+   Two faults Smith found on 2026-08-17, both mine, both invisible to every
+   suite that existed at the time. Assertions written against the real wrapper
+   and the real catalogue, because both bugs were of the kind that looks
+   perfectly healthy from the source text.
+   ========================================================================= */
+(function () {
+  console.log("\n=== 2026-08-17: judged codes, and never a markscheme cover as the answer ===");
+  const MATHS_CATALOGUE = process.env.MATHS_CATALOGUE_JS ||
+    "C:\\CodexProjects\\PaperDatabases\\Maths Categorisation\\viewer\\maths_catalogue.js";
+  if (!fs.existsSync(MATHS_CATALOGUE)) {
+    console.log("  SKIP: maths catalogue not found at " + MATHS_CATALOGUE);
+    return;
+  }
+  const html = fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths.html"), "utf8");
+  const open = html.lastIndexOf("<script>");
+  const inline = html.slice(open + "<script>".length, html.indexOf("</script>", open));
+  const store = {};
+  const ls = {
+    getItem: (k) => (Object.prototype.hasOwnProperty.call(store, k) ? store[k] : null),
+    setItem: (k, v) => { store[k] = String(v); },
+    removeItem: (k) => { delete store[k]; }
+  };
+  const stubEl = () => ({ style: {}, dataset: {}, appendChild() {}, addEventListener() {}, setAttribute() {}, querySelector: () => null, querySelectorAll: () => [] });
+  let mounted = null;
+  const sandbox = {
+    window: { localStorage: ls },
+    localStorage: ls,
+    document: { getElementById: stubEl, createElement: stubEl, addEventListener() {} },
+    console: { log() {}, warn() {}, error() {} },
+    PPQViewer: { version: "test", mount: (root, opts) => { mounted = opts; } }
+  };
+  sandbox.window.document = sandbox.document;
+  sandbox.window.PPQViewer = sandbox.PPQViewer;
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync(MATHS_CATALOGUE, "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync(path.join(PROJECT_ROOT, "example", "ibmaths_spine_labels.js"), "utf8"), sandbox);
+  vm.runInContext(inline, sandbox);
+  if (!mounted) { check(false, "wrapper mounts"); return; }
+  const recs = mounted.questions, cfg = mounted.config;
+  const source = sandbox.window.MATHS_PPQS || [];
+  const srcById = {};
+  source.forEach((q) => { srcById[q.id] = q; });
+
+  /* --- 1. The judged codes are what a pupil is filtered by ---------------
+     Smith un-ticked complex numbers in "Learned so far" and was still served
+     a "solve z³ − 8i = 0" question, because the scope filter read the
+     HISTORICAL codes (SL2.10.1 equation-solving, SL3.8.1 trig) and never the
+     judged one (AHL1.14.2, complex numbers). */
+  const topicOf = (c) => { const m = /^(SL|AHL)(\d+)\./.exec(String(c || "")); return m ? m[1] + m[2] : null; };
+
+  const scoped = recs.filter((r) => r.block_id === "8804-7401_Q13" || r.id === "8804-7401_Q13");
+  check(scoped.length > 0, "the exemplar 8804-7401_Q13 (solve z³ − 8i = 0) is in the deck");
+  if (scoped.length) {
+    const refs = cfg.learnedScope.refsOf(scoped[0]) || [];
+    check(refs.indexOf("AHL1.14.2") >= 0,
+      "its learned-scope refs carry the JUDGED complex-numbers code, so un-ticking complex numbers excludes it");
+    check(refs.indexOf("SL2.10.1") < 0,
+      "and no longer carry the historical equation-solving code that hid it");
+  }
+
+  /* The rule, not just the exemplar: wherever the seat shipped a judgement,
+     the pupil-facing refs must be that judgement. 62 legacy records point at
+     different topics under the two fields; a further 103 carry ONLY a judged
+     code and were invisible to the scope tree entirely. */
+  let judgedRecs = 0, judgedHonoured = 0, historicalLeak = 0;
+  recs.forEach((r) => {
+    const src = srcById[r.block_id] || srcById[r.id];
+    if (!src) return;
+    const judged = (src.aa_codes_today || []).filter(Boolean);
+    if (!judged.length) return;
+    judgedRecs++;
+    const refs = cfg.learnedScope.refsOf(r) || [];
+    const rt = new Set(refs.map(topicOf));
+    if (judged.map(topicOf).some((t) => rt.has(t))) judgedHonoured++;
+    const hist = (src.aa_codes || []).filter(Boolean).map(topicOf);
+    const jt = new Set(judged.map(topicOf));
+    if (hist.length && hist.some((t) => rt.has(t) && !jt.has(t))) historicalLeak++;
+  });
+  check(judgedRecs > 500 && judgedHonoured === judgedRecs,
+    "every record with a judged code is scoped by it (" + judgedHonoured + " of " + judgedRecs + ")");
+  check(historicalLeak === 0,
+    "no record is scoped by a historical topic the judgement disagrees with (" + historicalLeak + " leaks)");
+  check((cfg.learnedScope.refsOf(recs.find((r) => !(srcById[r.block_id] || {}).aa_codes_today) || recs[0]) || []).length >= 0,
+    "records with no judgement fall back to their historical codes rather than becoming unplaceable");
+
+  /* --- 2. A markscheme cover is never presented as the answer ------------
+     Two ways it happened: a "located" span lying in the front matter (379
+     records on 31 papers, since repaired by the seat), and no location at all,
+     where the whole document sprang open at page one (Smith's 8818-7201_Q7). */
+  const pageNum = (u) => { const m = /_p(\d+)/.exec(String(u || "")); return m ? parseInt(m[1], 10) : null; };
+  let frontMatterShown = 0, wholeAutoOpened = 0, wholeUnlabelled = 0, wholeCount = 0;
+  recs.forEach((r) => {
+    const pages = cfg.msPagesOf(r) || [];
+    if (!pages.length) return;
+    if (r.ms_pages_kind !== "whole") {
+      if (pages.every((u) => { const n = pageNum(u); return n !== null && n <= 3; })) frontMatterShown++;
+    } else {
+      wholeCount++;
+      if (cfg.msPagesOpenOf(r)) wholeAutoOpened++;
+      if (!/could not find/i.test(cfg.msPagesLabelOf(r) || "")) wholeUnlabelled++;
+    }
+  });
+  check(frontMatterShown === 0,
+    "no record presents a front-matter-only page set as its located markscheme (" + frontMatterShown + ")");
+  check(wholeAutoOpened === 0,
+    "the whole-document fallback never springs open at the cover (" + wholeCount + " such records, " + wholeAutoOpened + " auto-opening)");
+  check(wholeCount === 0 || wholeUnlabelled === 0,
+    "and every one of them says plainly that the question's own pages could not be found");
+
+  /* The guard must be real code, not a property of today's data: the seat
+     repaired the locator hours before this was written, so a data-only check
+     would pass on a wrapper that had never been fixed. */
+  check(/MS_FRONT_MATTER/.test(inline) && /allFrontMatter/.test(inline),
+    "the front-matter guard is in the wrapper, so a locator regression cannot reach a pupil");
+  check(/ms_pages_kind === "whole"\) return false/.test(inline),
+    "and the no-auto-open rule is explicit rather than incidental");
 })();
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");

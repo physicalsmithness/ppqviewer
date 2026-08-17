@@ -179,14 +179,20 @@
     function paperKindOf(q) {
       if (ROLE_LABEL[q.paper_role]) {
         /* An option or investigation still needs the calculator rule saying. */
+        /* The seat's vocabulary is permitted / not_permitted. "required" was
+           my guess and never appears in the data, so until 2026-08-17 every
+           one of the 553 calculator-permitted option questions printed a bare
+           "Option booklet" and dropped the calculator rule the comment above
+           insists on. Caught by the suite when the seat regenerated; both
+           spellings accepted now so neither side's wording can silence it. */
         if (q.paper_role === "option" || q.paper_role === "investigation") {
           if (q.calculator === "not_permitted") return ROLE_LABEL[q.paper_role] + ", no calculator";
-          if (q.calculator === "required") return ROLE_LABEL[q.paper_role] + ", calculator";
+          if (q.calculator === "permitted" || q.calculator === "required") return ROLE_LABEL[q.paper_role] + ", calculator";
         }
         return ROLE_LABEL[q.paper_role];
       }
       if (q.calculator === "not_permitted") return "No calculator";
-      if (q.calculator === "required") return "Calculator";
+      if (q.calculator === "permitted" || q.calculator === "required") return "Calculator";
       return "";
     }
 
@@ -346,17 +352,41 @@
       return order;
     }
 
+    /* ===== Which codes does a PUPIL see? (Smith, 2026-08-17) =====
+       The seat ships two code fields and they mean different things. Their
+       packet: `aa_codes_today` is "the spine codes the question would carry if
+       set today, from the lineage judgement; distinct from the classification's
+       historical codes". So `aa_codes` is what a question was tagged as under
+       its own syllabus generation, and `aa_codes_today` is the judged answer to
+       what it actually tests in the current course.
+
+       Everything a pupil meets is expressed in the CURRENT syllabus: the
+       Learned-so-far tick tree, the topic chip, the filters, the weak-area
+       chips. So the judged code wins wherever it exists, and the historical
+       one is the fallback, not the other way round.
+
+       This was backwards until today, and it was not cosmetic. Smith un-ticked
+       complex numbers in Learned so far and was still served
+       `8804-7401_Q13` ("solve z³ − 8i = 0"), because that record's historical
+       codes are SL2.10.1 and SL3.8.1 (equation solving, trigonometry) while its
+       judged code is AHL1.14.2, complex numbers, and the scope filter read only
+       the historical field with no fallback at all. 62 legacy records have the
+       two fields pointing at different topics, and a further 103 carry ONLY a
+       judged code, so the scope tree could not place them at all. The 463
+       current-syllabus AAHL records carry no judged codes and are unaffected by
+       the swap. */
+    function currentCodes(q) {
+      var judged = (q && q.aa_codes_today) || [];
+      if (judged.length) return judged;
+      return (q && q.aa_codes) || [];
+    }
+
     var questions = [];
     (window.MATHS_PPQS || []).forEach(function (q) {
-      var tnum = topicNumOf(q.aa_codes);
-      /* Seat packet 2026-08-03 (L02): `aa_codes_today` carries the judged
-         lineage codes for 1,272 legacy questions. Judged codes beat the MHL
-         heuristic; the heuristic survives only as the fallback for the 460
-         still-provisional questions and dies when batch D lands. */
-      if (tnum == null) tnum = topicNumOf(q.aa_codes_today);
+      var tnum = topicNumOf(currentCodes(q));
       if (tnum == null) tnum = legacyTopicNumOf(q.mhl_codes, q.option);
       var subtopics = [];
-      ((q.aa_codes && q.aa_codes.length) ? q.aa_codes : (q.aa_codes_today || [])).forEach(function (c) {
+      currentCodes(q).forEach(function (c) {
         var tp = topicPartOf(c);
         if (subtopics.indexOf(tp) < 0) subtopics.push(tp);
       });
@@ -376,6 +406,28 @@
           return m && where.nums.indexOf(parseInt(m[1], 10)) >= 0;
         });
         msKind = where.kind;
+      }
+      /* ===== Front-matter guard (Smith, 2026-08-17) =====
+         Every IB markscheme opens with a cover, a copyright/blank page and
+         Instructions to Examiners, so a "located" set lying entirely inside
+         the first three pages cannot be a question's marking. On 2026-08-17 a
+         locator fault put 379 records across 31 papers into exactly that
+         state: Smith revealed the markscheme for an M16 six-marker and got the
+         M/A/R/N abbreviations page, presented with full confidence because
+         `located-high` and `aligned` were indistinguishable to me at render
+         time. The seat has since re-run the locator and the corpus is clean,
+         which is precisely why this stays: it is cheap, it is knowably true,
+         and it turns a silent recurrence into a visible fallback instead of a
+         wrong answer in front of a pupil. Deliberately conservative at three
+         pages; some papers run preamble to page six, but three is the part no
+         markscheme can contradict. */
+      var MS_FRONT_MATTER = 3;
+      if (msNarrow.length) {
+        var allFrontMatter = msNarrow.every(function (u) {
+          var m = PAGE_RE.exec(u);
+          return m && parseInt(m[1], 10) <= MS_FRONT_MATTER;
+        });
+        if (allFrontMatter) { msNarrow = []; msKind = ""; }
       }
       if (!msNarrow.length) { msNarrow = msAll; msKind = "whole"; }
 
@@ -550,7 +602,10 @@
     var LEARNED_TREE = (function () {
       var byTopic = {};
       questions.forEach(function (q) {
-        (q.aa_codes || []).forEach(function (code) {
+        /* Judged codes first (see currentCodes above): the tree is a map of the
+           CURRENT syllabus, so a legacy question belongs under what it tests
+           today, not under what it was filed as in 2004. */
+        currentCodes(q).forEach(function (code) {
           var m = String(code).match(/^(?:SL|AHL)(\d)/i);
           if (!m) return;
           var t = parseInt(m[1], 10);
@@ -599,7 +654,9 @@
       learnedScope: {
         label: "Learned so far",
         tree: LEARNED_TREE,
-        refsOf: function (q) { return q.aa_codes || []; }
+        /* The scope filter MUST use the same codes the tree was built from, or
+           un-ticking a topic silently fails to exclude its questions. */
+        refsOf: function (q) { return currentCodes(q); }
       },
 
       filters: [
@@ -780,7 +837,9 @@
       },
       classificationsOf: function (q) {
         return {
-          syllabus: q.aa_codes.concat(q.mhl_codes),
+          /* Judged codes lead; the historical classification follows as
+             provenance rather than as the pupil-facing answer. */
+          syllabus: currentCodes(q).concat(q.mhl_codes || []),
           techniques: q.question_types,
           representations: q.themes
         };
@@ -819,8 +878,21 @@
       msPagesOf: function (q) { return q.ms_pages || []; },
       msPagesAllOf: function (q) { return q.ms_pages_all || []; },
       /* Open the pages unasked when there is nothing else to read, or when the
-         seat's data says the crop is too short to be the whole answer. */
-      msPagesOpenOf: function (q) { return !!q.ms_thin || !(q.ms_crops && q.ms_crops.length); },
+         seat's data says the crop is too short to be the whole answer.
+
+         NEVER auto-open the whole-document fallback (Smith, 2026-08-17). When
+         a question's own pages could not be located we have a twenty-page
+         markscheme and no idea where the pupil should look; springing it open
+         at its cover presents the cover AS the answer. That is how Smith read
+         `8818-7201_Q7` (the xy = 4 / y² − x² = 2 implicit differentiation
+         question) as having a completely unrelated markscheme: the paper was
+         right, the pages were right, and page one was a cover. Closed, with
+         the label saying plainly that the location is unknown, is honest;
+         open at the cover is not. 43 records are in this state today. */
+      msPagesOpenOf: function (q) {
+        if (q.ms_pages_kind === "whole") return false;
+        return !!q.ms_thin || !(q.ms_crops && q.ms_crops.length);
+      },
       msPagesLabelOf: function (q) {
         var n = (q.ms_pages || []).length;
         if (!n) return "";
@@ -834,7 +906,7 @@
         if (k === "bracketed") {
           return "Show the markscheme (" + n + " pages; this question is somewhere in them)";
         }
-        return "Show the paper's whole markscheme (" + n + " pages, from the cover; this question's own pages could not be located)";
+        return "We could not find this question's own markscheme pages. Open the paper's whole markscheme (" + n + " pages, starting at the cover) and look for question " + (q.question || "") + ".";
       },
       markschemeOf: function (q) {
         if (q.ms_thin && q.ms_crops && q.ms_crops.length) {

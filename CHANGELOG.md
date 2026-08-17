@@ -2,6 +2,50 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-17 — three faults Smith found in one sitting, all mine
+
+Every one of them looked healthy in the source and was invisible to the
+suites. Assertions added for all three, written against the real wrapper and
+the real catalogue rather than against the source text.
+
+- **The Learned-so-far scope read the wrong code field.** The seat ships
+  `aa_codes` (what a question was tagged as under its own syllabus generation)
+  and `aa_codes_today` ("the spine codes the question would carry if set
+  today, from the lineage judgement"). Everything a pupil meets is expressed
+  in the CURRENT syllabus, so the judged code must win; the wrapper preferred
+  the historical one, and `learnedScope.refsOf` read it with no fallback at
+  all. Smith un-ticked complex numbers and was still served
+  `8804-7401_Q13` ("solve z³ − 8i = 0"), whose historical codes are equation
+  solving and trigonometry and whose judged code is complex numbers. One
+  `currentCodes()` helper now governs the scope tree, the topic chip, the
+  filters, the weak-area chips and the progress axes. 62 legacy records had
+  the two fields pointing at different topics; a further 103 carried only a
+  judged code and were unplaceable in the tree. The 463 AAHL records carry no
+  judged codes and are unaffected.
+- **A markscheme cover could be presented as the answer.** Two routes. A
+  "located" span lying in the front matter (379 records across 31 papers,
+  since repaired by the seat and verified here page by page), and no location
+  at all, where the whole document sprang open at page one, which is how
+  Smith read `8818-7201_Q7` as having an unrelated markscheme when the paper
+  was right and page one was a cover. The wrapper now refuses a located set
+  lying entirely in the first three pages, and never auto-opens the
+  whole-document fallback, which instead says plainly that the question's own
+  pages could not be found and names the question to look for. The guard is
+  code, not data: the suite asserts the guard exists, so a locator regression
+  cannot reach a pupil again.
+- **553 option-booklet questions dropped their calculator rule.** The seat's
+  vocabulary is `permitted` / `not_permitted`; the wrapper tested for
+  `"required"`, which has never appeared in the data, so an option question
+  printed a bare "Option booklet". Found only because the seat's regeneration
+  made a neighbouring assertion fail.
+- Seat's locator fix verified independently before adoption: `8816-7201_Q9`
+  moved from markscheme page 5 (examiner instructions) to pages 11–13, and
+  page 11 does carry "attempt to differentiate implicitly, M1". Unlocated
+  records are down from 253 to 43. Their new `located-low` tier is the
+  confidence signal this project asked for.
+- Gates at head: 19 + 18 + 101 + 1,503 + 658 + 91 + 28 = 2,418, none failing.
+  Deploy site files re-assembled; the run needs Smith's sync and push.
+
 ## 2026-08-06 (later still) — d024: a sign-in gate on every consumer, and IB Maths starts reporting for the first time
 
 Smith ruled q13 within the hour: gate both, now, rather than waiting for
