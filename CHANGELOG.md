@@ -2,6 +2,36 @@
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.
 
+## 2026-08-06 (later still) — d024: a sign-in gate on every consumer, and IB Maths starts reporting for the first time
+
+Smith ruled q13 within the hour: gate both, now, rather than waiting for
+Google sign-in.
+
+- **`PPQLogin.mountGate()`**, a new shared helper: injects the gate styles,
+  markup, class dropdown (populated before anything that can fail, so it is
+  never blank), sign-in and reveal. ESAT's equivalent is 90 hand-written lines
+  in its wrapper; repeating that per consumer is how three drillers end up
+  with three subtly different sign-ins and one quietly stops pulsing. IB Maths
+  and Economics use the helper in eight lines each. ESAT keeps its hand-rolled
+  gate until a later touch, and the suite asserts the two behave alike.
+- **IB Maths and Economics are gated and reporting**, each with its own
+  project tag (`ppqviewer_ibmaths`, `ppqviewer_economics`) and its own cohort
+  key, so a pupil's economics class cannot overwrite their maths class in the
+  shared identity. Both fall back to opening ungated and silent if the login
+  script is missing: being locked out of revision is worse than an unreported
+  session.
+- **The IB Maths assembler now ships `ppq-login.js`** and fails loudly if it
+  is absent, because a missing gate script is invisible at build time and
+  serves an ungated, silent site.
+- `test_pulse.js` grew to 23 assertions: every pupil-facing consumer loads the
+  login, hands a report function to the mount, and holds distinct tags and
+  keys; the shared gate hides the app, offers the same three fields, is safe
+  to call before sign-in, and reveals the app on start.
+- Gates at head: 19 + 18 + 101 + 1,503 + 647 + 91 + 23 = 2,402, none failing.
+- **q08 (real class source) is now the blocking item.** Three hardcoded
+  placeholder class lists exist where there was one, and two of them are my
+  guesses at names Smith has not supplied.
+
 ## 2026-08-06 (later) — the attempt pulse has been throwing away its payload since it was wired
 
 Acting on the EdTech Overview seat's correction packet, diagnosis verified in

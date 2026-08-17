@@ -43,6 +43,10 @@
        (viewer/build_viewer_catalogue.py). Do not edit; re-run their builder. -->
   <script src="../../../CodexProjects/PaperDatabases/Maths Categorisation/viewer/maths_catalogue.js"></script>
   <script src="ibmaths_spine_labels.js"></script>
+  <!-- Estate shared sign-in + attempt pulse (d024, Smith 2026-08-06). Until
+       today this driller was published with no pulse at all, so nothing a
+       pupil did here reached the shared teacher workbook. -->
+  <script src="ppq-login.js"></script>
   <script src="../engine/ppqviewer.js"></script>
 
   <script>
@@ -903,10 +907,26 @@
       modules: { postQuestionReview: true, structuredPaper: true }
     };
 
+    /* d024 (sign-in gate and pulse on every consumer, Smith 2026-08-06). The
+       class list is INTERIM, exactly as ESAT's is, and stays so until q08
+       names the real class source. If ppq-login.js failed to load the driller
+       still opens, ungated and silent, because being locked out of revision is
+       worse than an unreported session. */
+    var INTERIM_CLASSES = ["Test", "Y12 Maths", "Y13 Maths"];
+    var gate = (window.PPQLogin && window.PPQLogin.mountGate) ? window.PPQLogin.mountGate({
+      title: "IB Maths Past-Paper Driller",
+      projectTag: "ppqviewer_ibmaths",
+      cohortKey: "ppqviewer_ibmaths_cohort_v1",
+      classes: INTERIM_CLASSES,
+      appEl: "ppq-root"
+    }) : null;
+    if (!gate) document.getElementById("ppq-root").style.display = "block";
+
     PPQViewer.mount(document.getElementById("ppq-root"), {
       config: window.PPQ_CONFIG,
       questions: questions,
-      meta: window.MATHS_META || {}
+      meta: window.MATHS_META || {},
+      report: gate ? gate.report : null
     });
   })();
   </script>

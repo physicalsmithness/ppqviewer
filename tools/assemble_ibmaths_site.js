@@ -73,6 +73,12 @@ if (!assetsOnly) {
   html = replaceOnce(html, '<link rel="stylesheet" href="../engine/ppqviewer.css">', '<link rel="stylesheet" href="engine/ppqviewer.css">', "css path");
   html = replaceOnce(html, '<script src="../../../CodexProjects/PaperDatabases/Maths Categorisation/viewer/maths_catalogue.js"></script>', '<script src="data/maths_catalogue.js"></script>', "catalogue path");
   html = replaceOnce(html, '<script src="ibmaths_spine_labels.js"></script>', '<script src="data/ibmaths_spine_labels.js"></script>', "spine labels path");
+  /* d024: the sign-in gate ships with the site. It sits at the root, matching
+     esatwallop, so both deployments reference it the same way. If this copy
+     were ever missed the page would 404 the script and open UNGATED and
+     silent, which is the failure mode the wrapper's fallback is for and which
+     `must()` below exists to prevent reaching a pupil. */
+  html = replaceOnce(html, '<script src="ppq-login.js"></script>', '<script src="ppq-login.js"></script>', "login path (root-relative in both layouts)");
   html = replaceOnce(html, '<script src="../engine/ppqviewer.js"></script>', '<script src="engine/ppqviewer.js"></script>', "engine path");
   html = replaceOnce(html, 'var BASE = "file:///C:/CodexProjects/PaperDatabases/outputs/previews/";', 'var BASE = "assets/previews/";', "asset base");
   html = replaceOnce(html, "<title>IB Maths driller — teacher preview</title>", "<title>IB Maths driller</title>", "title");
@@ -87,7 +93,9 @@ if (!assetsOnly) {
   fs.copyFileSync(ENGINE_CSS, path.join(DEPLOY, "engine", "ppqviewer.css"));
   fs.copyFileSync(CATALOGUE, path.join(DEPLOY, "data", "maths_catalogue.js"));
   fs.copyFileSync(path.join(PROJECT_ROOT, "example", "ibmaths_spine_labels.js"), path.join(DEPLOY, "data", "ibmaths_spine_labels.js"));
-  console.log("site files assembled (index.html rewritten: teacher strip out, GA in, relative paths)");
+  fs.copyFileSync(path.join(PROJECT_ROOT, "example", "ppq-login.js"), path.join(DEPLOY, "ppq-login.js"));
+  must(fs.existsSync(path.join(DEPLOY, "ppq-login.js")), "ppq-login.js shipped (without it the site opens ungated and reports nothing)");
+  console.log("site files assembled (index.html rewritten: teacher strip out, GA in, relative paths, sign-in gate shipped)");
 }
 
 // ---- assets (chunked, resumable) ------------------------------------------

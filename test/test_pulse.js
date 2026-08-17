@@ -116,17 +116,68 @@ check("no consumer wrapper hand-builds its own POST body",
     return fs.readFileSync(p, "utf8").indexOf("script.google.com") < 0;
   }));
 
-/* Reporting is opt-in per consumer, and two published consumers do not take
-   it. That is a product decision for Smith, not a defect, but it must be
-   visible rather than discovered: this assertion documents the live state and
-   will fail the day someone wires one up, prompting the record to be updated. */
-console.log("\n=== which consumers actually report (state, not judgement) ===");
-const wired = ["esat-compare.html", "ibmaths.html", "economics.html", "chem-compare.html"].filter(function (f) {
+/* d024 (Smith 2026-08-06): every pupil-facing consumer is gated and pulses.
+   IB Maths was published for a week reporting nothing at all; that is the
+   thing these assertions exist to stop recurring silently. */
+console.log("\n=== every pupil-facing consumer is gated and reports (d024) ===");
+
+const PUPIL_FACING = ["esat-compare.html", "ibmaths.html", "economics.html"];
+const wired = PUPIL_FACING.filter(function (f) {
   const p = path.join(PV, "example", f);
   return fs.existsSync(p) && fs.readFileSync(p, "utf8").indexOf("ppq-login.js") >= 0;
 });
-check("exactly ESAT and the chemistry comparison page report; IB Maths and Economics send nothing (recorded in OPEN_QUESTIONS q13)",
-  wired.length === 2 && wired.indexOf("esat-compare.html") >= 0 && wired.indexOf("chem-compare.html") >= 0);
+check("every pupil-facing consumer loads the estate login: " + wired.join(", "),
+  wired.length === PUPIL_FACING.length);
+
+const reporting = PUPIL_FACING.filter(function (f) {
+  const src = fs.readFileSync(path.join(PV, "example", f), "utf8");
+  return /report:\s*(gate \? gate\.report : null|presentationBenchmark \? null : report|report)/.test(src);
+});
+check("and hands a report function to the engine mount, so events actually fire: " + reporting.join(", "),
+  reporting.length === PUPIL_FACING.length);
+
+/* Distinct project tags and cohort keys: one shared workbook routes by project
+   tag, and a shared cohort key would make a pupil's economics class overwrite
+   their maths class. */
+const tags = {}, cohorts = {};
+PUPIL_FACING.forEach(function (f) {
+  const src = fs.readFileSync(path.join(PV, "example", f), "utf8");
+  const t = src.match(/projectTag:\s*"([^"]+)"/);
+  const c = src.match(/cohortKey:\s*"([^"]+)"/);
+  if (t) tags[t[1]] = (tags[t[1]] || 0) + 1;
+  if (c) cohorts[c[1]] = (cohorts[c[1]] || 0) + 1;
+});
+check("each consumer has its own project tag (" + Object.keys(tags).join(", ") + ")",
+  Object.keys(tags).length === PUPIL_FACING.length && Object.keys(tags).every((k) => tags[k] === 1));
+check("each consumer scopes its class to its own key, so one subject's class cannot overwrite another's",
+  Object.keys(cohorts).length === PUPIL_FACING.length && Object.keys(cohorts).every((k) => cohorts[k] === 1));
+
+console.log("\n=== the shared gate behaves like the hand-rolled one ===");
+
+const gateDom = new JSDOM(`<!doctype html><html><body><div id="ppq-root"></div></body></html>`,
+  { runScripts: "outside-only", url: "https://localhost/" });
+gateDom.window.fetch = function () { return Promise.resolve({}); };
+gateDom.window.eval(fs.readFileSync(LOGIN, "utf8"));
+const gate = gateDom.window.PPQLogin.mountGate({
+  title: "Test Driller", projectTag: "ppqviewer_test",
+  cohortKey: "ppqviewer_test_cohort_v1", classes: ["Y12 Test", "Y13 Test"],
+  appEl: "ppq-root"
+});
+const gdoc = gateDom.window.document;
+check("the gate injects itself and hides the app until sign-in",
+  !!gdoc.getElementById("ppq-sign-in-gate") && gdoc.getElementById("ppq-root").style.display === "none");
+check("the class dropdown is never blank: placeholder plus every class",
+  gdoc.getElementById("ppq-si-class").options.length === 3);
+check("it offers the same three fields the hand-rolled ESAT gate offers",
+  !!gdoc.getElementById("ppq-si-name") && !!gdoc.getElementById("ppq-si-class") && !!gdoc.getElementById("ppq-si-start"));
+check("report() is safe to hand to the engine before anyone has signed in",
+  typeof gate.report === "function" && (gate.report({ status: "answered" }), true));
+
+gdoc.getElementById("ppq-si-name").value = "Gate Pupil";
+gdoc.getElementById("ppq-si-class").value = "Y13 Test";
+gdoc.getElementById("ppq-si-start").click();
+check("signing in reveals the app and hides the gate",
+  gdoc.getElementById("ppq-root").style.display === "block" && gdoc.getElementById("ppq-sign-in-gate").style.display === "none");
 
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");
 process.exit(fail ? 1 : 0);

@@ -46,6 +46,8 @@
        seat (viewer/build_economics_catalogue.py). Do not edit; re-run their
        builder. window.ECON_META + window.ECON_QUESTIONS, 1,021 records. -->
   <script src="../../../CodexProjects/PaperDatabases/Economics Categorisation/viewer/economics_catalogue.js"></script>
+  <!-- Estate shared sign-in + attempt pulse (d024, Smith 2026-08-06). -->
+  <script src="ppq-login.js"></script>
   <script src="../engine/ppqviewer.js"></script>
 
   <script>
@@ -888,10 +890,24 @@
     window.ECON_BUILD_STATS = STATS;
     window.ECON_VIEWER_RECORDS = questions;
 
+    /* d024 (sign-in gate and pulse on every consumer, Smith 2026-08-06).
+       Interim class list until q08 names the real source; ungated and silent
+       if the login script is missing, rather than locking a pupil out. */
+    var INTERIM_CLASSES = ["Test", "Y12 Economics", "Y13 Economics"];
+    var gate = (window.PPQLogin && window.PPQLogin.mountGate) ? window.PPQLogin.mountGate({
+      title: "IB Economics Past-Paper Driller",
+      projectTag: "ppqviewer_economics",
+      cohortKey: "ppqviewer_economics_cohort_v1",
+      classes: INTERIM_CLASSES,
+      appEl: "ppq-root"
+    }) : null;
+    if (!gate) document.getElementById("ppq-root").style.display = "block";
+
     PPQViewer.mount(document.getElementById("ppq-root"), {
       config: window.PPQ_CONFIG,
       questions: questions,
-      meta: META
+      meta: META,
+      report: gate ? gate.report : null
     });
   })();
   </script>

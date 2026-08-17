@@ -33,10 +33,19 @@ The central feedback UI is specified but blocked on:
 The viewer can prepare question ID, learner name, selected answer, analysis/build
 identity and text, but must not invent or silently transmit to a destination.
 
-## q08 — real class source
+## q08 — real class source (now the blocking item, 2026-08-06)
 
-What is the current authoritative class list/API? Until known, the live
-`Test`, `Y12 ESAT`, `Y13 ESAT` list must be described as interim/test-only.
+What is the current authoritative class list/API? Until known, the live class
+lists must be described as interim/test-only.
+
+**Raised in priority by d024 (a sign-in gate on every consumer).** There are now
+three hardcoded placeholder lists, not one: `Test / Y12 ESAT / Y13 ESAT`,
+`Test / Y12 Maths / Y13 Maths`, `Test / Y12 Economics / Y13 Economics`. The
+last two are guesses at names Smith has not supplied. A pupil who picks the
+wrong label lands in the wrong bucket in the shared workbook, and the tracking
+d024 exists to enable is only as good as these strings. Either the real names
+per subject, or the TeacherViewer single-source lookup, before any of this is
+leaned on for teaching decisions.
 
 ## q09 — historical launch cards
 
@@ -64,7 +73,15 @@ phase.
 Decision required only if the host-side data model makes the pupil-first slice
 impractical.
 
-## q13 — should IB Maths and Economics report to the estate pulse?
+## q13 — should IB Maths and Economics report to the estate pulse? RESOLVED
+
+**RESOLVED by Smith, 2026-08-06, as d024 (a sign-in gate on every consumer):
+option (a), wire both now and accept the gate.** Built the same day via the new
+shared `PPQLogin.mountGate()`; the suite now enumerates every pupil-facing
+consumer and asserts each is gated, reports, and carries its own project tag
+and cohort key. The finding that prompted it is kept below because it is the
+evidence for the standing rule that a consumer is not finished until it
+reports.
 
 Found 2026-08-06 while fixing the pulse transport. Only `esat-compare.html` and
 the chemistry comparison page load `ppq-login.js` and pass a `report` function

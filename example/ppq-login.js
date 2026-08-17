@@ -183,5 +183,108 @@
       report: report, sendSessionStart: sendSessionStart, wireGate: wireGate, classes: classes.slice() };
   }
 
-  window.PPQLogin = { createLogin: createLogin, REPORT_URL: REPORT_URL, SHARED_IDENTITY_KEY: SHARED_IDENTITY_KEY };
+  /* ---------------------------------------------------------------------
+     mountGate: the whole sign-in gate, injected, for consumers that do not
+     want to hand-roll it.
+
+     WHY (d024, Smith 2026-08-06, "we must put a sign-in gate in front of
+     both"): ESAT's gate is 90 lines of markup, CSS and fallback wiring hand
+     written into `esat-compare.html`. Repeating that per consumer is how
+     three drillers end up with three subtly different sign-ins and one of
+     them silently stops pulsing. IB Maths and Economics use this instead, and
+     ESAT can migrate onto it on a later touch; until then `test_pulse.js`
+     asserts every gate offers the same fields, so they cannot drift apart
+     unnoticed.
+
+     Everything ESAT's hand-rolled gate does, this does:
+       - the class dropdown is populated FIRST, before anything that can fail,
+         so a pupil is never met with a blank list;
+       - if this script did not load at all the consumer falls back to a local
+         gate, so nobody is ever locked out (that half stays consumer-side,
+         necessarily: this function cannot run if the file is missing);
+       - the shared estate name prefills, and the class is scoped to this page
+         so it never clobbers a pupil's physics class.
+
+     opts: { title, subtitle, projectTag, cohortKey, classes[], appEl,
+             gateEl (optional; created if absent), onStatus, onEnter }
+     Returns { report, login, signedIn } — `report` is safe to hand straight
+     to PPQViewer.mount even when sign-in never happens. */
+  function mountGate(opts) {
+    opts = opts || {};
+    var doc = window.document;
+    var appEl = typeof opts.appEl === "string" ? doc.getElementById(opts.appEl) : opts.appEl;
+
+    if (!doc.getElementById("ppq-gate-style")) {
+      var st = doc.createElement("style");
+      st.id = "ppq-gate-style";
+      st.textContent =
+        "#ppq-sign-in-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:1rem;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}" +
+        "#ppq-sign-in-gate h2{margin:0;color:#1a1a17}" +
+        "#ppq-sign-in-gate input,#ppq-sign-in-gate select{padding:.5rem 1rem;font-size:1rem;border:1px solid #ccc;border-radius:6px;width:240px;background:#fff;color:#1a1a17}" +
+        "#ppq-sign-in-gate button{padding:.5rem 2rem;font-size:1rem;background:#3182ce;color:#fff;border:none;border-radius:6px;cursor:pointer}" +
+        "#ppq-sign-in-gate button:hover{background:#2b6cb0}" +
+        "#ppq-sign-in-gate .ppq-gate-hint{font-size:.85rem;color:#8c8579;max-width:26rem;text-align:center}" +
+        "#ppq-report-flash{position:fixed;bottom:12px;right:12px;font-size:.75rem;color:#48bb78;opacity:0;transition:opacity .3s}";
+      doc.head.appendChild(st);
+    }
+
+    var gate = opts.gateEl || doc.getElementById("ppq-sign-in-gate");
+    if (!gate) {
+      gate = doc.createElement("div");
+      gate.id = "ppq-sign-in-gate";
+      gate.innerHTML =
+        '<h2></h2><input id="ppq-si-name" placeholder="Your name" autocomplete="name">' +
+        '<select id="ppq-si-class"></select><button id="ppq-si-start">Start</button>' +
+        '<p class="ppq-gate-hint"></p>';
+      if (appEl && appEl.parentNode) appEl.parentNode.insertBefore(gate, appEl);
+      else doc.body.appendChild(gate);
+    }
+    gate.querySelector("h2").textContent = opts.title || "Past-Paper Viewer";
+    gate.querySelector(".ppq-gate-hint").textContent = opts.subtitle ||
+      "Sign in with the same name you use for the other drillers. Your class pulse goes to the shared teacher tracker.";
+
+    var flashEl = doc.getElementById("ppq-report-flash");
+    if (!flashEl) {
+      flashEl = doc.createElement("div"); flashEl.id = "ppq-report-flash"; doc.body.appendChild(flashEl);
+    }
+    function flash(msg) {
+      flashEl.textContent = msg; flashEl.style.opacity = "1";
+      setTimeout(function () { flashEl.style.opacity = "0"; }, 1500);
+      if (opts.onStatus) { try { opts.onStatus(msg); } catch (e) {} }
+    }
+
+    var nameEl = gate.querySelector("#ppq-si-name");
+    var classEl = gate.querySelector("#ppq-si-class");
+    var startEl = gate.querySelector("#ppq-si-start");
+
+    /* Populated first, and never left blank. */
+    var list = (opts.classes || []).slice();
+    classEl.innerHTML = "";
+    var ph = doc.createElement("option"); ph.value = ""; ph.textContent = "Choose your class…";
+    classEl.appendChild(ph);
+    list.forEach(function (c) { var o = doc.createElement("option"); o.value = c; o.textContent = c; classEl.appendChild(o); });
+
+    if (appEl) appEl.style.display = "none";
+    function enter() {
+      gate.style.display = "none";
+      if (appEl) appEl.style.display = "block";
+      if (opts.onEnter) { try { opts.onEnter(); } catch (e) {} }
+    }
+
+    var login = createLogin({
+      projectTag: opts.projectTag, cohortKey: opts.cohortKey,
+      classes: list, onStatus: flash
+    });
+    if (login.signedIn()) enter();
+    login.wireGate({ name: nameEl, classSelect: classEl, start: startEl }, enter);
+
+    return {
+      login: login,
+      signedIn: login.signedIn,
+      report: function (partial) { try { login.report(partial); } catch (e) {} }
+    };
+  }
+
+  window.PPQLogin = { createLogin: createLogin, mountGate: mountGate,
+    REPORT_URL: REPORT_URL, SHARED_IDENTITY_KEY: SHARED_IDENTITY_KEY };
 })();
