@@ -179,5 +179,57 @@ gdoc.getElementById("ppq-si-start").click();
 check("signing in reveals the app and hides the gate",
   gdoc.getElementById("ppq-root").style.display === "block" && gdoc.getElementById("ppq-sign-in-gate").style.display === "none");
 
+/* Smith's question, 2026-08-06: "a user who already has progress and then logs
+   in will keep their progress?" IB Maths ran ungated from 2026-07-29, so real
+   pupils have real local history that predates the gate. The answer must be
+   proved, not assumed: the engine namespaces its store on config.storageKey
+   alone, identity plays no part in the key, and the login writes only the
+   shared identity object and this page's own cohort key. These assertions pin
+   that down so nobody can later make sign-in the owner of the store without
+   the suite objecting. */
+console.log("\n=== progress made before sign-in survives it ===");
+
+const preDom = new JSDOM(`<!doctype html><html><body><div id="ppq-root"></div></body></html>`,
+  { runScripts: "outside-only", url: "https://localhost/" });
+preDom.window.fetch = function () { return Promise.resolve({}); };
+const CONSUMER_STORE = "ibmaths_ppq_v1";
+const priorWork = JSON.stringify({
+  attempts: [{ id: "8822-7101_Q1", marks: 5, ts: 1 }, { id: "8822-7101_Q2", marks: 3, ts: 2 }],
+  scores: { "8822-7101_Q1": 5 }, flags: {}, prefs: { order: "shuffle" },
+  learned: { set: { "SL3.6": 2 }, enabled: true }
+});
+preDom.window.localStorage.setItem(CONSUMER_STORE, priorWork);
+preDom.window.localStorage.setItem(CONSUMER_STORE + "_structmode", "parts");
+preDom.window.eval(fs.readFileSync(LOGIN, "utf8"));
+
+const preGate = preDom.window.PPQLogin.mountGate({
+  title: "Maths", projectTag: "ppqviewer_ibmaths",
+  cohortKey: "ppqviewer_ibmaths_cohort_v1", classes: ["Y13 Maths"], appEl: "ppq-root"
+});
+const pdoc = preDom.window.document;
+pdoc.getElementById("ppq-si-name").value = "Returning Pupil";
+pdoc.getElementById("ppq-si-class").value = "Y13 Maths";
+pdoc.getElementById("ppq-si-start").click();
+
+check("the attempt store is byte-identical after signing in",
+  preDom.window.localStorage.getItem(CONSUMER_STORE) === priorWork);
+check("and so is the part-view preference beside it",
+  preDom.window.localStorage.getItem(CONSUMER_STORE + "_structmode") === "parts");
+check("signing out clears only this page's class, never the pupil's work",
+  (preGate.login.signOut(),
+    preDom.window.localStorage.getItem(CONSUMER_STORE) === priorWork &&
+    !preDom.window.localStorage.getItem("ppqviewer_ibmaths_cohort_v1")));
+
+const loginSrc = fs.readFileSync(LOGIN, "utf8");
+const writes = (loginSrc.match(/localStorage\.(setItem|removeItem|clear)\(([^,)]+)/g) || [])
+  .map((s) => s.replace(/.*\(/, "").trim());
+check("the login touches only the shared identity and the page cohort key (" + writes.join(", ") + ")",
+  writes.length > 0 && writes.every((w) => /SHARED_IDENTITY_KEY|cohortKey/.test(w)));
+
+const engineSrcForKey = fs.readFileSync(path.join(PV, "engine", "ppqviewer.js"), "utf8");
+check("the engine keys its store on storageKey alone, so identity can never own a pupil's history",
+  /localStorage\.getItem\(this\.cfg\.storageKey\)/.test(engineSrcForKey) &&
+  !/storageKey\s*\+\s*[^_"']*(learnerId|anonymous_id|display_name)/.test(engineSrcForKey));
+
 console.log("\n==================  " + pass + " passed, " + fail + " failed  ==================");
 process.exit(fail ? 1 : 0);
