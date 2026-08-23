@@ -103,6 +103,55 @@ Economics deliberately unreported and say so in the registry.
 `test\test_pulse.js` asserts the current state, so the day a consumer is wired
 the suite fails and this question gets answered rather than drifting.
 
+## q14 — where does this run once login has to mean something? (2026-08-17)
+
+Smith: "these are all temporary, aren't they, because we're going to have to
+move them off GitHub in order to get login?" Partly, and the distinction
+decides the sequencing.
+
+- **Google sign-in itself does not need a move.** Google Identity Services is
+  client-side; a static page can sign a pupil in and receive an ID token.
+- **Accounts that MEAN something need a backend, but not necessarily a new
+  host.** Something has to verify the token (an unverified token is a claim,
+  not a fact) and hold per-pupil progress so it follows them between devices.
+  The estate already runs a small backend of exactly this kind: the Apps
+  Script behind the attempt pulse. TeacherViewer's d007 is the same pattern,
+  Google sign-in plus the surface hosted by the script.
+- **Putting the PAPERS behind the login does need a move.** On GitHub Pages
+  every asset URL is public; a sign-in screen there is a curtain over an
+  unlocked door. So the day "school-served and unpublicised, traffic watched"
+  (d014's basis) stops being a sufficient rights position is the day hosting
+  has to change. That, not login, is the forcing function.
+
+**What survives a move, so this is not wasted work:** the engine, every
+wrapper and config, the catalogues, the assemblers, and d026's two deployment
+shapes. What changes is the URL and the push mechanism, and the estate already
+has a redirect-stub pattern from the ibeconomics split.
+
+**The observation worth carrying:** six threads now point at one missing
+piece. q04 (hosted engine versus vendored copy), q07 (feedback backend owner),
+q08 (real class source), d014's expedited Google sign-in, TeacherViewer
+stalled one deployment short, and this. All of them are waiting on one small
+verified-identity service. Building that is a bigger decision than any of the
+six and would close all of them.
+
+## q15 — should school-facing drillers report into Smith's personal analytics and Sheet? (2026-08-17)
+
+WEB_KIT now carries TTPossiblee's d004, promoted to estate level: *a tool
+built for St Leonards does not use `G-WKYGJYERSR` and does not use the estate
+feedback sink*, because that measurement property and that Apps Script Sheet
+live in Smith's personal Google account, and pointing school use at them mixes
+school data into a private estate silently.
+
+Every ppqviewer consumer uses both. d024 (a sign-in gate on every consumer)
+made this sharper the same week: two more sites now collect pupil name, class
+and per-question attempts into that personal Sheet.
+
+The judgement is Smith's and it is not obvious: these are his own teaching
+tools, used with his own classes, which is not the same as a tool the school
+commissioned. But the question should be answered deliberately rather than by
+default, and it is cheap to change now and awkward later.
+
 ## Previously resolved
 
 - **q12 — IB-content public exclusion gate. RESOLVED by Smith, 2026-07-29
