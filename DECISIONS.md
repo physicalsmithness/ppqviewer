@@ -287,3 +287,25 @@ Open for the mock-up conversation: one-thing-per-screen versus three-panels-on-o
 **Standing consequence.** A new pupil-facing consumer is not finished until it is gated and reporting. The suite enumerates them, so adding one without wiring it fails the gate rather than shipping quietly.
 
 **Still interim, and now three times over: q08.** ESAT, Maths and Economics each carry a hardcoded placeholder class list. That was tolerable for one consumer and is not for three; the real class source (or an explicit test-only mode) is the blocking item before any of this is used for real teacher tracking.
+
+## d025 (I used AI on this one): AI-assisted work is coverage, not performance
+
+**Direction (Smith, dictated 2026-08-17).** A small marker a pupil sets after a question to say they used AI on it. Recorded as direction, not built; the forks below need Smith before any of it is worth coding.
+
+What he settled:
+
+- **Using AI cuts you out of the reflection layer.** The post-question interrogation asks where *your* thinking went wrong. If AI did the thinking there is nothing to interrogate, and asking anyway teaches a pupil to invent an answer.
+- **The 1-6 rating survives.** A pupil can still say how well they understand it.
+- **It counts towards nothing.** No performance statistic, no last-10 dots, no weak-area chip.
+- **It earns a BLUE coverage dot, and blue is the only thing that is ever blue.** The dashboard's coverage grid gains one new colour, reserved for "the only time you have met this was with AI". Coverage is a real and separate fact from performance, and this is the one place the distinction is worth a colour.
+- **Blue is a state, not a record.** It reflects the MOST RECENT attempt on that item only. Do the item again unaided and the blue is superseded and ignored; the history stays but the dot stops being blue.
+
+Open, and Smith's to rule:
+
+1. **Reporting.** Smith's instinct was "default to not reporting". The architect's counter-argument, on the record because it is a disagreement: a teacher who can see "covered nineteen items, fourteen of them with AI" is being told something true and useful, and suppressing it makes the tracker quietly wrong about what a class has actually done. The distinction worth keeping is between *not counting towards performance* (agreed, absolutely) and *not being visible at all* (a different and probably worse thing). Proposal: exclude from every performance figure, report it as its own status.
+2. **Does a later AI attempt turn a real dot blue?** "Most recent wins" says yes. Honest, and it does describe where a pupil is now, but it means an unaided success can be overwritten by a later assisted attempt, which will feel wrong to a pupil who is using AI to revise something they already know. The alternative is that blue is only ever a floor: it colours an item nothing else has coloured, and never displaces an unaided attempt.
+3. **One reflection question may deserve to survive the cut-out.** Not the error taxonomy, which is about your own wrong turning, but the forward-looking one from d023 (post-question redesign): "would you get a similar question right tomorrow?" Using AI and then judging whether you could now do it alone is arguably the single most useful thing a pupil can be asked at that moment, and it is the one question the assistance does not answer for them.
+4. **Scope.** Universal or maths-first? The problem is not subject-specific; ESAT, chemistry and economics pupils have the same access to the same tools. Recommend building it in the engine as an opt-in module so every consumer can switch it on.
+5. **Wording, and not overloading Flag.** The existing Flag button means "come back to this", which is a different idea; this must not ride on it. The marker's own copy should be plain and unloaded, "I used AI on this one", not a confession.
+
+The rating's MEANING shifts under the marker and the wording should shift with it: unaided it asks how that went, assisted it is closer to how well you understand it now. Worth one line of different copy rather than reusing the same prompt.
