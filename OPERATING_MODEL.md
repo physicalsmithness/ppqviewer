@@ -103,6 +103,14 @@ explicit act.
 - **Chemistry, physics, later consumers:** each gets the same shape when it
   goes live: an assembly path the architect can run, a native cmd for bulk,
   a deploy checkout Smith pushes.
+- **Two deployment shapes, chosen per subject (d026, 2026-08-17).** A
+  consumer either gets a site of its own (`esatwallop`, `ibmathsdriller`, and
+  `ibphysicsppqs` when it launches) or lives as a sub-path inside a subject
+  site that already exists (`ibeconomics/ppqviewer`). The second is new: the
+  assembler writes one folder inside another project's working copy and
+  touches nothing else in it, and Smith pushes that project's repo rather
+  than a deploy checkout of ours. A sub-path consumer inherits neither
+  analytics nor styling from its host; both are decisions, not defaults.
 
 ## On wake (any seat)
 

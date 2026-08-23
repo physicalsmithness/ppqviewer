@@ -309,3 +309,22 @@ Open, and Smith's to rule:
 5. **Wording, and not overloading Flag.** The existing Flag button means "come back to this", which is a different idea; this must not ride on it. The marker's own copy should be plain and unloaded, "I used AI on this one", not a confession.
 
 The rating's MEANING shifts under the marker and the wording should shift with it: unaided it asks how that went, assisted it is closer to how well you understand it now. Worth one line of different copy rather than reusing the same prompt.
+
+## d026 (two deployment shapes, one per subject): IB Physics gets its own site, Economics lives inside ibeconomics
+
+**Ruling (Smith, 2026-08-17).** Physics past-paper questions get a site of their own, `ibphysicsppqs`. Economics does not: it lives inside the existing economics site, at `ibeconomics/ppqviewer`.
+
+**Physics is a deliberate departure and Smith named it as one.** The earlier thinking was that physics past papers would only ever launch inside the individual physics drillers. They will still be attached to those drillers, but attachment takes time per driller, and a standalone site launches the whole corpus at once. So the order is: standalone first because it scales, attached afterwards as each driller is ready.
+
+That refines d021 (multi-consumer operating model), which recorded the chemistry pattern (viewer as one module beside driller modules) as the expected shape of most future deployments. The shape is better understood as a SEQUENCE than a fixed choice: viewer-primary to launch, module later where a host app exists. Economics proves the other half of the same rule, because there a host site already exists, so the viewer slots straight in beside it.
+
+**Economics is this project's first sub-path deployment**, and it is a genuinely different build target from the two live sites:
+
+- Target is a subfolder of an existing published repo (`ibeconomics`, live at `physicalsmithness.github.io/ibeconomics/`, working copy on the Claude drive), not a repo root. The assembler writes `ppqviewer\` inside that working copy and must never touch anything else in it; Smith pushes the `ibeconomics` repo as a whole.
+- Relative asset paths are unaffected: `assets/previews/...` resolves under `ppqviewer/` exactly as it does under a repo root.
+- Analytics are NOT inherited. Each page on that site carries its own snippet (MetaProject's standing note on the economics site), so the viewer page needs its own, and which measurement ID it should carry is a question for Smith rather than a guess.
+- The economics site has a house design system (`css\design-system.css`, with colour carrying fixed meaning across all 39 diagram pages). A pupil moving from a diagram to a past paper stays on one site, so whether the viewer wears that skin or its own is a real design question, not a detail.
+- Same origin as the diagram pages means shared `localStorage`. Storage keys must be checked against whatever the diagrams and the Diagrammer already write.
+- Both directions need a link, or nobody finds it: the economics site index to the viewer, and the viewer back.
+
+**Still owed before either publishes:** the school-served content ruling for IB Economics and IB Physics past papers, the d014 (q12 resolved, publish approved) class of question. For economics it bites harder than it did for maths, because `ibeconomics` is an existing public site with its own traffic rather than a quiet new address.
