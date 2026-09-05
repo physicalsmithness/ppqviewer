@@ -328,3 +328,19 @@ That refines d021 (multi-consumer operating model), which recorded the chemistry
 - Both directions need a link, or nobody finds it: the economics site index to the viewer, and the viewer back.
 
 **Still owed before either publishes:** the school-served content ruling for IB Economics and IB Physics past papers, the d014 (q12 resolved, publish approved) class of question. For economics it bites harder than it did for maths, because `ibeconomics` is an existing public site with its own traffic rather than a quiet new address.
+
+## d027 (three physics deployments, not a topic split): one engine, three qualifications, three sites
+
+**Ruling (Smith, 2026-08-17).** IB Physics, Trilogy GCSE and pre-IB past papers each get their own published site, off the one shared engine. Extends d026 (two deployment shapes), which named `ibphysicsppqs`.
+
+**What was rejected, and why it matters.** Smith had considered splitting the viewers by question topic, matching the individual physics drillers, and ruled it out on time. The stronger reason, recorded so it is not revisited: the viewer already carries a topic axis as a filter, so a topic-split site is a filter with a release train bolted to it, multiplied by the number of topics, and the coverage dashboard gets *worse* because each pupil only ever sees a slice of their own record. One bank, good filters.
+
+**Why qualification IS a legitimate split where topic is not.** Maths works as one site because it is one qualification across two syllabus generations, so a legacy question is still recognisably the pupil's subject. IB, Trilogy and pre-IB are three audiences. A Y10 pupil shown a bank that is mostly IB HL is looking at noise, and their progress page is dominated by things they will never sit. Three deployments cost almost nothing now (the assembler is parameterised; the second is a config file), which is exactly what would not be true of a topic split.
+
+**The critical path is not the viewer.** Physics Categorisation holds its spine and its family and question-type masters but has no `viewer\` catalogue yet; Trilogy holds an extraction database and master workbook; pre-IB has no seat that could be found at all. Each wrapper is roughly a bounded-builder day once data lands. Whether this is one week or three is decided by whether those seats build to `CATALOGUE_CONTRACT.md` first time, as Economics did.
+
+**Requirements packets issued 2026-08-27** to Physics Categorisation and Trilogy Categorisation (their inboxes; the Trilogy one also establishes the `inbox\` convention in that project). The pre-IB packet is held in `outbox\` because no pre-IB seat could be located, and it carries a prior question for Smith: whether "pre-IB past papers" means the school's own internal exams (different rights position, different pipeline) or IGCSE (in which case the corpus already exists under `Other boards GCSE Physics` and the seat is a sibling of Trilogy).
+
+**Standing instruction from the same conversation:** keep it simple for physics now, but make **coverage display and misconception display configurable per consumer**, because both will develop. They become config hooks like `questionTypes` and `progressAxes` already are. Sequencing note: d025's blue AI-coverage dot is the first new coverage state anyone has asked for, so building the flexible coverage surface for d025 means physics inherits a proven seam rather than discovering it.
+
+**Pointer carried into the packets rather than left to be rediscovered:** the estate's Error Taxonomy project holds `misconceptions_core.yaml` at estate level, elevated out of the IB Physics Overview precisely so misconceptions would not be reinvented per subject. Physics is the subject it was built from, so it is a prior answer to check before minting a parallel vocabulary.
