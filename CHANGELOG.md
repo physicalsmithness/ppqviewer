@@ -1,3 +1,51 @@
+## 2026-09-05 — the site-name swap, phantom parts refused, and a gate that catches vocabulary drift
+
+- **`deploy\ibmathsdriller` is now `deploy\ibmathsppqs`** (their d030). A folder
+  inside this project, named after a different project, containing this
+  project's site: the trap that caused the repo mix-up in the first place. The
+  IB Maths Driller seat enumerated every dependent file for me, including the
+  hand-over guard in `SYNC_IBMATHS_WEBSITE.cmd` whose failure mode is a script
+  calling itself, and `tools\state.js` whose bare `dir` string would have left
+  the wake surface reporting a missing checkout. Seven files updated; the
+  remote was already swapped, and the checkout is in sync.
+- **The wrapper stops calling itself a driller.** Once the addresses swap, a
+  site titled "IB Maths driller" sitting at the past-paper address is a milder
+  version of the same confusion. Now "IB Maths Past Papers", in the title, the
+  header and the assembler's rewrite.
+- **274 phantom parts were being served to pupils.** The maths seat's label
+  repair (packet 2026-08-15) named the corruption per part, flagging rather
+  than dropping them because tags and mark points hang off them. Flagged
+  upstream is not handled downstream: this wrapper read neither `label_status`
+  nor `phantom_kind`, so every phantom was offered as an ordinary part, which
+  means offering a pupil a question that was never printed. Now refused
+  everywhere pupil-facing. Two consequences the suite records: `2222-7107_Q12`
+  splits into three markable units of 4, 3 and 12 where a pupil used to get a
+  single 19-mark bar, and 15 questions correctly return to question-level
+  because their apparent second part was a `duplicate_of_sibling` phantom.
+- **`test_vocabulary.js`, a new gate, suggested by the EdTech Overview seat.**
+  Two of the three faults Smith found on 08-17 were the same fault: a wrapper
+  testing for a token the content seat's data has never contained. Nothing
+  could catch them, because every assertion in 2,418 asked whether a behaviour
+  FIRES, and neither of those is a behaviour that fires. This asserts that
+  every string literal a wrapper compares a catalogue field against actually
+  occurs in that field, and separately lists fields a seat ships that the
+  wrapper never reads. It found the dead `calculator === "required"` branch on
+  its first run, and the unread list is how the phantom fields above were
+  noticed eleven days after their packet arrived.
+- **Nine assertions across two suites were failing because the data got
+  BETTER.** Economics filled every empty `spec_status`, recovered 109 of 127
+  unmarked parts and repaired three of seven unparsed MCQs; maths repaired the
+  labels this suite's exemplar was pinned to. A gate that reddens when a seat
+  delivers what was asked teaches its owner to ignore it, so the rule is now
+  written into `OPERATING_MODEL.md`: assert the invariant, echo the count.
+- Two genuine findings surfaced while re-baselining, both packeted: 10 of
+  economics' 145 thin markschemes have no crop or page behind them (the
+  wrapper now says so rather than promising a printed scheme it does not
+  have), and maths has non-phantom parts carrying 0 marks with no
+  `marks_status` to explain them.
+- Gates at head: 19 + 18 + 101 + 1,503 + 661 + 92 + 28 + 4 = 2,426, none
+  failing. Deploy site files re-assembled; the run needs Smith's sync and push.
+
 # CHANGELOG: ppqviewer
 
 Universal engine changes are recorded here and notified into each consumer's inbox. Newest at the top.

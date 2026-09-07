@@ -1,4 +1,4 @@
-/* Assemble the deployable IB Maths site into deploy\ibmathsdriller.
+/* Assemble the deployable IB Maths site into deploy\ibmathsppqs.
 
    - index.html: example\ibmaths.html with deploy path rewrites, the teacher-only
      strip removed, and the estate GA4 + Clarity blocks injected (WEB_KIT).
@@ -19,7 +19,7 @@ const PROJECT_ROOT = path.resolve(__dirname, "..");
 const PAPERDB = process.env.IBMATHS_PAPERDB_ROOT || "C:\\CodexProjects\\PaperDatabases";
 const CATALOGUE = path.join(PAPERDB, "Maths Categorisation", "viewer", "maths_catalogue.js");
 const PREVIEWS = path.join(PAPERDB, "outputs", "previews");
-const DEPLOY = process.env.IBMATHS_DEPLOY_ROOT || path.join(PROJECT_ROOT, "deploy", "ibmathsdriller");
+const DEPLOY = process.env.IBMATHS_DEPLOY_ROOT || path.join(PROJECT_ROOT, "deploy", "ibmathsppqs");
 const WRAPPER = path.join(PROJECT_ROOT, "example", "ibmaths.html");
 const ENGINE_JS = path.join(PROJECT_ROOT, "engine", "ppqviewer.js");
 const ENGINE_CSS = path.join(PROJECT_ROOT, "engine", "ppqviewer.css");
@@ -81,7 +81,11 @@ if (!assetsOnly) {
   html = replaceOnce(html, '<script src="ppq-login.js"></script>', '<script src="ppq-login.js"></script>', "login path (root-relative in both layouts)");
   html = replaceOnce(html, '<script src="../engine/ppqviewer.js"></script>', '<script src="engine/ppqviewer.js"></script>', "engine path");
   html = replaceOnce(html, 'var BASE = "file:///C:/CodexProjects/PaperDatabases/outputs/previews/";', 'var BASE = "assets/previews/";', "asset base");
-  html = replaceOnce(html, "<title>IB Maths driller — teacher preview</title>", "<title>IB Maths driller</title>", "title");
+  /* Retitled 2026-09-05 with the site-name swap (d028): the past-paper viewer
+     moves to /ibmathsppqs and the separate authored-question driller takes
+     /ibmathsdriller, so a site called "driller" sitting at the past-paper
+     address would be a milder version of the confusion the swap fixes. */
+  html = replaceOnce(html, "<title>IB Maths Past Papers — teacher preview</title>", "<title>IB Maths Past Papers</title>", "title");
   html = replaceOnce(html, 'versionLabel: "ibmaths v0.2.0 (teacher preview) · engine "', 'versionLabel: "ibmaths v0.2.0 · engine "', "versionLabel");
   html = replaceOnce(html, 'appVersion: "ibmaths-teacher-preview"', 'appVersion: "ibmaths-live"', "appVersion");
   html = replaceOnce(html, 'learnerId: "teacher-preview"', 'learnerId: "local"', "learnerId");

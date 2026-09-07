@@ -124,7 +124,7 @@ say();
    that was assembled but never pushed cannot masquerade as live. */
 const CONSUMERS = [
   { name: "ESAT (esatwallop)", dir: "esatwallop", wrapper: "example/esat-compare.html" },
-  { name: "IB Maths (ibmathsdriller)", dir: "ibmathsdriller", wrapper: "example/ibmaths.html" }
+  { name: "IB Maths (ibmathsppqs)", dir: "ibmathsppqs", wrapper: "example/ibmaths.html" }
 ];
 
 say("DEPLOYMENTS  (canonical head vs the checkout Smith pushes)");
@@ -217,7 +217,7 @@ say();
 
 /* -------------------------------------------------------------------- gates */
 
-say("GATES  (run all seven before telling Smith anything is releasable)");
+say("GATES  (run all eight before telling Smith anything is releasable)");
 say("  node test/test_ppqviewer.js                  # engine contract");
 say("  node test/test_chem.js                       # donor capability parity");
 say("  node test/test_content_safety.js             # pin accounting + corpus sweep");
@@ -225,6 +225,7 @@ say("  node test/verify_analysis_presentation.js    # pupil journey, ESAT + math
 say("  node test/test_categorisation_integration.js # ESAT teaching catalogue");
 say("  node test/test_economics.js                  # economics consumer");
 say("  node test/test_pulse.js                      # attempt-pulse transport");
+say("  node test/test_vocabulary.js                 # wrapper/catalogue vocabulary agreement");
 say();
 say("  Sandbox note: jsdom resolved across a Windows mount takes minutes.");
 say("  Copy engine/ test/ example/ tools/ and node_modules to local disk and");

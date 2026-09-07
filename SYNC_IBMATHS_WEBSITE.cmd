@@ -9,7 +9,7 @@ rem  an error and nothing else. It now hands over to the real project instead.
 rem  Written with GOTO rather than IF-blocks on purpose: the canonical path
 rem  contains brackets, which break parenthesised IF blocks in batch.
 set "REAL=C:\Claude (not on Gdrive, nor OneDrive)\ppqviewer"
-if exist "%~dp0deploy\ibmathsdriller\.git" goto here
+if exist "%~dp0deploy\ibmathsppqs\.git" goto here
 if not exist "%REAL%\SYNC_IBMATHS_WEBSITE.cmd" goto here
 echo.
 echo This copy of ppqviewer has no deploy checkout, so it cannot publish.
@@ -22,7 +22,7 @@ exit /b %ERRORLEVEL%
 
 echo.
 echo IB Maths website update. Viewer maintained by Claude; catalogue owned by the Maths seat.
-echo Assembles deploy\ibmathsdriller from the engine, the wrapper and the canonical
+echo Assembles deploy\ibmathsppqs from the engine, the wrapper and the canonical
 echo maths catalogue, copying every crop and printed page it references.
 echo It copies only what is missing, and it does not commit or push.
 echo.
@@ -45,7 +45,7 @@ echo.
 if not "%SYNC_EXIT%"=="0" (
   echo The sync stopped with an error. Nothing was pushed.
 ) else (
-  echo Sync complete. Open deploy\ibmathsdriller in GitHub Desktop to review and push.
+  echo Sync complete. Open deploy\ibmathsppqs in GitHub Desktop to review and push.
 )
 echo.
 pause

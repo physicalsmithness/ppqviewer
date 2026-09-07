@@ -30,7 +30,7 @@ This file is where the boundary now lives, on both sides' reading lists.
 
 ppqviewer is the product: one shared engine (`engine\`), per-subject config
 and data, opt-in modules; subjects never fork (`PROJECT.md`). Deployments are
-consumers wearing deployment names: **esatwallop** (ESAT), **ibmathsdriller**
+consumers wearing deployment names: **esatwallop** (ESAT), **ibmathsppqs**
 (IB Maths), the **chemistry driller** (donor app; shared-engine migration
 pending), with physics, economics and the Special Relativity embed to come.
 
@@ -88,11 +88,16 @@ been adopted into this repository (see d021).
 Nothing publishes because a suite went green; deployment is always Smith's
 explicit act.
 
-- **Gates (all trains):** `node --check` on the engine, then the seven suites
+- **Gates (all trains):** `node --check` on the engine, then the eight suites
   (`test_ppqviewer`, `test_chem`, `test_content_safety`,
   `verify_analysis_presentation`, `test_categorisation_integration`,
-  `test_economics`, `test_pulse`), plus the consumer's own checks
-  (`VSAFE_RELEASE_CHECKS.md` for ESAT).
+  `test_economics`, `test_pulse`, `test_vocabulary`), plus the consumer's own
+  checks (`VSAFE_RELEASE_CHECKS.md` for ESAT).
+- **Assert invariants, echo counts.** A gate pinned to a snapshot of a content
+  seat's data goes red when that data IMPROVES, which teaches its owner to
+  ignore it. On 2026-09-05 nine assertions failed across two suites purely
+  because two seats had delivered what was asked of them. Pin the rule that
+  protects a pupil; put the number in the message instead.
 - **ESAT:** architect confirms gates; Smith runs `SYNC_ESAT_WEBSITE.cmd`,
   reviews `deploy\esatwallop` in GitHub Desktop, pushes; the served build ID
   is verified afterwards.
@@ -104,7 +109,7 @@ explicit act.
   goes live: an assembly path the architect can run, a native cmd for bulk,
   a deploy checkout Smith pushes.
 - **Two deployment shapes, chosen per subject (d026, 2026-08-17).** A
-  consumer either gets a site of its own (`esatwallop`, `ibmathsdriller`, and
+  consumer either gets a site of its own (`esatwallop`, `ibmathsppqs`, and
   `ibphysicsppqs` when it launches) or lives as a sub-path inside a subject
   site that already exists (`ibeconomics/ppqviewer`). The second is new: the
   assembler writes one folder inside another project's working copy and

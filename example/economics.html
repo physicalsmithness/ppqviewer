@@ -803,8 +803,14 @@
           /* Do not present three characters as though they were the marking
              bands. Say what is there and send the pupil to the printed
              scheme, which msPagesOpenOf has already opened. */
+          /* 2026-09-05: 10 of the 145 thin bands have no crop and no page
+             behind them either, so "the printed markscheme is open below" would
+             be a promise the record cannot keep. Say which case a pupil is in;
+             the alternative is a truncated band presented as if it were the
+             scheme. Reported to the seat as a data gap. */
           return "<i>The transcribed markscheme for this part is too short to be the whole scheme" +
-            (hasImages ? ", so the printed markscheme is open below." : ".") + "</i>" +
+            (hasImages ? ", so the printed markscheme is open below."
+                       : ", and no printed markscheme was captured for it.") + "</i>" +
             (q.band_text ? '<div class="ib-band">' + escHtml(q.band_text) + "</div>" : "");
         }
         return '<div class="ib-band">' + escHtml(q.band_text) + "</div>";

@@ -2842,12 +2842,22 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   // with the even romans missing; 126 questions carry the signature), so
   // absorption is GATED there and the question stays one unit until the
   // seat's X03 label repair ships.
+  /* UPDATE 2026-09-05: the seat's label repair landed and their advice was
+     that this gate could retire on the papers it covers. It has. Q12's labels
+     now read (a), (b), (c)(i), (c)(ii), (c)(iii); the sixth part is flagged
+     `group_lead_in` and refused by the wrapper; `mark_group` folds the three
+     romans into one 12-mark unit. A pupil now gets three markable units of 4,
+     3 and 12 where they used to get a single bar of 19, which is exactly what
+     the repair was for. Asserted as the new shape rather than re-pinned to
+     the old one. */
   const q12 = recs.filter((r) => r.block_id === "2222-7107_Q12");
-  check(q12.length === 1 && q12[0].is_part === false,
-    "2222-7107 P2 Q12 (roman-gap labels + blank mark) is gated to question-level, not absorbed: " +
+  check(q12.length === 3 && q12.every((r) => r.is_part === true),
+    "2222-7107 P2 Q12 splits into three markable units now its labels are repaired: " +
     q12.length + " unit(s)");
-  check(q12.length === 1 && (q12[0].question_marks === 19 || q12[0].marks === 19),
-    "the gated question still carries its printed 19 marks");
+  check(q12.length === 3 && q12.map((r) => r.marks).join(",") === "4,3,12",
+    "and the three units carry 4, 3 and 12, summing to the printed 19");
+  check(q12.every((r) => String(r.part_label || "").indexOf("(v)") < 0),
+    "the group-lead-in phantom is not served to a pupil as a part");
   const q10 = recs.filter((r) => r.block_id === "8822-7101_Q10");
   check(q10.length === 4 && q10.map((r) => r.marks).join(",") === "5,7,4,4",
     "8822-7101 Q10: the seat's mark_group makes 10(b)(i)+10(b)(ii) ONE 7-mark unit");
@@ -2874,8 +2884,26 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const fellBack = source.filter((q) => (q.parts || []).length >= 2 && byId[q.id] && byId[q.id].is_part === false);
   check(fellBack.length > 0,
     "questions whose part marks are blank with no status stay question-level (" + fellBack.length + " of them)");
-  check(fellBack.every((q) => (q.parts || []).some((p) => !p.marks_status && !(parseInt(p.marks, 10) > 0))),
-    "every fallback has a real reason: a part with no marks and no status explaining it");
+  /* This used to assert something about the SEAT's data hygiene: that every
+     fallback traced to a part with no marks AND no status. After the 08-23
+     regeneration some parts carry 0 marks with no status, which is a data gap
+     reported to them rather than a defect here, and asserting their hygiene in
+     my gate made my gate fail for their reason. Re-pointed at the invariant
+     that is mine and that actually protects a pupil. */
+  check(recs.filter((r) => r.is_part).every((r) => parseInt(r.marks, 10) > 0),
+    "no part unit is ever served with a mark bar it cannot size");
+  /* There are now two honest reasons a multi-part question stays one unit, and
+     the second only appeared today: a part whose marks are unknown, OR fewer
+     than two parts left once the phantoms are refused. 15 questions are the
+     second kind, each a real part plus a `duplicate_of_sibling` phantom
+     carrying the same marks, which the old absorption logic was quietly
+     treating as a genuine second part. */
+  const realOf = (q) => (q.parts || []).filter((p) => String(p.label_status || "") !== "phantom");
+  check(fellBack.every((q) => realOf(q).length < 2 || realOf(q).some((p) => !(parseInt(p.marks, 10) > 0))),
+    "every question-level fallback has a reason: unknown part marks, or fewer than two real parts");
+  check(fellBack.filter((q) => realOf(q).length < 2).length > 0,
+    "refusing phantoms returns some questions to question-level (" +
+      fellBack.filter((q) => realOf(q).length < 2).length + " of them)");
 
   // Seat packet 2026-08-03: the typed [figure]/[graph] token never reaches a pupil.
   const tokenLeak = recs.filter((r) =>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>IB Maths driller — teacher preview</title>
+  <title>IB Maths Past Papers — teacher preview</title>
   <!-- PPQ-SYNC:LOCAL-NOTE-START (removed from the deployed copy) -->
   <!-- q12 RESOLVED (Smith, 2026-07-29, recorded as d014): publication approved.
        Basis: served to school pupils who hold rights to the papers; not
@@ -35,7 +35,7 @@
 </head>
 <body>
   <!-- PPQ-SYNC:TEACHER-ONLY-START (removed from the deployed copy) -->
-  <div id="teacher-note"><b>Teacher preview (local).</b> Reads assets straight from PaperDatabases. The published site is the ibmathsdriller GitHub Pages copy (d014: school use, unpublicised).</div>
+  <div id="teacher-note"><b>Teacher preview (local).</b> Reads assets straight from PaperDatabases. The published site is the ibmathsppqs GitHub Pages copy (d014: school use, unpublicised).</div>
   <!-- PPQ-SYNC:TEACHER-ONLY-END -->
   <div id="ppq-root"></div>
 
@@ -187,12 +187,12 @@
            spellings accepted now so neither side's wording can silence it. */
         if (q.paper_role === "option" || q.paper_role === "investigation") {
           if (q.calculator === "not_permitted") return ROLE_LABEL[q.paper_role] + ", no calculator";
-          if (q.calculator === "permitted" || q.calculator === "required") return ROLE_LABEL[q.paper_role] + ", calculator";
+          if (q.calculator === "permitted") return ROLE_LABEL[q.paper_role] + ", calculator";
         }
         return ROLE_LABEL[q.paper_role];
       }
       if (q.calculator === "not_permitted") return "No calculator";
-      if (q.calculator === "permitted" || q.calculator === "required") return "Calculator";
+      if (q.calculator === "permitted") return "Calculator";
       return "";
     }
 
@@ -208,7 +208,7 @@
     var PAGE_RE = /_p(\d+)/;
     function ownMsPageNums(q) {
       var seen = {}, out = [];
-      (q.parts || []).forEach(function (p) {
+      realParts(q).forEach(function (p) {
         (p.ms_crops || []).forEach(function (c) {
           var m = PAGE_RE.exec(c);
           if (m) { var n = parseInt(m[1], 10); if (!seen[n]) { seen[n] = 1; out.push(n); } }
@@ -304,8 +304,32 @@
         return vs.length > 0 && vs[vs.length - 1] > vs.length;
       });
     }
+    /* ===== Phantom parts must never reach a pupil (seat packet 2026-08-15) =====
+       The seat's label repair named the corruption per part instead of leaving
+       me to infer it from a roman-gap signature. 274 parts across the corpus
+       are `label_status: "phantom"`, with `phantom_kind` saying which kind:
+       `group_lead_in` (a part whose body is actually the group's introduction),
+       `duplicate_of_sibling`, or `ocr_ghost`. They are flagged rather than
+       dropped upstream because tags and mark points hang off them and silently
+       removing them would leave orphans nobody could explain.
+
+       Flagged upstream is not the same as handled downstream, and until today
+       this wrapper read none of these fields, so all 274 were being served to
+       pupils as ordinary parts: a phantom part offers a pupil a question that
+       was never printed and cannot be answered. They come out of everything
+       pupil-facing here. The seat keeps them; the viewer refuses them.
+
+       Found by `test_vocabulary.js`, which lists fields a seat ships that the
+       wrapper never mentions. `label_status` and `phantom_kind` were on that
+       list eleven days after the packet arrived. */
+    function realParts(q) {
+      return (q && q.parts || []).filter(function (p) {
+        return String(p && p.label_status || "") !== "phantom";
+      });
+    }
+
     function unitsOf(q) {
-      var parts = q.parts || [];
+      var parts = realParts(q);
       if (parts.length < 2) return null;
       var order = [], byGroup = {};
       parts.forEach(function (p, i) {
@@ -536,7 +560,7 @@
          has no stem image, and stem_text loses them). Held at question level so
          each part shows the same printed context. */
       var blockPages = [];
-      (q.parts || []).forEach(function (p) {
+      realParts(q).forEach(function (p) {
         (p.pages || []).forEach(function (c) {
           if (!/(^|\/)question_/.test(c)) return;
           var u = BASE + q.preview + "/" + c;
@@ -550,7 +574,7 @@
       if (!units) {
         /* One practising unit: single-part, stemless, or the structural-loss
            era where part marks cannot be trusted. Original id preserved. */
-        var allParts = q.parts || [];
+        var allParts = realParts(q);
         var a = assetsOf(allParts);
         var rec = Object.assign({}, common, a, {
           id: q.id,
@@ -629,7 +653,7 @@
     })();
 
     window.PPQ_CONFIG = {
-      title: "IB Maths driller",
+      title: "IB Maths Past Papers",
       versionLabel: "ibmaths v0.2.0 (teacher preview) · engine " + (window.PPQViewer ? PPQViewer.version : "?"),
       appVersion: "ibmaths-teacher-preview",
       storageKey: "ibmaths_ppq_v1",
@@ -986,7 +1010,7 @@
        worse than an unreported session. */
     var INTERIM_CLASSES = ["Test", "Y12 Maths", "Y13 Maths"];
     var gate = (window.PPQLogin && window.PPQLogin.mountGate) ? window.PPQLogin.mountGate({
-      title: "IB Maths Past-Paper Driller",
+      title: "IB Maths Past Papers",
       projectTag: "ppqviewer_ibmaths",
       cohortKey: "ppqviewer_ibmaths_cohort_v1",
       classes: INTERIM_CLASSES,
