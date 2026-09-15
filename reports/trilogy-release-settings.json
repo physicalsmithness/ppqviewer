@@ -9,17 +9,30 @@
   },
   "title": "Trilogy Physics past-paper question viewer",
   "sign_in": {
-    "enabled": false,
-    "classes": [],
-    "rule": "enabled true requires a non-empty classes list of REAL class names as the school writes them. The assembler refuses otherwise. An invented list splits one cohort across two spellings and the teacher tracker cannot rejoin them; the Trilogy seat writes cohorts in the form '27 Trilogy 11Q'.",
-    "awaiting": "Smith's Trilogy class names (the standing q08 question)."
+    "enabled": true,
+    "classes": [
+      "Test",
+      "27 Trilogy 11P",
+      "27 Trilogy 11Q",
+      "27 Trilogy 11R",
+      "28 Trilogy 10P",
+      "28 Trilogy 10Q",
+      "28 Trilogy 10R"
+    ],
+    "rule": "enabled true requires a non-empty classes list of REAL class names as the school writes them. The assembler refuses otherwise. An invented list splits one cohort across two spellings and the teacher tracker cannot rejoin them.",
+    "source": "Smith, 2026-09-15: '27 Trilogy 11P (&Q&R). 28 Trilogy 10P (&Q&R). Remember Test.' The leading number is the exam-year cohort, matching the vocabulary the Trilogy Categorisation seat uses. Test comes first, as on the IB site."
   },
   "publication_ruling": {
-    "granted": false,
+    "granted": true,
     "rule": "The IB Maths ruling (d014/q12) does not inherit. AQA content needs its own ruling from Smith before anything is pushed. The assembler will build a bundle without it; the staging tool will not write into the deployment checkout.",
-    "granted_on": null,
-    "wording": null
+    "granted_on": "2026-09-15",
+    "wording": "Smith ruled the same terms as IB Maths: served only to pupils in school where he knows they have the rights; not publicised outside school; he watches for any traffic spike; revisit if Google sign-in lands. Given in answer to a lettered choice on 2026-09-15, alongside the decision to put the sign-in gate in front of it."
   },
+  "year_bands": [
+    { "value": "2018-2021", "label": "2018–2021", "first": 2018, "last": 2021 },
+    { "value": "2022-2025", "label": "2022–2025", "first": 2022, "last": 2025 }
+  ],
+  "year_bands_reason": "Smith, 2026-09-13, on the IB site: individual years are 'almost a clue as to which papers the questions are in the test', because a year whose questions are all withheld shows as a gap. The same applies here.",
   "upcoming_topics": [
     ["energy", "Energy"],
     ["electricity", "Electricity"],

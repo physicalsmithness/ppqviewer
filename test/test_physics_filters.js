@@ -104,7 +104,7 @@ try {
     assert.match(p.root.querySelector('.ppq-facet-cat[data-value="A5.VEL"] .ppq-cat-name').textContent,/A5\.2 Velocity addition/);
     assert.strictEqual(JSON.stringify(metadata),before);
   });
-  check("Trilogy and pre-IB keep their individual source paper and year controls",()=>{
+  check("a course without declared year bands keeps its individual source paper and year controls",()=>{
     for(const course of ["trilogy","preib"]){
       const records=[question("first","2023","1"),question("second","2025","2")],before=JSON.stringify(records);
       const cfg=configure(records,{course,topics:{"A.5":"Forces"}});
@@ -112,6 +112,24 @@ try {
       assert.deepStrictEqual(Array.from(cfg.filters.find(f=>f.field==="year").values),["2023","2025"]);
       assert(!cfg.filters.some(f=>f.field==="practice_paper"||f.field==="year_range"));
       assert.strictEqual(JSON.stringify(records),before);
+    }
+  });
+  // A year whose questions are all withheld shows as a gap in a per-year filter, and the
+  // gap names the papers a current test drew from. A course that declares bands gets
+  // bands instead, and must not also offer the bare years it is hiding.
+  check("declared year bands replace the individual year control, on any course",()=>{
+    for(const course of ["trilogy","preib"]){
+      const records=[question("first","2023","1"),question("second","2025","2")],before=JSON.stringify(records);
+      const bands=[{value:"2018-2021",label:"2018–2021",first:2018,last:2021},{value:"2022-2025",label:"2022–2025",first:2022,last:2025}];
+      const cfg=configure(records,{course,topics:{"A.5":"Forces"},year_bands:bands});
+      const range=cfg.filters.find(f=>f.field==="year_range");
+      assert(range,course+" offers a year range");
+      assert.deepStrictEqual(Array.from(range.values),["2018-2021","2022-2025"]);
+      assert(!cfg.filters.some(f=>f.field==="year"),course+" must not also offer bare years");
+      assert(cfg.filters.some(f=>f.field==="paper"),course+" keeps its real paper control");
+      assert(!cfg.filters.some(f=>f.field==="practice_paper"),"only IB merges papers for practice");
+      assert.strictEqual(range.valueOf(records[0]),"2022-2025");
+      assert.strictEqual(JSON.stringify(records),before,"source years are unchanged");
     }
   });
   check("explicit D2 ownership exposes versioned lowercase groups and types without leaking another topic",()=>{

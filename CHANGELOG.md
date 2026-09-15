@@ -61,8 +61,31 @@ build error.
 
 Eight gates green at 2,426 assertions, plus the 15 new Trilogy checks.
 
-Not published. The AQA ruling is Smith's, it does not inherit from d014/q12, and
-the deployment repository is still empty. See TRILOGY_RELEASE.md.
+**Ruled, gated and staged the same day.** Smith granted the AQA publication
+ruling on the IB Maths terms (school-only, unpublicised, watch for spikes,
+revisit if Google sign-in lands), recorded in his own words rather than
+inherited from d014/q12, and gave the real class list: Test, 27 Trilogy 11P/Q/R,
+28 Trilogy 10P/Q/R. That closes the standing q08 question for this subject, and
+the site is gated like IB Physics rather than open.
+
+**Year bands, not years, and now on any course that declares them.** Smith's
+rule from the IB site on 13 September was that individual years are "almost a
+clue as to which papers the questions are in the test", because a year whose
+questions are all withheld shows as a gap. That reasoning is not IB-specific, so
+`meta.year_bands` is now a catalogue-declared feature and Trilogy offers
+2018–2021 and 2022–2025. The gate refuses any served year that falls outside a
+declared band, and the published `build-info.json` carries the band names rather
+than the list of served years, because that list is the gap map the filter
+exists to hide. Each question still shows its own exact paper and year in its
+source label, as on the IB site.
+
+The Trilogy gate earned itself a second time here: `build-info.json` is served
+from the site, and it was publishing the publication ruling and its wording to
+the web. Governance records now stay in the local `latest.json`.
+
+Build `a8e2add2b62997e0`: 526 files staged in the deployment checkout, 18
+Trilogy checks green, eight estate gates green at 2,426 assertions. Smith
+commits and pushes. See TRILOGY_RELEASE.md.
 
 ## 2026-09-14: “also studied” co-strand panel (QoderWork)
 

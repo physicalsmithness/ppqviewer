@@ -151,15 +151,18 @@
       }
     });
   }
-  if (course === "ib") {
-    var yearBands = [
+  // Year bands rather than individual years, on every course that declares them.
+  // Smith's reason, 2026-09-13: a year whose questions are all withheld shows up as a
+  // gap in a per-year filter, and the gap names the papers a current test drew from.
+  // A course declares its own bands in meta.year_bands; IB keeps its historical list.
+  var yearBands = Array.isArray(meta.year_bands) && meta.year_bands.length ? meta.year_bands
+    : course === "ib" ? [
       {value:"2004-2009",label:"2004–2009",first:2004,last:2009},
       {value:"2010-2015",label:"2010–2015",first:2010,last:2015},
       {value:"2016-2020",label:"2016–2020",first:2016,last:2020},
       {value:"2021-2025",label:"2021–2025",first:2021,last:2025}
-    ];
-    var yearBandLabels = {};
-    yearBands.forEach(function (band) { yearBandLabels[band.value] = band.label; });
+    ] : null;
+  if (course === "ib") {
     // These are practice groupings only: original paper/year stay unchanged in
     // the source label, marks, answer type, saved attempts and source records.
     filters.push({field:"practice_paper",label:"paper",allLabel:"All papers",values:["1","2"],
@@ -169,6 +172,10 @@
         return /^(1|1A|1B)$/.test(paper) ? "1" : /^(2|3)$/.test(paper) ? "2" : "";
       }
     });
+  }
+  if (yearBands) {
+    var yearBandLabels = {};
+    yearBands.forEach(function (band) { yearBandLabels[band.value] = band.label; });
     filters.push({field:"year_range",label:"year range",allLabel:"All year ranges",
       values:yearBands.map(function (band) { return band.value; }),friendlyLabels:yearBandLabels,
       valueOf:function (q) {
@@ -178,7 +185,7 @@
       }
     });
   }
-  (course === "ib" ? ["level"] : ["paper", "year", "level"]).forEach(function (field) {
+  (course === "ib" ? ["level"] : yearBands ? ["paper", "level"] : ["paper", "year", "level"]).forEach(function (field) {
     var values = valuesFor(field);
     if (!values.length) return;
     var labels = {};

@@ -1,21 +1,62 @@
 # Trilogy Physics release — 15 September 2026
 
-**Status: assembled and gated, not published.** The bundle is built and every check
-passes. It has not been staged into the deployment checkout and nothing has been pushed,
-because the AQA publication ruling is Smith's and has not been given.
+**Status: staged in the deployment checkout, ready for Smith to commit and push.**
+Build `a8e2add2b62997e0`. Every check passes. Nothing has been pushed.
 
 Deployment repository: `trilogyphysicsppqs`, origin
 `https://github.com/physicalsmithness/trilogyphysicsppqs.git`, cloned at
 `C:\Claude (not on Gdrive, nor OneDrive)\trilogyphysicsppqs`, main, no commits yet.
-Intended URL: <https://physicalsmithness.github.io/trilogyphysicsppqs/>
+Staged there: 526 files. URL once pushed:
+<https://physicalsmithness.github.io/trilogyphysicsppqs/>
 
-## What the bundle holds
+## What the site holds
 
 - 93 whole parent questions, 517 parts, 516 bounded crops.
 - AQA Combined Science Trilogy, two topics: 6.2 Electricity and 6.5 Forces.
 - Electricity 32 parents / 144 topic parts; Forces 61 parents / 256 topic parts.
 - Foundation 49, Higher 44. Papers P1 35, P2 58. Years 2018 to 2025.
 - Whole parent questions with shared stems, bounded question and mark-scheme crops.
+
+## Publication ruling (Smith, 2026-09-15)
+
+Granted on the same terms as IB Maths: served only to pupils in school where he knows
+they have the rights; not publicised outside school; he watches for any traffic spike;
+revisit if Google sign-in lands. Recorded in
+`reports/trilogy-release-settings.json`. It is a separate ruling, not an inheritance
+from d014/q12, because AQA content is a different rights position from IB.
+
+## Sign-in
+
+The site is gated, matching IB Physics. Classes, from Smith on 2026-09-15:
+
+```
+Test
+27 Trilogy 11P    27 Trilogy 11Q    27 Trilogy 11R
+28 Trilogy 10P    28 Trilogy 10Q    28 Trilogy 10R
+```
+
+The leading number is the exam-year cohort, which matches the vocabulary the Trilogy
+Categorisation seat uses when it reports cohorts. `Test` comes first, as on the IB site.
+The gate is browser-local with no password check, and it fails open: if the script does
+not load the site opens ungated rather than locking a pupil out, because being unable to
+revise is worse than an unreported session.
+
+`example/physics-login.js` refuses to invent a class list. A gate with no real class
+names is a build error, not a default, because two spellings of one cohort cannot be
+rejoined in the teacher tracker.
+
+## Year ranges, not years
+
+The filter offers **2018–2021** and **2022–2025**, never individual years. Smith's rule
+from the IB site on 13 September: individual years are "almost a clue as to which papers
+the questions are in the test", because a year whose questions are all withheld shows as
+a gap. The same applies here, so the same rule applies. The published
+`build-info.json` carries the band names and not the list of served years, for the same
+reason. Each question still shows its own exact paper and year in its source label, as
+on the IB site.
+
+This is now a catalogue-declared feature (`meta.year_bands`) rather than an IB special
+case, so pre-IB gets it by declaring bands.
 
 ## Why it is releasable
 
@@ -60,15 +101,17 @@ the corpus does not contain cannot be served by it.
 
 ## Gates
 
-`node test/test_trilogy_release.js` — 15 checks, including a pupil journey through the
-actual published files. It asserts that no reserved or withheld parent is served, that no
-2026 paper and no Synergy parent is served, that every image is content-addressed, that
-assets and references agree exactly, that the estate analytics blocks are present, that the
-sign-in position matches the declared settings, and that nothing local, private or
-evidential survives into the published catalogue.
+`node test/test_trilogy_release.js` — 18 checks, including a pupil journey through the
+actual published files: that a reserved or withheld parent is never served, that no 2026
+paper and no Synergy parent is served, that every image is content-addressed, that assets
+and references agree exactly, that the analytics blocks are present, that the class list
+is the school's own and contains no IB class, that no individual year is offered as a
+filter value, and that nothing local, evidential or governance-related survives into any
+published file.
 
-It has already earned itself: it caught the `specimen` block carrying the source PDF's
-absolute path and sha256 into the public record.
+It has already earned itself twice. It caught the `specimen` block carrying the source
+PDF's absolute path and sha256 into the public record, on 22 of the 93 questions. It then
+caught `build-info.json` publishing the publication ruling and its wording to the web.
 
 The eight estate gates stay green at 2,426 assertions with the shared-file changes below.
 
@@ -76,37 +119,49 @@ The eight estate gates stay green at 2,426 assertions with the shared-file chang
 
 The wrapper was IB-only by name. Course behaviour is now declared by the catalogue:
 `topic_chooser`, `sign_in`, `workspace_chrome`, `upcoming_topics`, `topic_links`,
-`classes` and `account_link`. Every default reproduces exactly what `course === "ib"` did
-before these fields existed, so an older catalogue behaves as it always has, and the IB
-deployment is functionally unchanged.
+`classes`, `account_link` and `year_bands`. Every default reproduces exactly what
+`course === "ib"` did before these fields existed, so an older catalogue behaves as it
+always has, and the IB deployment is functionally unchanged.
 
-Two consequences worth knowing. `example/physics-login.js` no longer shows the relativity
-coverage link where a course has nowhere to point, and it refuses to invent a class list:
-a sign-in gate without real class names is a build error, not a default. The IB deployment
-is now one wrapper revision behind head, cosmetically rather than functionally, until its
-next release train.
+Consequence worth knowing: the IB deployment is now one wrapper revision behind head,
+cosmetically rather than functionally, until its next release train. The assembled local
+preview under `dist/physics-preview` is also stale for the same reason, which
+`test/test_physics.js` reports as six failures until `RUN_PHYSICS_PREVIEW.cmd` is run.
 
-## Settings
+## The remaining step
 
-`reports/trilogy-release-settings.json` carries the publication ruling, the sign-in
-position and the class list as data. Two things are open there:
+Review the checkout, then commit and push. From PowerShell, as a normal user:
 
-- **`publication_ruling.granted` is false.** The IB Maths ruling (d014/q12) does not
-  inherit. `tools/stage_trilogy_release.js` refuses to write into the checkout without
-  Smith's ruling recorded in his own words.
-- **`sign_in.enabled` is false, and `sign_in.classes` is empty.** The IB site is gated;
-  this one is not, because a gate needs the real Trilogy class names and inventing them
-  splits one cohort across two spellings that the teacher tracker cannot rejoin. The
-  Trilogy seat writes cohorts in the form `27 Trilogy 11Q`.
+```
+cd "C:\Claude (not on Gdrive, nor OneDrive)\trilogyphysicsppqs"
+git add -A
+git commit -m "Trilogy Physics: electricity and forces, 93 questions, 517 parts, build a8e2add2b62997e0"
+git push -u origin main
+```
 
-## The path to publication
+Everything in that checkout is generated, so `git add -A` is safe there. It is not safe
+in the engine repository, where phantom newline-only changes live.
 
-1. Rebuild the input on the host, so `trilogy.json` carries the derived flag:
-   `"C:\CodexProjects\PaperDatabases\tools\python\python.exe" tools\build_trilogy_physics.py --exclusions dist\physics-inputs\trilogy-test-exclusions.json`
-2. Assemble: `node tools\assemble_trilogy_release.js`
-3. Gate: `node test\test_trilogy_release.js`
-4. Record the ruling, and the class list if the site is to be gated, in
-   `reports\trilogy-release-settings.json`; re-run 2 and 3.
-5. Stage: `node tools\stage_trilogy_release.js --write`
-6. Smith commits and pushes `main` in the checkout, then verifies the served build rather
-   than assuming Pages has updated.
+Then enable GitHub Pages on the repository if it is not already on, and verify the served
+build rather than assuming Pages has updated:
+<https://physicalsmithness.github.io/trilogyphysicsppqs/build-info.json> should report
+`a8e2add2b62997e0`.
+
+The local release record for this build, including the 128 withheld parent IDs and the
+three verified evidence fingerprints, is kept at
+`reports/trilogy-release-record-a8e2add2b62997e0.json`, because `dist/` is generated and
+not versioned.
+
+To rebuild from source at any point (host, PowerShell, normal user; the first line reads
+the database read-only and writes only crops that do not already exist). Running these
+four is also the way to verify this release independently: the build id should come back
+as `a8e2add2b62997e0` and the staging step should report no added, removed or changed
+files apart from `build-info.json`, whose only difference is its timestamp.
+
+```
+cd "C:\Claude (not on Gdrive, nor OneDrive)\ppqviewer"
+& "C:\CodexProjects\PaperDatabases\tools\python\python.exe" tools\build_trilogy_physics.py --exclusions dist\physics-inputs\trilogy-test-exclusions.json
+node tools\assemble_trilogy_release.js
+node test\test_trilogy_release.js
+node tools\stage_trilogy_release.js --write
+```

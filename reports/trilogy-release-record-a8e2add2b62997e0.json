@@ -1,0 +1,249 @@
+{
+  "build_id": "a8e2add2b62997e0",
+  "built_at": "2026-09-15T20:32:26.131Z",
+  "course": "trilogy",
+  "title": "Trilogy Physics past-paper question viewer",
+  "topics": [
+    "electricity",
+    "forces"
+  ],
+  "topic_counts": {
+    "electricity": {
+      "parents": 32,
+      "parts": 144
+    },
+    "forces": {
+      "parents": 61,
+      "parts": 256
+    }
+  },
+  "parents": 93,
+  "parts": 517,
+  "assets": 516,
+  "sign_in": true,
+  "year_bands": [
+    "2018-2021",
+    "2022-2025"
+  ],
+  "tiers": {
+    "F": 49,
+    "H": 44
+  },
+  "root": "/sessions/intelligent-gracious-mayer/mnt/Claude (not on Gdrive, nor OneDrive)/ppqviewer/dist/trilogy-release/a8e2add2b62997e0-1789504336358",
+  "years": [
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "exclusion_review_certified_on": "2026-09-14",
+  "publication_ruling": {
+    "granted": true,
+    "rule": "The IB Maths ruling (d014/q12) does not inherit. AQA content needs its own ruling from Smith before anything is pushed. The assembler will build a bundle without it; the staging tool will not write into the deployment checkout.",
+    "granted_on": "2026-09-15",
+    "wording": "Smith ruled the same terms as IB Maths: served only to pupils in school where he knows they have the rights; not publicised outside school; he watches for any traffic spike; revisit if Google sign-in lands. Given in answer to a lettered choice on 2026-09-15, alongside the decision to put the sign-in gate in front of it."
+  },
+  "clearance": {
+    "path": "/sessions/intelligent-gracious-mayer/mnt/Claude (not on Gdrive, nor OneDrive)/ppqviewer/reports/trilogy-reviewed-test-exclusions.json",
+    "sha256": "922f67ce2886268afd58138c6e8de86e893756cd87f655edfef5a566a008135b"
+  },
+  "settings": {
+    "path": "/sessions/intelligent-gracious-mayer/mnt/Claude (not on Gdrive, nor OneDrive)/ppqviewer/reports/trilogy-release-settings.json",
+    "sha256": "3ef0482b911fee05cb25e3a73da58d14ef012520cda354c3db6b29fd2121e600"
+  },
+  "input": {
+    "path": "/sessions/intelligent-gracious-mayer/mnt/Claude (not on Gdrive, nor OneDrive)/ppqviewer/dist/physics-inputs/_trilogy-sandbox.json",
+    "sha256": "5afb654b47000cdadb5c04bdc18afacf0919eb4cc1ec4494817a2f07361cdcae"
+  },
+  "evidence_verified": [
+    {
+      "path": "/sessions/intelligent-gracious-mayer/mnt/PaperDatabases/Trilogy Categorisation/qa/exclusion_review_2026-09-14/REVIEW.md",
+      "sha256": "82f844a298b7229236226daba4e0c3433b50c6488e3caf4e1dc1b1fd701f5974"
+    },
+    {
+      "path": "/sessions/intelligent-gracious-mayer/mnt/PaperDatabases/Trilogy Categorisation/qa/exclusion_review_2026-09-14/evidence.json",
+      "sha256": "9b49802d60b6c25d973246eb2c59e54cfaa64b419bfee6dc5d48858c876eddcd"
+    },
+    {
+      "path": "/sessions/intelligent-gracious-mayer/mnt/PaperDatabases/Trilogy Categorisation/qa/exclusion_review_2026-09-14/corpus_signature_search.py",
+      "sha256": "82fd909119c90a4b9b68c94e575ed41866f73588ce098074e38b004c55c06243"
+    }
+  ],
+  "withheld_parent_ids": [
+    "synergy_2018_1f::Q07",
+    "synergy_2018_2f::Q09",
+    "synergy_2018_2h::Q01",
+    "synergy_2018_3f::Q10",
+    "synergy_2018_3h::Q03",
+    "synergy_2018_4f::Q07",
+    "synergy_2019_1h::Q07",
+    "synergy_2019_4f::Q08",
+    "synergy_2019_4f::Q09",
+    "synergy_2019_4h::Q01",
+    "synergy_2019_4h::Q02",
+    "synergy_2019_4h::Q09",
+    "synergy_2020_4f::Q04",
+    "synergy_2025_3f::Q08",
+    "synergy_2025_3h::Q01",
+    "synergy_2025_3h::Q06",
+    "synergy_2025_4h::Q05",
+    "synergy_2025_4h::Q07",
+    "synergy_2025_4h::Q08",
+    "synergy_specimen_set1_1h::Q09",
+    "synergy_specimen_set1_2h::Q03",
+    "synergy_specimen_set1_4h::Q07",
+    "synergy_specimen_set2_1f::Q09",
+    "synergy_specimen_set2_1h::Q03",
+    "synergy_specimen_set2_3f::Q06",
+    "synergy_specimen_set2_3f::Q08",
+    "synergy_specimen_set2_3h::Q02",
+    "synergy_specimen_set2_3h::Q05",
+    "synergy_specimen_set2_3h::Q08",
+    "synergy_specimen_set2_4f::Q01",
+    "synergy_specimen_set2_4f::Q03",
+    "synergy_specimen_set2_4f::Q08",
+    "synergy_specimen_set2_4f::Q10",
+    "synergy_specimen_set2_4h::Q01",
+    "synergy_specimen_set2_4h::Q03",
+    "trilogy_2018_p1f::Q01",
+    "trilogy_2018_p1f::Q04",
+    "trilogy_2018_p1f::Q05",
+    "trilogy_2018_p1f::Q07",
+    "trilogy_2018_p1h::Q02",
+    "trilogy_2018_p1h::Q03",
+    "trilogy_2018_p1h::Q04",
+    "trilogy_2018_p1h::Q06",
+    "trilogy_2018_p2f::Q01",
+    "trilogy_2018_p2f::Q02",
+    "trilogy_2018_p2f::Q03",
+    "trilogy_2018_p2f::Q04",
+    "trilogy_2018_p2f::Q06",
+    "trilogy_2018_p2h::Q03",
+    "trilogy_2018_p2h::Q05",
+    "trilogy_2018_p2h::Q07",
+    "trilogy_2019_p1f::Q02",
+    "trilogy_2019_p1f::Q03",
+    "trilogy_2019_p1f::Q06",
+    "trilogy_2019_p1f::Q07",
+    "trilogy_2019_p1h::Q01",
+    "trilogy_2019_p1h::Q02",
+    "trilogy_2019_p1h::Q03",
+    "trilogy_2019_p1h::Q05",
+    "trilogy_2019_p2f::Q01",
+    "trilogy_2019_p2f::Q03",
+    "trilogy_2019_p2f::Q04",
+    "trilogy_2019_p2h::Q05",
+    "trilogy_2020_p1f::Q03",
+    "trilogy_2020_p1f::Q04",
+    "trilogy_2020_p1f::Q05",
+    "trilogy_2020_p1h::Q01",
+    "trilogy_2020_p1h::Q05",
+    "trilogy_2020_p2f::Q06",
+    "trilogy_2020_p2f::Q07",
+    "trilogy_2020_p2h::Q01",
+    "trilogy_2020_p2h::Q02",
+    "trilogy_2020_p2h::Q07",
+    "trilogy_2021_p1f::Q01",
+    "trilogy_2021_p1f::Q03",
+    "trilogy_2021_p1f::Q04",
+    "trilogy_2021_p1h::Q03",
+    "trilogy_2021_p1h::Q04",
+    "trilogy_2021_p1h::Q06",
+    "trilogy_2021_p2f::Q02",
+    "trilogy_2021_p2f::Q03",
+    "trilogy_2021_p2f::Q06",
+    "trilogy_2021_p2f::Q07",
+    "trilogy_2021_p2h::Q01",
+    "trilogy_2021_p2h::Q02",
+    "trilogy_2021_p2h::Q06",
+    "trilogy_2022_p1f::Q02",
+    "trilogy_2022_p1f::Q04",
+    "trilogy_2022_p1f::Q06",
+    "trilogy_2022_p1h::Q02",
+    "trilogy_2022_p1h::Q04",
+    "trilogy_2022_p2f::Q03",
+    "trilogy_2022_p2f::Q04",
+    "trilogy_2022_p2f::Q05",
+    "trilogy_2022_p2f::Q07",
+    "trilogy_2022_p2h::Q02",
+    "trilogy_2022_p2h::Q07",
+    "trilogy_2023_p1f::Q03",
+    "trilogy_2023_p1h::Q06",
+    "trilogy_2025_p1f::Q05",
+    "trilogy_2025_p1f::Q06",
+    "trilogy_2025_p1h::Q01",
+    "trilogy_2025_p1h::Q02",
+    "trilogy_2025_p1h::Q03",
+    "trilogy_2025_p1h::Q05",
+    "trilogy_2025_p2f::Q06",
+    "trilogy_2025_p2f::Q07",
+    "trilogy_2025_p2h::Q01",
+    "trilogy_2025_p2h::Q02",
+    "trilogy_2025_p2h::Q06",
+    "trilogy_specimen_set1_p1f::Q06",
+    "trilogy_specimen_set1_p1h::Q01",
+    "trilogy_specimen_set1_p1h::Q04",
+    "trilogy_specimen_set1_p1h::Q06",
+    "trilogy_specimen_set1_p2f::Q07",
+    "trilogy_specimen_set1_p2h::Q02",
+    "trilogy_specimen_set2_p1f::Q01",
+    "trilogy_specimen_set2_p1f::Q04",
+    "trilogy_specimen_set2_p1f::Q07",
+    "trilogy_specimen_set2_p1h::Q02",
+    "trilogy_specimen_set2_p1h::Q04",
+    "trilogy_specimen_set2_p1h::Q05",
+    "trilogy_specimen_set2_p2f::Q01",
+    "trilogy_specimen_set2_p2f::Q03",
+    "trilogy_specimen_set2_p2f::Q05",
+    "trilogy_specimen_set2_p2f::Q06",
+    "trilogy_specimen_set2_p2h::Q01",
+    "trilogy_specimen_set2_p2h::Q02"
+  ],
+  "shared_files": [
+    {
+      "path": "engine/ppqviewer.js",
+      "sha256": "399dd6026fc66f39b0e3a24e63e7e54e7d6884b5d590db6d572256a56e1ecfe7"
+    },
+    {
+      "path": "engine/ppqviewer.css",
+      "sha256": "ae9723624e651aa8eae469f1cc37906e820e2ad0dd521535d86d4f167b9d8b25"
+    },
+    {
+      "path": "example/physics.html",
+      "sha256": "77cc54d7a0d70c8feec0c8933bac36937385a797f270a421a8e26eb662e591cf"
+    },
+    {
+      "path": "example/physics-config.js",
+      "sha256": "0145e34063ff6c1f326336de5d1bf763249f16f38f639606be794189fe11338c"
+    },
+    {
+      "path": "example/physics-identity.js",
+      "sha256": "496715372640f87596b993500872dbc2d4c9197e137ed2911a307829f2d44f11"
+    },
+    {
+      "path": "example/physics-login.js",
+      "sha256": "ca22f96d22db33cb2bb8a70b63f699d6518f2c67e41b0fb939c7035f43e19981"
+    },
+    {
+      "path": "example/physics-reporting.js",
+      "sha256": "973fc2755c6cf32afea5c64df86ee527f37c20c04695d6de95d7b43b8ddad5bf"
+    },
+    {
+      "path": "tools/assemble_trilogy_release.js",
+      "sha256": "6e5e11f69d2b784844d02a163fddf53bc09daf424981e966fa18897b9f859590"
+    },
+    {
+      "path": "tools/build_trilogy_physics.py",
+      "sha256": "24a38f51051894015ab12b36e1cc0581854671867fd32967f00e651dc792af84"
+    },
+    {
+      "path": "tools/trilogy_reviewed_topics.py",
+      "sha256": "f76969d00e549bae0f101661670995d1761c9ebe4d10484b93ef614230c3b19d"
+    }
+  ],
+  "note": "Local release record for the staged build, kept in reports/ because dist/ is generated and gitignored. Paths are as the assembling session saw them; the sha256 fingerprints are what a later reader should check."
+}

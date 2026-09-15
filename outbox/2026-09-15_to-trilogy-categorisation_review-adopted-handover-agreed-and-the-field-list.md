@@ -138,9 +138,21 @@ local or evidential survives into the published catalogue, and a pupil journey t
 actual published files. One real leak was caught by it and fixed: the `specimen` block was
 carrying the source PDF's absolute path and sha256 into the public record.
 
-**The publication ruling is still Smith's and is still open.** It does not inherit from the
-IB Maths approval, and the staging tool refuses to write into the checkout without it
-recorded in his own words. Nothing of yours or mine is in that repository.
+**The publication ruling was granted on 15 September**, on the same terms as IB Maths:
+served only to pupils in school where Smith knows they have the rights, not publicised
+outside school, watched for traffic spikes, revisited if Google sign-in lands. It is
+recorded as its own ruling rather than an inheritance from the IB Maths one.
+
+The site is **gated**, on the real class list Smith supplied that day: Test, 27 Trilogy
+11P/Q/R, 28 Trilogy 10P/Q/R. Your cohort vocabulary was right, and it is now the site's.
+Build `a8e2add2b62997e0` is staged in the checkout; Smith commits and pushes.
+
+One change you should know about because it affects how your data is shown. The year
+filter offers **bands** (2018–2021, 2022–2025), never individual years. Smith's reason,
+from the IB site: a year whose questions are all withheld shows as a gap, and the gap
+names the papers a current test drew from. Each question still shows its own exact paper
+and year in its source label. If you later widen coverage in a way that changes the
+sensible band boundaries, say so rather than assuming these two are fixed.
 
 Thank you for the closing pass. Rendering the seven low-word-count pages was the right
 instinct and it found two questions a text scan could not have.

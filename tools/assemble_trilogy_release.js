@@ -66,6 +66,11 @@ function validateClearance(input, clearance) {
 
   ensure(input.questions.every(q => /^\d{4}$/.test(String(q.year)) && Number(q.year) < 2026),
     "A reserved exam year reached the release");
+  const bands = (json(SETTINGS).year_bands) || [];
+  ensure(bands.length, "Declare year_bands in the settings: a per-year filter names the gaps");
+  for (const q of input.questions)
+    ensure(bands.some(b => Number(q.year) >= b.first && Number(q.year) <= b.last),
+      "A served year falls outside every declared band, so it would show as its own filter value: " + q.year);
   ensure(!(report.unresolved || []).length, "Unresolved reservations remain: " + JSON.stringify(report.unresolved));
   ensure(!(report.skipped || []).length, "Questions were skipped during the build: " + JSON.stringify(report.skipped));
 
@@ -101,7 +106,10 @@ function publicMeta(input, settings) {
     classes: signIn.enabled ? signIn.classes : undefined,
     // GCSE has no Driller coverage page to point at; show no link rather than a broken one.
     account_link: null,
-    upcoming_topics: settings.upcoming_topics || null
+    upcoming_topics: settings.upcoming_topics || null,
+    // Bands, never individual years: a year whose questions are all withheld shows as a
+    // gap in a per-year filter, and the gap names the papers a current test drew from.
+    year_bands: settings.year_bands || null
     // The exclusion review stays out of the public catalogue. It is the evidence for
     // what was withheld, and naming it to a pupil narrates the questions they cannot
     // see. Its record lives in dist/trilogy-release/latest.json, which is local.
@@ -180,15 +188,22 @@ function assemble() {
     topics: Object.keys(meta.topics), topic_counts: topicCounts,
     parents: publicQuestions.length, parts: unique(publicQuestions.flatMap(q => q.part_ids)).length,
     assets: new Set([...assets.values()].map(a => a.url)).size,
-    sign_in: meta.sign_in, years: unique(publicQuestions.map(q => q.year)).sort(),
+    sign_in: meta.sign_in,
+    // build-info.json is published, so it carries bands rather than a list of served
+    // years: the list of years is the gap map the band filter exists to hide.
+    year_bands: (meta.year_bands || []).map(b => b.value),
     tiers: Object.fromEntries(unique(publicQuestions.map(q => q.level)).sort()
-      .map(level => [level, publicQuestions.filter(q => q.level === level).length])),
-    exclusion_review_certified_on: clearance.closing_pass_on,
-    publication_ruling: settings.publication_ruling || { granted: false }
+      .map(level => [level, publicQuestions.filter(q => q.level === level).length]))
+    // build-info.json is served from the site, so it carries only what a visitor can
+    // already see. The review date, the ruling and its wording are governance records
+    // and stay in dist/trilogy-release/latest.json, which is local.
   };
   fs.writeFileSync(path.join(out, "build-info.json"), JSON.stringify(info, null, 2) + "\n");
   const local = {
     ...info, root: out,
+    years: unique(publicQuestions.map(q => q.year)).sort(),
+    exclusion_review_certified_on: clearance.closing_pass_on,
+    publication_ruling: settings.publication_ruling || { granted: false },
     clearance: { path: CLEARANCE, sha256: sha(read(CLEARANCE)) },
     settings: { path: SETTINGS, sha256: sha(read(SETTINGS)) },
     input: { path: INPUT, sha256: sha(read(INPUT)) },

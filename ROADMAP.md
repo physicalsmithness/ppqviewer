@@ -192,11 +192,13 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
 - [ ] Chemistry shared-engine migration.
 - [ ] Special Relativity embed.
 - [ ] IB Physics, Trilogy Physics and pre-IB Physics adapters. IB Physics published
-  2026-09-13. **Trilogy Physics assembled and gated 2026-09-15, not published:** the
-  exclusion review is certified and scope-enforced, the release train and its
-  15-check gate exist, and the only thing outstanding is the AQA publication ruling
-  (Smith's; it does not inherit from d014/q12). Sign-in is off pending real Trilogy
-  class names (q08). See TRILOGY_RELEASE.md. Pre-IB still has no seat.
+  2026-09-13. **Trilogy Physics staged for publication 2026-09-15** (build
+  `a8e2add2b62997e0`, 526 files in the checkout, 18-check gate green): the exclusion
+  review is certified and scope-enforced, the AQA publication ruling was granted that
+  day on the IB Maths terms, and the site is gated on the real Trilogy class list,
+  which closes q08 for this subject. Smith commits and pushes. See
+  TRILOGY_RELEASE.md. Pre-IB still has no seat; it inherits the same release train
+  and gets year bands by declaring them.
 - [x] **Economics adapter — WRAPPED 2026-08-06, not published.** The content
   seat delivered `economics_catalogue.js` (1,021 records, 3,498 parts) on
   2026-08-03; the wrapper and its 91-assertion suite were built by the first

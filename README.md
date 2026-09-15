@@ -11,9 +11,10 @@ a reviewed public IB release. See [IB_PHYSICS_RELEASE.md](IB_PHYSICS_RELEASE.md)
 for current counts, taxonomy provenance and publication status, and
 [PHYSICS_PREVIEW.md](PHYSICS_PREVIEW.md) for the broader local preview.
 
-Trilogy Physics (AQA GCSE, electricity and forces) is assembled and gated but not
-published: see [TRILOGY_RELEASE.md](TRILOGY_RELEASE.md). It waits on one thing, the
-AQA publication ruling, which is Smith's and does not inherit from the IB Maths one.
+Trilogy Physics (AQA GCSE, electricity and forces) is staged for publication, gated
+on the school's real class list, with the AQA ruling granted on 2026-09-15 on its own
+terms rather than inherited. See [TRILOGY_RELEASE.md](TRILOGY_RELEASE.md) for what it
+holds, what is withheld, and the one remaining commit and push.
 
 ## Read first
 

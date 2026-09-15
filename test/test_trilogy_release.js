@@ -23,7 +23,9 @@ const clearance = JSON.parse(readRoot("reports/trilogy-reviewed-test-exclusions.
 const catalogue = read("data/physics_catalogue.js");
 const box = { window: {} };
 vm.runInNewContext(catalogue, box, { timeout: 20000 });
-const meta = box.window.PHYSICS_META, questions = box.window.PHYSICS_QUESTIONS;
+// Round-trip out of the vm realm so deepStrictEqual compares values, not prototypes.
+const meta = JSON.parse(JSON.stringify(box.window.PHYSICS_META));
+const questions = JSON.parse(JSON.stringify(box.window.PHYSICS_QUESTIONS));
 
 try {
   check("the published bundle carries exactly the files a Pages site needs", () => {
@@ -107,6 +109,9 @@ try {
       assert(Array.isArray(meta.classes) && meta.classes.length, "a gate needs real class names");
       assert.deepEqual(meta.classes, settings.sign_in.classes);
       assert(!meta.classes.some(name => /^IB\d/.test(name)), "an IB class list must not reach a GCSE site");
+      assert(meta.classes.includes("Test"), "the Test class stays available");
+      assert(meta.classes.filter(n => n !== "Test").every(n => /Trilogy/i.test(n)),
+        "every real class on this site is a Trilogy class");
     } else {
       assert(!Object.hasOwn(meta, "classes") || !meta.classes, "an ungated build ships no class list");
     }
@@ -135,6 +140,16 @@ try {
     opened.push(p);
     return p;
   }
+  // A gated site shows the chooser to anyone, then asks who you are before practice.
+  function signIn(p, cohort) {
+    const gate = p.w.document.getElementById("physics-sign-in-gate");
+    assert(gate, "the sign-in gate is shown before any question");
+    gate.querySelector("input").value = "Fixture Pupil";
+    gate.querySelector("select").value = cohort || meta.classes[1];
+    gate.querySelector("form").dispatchEvent(new p.w.Event("submit", { bubbles: true, cancelable: true }));
+    return p;
+  }
+  const enter = query => meta.sign_in ? signIn(open(query)) : open(query);
 
   check("the site opens on a topic chooser naming both topics and no others as available", () => {
     const p = open("");
@@ -161,9 +176,22 @@ try {
     assert(disabled.every(el => /Not yet available/i.test(el.textContent) && !el.querySelector("a[href]")));
   });
 
+  check("a pupil must say who they are before any question is shown", () => {
+    if (!meta.sign_in) { assert(!open("?topic=forces").w.document.getElementById("physics-sign-in-gate")); return; }
+    const p = open("?topic=forces");
+    assert(!p.w.physicsViewer, "no question is mounted before sign-in");
+    const options = [...p.w.document.querySelectorAll("#physics-login-cohort option")]
+      .map(o => o.value).filter(Boolean);
+    assert.deepEqual(options, meta.classes, "the class list is exactly the one the school uses");
+    assert(!options.some(name => /^IB\d/.test(name)), "no IB class may appear on a GCSE site");
+    signIn(p);
+    assert(p.w.physicsViewer, "signing in starts practice");
+    assert.equal(p.w.physicsIdentity.current().cohort, meta.classes[1]);
+  });
+
   check("choosing a topic starts practice on that topic's questions alone", () => {
     for (const topic of Object.keys(meta.topics)) {
-      const p = open("?topic=" + topic);
+      const p = enter("?topic=" + topic);
       assert(p.w.physicsViewer, topic + " mounts the viewer");
       const shown = p.w.physicsViewer.view;
       assert(shown.length, topic + " has questions");
@@ -173,7 +201,7 @@ try {
   });
 
   check("a question renders its crops and reveals its mark scheme, not before", () => {
-    const p = open("?topic=forces");
+    const p = enter("?topic=forces");
     const v = p.w.physicsViewer;
     const first = v.view[0];
     v.goToId(first.id);
@@ -183,12 +211,32 @@ try {
     assert(first.question_images.every(src => shownImages.includes(src)), "every question crop is shown");
   });
 
-  check("tier, paper and year are offered as filters on a GCSE site", () => {
-    const p = open("?topic=forces");
+  check("paper, tier and a year RANGE are filterable; no individual year is offered", () => {
+    const p = enter("?topic=forces");
     const controls = p.w.document.querySelector(".ppq-filters");
     assert(controls, "the filter bar is present");
     const text = controls.textContent.toLowerCase();
-    for (const field of ["paper", "year", "level"]) assert(text.includes(field), field + " is filterable");
+    for (const field of ["paper", "year range", "level"]) assert(text.includes(field), field + " is filterable");
+    // A year whose questions are all withheld would show as a gap, and the gap names
+    // the papers a current test drew from. Bands only. Smith's rule, 2026-09-13.
+    const offered = [...controls.querySelectorAll("option")].map(o => o.value);
+    const bare = offered.filter(v => /^(19|20)\d{2}$/.test(v));
+    assert(!bare.length, "individual years must not be offered as filter values: " + bare.join(", "));
+    const bands = (meta.year_bands || []).map(b => b.value);
+    assert(bands.length && bands.every(v => offered.includes(v)), "every declared band is offered");
+    for (const q of questions)
+      assert((meta.year_bands || []).some(b => Number(q.year) >= b.first && Number(q.year) <= b.last),
+        "every served year falls inside a band: " + q.year);
+  });
+
+  check("the publication ruling is recorded in Smith's own words, not inherited", () => {
+    const ruling = settings.publication_ruling;
+    assert.equal(ruling.granted, true, "the AQA ruling must be granted before this build is staged");
+    assert(ruling.granted_on, "the ruling carries a date");
+    assert(typeof ruling.wording === "string" && ruling.wording.trim().length > 20,
+      "the ruling is recorded in words a later reader can check");
+    assert(!/inherit|d014|q12/i.test(ruling.wording.replace(/does not inherit[^.]*\./i, "")) ||
+      /IB Maths/i.test(ruling.wording), "the ruling names its own terms");
   });
 
   check("the build record agrees with what is actually published", () => {
@@ -198,8 +246,28 @@ try {
     assert.equal(info.parts, new Set(questions.flatMap(q => q.part_ids)).size);
     assert.equal(info.sign_in, meta.sign_in);
     assert.deepEqual(info.topics.sort(), Object.keys(meta.topics).sort());
+    // The published build record must not enumerate served years either: that list is
+    // the gap map the band filter exists to hide.
+    assert(!Object.hasOwn(info, "years"), "build-info.json must not list the served years");
+    assert.deepEqual(info.year_bands, (meta.year_bands || []).map(b => b.value));
+    // build-info.json is served from the site. Governance records are not for visitors.
+    for (const key of ["publication_ruling", "exclusion_review_certified_on", "withheld_parent_ids",
+      "clearance", "settings", "input", "evidence_verified", "shared_files", "root"])
+      assert(!Object.hasOwn(info, key), "build-info.json must not publish " + key);
+    assert(!/ruling|exclusion|withheld|assessment|Smith|CodexProjects/i.test(read("build-info.json")),
+      "build-info.json must not carry governance or evidence text");
+    // The same record, kept locally, is where the evidence does live.
+    assert(local.publication_ruling && local.publication_ruling.granted === true);
+    assert(local.exclusion_review_certified_on, "the local record keeps the review date");
     for (const [topic, counts] of Object.entries(info.topic_counts))
       assert.equal(counts.parents, questions.filter(q => q.topic_codes.includes(topic)).length, topic + " parent count");
+  });
+
+  check("no published file carries a governance record or an internal name", () => {
+    for (const file of ["index.html", "build-info.json", "data/physics_catalogue.js",
+      "physics-config.js", "physics-identity.js", "physics-login.js", "physics-reporting.js"])
+      assert(!/CodexProjects|PaperDatabases|Shared drives|publication_ruling|trilogy-reviewed-test-exclusions/i.test(read(file)),
+        file + " carries an internal reference");
   });
 
   for (const p of opened) p.dom.window.close();
