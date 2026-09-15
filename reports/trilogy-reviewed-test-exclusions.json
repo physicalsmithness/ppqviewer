@@ -1,18 +1,45 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "reviewed_on": "2026-09-10",
-  "complete_test_exclusion_certified": false,
+  "closing_pass_on": "2026-09-14",
+  "complete_test_exclusion_certified": true,
+  "certification_scope": {
+    "topic_codes": ["electricity", "forces"],
+    "syllabus_sections": ["6.2", "6.5"],
+    "serving_courses": ["Trilogy"],
+    "input_built": "2026-09-10",
+    "served_parents": 93,
+    "served_parts": 517,
+    "note": "The certification holds for this scope only. Widen the topics, or admit Synergy to serving, and the review restarts: the builder drops exclusion_review_complete automatically when the build no longer matches this scope."
+  },
+  "certification_evidence": {
+    "seat": "Trilogy Categorisation",
+    "packet": "inbox/2026-09-14_from-trilogy-categorisation_exclusion-review-closed-and-two-questions.md",
+    "root": "C:\\CodexProjects\\PaperDatabases\\Trilogy Categorisation\\qa\\exclusion_review_2026-09-14",
+    "files": {
+      "REVIEW.md": "82f844a298b72292",
+      "evidence.json": "9b49802d60b6c25d",
+      "corpus_signature_search.py": "82fd909119c90a4b"
+    },
+    "verified_by": "ppqviewer architect, 2026-09-15, sha256 prefixes recomputed from the seat's tree",
+    "method": "17,323 flattened searchable text units from aqa_extraction_plus_calc.db opened read-only, matched against printed assessment wording; seven assessment pages carrying 45 or fewer native words rendered and read for the first time."
+  },
   "policy": "Additive whole-parent exclusions supported by targeted visual review of current assessment snapshots. Apply alongside the broad assessment matcher. Shared-context variants are explicitly marked conservative; unmatched pages are not certified clear.",
   "assessment_root": "H:\\Shared drives\\0. Physics (Teachers)\\2 - AQA GCSE\\Assessments",
   "source_database": "Trilogy Categorisation/aqa_extraction_plus_calc.db",
   "parent_ids": [
     "trilogy_2018_p1f::Q04",
+    "trilogy_2018_p1h::Q06",
     "trilogy_2018_p2f::Q01",
     "trilogy_2019_p2f::Q01",
     "trilogy_2020_p2f::Q06",
     "trilogy_2020_p2h::Q01",
     "trilogy_2022_p2f::Q03",
-    "trilogy_2022_p2h::Q07"
+    "trilogy_2022_p2f::Q07",
+    "trilogy_2022_p2h::Q02",
+    "trilogy_2022_p2h::Q07",
+    "synergy_specimen_set2_4f::Q08",
+    "synergy_specimen_set2_4h::Q01"
   ],
   "part_ids": [],
   "paper_ids": [],
@@ -93,27 +120,79 @@
       "decision": "conservative_related_parent_exclusion",
       "reason": "Higher tier reuses the same distinctive apple/branch/leaf/X diagram, adding a stem label; its fall scenario uses 0.50 s, equivalent to the Foundation answer. Higher tier asks for two arrows and distance rather than the Foundation single weight arrow and time. It is not claimed to be the identical set of parts: the entire related parent is reserved to avoid revealing the assessment's shared context and answer relationship.",
       "newly_excluded_from_reviewed_input": true
+    },
+    {
+      "test": "2. Electricity/2023 electricity test.pdf",
+      "test_pages": [9],
+      "test_question": "9(d)",
+      "source_parent_ids": ["trilogy_2018_p1h::Q06"],
+      "source_part_ids": ["trilogy_2018_p1h::06.4"],
+      "method": "page_render_and_verbatim_corpus_match",
+      "decision": "confirmed_source_already_reserved",
+      "reason": "Verbatim on 'Explain how the readings on both meters change when the environmental conditions change. [6 marks]', with the same LDR, ammeter and voltmeter circuit. The phrase occurs once corpus-wide. The page carries 44 native words, so a text-only scan could not have reached it; it was rendered and read in the 14 September closing pass. Already withheld by the broad matcher, and tagged examined 6.2, so it would otherwise have been served.",
+      "newly_excluded_from_reviewed_input": false,
+      "found_by": "Trilogy Categorisation closing pass, 2026-09-14"
+    },
+    {
+      "test": "5. Forces and motion/2. Test before car safety etc/2024 Foundation test b4 car safety.pdf",
+      "test_sha256": "6cb48181ef49abd2578b9858a467dfc3d1a9b69495fcfdac72224da1839b5cd3",
+      "test_pages": [11, 12],
+      "test_question": "London Marathon wheelchair race",
+      "source_parent_ids": ["trilogy_2022_p2f::Q07", "trilogy_2022_p2h::Q02"],
+      "source_part_ids": ["trilogy_2022_p2f::07.5"],
+      "method": "page_render_and_verbatim_corpus_match",
+      "decision": "confirmed_source_and_tier_twin_already_reserved",
+      "reason": "Verbatim on 'Explain why the speed of a competitor changes during the race', preceded by 'Average speed = ______ m/s'. The phrase occurs in two parents only, which are tier twins; both are reserved. Page 12 carries 32 native words and was rendered in the closing pass. Already withheld by the broad matcher, and tagged examined 6.5, so it would otherwise have been served.",
+      "newly_excluded_from_reviewed_input": false,
+      "found_by": "Trilogy Categorisation closing pass, 2026-09-14"
+    },
+    {
+      "test": "2. Electricity/2023 electricity test.pdf and 2023 Foundation electricity test.pdf",
+      "test_question": "wire-length investigation apparatus",
+      "source_parent_ids": ["synergy_specimen_set2_4f::Q08", "synergy_specimen_set2_4h::Q01"],
+      "method": "distinctive_value_match",
+      "decision": "reserved_ahead_of_scope",
+      "reason": "3.22 V and 2.18 A with the anomalous 5.26 ohm result occur in no other parent. Synergy is outside the serving scope today, so this is not a live risk; it is reserved now so that widening the award axis cannot quietly serve a question already sat.",
+      "newly_excluded_from_reviewed_input": false,
+      "found_by": "Trilogy Categorisation closing pass, 2026-09-14"
     }
   ],
-  "unresolved": [
+  "unresolved": [],
+  "resolved_as_absent_from_corpus": [
     {
       "test": "5. Forces and motion/1. Early test/Motion wk4 test 2025.pdf",
       "test_sha256": "d39f5b8ad6befed80ad32c3f612c8af921fe1f85c15249919bccb24e340b3fb6",
       "test_pages": [2, 3, 4],
-      "finding": "Substantial image-only question text was visually read. Page 2 is a cyclist velocity graph ending at 70 s with Y at 30 s/5.4 m/s and Z at 70 s, asking for distance Y-Z. Pages 3-4 are an aircraft distance graph to 12000 m at 50 s and deceleration from 250 to 68 m/s at 0.14 m/s2. Distinctive manually read phrases and values did not identify these in the available Trilogy/Synergy source corpus. The served 2020 P2F Q04 bicycle graph was visually rejected (distance to 250 m at 50 s, different question). Exact source remains unresolved; an older/separate-course source is possible, not verified."
+      "items": [
+        "Cyclist velocity-time graph, Y at 30 s and 5.4 m/s, Z at 70 s; distance between Y and Z",
+        "Aircraft distance-time graph reaching 12 000 m at 50 s",
+        "Aircraft decelerating at 0.14 m/s2 from 250 m/s to 68 m/s"
+      ],
+      "corpus_matches": 0,
+      "finding": "Each item searched on its own printed signature against all 17,323 flattened text units. All returned zero. The word aircraft occurs in three parents corpus-wide, none of them a motion question. The served 2020 P2F Q04 bicycle graph was visually rejected on 10 September.",
+      "conclusion": "Absent from the corpus. A question the corpus does not contain cannot be served by it. Absence is evidence, not proof of origin: an older specification, another board or a published practice resource are all consistent with this."
     },
     {
       "test": "5. Forces and motion/2. Test before car safety etc/2024 Foundation test b4 car safety.pdf",
       "test_sha256": "6cb48181ef49abd2578b9858a467dfc3d1a9b69495fcfdac72224da1839b5cd3",
       "test_pages": [3, 4, 5],
-      "finding": "Image-only athlete/starting-blocks Newton-third-law question, athlete distance graph labelled J/K/L, and aircraft-engine reaction-force question were visually read. Distinctive text was not found in the available Trilogy/Synergy source database. Exact source identity remains unresolved."
+      "items": [
+        "Athlete on starting blocks before a 100 metre race; force pair",
+        "Athlete distance-time graph labelled J, K and L",
+        "Aircraft engine, air taken in at the front and pushed out of the back"
+      ],
+      "corpus_matches": 0,
+      "finding": "All zero. The phrase starting block occurs nowhere in the corpus. The nearest relatives of the J/K/L graph are synergy_specimen_set2_3f::Q06 and synergy_specimen_set2_3h::Q08, which are different questions and are not served.",
+      "conclusion": "Absent from the corpus."
     }
   ],
   "limitations": [
     "This targeted review supplements, rather than replaces, the broader 201-document assessment scan.",
-    "Nine named current tests were snapshotted. Native text was ranked across every page/paragraph block; selected image-only pages and all embedded images of the 2025 resit and 2026 final forces DOCX were viewed. This is not a full visual certification of every test page.",
+    "Nine named current tests were snapshotted. Native text was ranked across every page/paragraph block; selected image-only pages and all embedded images of the 2025 resit and 2026 final forces DOCX were viewed. Seven further low-word-count pages were rendered in the 14 September closing pass.",
+    "The three DOCX tests' embedded images were inspected on 2026-09-10 and not re-inspected in the closing pass.",
     "No generic shared phrase alone establishes source identity; weak matches for speed-of-sound recall, standard equations, and common answer instructions were not treated as confirmed sources.",
     "A 2026 assessment must still be checked. The source-paper cutoff at 2026 does not make questions copied into a 2026 test safe.",
-    "The builder must apply whole-parent exclusions and the source-paper year cutoff independently."
+    "The builder must apply whole-parent exclusions and the source-paper year cutoff independently.",
+    "The certification in certification_scope covers the two-topic, Trilogy-only input. It does not carry to a wider corpus."
   ]
 }

@@ -16,10 +16,20 @@
       doc.head.appendChild(style);
     }
     var bar = doc.createElement("nav"); bar.className = "physics-account"; bar.setAttribute("aria-label", "Physics account and coverage");
-    var coverage = doc.createElement("a"); coverage.href = opts.coverageHref || "/SpecialRelativityDriller/app/coverage.html"; coverage.textContent = "Relativity coverage";
-    coverage.title = "Galilean and special relativity: coverage across the Driller and past papers";
+    // A course with nowhere to point must show no link rather than a broken one.
+    // opts.coverage === null suppresses it; the default is the IB relativity page.
+    var link = opts.coverage === null ? null : (opts.coverage || {
+      href: opts.coverageHref || "/SpecialRelativityDriller/app/coverage.html",
+      label: "Relativity coverage",
+      title: "Galilean and special relativity: coverage across the Driller and past papers"
+    });
     var person = doc.createElement("button"); person.type = "button"; person.className = "physics-person"; person.hidden = true;
-    bar.appendChild(coverage); bar.appendChild(person);
+    if (link && link.href && link.label) {
+      var coverage = doc.createElement("a"); coverage.href = link.href; coverage.textContent = link.label;
+      if (link.title) coverage.title = link.title;
+      bar.appendChild(coverage);
+    }
+    bar.appendChild(person);
     app.parentNode.insertBefore(bar, app);
     var gate = doc.createElement("section"); gate.id = "physics-sign-in-gate"; gate.setAttribute("aria-labelledby", "physics-sign-in-title");
     gate.innerHTML = '<h1 id="physics-sign-in-title">Sign in to physics practice</h1>' +
@@ -34,7 +44,9 @@
     var placeholder = doc.createElement("option"); placeholder.value = ""; placeholder.textContent = "Pick your class"; cohort.appendChild(placeholder);
     // This is the current SR dropdown; an already-shared physics class is
     // retained exactly even if its value is absent from this local list.
-    var classes = opts.classes || ["Test", "IB27", "IB28"];
+    // Real class names come from the catalogue. Never invent them: an invented list
+    // splits one cohort across two spellings and the teacher tracker cannot rejoin them.
+    var classes = Array.isArray(opts.classes) && opts.classes.length ? opts.classes : ["Test", "IB27", "IB28"];
     function addClass(value) {
       if (!value || Array.from(cohort.options).some(function (option) { return option.value === value; })) return;
       var option = doc.createElement("option"); option.value = value; option.textContent = value; cohort.appendChild(option);

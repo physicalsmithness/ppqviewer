@@ -265,8 +265,11 @@ def build(source_root, output, extra_exclusions=None):
                  "part_ids": sorted(plan_parts),
                  "policy": "Withhold every explicitly selected IN_PAPER part, including modified selections, its whole parent and linked tier variants."},
                 {"source": "User instruction, 2026-09-10", "policy": "All 2026 and later source papers are reserved for mocks."}]
-    unresolved = ["The other school assessment collection has not yet been fully matched to source questions."]
+    unresolved = []
     reviewed_exclusions = Path(__file__).resolve().parents[1] / "reports/trilogy-reviewed-test-exclusions.json"
+    certification = read_json(reviewed_exclusions)
+    if not certification.get("complete_test_exclusion_certified"):
+        unresolved.append("The other school assessment collection has not yet been fully matched to source questions.")
     current_exclusions = Path(__file__).resolve().parents[1] / "dist/physics-inputs/trilogy-test-exclusions.json"
     # A standalone rebuild must retain the broad current-test reservations.
     # Optional extra rules can only add reservations, never replace that base.
@@ -391,10 +394,31 @@ def build(source_root, output, extra_exclusions=None):
                 skipped.append({"parent_id": parent, "reason": str(error)})
     assert not excluded.intersection(q["parent_id"] for q in questions)
     assert all(Path(path).is_file() for q in questions for kind in ("question_images", "markscheme_images") for path in q[kind])
+    # The exclusion flag is derived, never asserted. The Trilogy Categorisation seat
+    # certifies a scope; this build must fall inside that scope for the flag to stand.
+    # Widen the topics, or admit a second award to serving, and it drops on its own.
+    served_topics = {topic for q in questions for topic in q["topic_codes"]}
+    scope = certification.get("certification_scope", {})
+    scope_reasons = []
+    if not certification.get("complete_test_exclusion_certified"):
+        scope_reasons.append("The reviewed test exclusions do not certify a complete assessment comparison.")
+    if set(scope.get("topic_codes", [])) != set(TOPICS.values()):
+        scope_reasons.append(f"Certified topics {sorted(scope.get('topic_codes', []))} do not match the builder's topics {sorted(set(TOPICS.values()))}.")
+    if not served_topics <= set(scope.get("topic_codes", [])):
+        scope_reasons.append(f"Served topics {sorted(served_topics)} fall outside the certified topics {sorted(scope.get('topic_codes', []))}.")
+    if set(scope.get("serving_courses", [])) != {"Trilogy"}:
+        scope_reasons.append(f"Certified serving courses {sorted(scope.get('serving_courses', []))} are not Trilogy alone.")
+    if unresolved:
+        scope_reasons.append("Unresolved reservations remain in this build.")
+    exclusion_review_complete = not scope_reasons
     result = {
         "meta": {"course": "trilogy", "title": "Trilogy Physics",
                  "topics": {"electricity": "Electricity", "forces": "Forces"},
-                 "exclusion_review_complete": False},
+                 "exclusion_review_complete": exclusion_review_complete,
+                 "exclusion_review": {"certified_on": certification.get("closing_pass_on"),
+                                      "scope": scope,
+                                      "withheld_reasons": scope_reasons,
+                                      "evidence": certification.get("certification_evidence", {})}},
         "questions": questions,
         "report": {"sources": [str(database.resolve()), str(source_root / "outputs/previews")],
                    "known_exclusions": evidence, "excluded_parent_ids": sorted(excluded),
@@ -416,7 +440,8 @@ def build(source_root, output, extra_exclusions=None):
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({"output": str(output), "questions": len(questions),
                       "topics": result["report"]["topic_counts"], "skipped": len(skipped),
-                      "exclusion_review_complete": False}))
+                      "exclusion_review_complete": exclusion_review_complete,
+                      "exclusion_review_withheld_reasons": scope_reasons}))
     return result
 
 

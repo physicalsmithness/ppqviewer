@@ -205,7 +205,9 @@
     })) structuredParents[parent] = true;
   });
 
-  var identityClient = course === "ib" && window.PhysicsIdentity && typeof window.PhysicsIdentity.create === "function"
+  // Declared by the catalogue, defaulting to the IB behaviour that predates the field.
+  var wantsSignIn = typeof meta.sign_in === "boolean" ? meta.sign_in : course === "ib";
+  var identityClient = wantsSignIn && window.PhysicsIdentity && typeof window.PhysicsIdentity.create === "function"
     ? (window.physicsIdentity || (window.physicsIdentity = window.PhysicsIdentity.create())) : null;
   // QoderWork 2026-09-14: "also studied" co-strand panel. topic_codes[0] is the
   // part's primary strand (the same one groupKey uses for progress); the rest are

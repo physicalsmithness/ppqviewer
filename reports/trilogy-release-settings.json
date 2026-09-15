@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "note": "Publication settings for the Trilogy deployment. Data, not code: changing the sign-in position or the class list is an edit here, and the assembler enforces the rules below.",
+  "site": {
+    "repository": "trilogyphysicsppqs",
+    "origin": "https://github.com/physicalsmithness/trilogyphysicsppqs.git",
+    "url": "https://physicalsmithness.github.io/trilogyphysicsppqs/",
+    "checkout": "C:\\Claude (not on Gdrive, nor OneDrive)\\trilogyphysicsppqs"
+  },
+  "title": "Trilogy Physics past-paper question viewer",
+  "sign_in": {
+    "enabled": false,
+    "classes": [],
+    "rule": "enabled true requires a non-empty classes list of REAL class names as the school writes them. The assembler refuses otherwise. An invented list splits one cohort across two spellings and the teacher tracker cannot rejoin them; the Trilogy seat writes cohorts in the form '27 Trilogy 11Q'.",
+    "awaiting": "Smith's Trilogy class names (the standing q08 question)."
+  },
+  "publication_ruling": {
+    "granted": false,
+    "rule": "The IB Maths ruling (d014/q12) does not inherit. AQA content needs its own ruling from Smith before anything is pushed. The assembler will build a bundle without it; the staging tool will not write into the deployment checkout.",
+    "granted_on": null,
+    "wording": null
+  },
+  "upcoming_topics": [
+    ["energy", "Energy"],
+    ["electricity", "Electricity"],
+    ["particle-model", "Particle model of matter"],
+    ["atomic-structure", "Atomic structure"],
+    ["forces", "Forces"],
+    ["waves", "Waves"],
+    ["magnetism", "Magnetism and electromagnetism"]
+  ]
+}

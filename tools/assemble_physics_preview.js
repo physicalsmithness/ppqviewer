@@ -336,7 +336,12 @@ function assemble() {
   const missing = [!inputs.some(i=>i.meta.course === "ib" && i.questions.some(q=>q.topic_codes.includes("D.2"))) && "IB D2", !inputs.some(i=>i.meta.course === "preib") && "pre-IB forces"].filter(Boolean);
   const html='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Physics past-paper practice</title><style>body{margin:0;background:#f4f6f8;color:#182a37;font:17px/1.5 system-ui,sans-serif}main{max-width:1000px;margin:auto;padding:36px 24px}h1{font-size:2.1rem;line-height:1.15}.note{padding:16px 20px;background:#fff1cd;border-left:4px solid #b17a12;border-radius:8px}section{margin-top:32px}.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.topics a{display:block;border:1px solid #d2dde5;border-radius:12px;background:white;padding:22px;color:#174e67;text-decoration:none}.topics a:hover{border-color:#267b9a}.topics span{display:block;font-size:.9rem;margin-top:6px;color:#51616c}footer{margin-top:34px;font-size:.9rem;color:#52616c}</style></head><body><main><p>PAST-PAPER QUESTION VIEWER</p><h1>Physics past-paper practice</h1><p>Choose a course and topic. Work from the printed question, reveal its markscheme, and keep track of your practice.</p>'+inputs.map(i=>coursePage(i.meta,i.questions)).join('')+'<footer>'+(missing.length ? 'Still to connect: '+missing.map(esc).join(' and ')+'. ' : '')+'All courses use the shared viewer. Progress is saved in this browser.<br>Build '+buildId+'</footer></main></body></html>';
   fs.writeFileSync(path.join(out,"index.html"),html);
-  const info={build_id:buildId,built_at:new Date().toISOString(),root:out,courses,pupil_release_ready:false};
+  // Derived, never asserted: the combined preview is only pupil-ready when every
+  // course in it has a certified exclusion review. One uncertified course holds the lot.
+  const pupilReleaseReady=courses.length>0 && courses.every(c=>c.exclusion_review_complete===true);
+  const info={build_id:buildId,built_at:new Date().toISOString(),root:out,courses,
+    pupil_release_ready:pupilReleaseReady,
+    pupil_release_withheld_for:courses.filter(c=>c.exclusion_review_complete!==true).map(c=>c.course)};
   fs.writeFileSync(path.join(out,"build-info.json"),JSON.stringify(info,null,2));
   const audit=path.join(ROOT,"dist/physics-audit"); fs.mkdirSync(audit,{recursive:true});
   fs.writeFileSync(path.join(audit,buildId+".json"),JSON.stringify({build:info,inputs:inputs.map(i=>({course:i.meta.course,report:i.report})),asset_policy:"Crops only. No whole exam pages, PDFs, source test workbooks or unfiltered catalogues."},null,2));

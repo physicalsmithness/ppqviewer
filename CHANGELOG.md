@@ -1,3 +1,69 @@
+## 2026-09-15: Trilogy adopted, and the flags that were hardcoded now derive
+
+The Trilogy Categorisation seat closed its exclusion review on 14 September and
+asked for two hardcoded flags to move. They have moved, but not as flags.
+
+**Adopted first, in the order the seat asked.** `synergy_specimen_set2_4f::Q08`
+and `synergy_specimen_set2_4h::Q01` are reserved before anything else changed, so
+the certification cannot carry silently into a wider corpus. The two copied
+questions the closing pass identified for the first time are recorded with their
+evidence (`trilogy_2018_p1h::Q06`; `trilogy_2022_p2f::Q07` and its twin
+`trilogy_2022_p2h::Q02`), both already withheld by the broad matcher. The six
+items that returned zero moved out of `unresolved` into
+`resolved_as_absent_from_corpus`, carrying the seat's own caution that absence
+from the corpus is evidence rather than proof of origin. The three cited evidence
+files were re-fingerprinted here before adopting, and the assembler re-checks them
+on every build.
+
+Rebuilding changed nothing a pupil sees: 93 parents and 517 parts before and
+after, byte-identical served IDs. The two Synergy parents were the only additions
+to the excluded set, which confirms the seat's reading.
+
+**`exclusion_review_complete` is no longer asserted anywhere.**
+`tools/build_trilogy_physics.py` derives it from `certification_scope` in
+`reports/trilogy-reviewed-test-exclusions.json`, and withholds it unless the
+certified topics equal the builder's topics, the certified serving courses are
+Trilogy alone, every served topic falls inside the scope, and nothing is
+unresolved. It records why when it withholds. `pupil_release_ready` in
+`tools/assemble_physics_preview.js` derives the same way from every course in the
+build, and names which course held it. `tools/assemble_trilogy_release.js`
+re-derives the whole conclusion independently rather than trusting the built
+input, so a hand-edited `trilogy.json` cannot carry a certification it has not
+earned.
+
+The point is the seat's sentence: *the moment coverage goes beyond 6.2 and 6.5,
+or beyond Trilogy, the review starts again.* It now does that by itself.
+
+**A release train for Trilogy.** `tools/assemble_trilogy_release.js` builds the
+public bundle; `tools/stage_trilogy_release.js` copies it into the deployment
+checkout and refuses without the AQA publication ruling recorded in Smith's own
+words; `reports/trilogy-release-settings.json` holds the ruling, the sign-in
+position and the class list as data rather than code.
+`test/test_trilogy_release.js` gates it: 15 checks including a pupil journey
+through the actual published files.
+
+The gate earned itself on its first run. The `specimen` block was carrying the
+source PDF's absolute path and sha256 into the public catalogue, on 22 of the 93
+parents. The public record now carries the printed date and set alone; the
+`source_label` already said "Specimen 2018 set 1".
+
+**The wrapper stopped being IB-only by name.** `example/physics.html` read
+`course === "ib"` in four places to decide whether to show a topic chooser, gate
+on sign-in, apply workspace chrome, and which topics to name as coming. Course
+behaviour is now declared by the catalogue: `topic_chooser`, `sign_in`,
+`workspace_chrome`, `upcoming_topics`, `topic_links`, `classes`, `account_link`.
+Every default reproduces exactly what `course === "ib"` did before these fields
+existed, so an older catalogue behaves as it always has and the IB deployment is
+functionally unchanged. `example/physics-login.js` now shows no coverage link
+where a course has nowhere to point, rather than a broken one to the relativity
+page, and it refuses to invent a class list: a gate without real class names is a
+build error.
+
+Eight gates green at 2,426 assertions, plus the 15 new Trilogy checks.
+
+Not published. The AQA ruling is Smith's, it does not inherit from d014/q12, and
+the deployment repository is still empty. See TRILOGY_RELEASE.md.
+
 ## 2026-09-14: “also studied” co-strand panel (QoderWork)
 
 A part that belongs to more than one topic now says so on the question card,

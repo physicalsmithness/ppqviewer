@@ -11,6 +11,10 @@ a reviewed public IB release. See [IB_PHYSICS_RELEASE.md](IB_PHYSICS_RELEASE.md)
 for current counts, taxonomy provenance and publication status, and
 [PHYSICS_PREVIEW.md](PHYSICS_PREVIEW.md) for the broader local preview.
 
+Trilogy Physics (AQA GCSE, electricity and forces) is assembled and gated but not
+published: see [TRILOGY_RELEASE.md](TRILOGY_RELEASE.md). It waits on one thing, the
+AQA publication ruling, which is Smith's and does not inherit from the IB Maths one.
+
 ## Read first
 
 1. `OPERATING_MODEL.md` — seats, single-writer boundaries and release trains

@@ -88,14 +88,28 @@
       if (window.PHYSICS_META.release) {
         document.querySelector(".physics-preview").remove();
       }
+      // Course behaviour is declared by the catalogue, not inferred from its name.
+      // Every default reproduces what "ib" did before these fields existed, so an
+      // older catalogue that declares none of them behaves exactly as it always has.
+      var isIb = window.PHYSICS_META.course === "ib";
+      var feature = function (name, ibDefault) {
+        return typeof window.PHYSICS_META[name] === "boolean" ? window.PHYSICS_META[name] : (isIb && ibDefault);
+      };
+      var useTopicChooser = feature("topic_chooser", true);
+      var useSignInGate = feature("sign_in", true);
+      var useWorkspaceChrome = feature("workspace_chrome", true);
+      var upcomingTopics = Array.isArray(window.PHYSICS_META.upcoming_topics) ? window.PHYSICS_META.upcoming_topics : null;
+      var topicLinks = window.PHYSICS_META.topic_links && typeof window.PHYSICS_META.topic_links === "object"
+        ? window.PHYSICS_META.topic_links : null;
       var params = new URLSearchParams(window.location.search);
       var availableTopics = Array.from(new Set(window.PHYSICS_QUESTIONS.flatMap(function (q) { return q.topic_codes || []; })));
       function topicKey(value) { return String(value).replace(/[.\s]/g, "").toUpperCase(); }
       function showTopicChooser() {
-        root.innerHTML = '<section class="physics-topic-home"><h1><a href="./">IB Physics past-paper question viewer</a></h1>' +
+        root.innerHTML = '<section class="physics-topic-home"><h1><a href="./"></a></h1>' +
           '<h2>Choose a topic</h2><div class="physics-topic-grid physics-topics-available"></div>' +
           '<h2 class="physics-topics-soon-heading">More topics</h2><div class="physics-topic-grid physics-topics-soon"></div></section>';
-        var known = [
+        root.querySelector(".physics-topic-home h1 a").textContent = window.PPQ_CONFIG.title;
+        var known = upcomingTopics || [
           ["A.1", "Kinematics"], ["A.5", "Galilean and special relativity"], ["C.1", "Simple harmonic motion"],
           ["D.2", "Electric and magnetic fields"], ["E.1", "Structure of the atom"],
           ["E.2", "Quantum physics"], ["DATA", "Data analysis and experimental method"]
@@ -112,10 +126,13 @@
           var note = document.createElement("p");
           note.textContent = available ? window.PHYSICS_QUESTIONS.filter(function (q) { return (q.topic_codes || []).indexOf(code) >= 0; }).length + " question parts" : "Not yet available";
           article.appendChild(note);
-          if (available && topicKey(code) === "A5") {
+          var link_ = topicLinks ? topicLinks[code] : (topicKey(code) === "A5" ? {
+            href: window.PHYSICS_META.release ? "/SpecialRelativityDriller/app/coverage.html" : "../SpecialRelativityDriller/app/coverage.html",
+            label: "Relativity coverage across the Driller and past papers"
+          } : null);
+          if (available && link_ && link_.href && link_.label) {
             var coverage = document.createElement("a"); coverage.className = "physics-topic-coverage";
-            coverage.href = window.PHYSICS_META.release ? "/SpecialRelativityDriller/app/coverage.html" : "../SpecialRelativityDriller/app/coverage.html";
-            coverage.textContent = "Relativity coverage across the Driller and past papers"; article.appendChild(coverage);
+            coverage.href = link_.href; coverage.textContent = link_.label; article.appendChild(coverage);
           }
           return article;
         }
@@ -133,7 +150,7 @@
       var hasRequestedTopic = requestedTopics.some(function (requested) {
         return availableTopics.some(function (code) { return topicKey(code) === topicKey(requested) || (code === "DATA" && topicKey(requested) === "1B"); });
       });
-      if (window.PHYSICS_META.course === "ib" && !params.get("id") && !hasRequestedTopic) {
+      if (useTopicChooser && !params.get("id") && !hasRequestedTopic) {
         showTopicChooser();
         return;
       }
@@ -166,12 +183,12 @@
             root.before(missingNotice);
           }
         }
-        if (window.PHYSICS_META.course === "ib") {
+        if (useWorkspaceChrome) {
           document.body.classList.add("physics-workspace");
           root.classList.add("ppq-compact-workspace");
           var title = root.querySelector(".ppq-title"), home = document.createElement("a");
-          home.href = "./"; home.className = "physics-viewer-home"; home.textContent = "IB Physics past-paper question viewer";
-          home.setAttribute("aria-label", "IB Physics past-paper question viewer: choose a topic");
+          home.href = "./"; home.className = "physics-viewer-home"; home.textContent = window.PPQ_CONFIG.title;
+          home.setAttribute("aria-label", window.PPQ_CONFIG.title + ": choose a topic");
           title.textContent = ""; title.appendChild(home);
           var account = document.querySelector(".physics-account");
           if (account) root.querySelector(".ppq-header").appendChild(account);
@@ -181,7 +198,7 @@
         console.error("Physics preview could not start", error);
       }
       }
-      if (window.PHYSICS_META.course === "ib") {
+      if (useSignInGate) {
         if (!window.PhysicsLogin || !window.physicsIdentity) {
           unavailable("The shared physics sign-in could not be loaded. Reload the page to try again. Your saved practice has not been changed.");
           return;
@@ -191,6 +208,8 @@
           identity: window.physicsIdentity,
           appEl: root,
           trackingEnabled: reportingEnabled,
+          classes: window.PHYSICS_META.classes,
+          coverage: Object.hasOwn(window.PHYSICS_META, "account_link") ? window.PHYSICS_META.account_link : undefined,
           onEnter: start,
           onIdentityChange: function (identity) {
             var learnerId = identity.anonymous_id || "local", viewer = window.physicsViewer;
