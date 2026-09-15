@@ -5,3 +5,9 @@ dist/
 deploy/
 
 node_modules/
+
+# Local Python helpers for physics source reading and crop generation.
+__pycache__/
+
+# Scratch: local logs, working PDFs and throwaway scripts.
+tmp/

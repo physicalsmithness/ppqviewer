@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "topic": "D.2",
+  "review_complete": true,
+  "reviewed_on": "2026-09-12",
+  "unresolved_relevant_items": [],
+  "suppressed_assets": [
+    {
+      "source_part_id": "ibchem_part_f504bac67c9788a0",
+      "parent_id": "06M.P3.SL.TZ2.QB4",
+      "role": "markscheme",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2006_may_3_92cc5d22/crops/mark_scheme_b4_b_v007_p007_02_303ecd2814.png",
+      "sha256": "c0251a804a9c7e348f1e86b417705fa3a3991d5dddac80c5cc34c7c9ecdbcc39",
+      "reason": "This crop contains only the following section heading, Option C — Energy Extension. It is not a continuation of B4(b). The original preceding page and first crop contain all three answer statements and the [3] mark total. The original following page begins the unrelated Option C section. Omit only this exact heading image; do not alter source metadata or images.",
+      "remaining_answer_complete": true,
+      "source_region": {"page_number": 7, "bbox": [42.56, 85.39, 202.28, 98.67]},
+      "original_printed_page": 8
+    }
+  ],
+  "required_assets": [
+    {
+      "source_part_id": "ibchem_part_f504bac67c9788a0",
+      "parent_id": "06M.P3.SL.TZ2.QB4",
+      "role": "markscheme",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2006_may_3_92cc5d22/crops/mark_scheme_b4_b_v006_p006_01_d449189370.png",
+      "sha256": "379b3812ab6b52cf9f5cf579e328352c5a27af59dcdb190aabfbf99ce72c18d9",
+      "source_region": {"page_number": 6, "bbox": [70.88, 466.58, 555.92, 534.03]},
+      "original_printed_page": 7,
+      "reviewed_answer_completeness": "The full original B4(b) answer has the conversion of initial kinetic energy to electrostatic potential energy, the electrostatic-energy equation and the inference of closest approach, followed by [3]. All appear intact in this first retained crop. No answer or continuation occurs in the suppressed heading crop."
+    }
+  ],
+  "source_files": [
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2006_may_3_92cc5d22/mark_scheme_preview.json", "sha256": "5a3ea4e2ac21ad15d1d2b90033122e12d690495d1ef139c0a3a2e998dcdc7a71"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2006_may_3_92cc5d22/crops/mark_scheme_b4_b_v006_p006_01_d449189370.png", "sha256": "379b3812ab6b52cf9f5cf579e328352c5a27af59dcdb190aabfbf99ce72c18d9"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2006_may_3_92cc5d22/crops/mark_scheme_b4_b_v007_p007_02_303ecd2814.png", "sha256": "c0251a804a9c7e348f1e86b417705fa3a3991d5dddac80c5cc34c7c9ecdbcc39"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2006_may_3_92cc5d22/pages/mark_v006_p006.png", "sha256": "7a1a5afa879a0709bde5c05fbd8d2d792786d3a027356a96b464ee89a32a5059"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2006_may_3_92cc5d22/pages/mark_v007_p007.png", "sha256": "4ecd2c7ec4e2f629706129cffdca9558f5be1bdc88a1ec8ec1393ce281def030"},
+    {"path": "C:/CodexProjects/PaperDatabases/IB Papers and MS/exam_papers/may_06/disk_2/Markschemes/Group 4/English/Physics SL paper 3 TZ2.pdf", "sha256": "da02cec88f002fd58b799971014efb0bdfcbd8d80b43d57d2ba2f051c090389a"}
+  ],
+  "limits": "A single exact presentation suppression. No test exclusions are removed, no crop repaired, no content scope widened and no source database file changed. Other parts/images retain their independent gates."
+}

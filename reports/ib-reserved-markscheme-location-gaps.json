@@ -1,0 +1,1502 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-09-12T19:14:49.772Z",
+  "candidate_count": 226,
+  "preview_count": 131,
+  "gap_count": 123,
+  "affected_preview_count": 19,
+  "missing_native_source_ids": [
+    "ibchem_part_9d82b231b1ea69dd"
+  ],
+  "decision": "Keep conservative release hold whenever a reserved entry has no source rectangle. No text absence or harmless structural-header inference is justified. A relaxation requires independently verified whole-question markscheme page/rectangle coverage.",
+  "limitations": [
+    "Read-only metadata audit; no visual review or source corpus repair.",
+    "Detailed fingerprints cover affected metadata and native/archive/assessment inputs. The complete examined metadata set is bound by the sorted manifest digest; rebuild it from reviewed_previews and both question_preview.json and mark_scheme_preview.json."
+  ],
+  "reviewed_previews": [
+    "ib_physics_2004_nov_1_5bc0c286",
+    "ib_physics_2004_nov_1_db18a0ad",
+    "ib_physics_2004_nov_2_576c8e1a",
+    "ib_physics_2004_nov_3_76f24f38",
+    "ib_physics_2004_nov_3_c4d0287e",
+    "ib_physics_2005_may_1_05b75d35",
+    "ib_physics_2005_may_1_2dfbd126",
+    "ib_physics_2005_may_1_a474c55e",
+    "ib_physics_2005_may_2_c70c7143",
+    "ib_physics_2005_may_3_6d8c1866",
+    "ib_physics_2005_may_3_7e173998",
+    "ib_physics_2005_nov_1_44403951",
+    "ib_physics_2005_nov_1_49c0d917",
+    "ib_physics_2005_nov_3_4296b018",
+    "ib_physics_2006_may_1_29422d1f",
+    "ib_physics_2006_may_1_947474ec",
+    "ib_physics_2006_may_1_f72b7d1a",
+    "ib_physics_2007_may_1_7b8c301a",
+    "ib_physics_2007_may_1_994ba5b5",
+    "ib_physics_2007_may_3_1d1a90ef",
+    "ib_physics_2007_nov_2_6b245122",
+    "ib_physics_2007_nov_2_7645ff9a",
+    "ib_physics_2008_may_1_4962028d",
+    "ib_physics_2008_may_1_57ba1be5",
+    "ib_physics_2008_may_1_b2fdfa35",
+    "ib_physics_2008_may_3_030c56b9",
+    "ib_physics_2009_may_1_5caccbe4",
+    "ib_physics_2009_may_1_9437d8d7",
+    "ib_physics_2009_may_1_a79de822",
+    "ib_physics_2009_may_1_c42d8ff5",
+    "ib_physics_2009_may_2_e7e0f793",
+    "ib_physics_2009_may_3_4fd6c42e",
+    "ib_physics_2009_may_3_9b8c5060",
+    "ib_physics_2009_nov_1_b579fa42",
+    "ib_physics_2009_nov_2_573e5d8d",
+    "ib_physics_2010_may_1_2600c514",
+    "ib_physics_2010_may_1_4b5617c6",
+    "ib_physics_2010_may_1_4db32e9e",
+    "ib_physics_2010_may_1_92d23183",
+    "ib_physics_2010_may_3_d1444c7c",
+    "ib_physics_2010_nov_1_57af6c2b",
+    "ib_physics_2010_nov_1_7ac272de",
+    "ib_physics_2010_nov_3_1b08d840",
+    "ib_physics_2010_nov_3_eba44f8a",
+    "ib_physics_2011_may_1_22be1d13",
+    "ib_physics_2011_may_1_7bca7ec1",
+    "ib_physics_2011_may_1_89f3a653",
+    "ib_physics_2011_may_1_d7eeb565",
+    "ib_physics_2011_nov_1_f7ed4aa8",
+    "ib_physics_2011_nov_2_71a6c7c2",
+    "ib_physics_2011_nov_3_1d11746b",
+    "ib_physics_2011_nov_3_b53f4a78",
+    "ib_physics_2012_may_1_4bd61ed0",
+    "ib_physics_2012_may_1_93fa6fdb",
+    "ib_physics_2012_may_1_ad31971a",
+    "ib_physics_2012_may_1_ef8c094b",
+    "ib_physics_2012_may_2_6021c527",
+    "ib_physics_2012_may_2_8d77f5af",
+    "ib_physics_2012_may_3_0fa2fded",
+    "ib_physics_2012_may_3_b0d7c487",
+    "ib_physics_2012_nov_1_3784a095",
+    "ib_physics_2012_nov_1_90f34131",
+    "ib_physics_2013_may_1_04aa8dc6",
+    "ib_physics_2013_may_1_1b5e0ddf",
+    "ib_physics_2013_may_1_beca4846",
+    "ib_physics_2013_nov_1_4ce8dc55",
+    "ib_physics_2014_may_1_433a538a",
+    "ib_physics_2014_may_1_74cadd64",
+    "ib_physics_2014_may_1_9b9d5bfb",
+    "ib_physics_2014_may_1_fdc5a146",
+    "ib_physics_2014_nov_1_28540758",
+    "ib_physics_2014_nov_3_a290dada",
+    "ib_physics_2014_nov_3_c903c22c",
+    "ib_physics_2015_may_1_22ee6667",
+    "ib_physics_2015_may_1_753a428f",
+    "ib_physics_2015_may_1_907b1ca3",
+    "ib_physics_2015_may_2_fe89ccee",
+    "ib_physics_2015_may_3_402d4969",
+    "ib_physics_2015_nov_1_70cfff1d",
+    "ib_physics_2015_nov_1_9eb21c23",
+    "ib_physics_2015_nov_2_d310a1ba",
+    "ib_physics_2016_may_1_313b2df1",
+    "ib_physics_2016_may_1_f533becc",
+    "ib_physics_2016_may_3_e424ef51",
+    "ib_physics_2016_nov_1_af2bc88e",
+    "ib_physics_2016_nov_1_e3911cf3",
+    "ib_physics_2017_may_1_10be43ee",
+    "ib_physics_2017_may_2_aa7aa2fb",
+    "ib_physics_2017_nov_2_30b39630",
+    "ib_physics_2017_nov_2_6ced0dfe",
+    "ib_physics_2018_may_1_0183b3e6",
+    "ib_physics_2018_may_1_5ed88500",
+    "ib_physics_2018_may_1_d6844c79",
+    "ib_physics_2018_may_1_eda39dc2",
+    "ib_physics_2018_may_2_5eda784f",
+    "ib_physics_2018_may_2_d257da58",
+    "ib_physics_2018_may_3_3128ba47",
+    "ib_physics_2018_may_3_7de41b9c",
+    "ib_physics_2018_may_3_e6e9f16d",
+    "ib_physics_2018_nov_1_4b9773e3",
+    "ib_physics_2018_nov_2_71842670",
+    "ib_physics_2019_may_1_33acc41e",
+    "ib_physics_2019_may_3_e6c6fff7",
+    "ib_physics_2020_nov_1_75b8a9ec",
+    "ib_physics_2020_nov_1_f5755c2d",
+    "ib_physics_2020_nov_2_6892e30d",
+    "ib_physics_2020_nov_2_87e83f55",
+    "ib_physics_2021_may_2_a537f4a7",
+    "ib_physics_2021_nov_1_72c4a06b",
+    "ib_physics_2021_nov_1_def7841b",
+    "ib_physics_2023_may_1_1e4158ba",
+    "ib_physics_2023_may_3_ac610754",
+    "ib_physics_2024_may_1_0270a04e",
+    "ib_physics_2024_may_1_3d92f90a",
+    "ib_physics_2024_may_2_69abdcaf",
+    "ib_physics_2024_may_2_70b6f68a",
+    "ib_physics_2024_may_2_91cc2764",
+    "ib_physics_2024_may_2_9d282bcd",
+    "ib_physics_2024_nov_2_6d9c29e3",
+    "ib_physics_2024_nov_2_8382de32",
+    "ib_physics_2024_nov_3_62d62c77",
+    "ib_physics_2024_nov_3_c4c36be7",
+    "ib_physics_2025_may_1a_70031c2c",
+    "ib_physics_2025_may_1a_c17e4ba9",
+    "ib_physics_2025_may_1a_db92c33d",
+    "ib_physics_2025_may_1a_e4654c4d",
+    "ib_physics_2025_nov_1a_4747671b",
+    "ib_physics_2025_nov_1a_6d4c9d99",
+    "ib_physics_2025_nov_2_6fa9fffb",
+    "ib_physics_2025_nov_2_7eaf3631",
+    "ib_physics_2025_nov_2_ad40a7d0"
+  ],
+  "metadata_manifest_sha256": "ffde5e6b7ffab0ac68a385f132967ef92c97832fb7ff454dc84437f97b265a13",
+  "gaps": [
+    {
+      "preview": "ib_physics_2004_nov_2_576c8e1a",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_2_576c8e1a\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "B1",
+          "part_label": "B1(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(d)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(e)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(e)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(e)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(c)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(b)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(e)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(e)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(f)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2004_nov_3_76f24f38",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "E2",
+          "part_label": "E2(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2004_nov_3_c4d0287e",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "E2",
+          "part_label": "E2(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2005_may_2_c70c7143",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_may_2_c70c7143\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "A1",
+          "part_label": "A1(a)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "A1",
+          "part_label": "A1(b)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "A1",
+          "part_label": "A1(c)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "A1",
+          "part_label": "A1(d)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "A1",
+          "part_label": "A1(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "A1",
+          "part_label": "A1(e)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(c)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2005_may_3_6d8c1866",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_may_3_6d8c1866\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "A1",
+          "part_label": "A1(a)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "F2",
+          "part_label": "F2(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2005_may_3_7e173998",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_may_3_7e173998\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "F2",
+          "part_label": "F2(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2007_may_3_1d1a90ef",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2007_may_3_1d1a90ef\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "A3",
+          "part_label": "A3(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2007_nov_2_6b245122",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2007_nov_2_6b245122\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "B3",
+          "part_label": "B3(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(d)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(d)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2007_nov_2_7645ff9a",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2007_nov_2_7645ff9a\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "B2",
+          "part_label": "B2(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(c)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2009_may_2_e7e0f793",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2009_may_2_e7e0f793\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "A1",
+          "part_label": "A1(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "A1",
+          "part_label": "A1(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "A1",
+          "part_label": "A1(c)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": false
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(d)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(d)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2009_nov_2_573e5d8d",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2009_nov_2_573e5d8d\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "B3",
+          "part_label": "B3(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(a)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2010_nov_3_1b08d840",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "B1",
+          "part_label": "B1(a)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2011_nov_2_71a6c7c2",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2011_nov_2_71a6c7c2\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "B1",
+          "part_label": "B1(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(b)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2012_may_2_6021c527",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2012_may_2_6021c527\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "B1",
+          "part_label": "B1(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(c)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(b)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(d)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(d)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(a)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(a)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2012_may_2_8d77f5af",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2012_may_2_8d77f5af\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "B1",
+          "part_label": "B1(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(a)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(a)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B1",
+          "part_label": "B1(d)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B2",
+          "part_label": "B2(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(d)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B3",
+          "part_label": "B3(d)(v)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "B4",
+          "part_label": "B4(c)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2015_may_2_fe89ccee",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2015_may_2_fe89ccee\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "1",
+          "part_label": "1(b)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "1",
+          "part_label": "1(b)(vi)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "4",
+          "part_label": "4(a)(iv)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "4",
+          "part_label": "4(d)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2015_nov_2_d310a1ba",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2015_nov_2_d310a1ba\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "6",
+          "part_label": "6(f)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2020_nov_2_6892e30d",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2020_nov_2_6892e30d\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "6",
+          "part_label": "6(a)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(a)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(b)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(b)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(c)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(c)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2020_nov_2_87e83f55",
+      "kind": "mark_scheme",
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2020_nov_2_87e83f55\\mark_scheme_preview.json",
+      "entries": [
+        {
+          "question_number": "6",
+          "part_label": "6(a)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(a)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(a)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(b)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(b)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(c)(i)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(c)(ii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        },
+        {
+          "question_number": "6",
+          "part_label": "6(c)(iii)",
+          "group": false,
+          "crop_image_count": 0,
+          "page_start": null,
+          "page_end": null,
+          "is_unlocated_recovery_placeholder": true
+        }
+      ]
+    }
+  ],
+  "source_files": [
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a1-c1-assessments\\candidate-parts.json",
+      "sha256": "8236911b63f7e72e34ea70c5cb8476759593762a1c497fcc32b079d58d5e76b4"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\current-ib-tests.json",
+      "sha256": "bd7da777a2b2dee6d1446d2edd9615bfe935132e8dab92a2c1e16472873f345f"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-a1-c1-reviewed-test-exclusions.json",
+      "sha256": "a79c1432dc1b7a1852ed67cdead8ad70621590dd480078ab7517c52eddc60be2"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-a5-reviewed-test-exclusions.json",
+      "sha256": "88dc4b149665a081fb4c69eb91c13149af0c7ef65a7bdbffb07af9aeef3b00a6"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\exports\\ib_physics_archive_flat_v5.csv",
+      "sha256": "6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_2_576c8e1a\\mark_scheme_preview.json",
+      "sha256": "91240c454475435181297145947771b4ee2cf0252ecb0aec5f57368bbc4dd641"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\mark_scheme_preview.json",
+      "sha256": "bcfb708d35c4efcc188fa1125a8fca6a23e93132a9bf0412a2ee919ee7f4a8fb"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\mark_scheme_preview.json",
+      "sha256": "28955c47ae894a92da631f5a728223698b8228361f3ce8f588415badaf44e9a4"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_may_2_c70c7143\\mark_scheme_preview.json",
+      "sha256": "635a0adcbfd93994812f0a95aca165a2a49162467079350a9a111eb45744ad96"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_may_3_6d8c1866\\mark_scheme_preview.json",
+      "sha256": "8e74bab3d3fab2a08e09ea720a3166bef364fa4baf9f719ff188841c2b53f472"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_may_3_7e173998\\mark_scheme_preview.json",
+      "sha256": "4abf614d5ec0c58892bca1dd4f67f894aa2459e71a9eec61fbb9280d1fc5bf83"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2007_may_3_1d1a90ef\\mark_scheme_preview.json",
+      "sha256": "0560e890cc53b78d74d0c8f04314458fdfe033d4c34fecb43ea2d36e659316ad"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2007_nov_2_6b245122\\mark_scheme_preview.json",
+      "sha256": "9c9fa6a6c0f24c19b89e38d8a9b2bacf891c1bbcbe119fba2200106fbcbffc31"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2007_nov_2_7645ff9a\\mark_scheme_preview.json",
+      "sha256": "9cfab0ade5de3f3672fa031cff224aefb3aacc4ccf8b398dbc15c974be3331d8"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2009_may_2_e7e0f793\\mark_scheme_preview.json",
+      "sha256": "e1808b935cbd6add1881840e830d41f069d86a7da258598a3590c51c4a5d026a"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2009_nov_2_573e5d8d\\mark_scheme_preview.json",
+      "sha256": "0cf37730fb02a45dcd4eabc7886ac102beba2e4f755374371e7e92bbb4ddd231"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\mark_scheme_preview.json",
+      "sha256": "87223a6975e4fe0950458103a64368b43495c76c783761998bd3708b8c23dc6c"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2011_nov_2_71a6c7c2\\mark_scheme_preview.json",
+      "sha256": "bcf3000d4ae8bdcc40deddd10f37164a9b7031ded58fba196dc093f98f164fee"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2012_may_2_6021c527\\mark_scheme_preview.json",
+      "sha256": "fb136553c8ba3b1e0c66f3a3f9aa76b52148957dad6fa1dd633619b91c409fe8"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2012_may_2_8d77f5af\\mark_scheme_preview.json",
+      "sha256": "190ea59ce52b9d1909abbb9bc60e0038bfb3b2944aa94205addffdcc8588d3e3"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2015_may_2_fe89ccee\\mark_scheme_preview.json",
+      "sha256": "eebc50ce72d978af9cedb0f7cf68110b5e3c277643e777a0612a46783e9d8f75"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2015_nov_2_d310a1ba\\mark_scheme_preview.json",
+      "sha256": "81adbb8806cd31b74cf9febb719bae6090420bd1193868d700dc91e227e4bf36"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2020_nov_2_6892e30d\\mark_scheme_preview.json",
+      "sha256": "0c3cc409b8a25c58f77d7e86c0019c3609dee51c1c7d2042b9e8f5ddf80bf410"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2020_nov_2_87e83f55\\mark_scheme_preview.json",
+      "sha256": "b48d98b7d75781107a1654ee8abd15dbf4da79766fd4b9b6074f328372f7af60"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\returns\\PACKET_006D\\matches.csv",
+      "sha256": "adbb93f1d7ea404b3842e0bf0f570dad3a81060cefc0242cef088179f1a6bb0c"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\returns\\PACKET_006D\\source_results_v4.csv",
+      "sha256": "ef1c8a492625092bd2af73c0183aa8e37a49402bfe456232d576be12ade8d079"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\viewer\\ibphysics_catalogue.js",
+      "sha256": "050e5203246af6f79f667353c7a8b3668b0657cdaf412a9a0809b1be4e584448"
+    }
+  ]
+}

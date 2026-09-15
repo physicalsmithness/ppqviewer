@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "rules": [
+    {
+      "parent_id": "trilogy_specimen_set2_p1f::Q02",
+      "source_relative_path": "Trilogy (and Synergy)/trilogy past papers, ms and examiners reports/8464-P-1F-QP-Trilogy-Specimen(Set 2) v1.0.pdf",
+      "source_sha256": "8ed5ad99f5576b668137bfca03b1c98248376a7e02c8d88ac71281ba06cf1d42",
+      "question_preview_sha256": "072be321a6e7af2d5467ca8adff2fef1f490e0ba4629306fede132694707a32f",
+      "printed_label": "02.3",
+      "page_start": 5,
+      "part_id": "trilogy_specimen_set2_p1f::02.3@p005",
+      "markscheme_label": "02.4",
+      "topic_codes": [
+        "electricity"
+      ],
+      "markscheme_source_relative_path": "Trilogy (and Synergy)/trilogy past papers, ms and examiners reports/8464-P-1F-MS-Trilogy-Specimen(Set 2) v1.0.pdf",
+      "markscheme_source_sha256": "1e9bd143ba72ce8287a8cafe513ebeb2289497cd58768d71e46e7e4a9f04bfbe",
+      "markscheme_preview_sha256": "415376c2c7dc3d7463591ba908f4fcb402a96d23adab13587f29af2589ebf6a8",
+      "evidence": "Visually reviewed original-derived question crops for printed pages 4 and 5 and the original-derived mark-scheme crop for page 8 on 2026-09-10. The question paper itself prints 02.3 twice: page 4 asks which component decreases resistance when temperature increases; page 5 asks which component decreases resistance when light intensity increases. These are separate assessed one-mark appearances, not duplicated extraction of one question. Preserve both printed labels. The diagram identifies C as the thermistor and B as the light-dependent resistor. The source mark scheme labels the temperature answer C as 02.3 and the light answer B as 02.4, each with 1 mark and examined specification reference 6.2.1.4. Only the page-5 appearance receives the occurrence-specific consumer ID and mark-scheme alignment override. Whole-parent marks remain 11 (1+1+1+1+2+1+1+3); count eight distinct appearances. No source PDF, preview or SQL row was changed."
+    }
+  ]
+}

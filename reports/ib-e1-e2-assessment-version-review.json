@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-13",
+  "review_complete": true,
+  "scope": "E2-facing task and wording comparison across the current locally snapshotted E assessment versions; E1-specific additions delegated to separate E1 review. No source or test files changed.",
+  "method": "Compared extracted paragraph wording and full PDF page text; used normalized three-word overlap only to locate version deltas, then read reported differences. Equations/images in DOCX can be absent from text extraction, so matching PDF visual evidence remains required. This record does not claim DOCX and PDF bytes are identical.",
+  "source_files": [
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\tmp\\pdfs\\ib-e1-e2-current-test-text.json",
+      "sha256": "19f4fe6ad0df7b50caaff920aef1b3bbe8f7e8c7a8d682c999a6b88acfe9d747"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\tmp\\pdfs\\ib-e1-e2-other-test-text.json",
+      "sha256": "6d79c13d029f08ecc19f555a7119e251fce9bfdb4dcef122a59110cbf86c643b"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-e1-e2-current-assessment-freshness.json",
+      "sha256": "44829ac7fd8c67b89715dc432cf923bfd644197b6746ee2d0566156340afa0fa"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E1-E2 Test HL.pdf",
+      "sha256": "9ba329e6831a40d1a9f5f68bafb8a54a1e8cd71c9a9e013de1edb02f5f690604"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E HL Test.pdf",
+      "sha256": "6ef0985da90e31cf27f161389f5e93aefb6fa01e039a16696f64e92c453f56f9"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E Test (SL content only) 2026.docx",
+      "sha256": "417cd66d17379704916fec75ac63ffd399d53f5cf8f2dbb13bbbfbbc9c670bd4"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\z. end of course mini-tests\\E1 HL Minitest.pdf",
+      "sha256": "90dd84e2b53b60c92ac6f26b21b548ced239fcb9248d5b21f405cb3304cec0dc"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\z. end of course mini-tests\\E1 SL Minitest.pdf",
+      "sha256": "5d71b1834d4b0387487211a6584ecb6f9908e99df981250fd596dde48d759397"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\z. end of course mini-tests\\E2 Minitest.pdf",
+      "sha256": "98abfc90719177f5785174e6ee5fe23ba1387ae4e0fa0b93ba2884c607c5814b"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E1-E2 Test HL (temp).pdf",
+      "sha256": "76a81f168794a6ca91e6fa581fb0b8d40cf63a9f6fcf27079c83f7be63000a62"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E1-E2 Test HL.docx",
+      "sha256": "1fe4074c932db02a9a627b4dda8d30d12160b7a0b0de5a85cf7155cbff3f7282"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E HL Test.docx",
+      "sha256": "00c72993fb767e6cf8e605e8b0cd4a999c2bc74055be3dc35ec169b6c0201824"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E Test (SL content only).docx",
+      "sha256": "9fc5eddb36a8374a93262973c38571387b1b8f1d9273acccc1af90df4354ec58"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E3-E5 Test HL.pdf",
+      "sha256": "384a043d823c3d8044c07d7fef9ce962896ceb247d6713fef35c306b774d6088"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E3-E5 Test HL.docx",
+      "sha256": "acbacfe42378d58775a9d854111e3511cb283e565e7140caf29562159159ab42"
+    }
+  ],
+  "comparisons": [
+    {
+      "source": "E/E1-E2 Test HL.docx",
+      "against": "E/E1-E2 Test HL.pdf",
+      "disposition": "no_additional_E2_task_identified",
+      "evidence": "All substantial Word paragraphs match the corresponding PDF wording; extraction omits some equation objects, so original DOCX remains separately fingerprinted."
+    },
+    {
+      "source": "E/Topic E HL Test.docx",
+      "against": "E/Topic E HL Test.pdf",
+      "disposition": "no_additional_E2_task_identified",
+      "evidence": "All substantial Word paragraphs match PDF wording; Q16 b/c, Q12 and Q18 preserved in full HL test scope."
+    },
+    {
+      "source": "E/E1-E2 Test HL (temp).pdf",
+      "against": "E/Topic E HL Test.pdf",
+      "disposition": "no_additional_E2_task_identified",
+      "evidence": "Read all E2 pages: 6 stopping-gradient,8 same-potential and equal-KE de Broglie comparisons,9 Compton concepts/numerical shift,10–11 Compton calculation/model test,12–13 diffraction minimum potential and proton/electron comparison,14 de Broglie hypothesis and photoelectric claims,15–17 threshold/saturation explanation,19 fixed photon-number current graph,21 frequency doubling,22–23 work function/threshold wavelength,24 frequency scaling. These are included in the full HL PDF task comparison."
+    },
+    {
+      "source": "E/Topic E Test (SL content only).docx",
+      "against": "E/Topic E Test (SL content only) 2026.docx and shared HL tests",
+      "disposition": "no_additional_E2_task_identified",
+      "evidence": "No direct photoelectric/de Broglie/Compton task; E2 mentions are photon energy and named distractors. Distinct E1/E3/E5 paragraphs handed to E1 reviewer.",
+      "forwarded_E1_blocks": [
+        97,
+        102,
+        106,
+        134,
+        194,
+        200,
+        241,
+        247,
+        251,
+        256,
+        278,
+        287,
+        288
+      ]
+    },
+    {
+      "source": "E/E3-E5 Test HL.docx",
+      "against": "E/E3-E5 Test HL.pdf",
+      "disposition": "no_additional_E2_task_identified",
+      "evidence": "Only substantial text delta is block61 requiring two sources of radioactive waste rather than the PDF single source; E1 reviewer owns fission/decay part checks."
+    }
+  ],
+  "read_failures": [],
+  "unresolved_E2_version_items": [],
+  "limitations": [
+    "Answer-labelled files remain fingerprinted by the current-assessment freshness receipt and were not used to expand the question inventory.",
+    "This is not learner-eligibility or crop-quality certification."
+  ]
+}

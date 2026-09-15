@@ -1,0 +1,289 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-13",
+  "description": "Source crops actually viewed during E2 assessment comparison. This is not a whole-source crop quality certification.",
+  "images": [
+    {
+      "id": "ibchem_part_d74db0380fbf8208",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2014_may_3_b246a25f/crops/question_4_a_v008_p008_01_ec7dcfac6d.png",
+      "sha256": "f86f3b85a2e2e3e38e0c49146b455c1a80103ce50c06c4a4286626461a8dddd3"
+    },
+    {
+      "id": "ibchem_part_8cbd81f1b8e79ef6",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2014_nov_3_c903c22c/crops/question_5_a_v010_p010_01_e81e7cdc2f.png",
+      "sha256": "1c6f219f82a35a491e59371c1e6809fae24452ed13d268a1d29dfa62659ce6bf"
+    },
+    {
+      "id": "ibchem_part_e6c648062bd865b2",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2010_may_3_aa67390c/crops/question_b1_a_v005_p005_01_c44853db25.png",
+      "sha256": "19422c770744f9162aa7f1dc98430fd3b590ee3275ac1d9a25bd557bd548f749"
+    },
+    {
+      "id": "ibchem_part_911cd9913d4d699e",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2009_may_3_14be0e41/crops/question_b2_a_v008_p008_01_b352d5c3fa.png",
+      "sha256": "4ae41c63747464d2e038c9dedc57b771a849eb8d1e786c2528b7faa47e2e0b18"
+    },
+    {
+      "id": "ibchem_part_8bd55da92c2efe64",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2009_may_1_9437d8d7/crops/question_27_v014_p014_01_f6edb8ce59.png",
+      "sha256": "df57934d2219f772a1c603a75a1dab0b30af11dbbd6d92a0c2b1899dd7857732"
+    },
+    {
+      "id": "ibchem_part_065d2b0790e31327",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2006_nov_1_c98d2823/crops/question_35_v023_p023_01_bd2273a6c4.png",
+      "sha256": "0f5f0cbeac25cccf6fab26d312550af5a682821ddfd5cbb73f2279971e082442"
+    },
+    {
+      "id": "ibchem_part_a7bca8e582416348",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2022_may_1_27ee4bb6/crops/question_39_v024_p024_01_e6344350dc.png",
+      "sha256": "e6c02565f8bc4808ef470f0137e7db11296f17365c6cf4649880e9f6c8e25f0f"
+    },
+    {
+      "id": "ibchem_part_52394114ff44a382",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2018_may_1_0183b3e6/crops/question_38_v020_p020_01_2154e9aed6.png",
+      "sha256": "aea954c54cd2669748a42e07c4849df41242a6a7354f56ed54914d83ccccdff4"
+    },
+    {
+      "id": "ibchem_part_de09d867f60c7f83",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2015_may_1_753a428f/crops/question_30_v015_p015_01_66af3dc9b7.png",
+      "sha256": "38d851f5f83be822ffeeef1a352f178100b91240aa4009f1de598556b242ed69"
+    },
+    {
+      "id": "ibchem_part_21c9bd30ca633402",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2015_nov_1_70cfff1d/crops/question_29_v013_p013_01_fcf2dfd381.png",
+      "sha256": "43dc43a6e07d55359f9a300d21b61025a8686dd11e99b647311704cbf4611190"
+    },
+    {
+      "id": "ibchem_part_df8c1191e13479bb",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2005_may_1_0722ab96/crops/question_34_v017_p017_01_4ce161e186.png",
+      "sha256": "1b7607a315b78b4dc8c14d33c0fb98148860c7b6c4b4533b65515b7f60e11fe6"
+    },
+    {
+      "id": "ibchem_part_f9318b866c47d6de",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2014_nov_1_28540758/crops/question_32_v016_p016_01_b7c3db5bfd.png",
+      "sha256": "e3a03ea94aee7db719c16b6309679f0301e60aac7113436c86895e793678ae92"
+    },
+    {
+      "id": "ibchem_part_fc85fa96ab886e3f",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2012_may_3_32100ffe/crops/question_b3_b__ii_v010_p010_01_f9c667f5ce.png",
+      "sha256": "d085fcff2722a745a6ab789a206b4cb222c3b23070cf4fd6d9b6a3b1454ebc5d"
+    },
+    {
+      "id": "ibchem_part_831a15d11123cbca",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2010_may_3_aa67390c/crops/question_b1_b_v005_p005_01_d2d962b605.png",
+      "sha256": "f140bd6d7a83c2998aa64415243d6ad550c22d30d338a8e512a0bec8bbd1fa68"
+    },
+    {
+      "id": "ibchem_part_40f492bb45a7089f",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2022_may_2_78179c5a/crops/question_9_a__i_v027_p027_01_61016fe3c7.png",
+      "sha256": "6b108ee528188359b9ee7dcf6ad7adb5c2f3ef30fb56fcab3c9f7e2b4fdc008e"
+    },
+    {
+      "id": "ibchem_part_fc85fa96ab886e3f",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2012_may_3_32100ffe/crops/question_b3_b__ii_v011_p011_02_7913979683.png",
+      "sha256": "4768bd681dc0fd5825abbf57ec42065d40df3a8cb213a977fb109a861d0b9df9"
+    },
+    {
+      "id": "ibchem_part_40f492bb45a7089f",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2022_may_2_78179c5a/crops/question_question_9_v027_p027_01_247d0e2470.png",
+      "sha256": "a525abed2c80f2f5a97519b2ce78f4ae86784a240140742fd9c04a6870c2f1e0"
+    },
+    {
+      "id": "ibchem_part_40f492bb45a7089f",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2022_may_2_78179c5a/crops/question_question_9_v028_p028_02_af0d43ce17.png",
+      "sha256": "7e32a2150ffe519a6b84eec6baa89870dc36d2b5adf1be6e097745e0b1d45bbd"
+    },
+    {
+      "id": "ibchem_part_3f47cf09581cbf5c",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2025_may_2_b520dfea/crops/question_6_c_v018_p018_01_92ae506874.png",
+      "sha256": "73607d12368848087e0da9bb16b6b2c8fba04f620d7d631e43efd7afecfae447"
+    },
+    {
+      "id": "ibchem_part_957e355da5cadc89",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2016_nov_2_6f66c23a/crops/question_11_a_v024_p024_01_cc5b195b34.png",
+      "sha256": "d43d0b29049570427595ebf953f33b73bd029c729cb1521fd3f7fb1ebc4c5d1e"
+    },
+    {
+      "id": "ibchem_part_cac5ad11a50c6ff1",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2015_nov_2_d310a1ba/crops/question_5_a_v010_p010_01_b4cc18475c.png",
+      "sha256": "5bf47a012d31af7d5f7057d9542caac05b869128b19a03161e7b6509baca365e"
+    },
+    {
+      "id": "ibchem_part_4e578a0cd5445014",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2013_nov_3_147ed3fc/crops/question_4_a__i_v006_p006_01_123d5d45ac.png",
+      "sha256": "7c293d9f47c53d4ded97dce8ee2c6c614bdb6cc78c9f5cbfcef28e2a968eb9c1"
+    },
+    {
+      "id": "ibchem_part_19ad3137f24d8b80",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2013_nov_3_147ed3fc/crops/question_4_a__ii_v007_p007_02_5824234e84.png",
+      "sha256": "53121f9839cf17c03fb3169da51e637eff0d72c153659320b7a71f11eb5f67f9"
+    },
+    {
+      "id": "ibchem_part_e4ded8684f171c83",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2012_may_3_0fa2fded/crops/question_b1_b__i_v010_p010_01_603bc543b8.png",
+      "sha256": "990265d23225a90a333ff54ba7adbfaf613d9ee08a098bebd9b8a71d02467c86"
+    },
+    {
+      "id": "ibchem_part_f9c12ce15d0d555e",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2012_may_3_0fa2fded/crops/question_b1_b__ii_v010_p010_01_807f677ea3.png",
+      "sha256": "83cdba5285e9df06768ab08cbb833354c6a36ab88f82d1fd580bde027c4eb4df"
+    },
+    {
+      "id": "ibchem_part_b57d22a7565d808c",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2009_may_3_9b8c5060/crops/question_b1_a_v006_p006_01_12146f3700.png",
+      "sha256": "44b188ca1b8d4828b22c8c326d7c36c7ee7bc9ccddffe273b8a94766869efcb5"
+    },
+    {
+      "id": "ibchem_part_daa367ac7a90bb86",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2005_may_2_c70c7143/crops/question_a4_v010_p010_03_16362cf5bc.png",
+      "sha256": "0b59976afbf730abf731ef086c5cd1b3e21475ed36a6173d8522a28d648d7d69"
+    },
+    {
+      "id": "ibchem_part_19ad3137f24d8b80",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2013_nov_3_147ed3fc/crops/question_4_a__ii_v006_p006_01_421e261e54.png",
+      "sha256": "40a3a1341f264dafdf1d0afeb4f6d45125a1e2ef83cea60ea37ed0ffa5de2e54"
+    },
+    {
+      "id": "ibchem_part_daa367ac7a90bb86",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2005_may_2_c70c7143/crops/question_a4_v008_p008_01_ac5c5bcdc2.png",
+      "sha256": "f4bf21d9958f33c8a5d2d6cee3946df098de9be829c157d55de1bd2213d78f60"
+    },
+    {
+      "id": "ibchem_part_daa367ac7a90bb86",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2005_may_2_c70c7143/crops/question_a4_v009_p009_02_a9105d0fbe.png",
+      "sha256": "d2214d2d53d5159e312dfdfc94cd7701c46ba7f833670dc46f7a5370baa238b2"
+    },
+    {
+      "id": "ibchem_part_3f47cf09581cbf5c",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2025_may_2_b520dfea/crops/question_question_6_v017_p017_01_065a3f79b9.png",
+      "sha256": "23d9100c90cfb753d1016de874fccf023441669dfacba7aeb69d9013ad33def5"
+    },
+    {
+      "id": "ibchem_part_3f47cf09581cbf5c",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2025_may_2_b520dfea/crops/question_question_6_v018_p018_02_481a970bd1.png",
+      "sha256": "68d2c8d85166cf6caa15391d88e52d3037498af0baca930765d62a06af302dbd"
+    },
+    {
+      "id": "ibchem_part_735f31a8386ab7c3",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2009_may_1_a79de822/crops/question_26_v017_p017_01_355ae4a7eb.png",
+      "sha256": "4b3795e68a882e8cc4810f03a6b1a3e0b44b053d55c83f29232936f656ca285c"
+    },
+    {
+      "id": "ibchem_part_cd9a626239859563",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2011_nov_3_b53f4a78/crops/question_b1_b__iii_v008_p008_01_7fdcca51ed.png",
+      "sha256": "940bb822b7e9bb1958d646d7495d0d344eb2160a403af3a25b9481fa3e1006b1"
+    },
+    {
+      "id": "ibchem_part_1ea95804146ce613",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2011_nov_3_b53f4a78/crops/question_b1_b__ii_v008_p008_01_84d12a2985.png",
+      "sha256": "4d6dc7c17abff41676134952de74cda78736b8e08c870ae1769d557e26d08f8f"
+    },
+    {
+      "id": "ibchem_part_aedf0afa8753d139",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2021_may_2_a537f4a7/crops/question_10_a_v025_p025_01_b33e43c469.png",
+      "sha256": "56df4804916b97da4728bf1cd970b7aecd67d1be1b8489b9167422c663b19f83"
+    },
+    {
+      "id": "ibchem_part_b6193b9981dee31b",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2011_may_3_d95726ec/crops/question_b1_a_v006_p006_01_c16efcce6e.png",
+      "sha256": "f27547f7e5128ff452a82d933dc6dda782605fa2ae9b14d8e85afcd885776501"
+    },
+    {
+      "id": "ibchem_part_b80235c452bb93eb",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2004_nov_1_5bc0c286/crops/question_36_v024_p024_01_dc35bd135a.png",
+      "sha256": "ae3a8c0c3dcb7ae7e68099178ae18677233f4601212c896b096a1db29c43597b"
+    },
+    {
+      "id": "ibchem_part_5e382fec0cb3b932",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2014_may_1_74cadd64/crops/question_28_v015_p015_01_8996494a5d.png",
+      "sha256": "83d1d695f10904c22a8541c1b3ef9b047d1bbd22c991fe2440ff28d4863db77b"
+    },
+    {
+      "id": "ibchem_part_249d28b461e22b1b",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2009_nov_1_b579fa42/crops/question_33_v018_p018_01_6e596c3f0d.png",
+      "sha256": "ba8507f963d25ce11ba6ca087d762f718aef7070c65f068b395cb79d672f1c91"
+    },
+    {
+      "id": "ibchem_part_6e076653f7d791b2",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2010_may_3_d1444c7c/crops/question_b1_a_v008_p008_01_6c1fc8b6fb.png",
+      "sha256": "a77947ee34a8b8e09d32164ffae11988e54a637e6a10c364587f3a615a5ccaa7"
+    },
+    {
+      "id": "ibchem_part_f0e3ba3c4046377c",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2025_nov_2_7eaf3631/crops/question_10_a_v025_p025_01_c42807ecc2.png",
+      "sha256": "5a12487658ecd2be05c8f2eeaa0bf770a178769959e4a471cfca4542a787dfd8"
+    },
+    {
+      "id": "ibchem_part_4724b8647908c9e2",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2017_may_1_413ca048/crops/question_39_v019_p019_01_ffd008f97a.png",
+      "sha256": "a8ac5ae258fea0cf9dd8cd218536f8bbc2b27e569f717377a5d84b3ffa103361"
+    },
+    {
+      "id": "ibchem_part_277ad1cba219027c",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2025_may_1a_482eab55/crops/question_35_v022_p022_01_0438d69964.png",
+      "sha256": "33ab2b3482e4a6f1f6374b460d12e1f45e74384b0729663da828adbeefc10f9d"
+    },
+    {
+      "id": "ibchem_part_c96b9537aa6891dd",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2021_nov_1_72c4a06b/crops/question_37_v021_p021_01_1169daf532.png",
+      "sha256": "4a960008f7cf27324fe2185ce1b83a5c76d02fd74fb2db2d984bf3fd6d6a2f78"
+    },
+    {
+      "id": "ibchem_part_45ce0b3855bddbba",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2024_may_1_b48dd705/crops/question_37_v018_p018_01_d1b406a5a4.png",
+      "sha256": "ab8d1f3aa77fcafe4e83d39941d7e1f153dc88f7fb59249fef0c72948861f371"
+    },
+    {
+      "id": "ibchem_part_e02ec29e8e5e7b55",
+      "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2015_may_3_402d4969/crops/question_5_a_v008_p008_01_354b966766.png",
+      "sha256": "f4825e34191a3f4c59d8dc09343cb3f75b14a2ce9da9d5444a2ab6103a73c28a"
+    },
+    {
+      "id": "E2-mini-page-1",
+      "path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/tmp/pdfs/e2-assessment-review/mini-p1.png",
+      "sha256": "8d2abc0f9ffd6ff4e885bab52cbb2f55b5b4551dc22f563f375ac2e39c9e5f4a"
+    },
+    {
+      "id": "E2-mini-page-2",
+      "path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/tmp/pdfs/e2-assessment-review/mini-p2.png",
+      "sha256": "4bc82443d183602dc8caad3929f4064827d1b9704c6434001304c45d19554ce2"
+    },
+    {
+      "id": "E2-mini-page-3",
+      "path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/tmp/pdfs/e2-assessment-review/mini-p3.png",
+      "sha256": "fa2805011f574fee035a3b600b89fae3d97be1a01b37495684964ffa73602991"
+    }
+  ],
+  "additional_images": [
+  {
+    "id": "ibchem_part_cd9a626239859563",
+    "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2011_nov_3_b53f4a78/crops/question_b1_b__iii_v009_p009_02_b01c1135db.png",
+    "sha256": "d73f643f2f21bf4a49c36030c0a46c7e674b55147c54a42acf75aa95ff53a3d3"
+  },
+  {
+    "id": "ibchem_part_e6290f3ca090b95f",
+    "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2024_nov_2_8382de32/crops/question_11_b__i_v025_p025_01_49ed72ac78.png",
+    "sha256": "1927359d92ac6c01c8b7030f464acd0b1ec63497ecdf626c57c2d3ccbee2d1a5"
+  },
+  {
+    "id": "ibchem_part_6800e25356773982",
+    "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2021_may_1_5acb459b/crops/question_38_v019_p019_01_be87d6f17c.png",
+    "sha256": "df74b2719ca35e9afe9eafc16b685458407588d300e0b9fcaeb196b3264880af"
+  },
+  {
+    "id": "ibchem_part_19c71c3466b7b525",
+    "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2012_may_1_ad31971a/crops/question_28_v012_p012_01_e6c614b321.png",
+    "sha256": "c1c9ff7edd7a94d3cfbf4773526d7e3211596eabb3ef20c65711ff893a6578e0"
+  },
+  {
+    "id": "ibchem_part_5da3034704f5ade8",
+    "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2012_may_1_93fa6fdb/crops/question_29_v016_p016_01_521304902c.png",
+    "sha256": "b01e6770a61382968d45c8aa91bcdf1ebdf615bafd6956752e782691f050a930"
+  },
+  {
+    "id": "ibchem_part_28f05df6a7f9eded",
+    "path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2010_nov_1_7ac272de/crops/question_32_v018_p018_01_49399b9baf.png",
+    "sha256": "040e289a3c2e8ec185cf74f57a4e8da751d3cd2a46c8f0c2f043813e761e2647"
+  }
+]
+}

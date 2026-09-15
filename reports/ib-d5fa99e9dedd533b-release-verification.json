@@ -1,0 +1,48 @@
+{
+  "build_id": "d5fa99e9dedd533b",
+  "commit": "d3195abc9940e3bbb63ad47d5ffd67a9eed9e55e",
+  "release_directory": "dist/ibphysics-release/d5fa99e9dedd533b-1789317749324",
+  "result": "PASS",
+  "full_release_suite": {
+    "session_id": 73028,
+    "exit_code": 0,
+    "checks": 33,
+    "mcqs": 252,
+    "fresh_keyboard_journeys": 2016,
+    "reused_keyboard_journeys": 0
+  },
+  "focused_checks": {
+    "e_topic_browser_fixtures": 8,
+    "e_merge": 10,
+    "e_original_part_order": 5,
+    "global_assessment_reports": 6,
+    "e2_assessment_review": 6,
+    "reporting": 12,
+    "filters": 7,
+    "chooser": 14,
+    "isolated_staging": 18
+  },
+  "parts": 543,
+  "public_images": 1316,
+  "prepublication_fingerprints_rechecked": 3406,
+  "live_verification": {
+    "path": "dist/physics-audit/ib-a5-live-verification.json",
+    "checked_at": "2026-09-13T16:53:59.601Z",
+    "files": 22,
+    "github_pages_exact_commit_built": true,
+    "public_topic_chooser_visually_checked": true
+  },
+  "browser_test_record": "reports/ib-d5fa99e9dedd533b-browser-check.json",
+  "independent_public_browser_check": {
+    "result": "PASS",
+    "reviewer_task": "01a08c57-2f45-7bd0-a2ad-21d12b5c4132",
+    "checks": ["Both public E topic cards and type selectors", "E1 Q4(a) visible answer-free scope note and corrected a/b chips", "E1 question/context and full-size markscheme", "E2 Q7(b) current HL and ordered chips", "E2 question/context and both markscheme images"],
+    "grades_attempts_or_feedback_submitted": false
+  },
+  "media_sample_record": "reports/ib-e1-e2-final-media-sample-review.json",
+  "media_sample_scope": "16 retained E parts, including all six mixed notes and all seven retained 2025 parts. Later ordering correction preserved source fields, keys and crop arrays exactly.",
+  "reporting_receipt": "dist/physics-audit/ibphysics-reporting-sheet-readback.json",
+  "no_historical_attempts_uploaded": true,
+  "no_new_production_test_attempts_submitted": true,
+  "identity_helper_version": 1
+}

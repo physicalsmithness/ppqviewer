@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "course": "ib",
+  "topic": "A.5",
+  "review_scope": "Only these four source-ID bound MCQ answers have been visually verified. Answer metadata cannot expand the served selection or override assessment, source-year, topic or crop exclusions.",
+  "presentation_corrections": {
+    "ibchem_part_400ccd640c974718": {
+      "source_part_id": "ibchem_part_400ccd640c974718",
+      "part_id": "25M.P2.HL.TZ1.Q7(a_ii)",
+      "preview": "ib_physics_2025_may_2_22756acd",
+      "question_metadata": {
+        "path": "outputs/previews/ib_physics_2025_may_2_22756acd/question_preview.json",
+        "sha256": "5e9b78794a73ba2dca6ae9bb971bdb5a4458d1ebb739c7b3e23cbe97958a6e80"
+      },
+      "current_prompt_crop": {
+        "path": "outputs/previews/ib_physics_2025_may_2_22756acd/crops/question_7_a__ii_v015_p015_01_36de80b6aa.png",
+        "sha256": "3c30fe675924b74dee1fc60868f1e55f11a27751200e91fc5c80a6a26707f544"
+      },
+      "context_only_crop": {
+        "filename": "question_7_a__ii_v016_p016_02_ff12c0e326.png",
+        "path": "outputs/previews/ib_physics_2025_may_2_22756acd/crops/question_7_a__ii_v016_p016_02_ff12c0e326.png",
+        "sha256": "5446b423d7e393f545eed6b55b9b5a13b7e867295fbc5ca617f3e980d6d534b1"
+      },
+      "whole_question_evidence_crop": {
+        "path": "outputs/previews/ib_physics_2025_may_2_22756acd/crops/question_question_7_v016_p016_02_0787712f11.png",
+        "sha256": "6502e4514480d5ff87be3ae1e2f0ac866b3f857cb105b5ce94afda3d6a60fde2"
+      },
+      "evidence": "Visually verified 2026-09-12: page15 focused crop contains the complete one-mark (a)(ii) invariant-definition prompt. The page16 focused crop contains only the following-part introduction (events P and Q simultaneous in S-prime; clocks synchronized). The whole-question page16 crop places this introduction immediately before (b)(i) and (b)(ii). Move the unchanged page16 crop to labelled context; retain page15 as the current prompt. No image edits or asset additions."
+    }
+  },
+  "parts": {
+    "ibchem_part_7d8ed9f4f8bd7ff9": {
+      "correct_option": "B",
+      "year": "2025",
+      "session": "May",
+      "level": "HL",
+      "time_zone": "TZ1",
+      "paper": "1A",
+      "question_number": "9",
+      "preview": "ib_physics_2025_may_1a_482eab55",
+      "question_source": {
+        "path": "IB Papers and MS/exam_papers/may_25/files and resources/Experimental sciences/Physics_paper_1A_TZ1_HL.pdf",
+        "sha256": "a5346dbdcaccd5edf988febf26f8ea753fee34d7480179dcd6fc034189348fc2"
+      },
+      "markscheme_source": {
+        "path": "IB Papers and MS/exam_papers/may_25/files and resources/Experimental sciences/Physics_paper_1A_TZ1_HL_markscheme.pdf",
+        "sha256": "7d8f3a33f58d9646e4c548732e07d85d269bcebdf18182fb083cb6bd8ced575f"
+      },
+      "question_metadata": {
+        "path": "outputs/previews/ib_physics_2025_may_1a_482eab55/question_preview.json",
+        "sha256": "b00f410119d13972c8655613024e781853efcc72b795884b7d559574076da79f"
+      },
+      "markscheme_metadata": {
+        "path": "outputs/previews/ib_physics_2025_may_1a_482eab55/mark_scheme_preview.json",
+        "sha256": "5a1ccd9fa5824515e10483784347486a6b8339d2e9ba5c2d1d975a283bcc253b"
+      },
+      "question_crops": [
+        {
+          "path": "outputs/previews/ib_physics_2025_may_1a_482eab55/crops/question_9_v006_p006_01_8873a46714.png",
+          "sha256": "f3d6b94ee877485f8c2312c6792385af58b0da3896eabbf4a24f2838c98dca7f"
+        }
+      ],
+      "markscheme_crops": [
+        {
+          "path": "outputs/previews/ib_physics_2025_may_1a_482eab55/crops/mark_scheme_9_v003_p003_01_f3157ea857.png",
+          "sha256": "af0a9d67bad6e3c9886bc56ea3254d94c44fb115cea52a56a5c3443e17939933"
+        }
+      ],
+      "markscheme_entry": {
+        "question_number": "9",
+        "source_lines": [
+          "9.",
+          "B"
+        ],
+        "answer_text": "Answer: B",
+        "page_start": 3,
+        "page_end": 3
+      },
+      "visual_review": {
+        "reviewed_on": "2026-09-12",
+        "question_options_complete": true,
+        "printed_scheme_verified": true,
+        "evidence": "The printed options show B = 0.80c; the source scheme crop explicitly prints 9. B."
+      }
+    },
+    "ibchem_part_2a6a6d65a4fbca3a": {
+      "correct_option": "B",
+      "year": "2025",
+      "session": "May",
+      "level": "HL",
+      "time_zone": "TZ3",
+      "paper": "1A",
+      "question_number": "9",
+      "preview": "ib_physics_2025_may_1a_db92c33d",
+      "question_source": {
+        "path": "IB Papers and MS/exam_papers/may_25/files and resources/Experimental sciences/Physics_paper_1A_TZ3_HL.pdf",
+        "sha256": "01137f4e43544f8cca3407aca1f1ff8d63385b96d352b931e504857cc52f3eb3"
+      },
+      "markscheme_source": {
+        "path": "IB Papers and MS/exam_papers/may_25/files and resources/Experimental sciences/Physics_paper_1A_TZ3_HL_markscheme.pdf",
+        "sha256": "b0dcc85fe388fd13451d510563053c2225e8eea3c523250cb171d8a223ced819"
+      },
+      "question_metadata": {
+        "path": "outputs/previews/ib_physics_2025_may_1a_db92c33d/question_preview.json",
+        "sha256": "dc5525453799699ab62f401428c9fa385942d83d773a833ad4b6c9cce467178c"
+      },
+      "markscheme_metadata": {
+        "path": "outputs/previews/ib_physics_2025_may_1a_db92c33d/mark_scheme_preview.json",
+        "sha256": "738e76dcc77adcbb1351e8a5903e5af6f685aacb6b6784b975c38148a4abc5c4"
+      },
+      "question_crops": [
+        {
+          "path": "outputs/previews/ib_physics_2025_may_1a_db92c33d/crops/question_9_v006_p006_01_836bc78b4a.png",
+          "sha256": "bdc076a17b175d5884a408be688d470749d2121915ed8d5b5b93cb81c8538ef9"
+        }
+      ],
+      "markscheme_crops": [
+        {
+          "path": "outputs/previews/ib_physics_2025_may_1a_db92c33d/crops/mark_scheme_9_v003_p003_01_25c1cb4381.png",
+          "sha256": "713e800e1af193f6e44519fc398e4572c1ed81e948d183a80afa9fe36ade1d11"
+        }
+      ],
+      "markscheme_entry": {
+        "question_number": "9",
+        "source_lines": [
+          "9.",
+          "B"
+        ],
+        "answer_text": "Answer: B",
+        "page_start": 3,
+        "page_end": 3
+      },
+      "visual_review": {
+        "reviewed_on": "2026-09-12",
+        "question_options_complete": true,
+        "printed_scheme_verified": true,
+        "evidence": "The printed options show B = 5.0s; the source scheme crop explicitly prints 9. B."
+      }
+    },
+    "ibchem_part_bd57ab66352d4fbd": {
+      "correct_option": "B",
+      "year": "2025",
+      "session": "Nov",
+      "level": "HL",
+      "time_zone": "TZ3",
+      "paper": "1A",
+      "question_number": "8",
+      "preview": "ib_physics_2025_nov_1a_6d4c9d99",
+      "question_source": {
+        "path": "IB Papers and MS/exam_papers/nov_25/files and resources/Experimental sciences/Physics_paper_1A_TZ3_HL.pdf",
+        "sha256": "431f3df5dbd9b6387e35400954671d0263bf389ffabb6200657001dd88da4a79"
+      },
+      "markscheme_source": {
+        "path": "IB Papers and MS/exam_papers/nov_25/files and resources/Experimental sciences/Physics_paper_1A_TZ3_HL_markscheme.pdf",
+        "sha256": "ab96434b8dc1296e310c846758edc76abf9df8f675f3b025375da6ccecfc8231"
+      },
+      "question_metadata": {
+        "path": "outputs/previews/ib_physics_2025_nov_1a_6d4c9d99/question_preview.json",
+        "sha256": "37cafa5bc104bb15f2b1605f4b79020832ef2e9ed67566a0ebc5a26d79404007"
+      },
+      "markscheme_metadata": {
+        "path": "outputs/previews/ib_physics_2025_nov_1a_6d4c9d99/mark_scheme_preview.json",
+        "sha256": "6ced64dc7487bba6416ec90d428e7403c9562d5d7dbf1d4353f1bdea2685a6ab"
+      },
+      "question_crops": [
+        {
+          "path": "outputs/previews/ib_physics_2025_nov_1a_6d4c9d99/crops/question_8_v006_p006_01_7877e164d0.png",
+          "sha256": "bf11bf1b969b97ad81a52638fb6eb725d58b4eeec5f199ec97a15181ccb6223a"
+        }
+      ],
+      "markscheme_crops": [
+        {
+          "path": "outputs/previews/ib_physics_2025_nov_1a_6d4c9d99/crops/mark_scheme_8_v003_p003_01_0a0c09f006.png",
+          "sha256": "d5d8bb689a0ead9a93f90970361e14e9bee82fae8b12ded94fb1c8dbb92b35d1"
+        }
+      ],
+      "markscheme_entry": {
+        "question_number": "8",
+        "source_lines": [
+          "8.",
+          "B"
+        ],
+        "answer_text": "Answer: B",
+        "page_start": 3,
+        "page_end": 3
+      },
+      "visual_review": {
+        "reviewed_on": "2026-09-12",
+        "question_options_complete": true,
+        "printed_scheme_verified": true,
+        "evidence": "The complete printed graph labels A-D and contains all four worldlines. B reaches approximately x=-2km at ct=2.5km; the source scheme crop explicitly prints 8. B."
+      }
+    },
+    "ibchem_part_4f64ee713b670bf3": {
+      "correct_option": "A",
+      "year": "2025",
+      "session": "Nov",
+      "level": "HL",
+      "time_zone": "TZ3",
+      "paper": "1A",
+      "question_number": "9",
+      "preview": "ib_physics_2025_nov_1a_6d4c9d99",
+      "question_source": {
+        "path": "IB Papers and MS/exam_papers/nov_25/files and resources/Experimental sciences/Physics_paper_1A_TZ3_HL.pdf",
+        "sha256": "431f3df5dbd9b6387e35400954671d0263bf389ffabb6200657001dd88da4a79"
+      },
+      "markscheme_source": {
+        "path": "IB Papers and MS/exam_papers/nov_25/files and resources/Experimental sciences/Physics_paper_1A_TZ3_HL_markscheme.pdf",
+        "sha256": "ab96434b8dc1296e310c846758edc76abf9df8f675f3b025375da6ccecfc8231"
+      },
+      "question_metadata": {
+        "path": "outputs/previews/ib_physics_2025_nov_1a_6d4c9d99/question_preview.json",
+        "sha256": "37cafa5bc104bb15f2b1605f4b79020832ef2e9ed67566a0ebc5a26d79404007"
+      },
+      "markscheme_metadata": {
+        "path": "outputs/previews/ib_physics_2025_nov_1a_6d4c9d99/mark_scheme_preview.json",
+        "sha256": "6ced64dc7487bba6416ec90d428e7403c9562d5d7dbf1d4353f1bdea2685a6ab"
+      },
+      "question_crops": [
+        {
+          "path": "outputs/previews/ib_physics_2025_nov_1a_6d4c9d99/crops/question_9_v006_p006_01_3cd1e3a50a.png",
+          "sha256": "de3b3a1526ff3669d0d15200d0a7a3f50bfcaedfcc0dc657f1e5ca699cf77ceb"
+        }
+      ],
+      "markscheme_crops": [
+        {
+          "path": "outputs/previews/ib_physics_2025_nov_1a_6d4c9d99/crops/mark_scheme_9_v003_p003_01_3792080779.png",
+          "sha256": "60fe31ae57d7ddf8e83e5c9be9aa0bd61d9f2103636221600c5ba875d5d347c3"
+        }
+      ],
+      "markscheme_entry": {
+        "question_number": "9",
+        "source_lines": [
+          "9.",
+          "A"
+        ],
+        "answer_text": "Answer: A",
+        "page_start": 3,
+        "page_end": 3
+      },
+      "visual_review": {
+        "reviewed_on": "2026-09-12",
+        "question_options_complete": true,
+        "printed_scheme_verified": true,
+        "evidence": "The printed fraction options show A = 3/5; the source scheme crop explicitly prints 9. A."
+      }
+    }
+  }
+}

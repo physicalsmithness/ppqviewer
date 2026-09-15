@@ -1,0 +1,499 @@
+{
+  "schema_version": 1,
+  "topics": [
+    "E.1",
+    "E.2"
+  ],
+  "reviewed_on": "2026-09-13",
+  "review_kind": "Independent bounded final source-media sample; not full visual proofreading",
+  "review_complete": true,
+  "source_clearance": {
+    "path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/reports/ib-e1-e2-release-clearance.json",
+    "sha256": "a8cc68a1573c203a6ad23277e0cd2a1376f41532b68a58a8351393c43b5ae645"
+  },
+  "counts": {
+    "retained_parts": 94,
+    "retained_source_assets": 243,
+    "sampled_parts": 16,
+    "sampled_asset_paths": 41,
+    "sampled_distinct_image_bytes": 39,
+    "all_mixed_note_parts": 6,
+    "all_retained_2025_parts": 7
+  },
+  "selection": "All retained parts with practice_scope_notes; every retained 2025 E part; both retained leaves of 2023 Nov SL P2 Q4 and 2021 May HL P2 Q10.",
+  "metadata_verification": {
+    "clearance_sha256": "a8cc68a1573c203a6ad23277e0cd2a1376f41532b68a58a8351393c43b5ae645",
+    "parts": 94,
+    "keys_checked": 54,
+    "key_issues": [],
+    "assets_checked": 243,
+    "asset_hash_mismatches": []
+  },
+  "findings": [
+    {
+      "severity": "minor_source_layout",
+      "source_part_id": "ibchem_part_056205e92f7226d7",
+      "parent_id": "21M.P2.HL.TZ1.Q10",
+      "roles": [
+        "question",
+        "context"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\question_10_c_v026_p026_01_e38e4c87dc.png",
+          "sha256": "47acd11c9fafee2b73d1f201441040e66df33bea4a3295c70da173a26b74d421"
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\question_question_10_v026_p026_02_b851c4b006.png",
+          "sha256": "47acd11c9fafee2b73d1f201441040e66df33bea4a3295c70da173a26b74d421"
+        }
+      ],
+      "reason": "The final-paper crop retains substantial empty page area and a partly cropped References footer. The requested part and its answer are complete; no missing diagram/options or assessment exposure was identified.",
+      "disposition": "No source change or new hold; optional future source-crop cleanup."
+    },
+    {
+      "severity": "minor_adjacent_row_fragment",
+      "source_part_id": "ibchem_part_4b3ba90b7b2b590c",
+      "parent_id": "23N.P2.SL.TZ1.Q4",
+      "role": "markscheme",
+      "evidence": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2023_nov_2_94624175\\crops\\mark_scheme_4_b_v010_p010_01_afb18f88a4.png",
+          "sha256": "7f6096a1e929eb626921d57f9d5a94e23ee674e2cca7f869fb4be1ae32590217"
+        }
+      ],
+      "reason": "A clipped trailing line from the preceding (a) answer appears above the complete (b) row. Both source parts are retained; the intended three-mark answer is complete. The fragment is in the revealed scheme, not the public scope notes.",
+      "disposition": "No new assessment hold; optional future source-crop cleanup."
+    },
+    {
+      "severity": "context_dependency_verified",
+      "source_part_ids": [
+        "ibchem_part_8038ee395e8b43da",
+        "ibchem_part_a876d4e961e9fe62"
+      ],
+      "reason": "The focused electron-capture prompt crops end before the printed fill-in equation. The mandatory visible whole-question context contains the complete equation, all data, and correctly labelled continuation. Keep context visible for these parts.",
+      "disposition": "Complete as projected with mandatory context; no isolated focused-only presentation certification."
+    }
+  ],
+  "blocking_findings": [],
+  "checks": [
+    "All nine sampled MCQs show all options and agree with the photographed source key.",
+    "All six scope-note texts were read: no answer, local path, pupil identity or assessment-exclusion disclosure was found.",
+    "All sampled written prompts, diagrams and target markscheme rows are legible and complete when their projected context is included.",
+    "Current helper preparation retained94 parts; all54 retained extracted MCQ keys independently rechecked against source rows and original key metadata; all243 distinct retained source asset paths match clearance hashes."
+  ],
+  "sampled_parts": [
+    {
+      "id": "21M.P2.HL.TZ1.Q10(c)",
+      "source_part_id": "ibchem_part_056205e92f7226d7",
+      "topic_codes": [
+        "E.2"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": null,
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\question_10_c_v026_p026_01_e38e4c87dc.png",
+          "sha256": "47acd11c9fafee2b73d1f201441040e66df33bea4a3295c70da173a26b74d421"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\question_question_10_v025_p025_01_5cc6e23158.png",
+          "sha256": "ea871dbce0e26bf04d4901f7f4a117ef1b140742841f56e73e08753ed64579bd"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\question_question_10_v026_p026_02_b851c4b006.png",
+          "sha256": "47acd11c9fafee2b73d1f201441040e66df33bea4a3295c70da173a26b74d421"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\mark_scheme_10_c_v017_p017_01_c3ced9e2fa.png",
+          "sha256": "1a075675aecaf76ee93125f6f5ac4b4d6961d315108ea83ed3a1a602005413fb"
+        }
+      ]
+    },
+    {
+      "id": "21M.P2.HL.TZ1.Q10(a)",
+      "source_part_id": "ibchem_part_aedf0afa8753d139",
+      "topic_codes": [
+        "E.2"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": null,
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\question_10_a_v025_p025_01_b33e43c469.png",
+          "sha256": "56df4804916b97da4728bf1cd970b7aecd67d1be1b8489b9167422c663b19f83"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\question_question_10_v025_p025_01_5cc6e23158.png",
+          "sha256": "ea871dbce0e26bf04d4901f7f4a117ef1b140742841f56e73e08753ed64579bd"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\question_question_10_v026_p026_02_b851c4b006.png",
+          "sha256": "47acd11c9fafee2b73d1f201441040e66df33bea4a3295c70da173a26b74d421"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_a537f4a7\\crops\\mark_scheme_10_a_v017_p017_01_5a4732adce.png",
+          "sha256": "9045ae8837595606ff64d6db1bc9b9603dd2f77584e445dfd49ab169afa9eb44"
+        }
+      ]
+    },
+    {
+      "id": "25N.P1A.SL.TZ1.Q22(whole)",
+      "source_part_id": "ibchem_part_1fe90fa73558e9e6",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [
+        "E1 focus: nuclear notation and proton/nucleon numbers. This question also uses radioactive-decay physics."
+      ],
+      "correct_option": "C",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_1a_2ce632be\\crops\\question_22_v013_p013_01_818767b474.png",
+          "sha256": "964016bc0e77ef94be7b8505de5fe22db212daee4949a8fb02a74d2b37026d68"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_1a_2ce632be\\crops\\mark_scheme_22_v003_p003_01_af0235b292.png",
+          "sha256": "a892db83001797bff45e675a49c43ea8d696c7deff7ab486acf19d2ed724bf8e"
+        }
+      ]
+    },
+    {
+      "id": "25M.P1A.HL.TZ1.Q35(whole)",
+      "source_part_id": "ibchem_part_277ad1cba219027c",
+      "topic_codes": [
+        "E.2"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": "A",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_482eab55\\crops\\question_35_v022_p022_01_0438d69964.png",
+          "sha256": "33ab2b3482e4a6f1f6374b460d12e1f45e74384b0729663da828adbeefc10f9d"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_482eab55\\crops\\mark_scheme_35_v003_p003_01_59620a8d5d.png",
+          "sha256": "4a1d18af5b7a9405922ae6f3179cb745a622f0e207368b284216719228c90580"
+        }
+      ]
+    },
+    {
+      "id": "25M.P1A.HL.TZ1.Q32(whole)",
+      "source_part_id": "ibchem_part_3867d312a2d82484",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": "A",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_482eab55\\crops\\question_32_v020_p020_01_fa2b6f8495.png",
+          "sha256": "90325a845e49db9d02582f59fbc37370a1521ade00565ee65e5c8ae9e0b2d685"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_482eab55\\crops\\mark_scheme_32_v003_p003_01_f8b3a94ac6.png",
+          "sha256": "7a3929ca297fa31b3ba2392a6467ad48ecb6fc291fa89173b5624971a4a77fc5"
+        }
+      ]
+    },
+    {
+      "id": "25N.P2.HL.TZ1.Q6(b_ii)",
+      "source_part_id": "ibchem_part_3e326978db2908c9",
+      "topic_codes": [
+        "E.2"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": null,
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_2_ad40a7d0\\crops\\question_6_b__ii_v013_p013_01_924f796a2e.png",
+          "sha256": "b282821fe74185d812532bfaf34bcefb5bb94e8a41014162537aa9efd778faeb"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_2_ad40a7d0\\crops\\question_question_6_v013_p013_01_aaa7393624.png",
+          "sha256": "cb0f6a5f51e34fb644595925e1faf68b8102c2ed19881afb028840bc3ffcc49a"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_2_ad40a7d0\\crops\\question_question_6_v014_p014_02_10002cdbed.png",
+          "sha256": "231b86d9fed18a5db15c1cc2e057e9f140f8ae288991da02e3c82140c81e2136"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_2_ad40a7d0\\crops\\mark_scheme_6_b__ii_v013_p013_01_e4caa49bc6.png",
+          "sha256": "aa7f16763d03d300268058720eb8a9551e31a1d14d96d4d5c30e460de9722bed"
+        }
+      ]
+    },
+    {
+      "id": "23N.P2.SL.TZ1.Q4(b)",
+      "source_part_id": "ibchem_part_4b3ba90b7b2b590c",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": null,
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2023_nov_2_94624175\\crops\\question_4_b_v014_p014_01_609d7df1da.png",
+          "sha256": "be95154bf4640feca28abb97f646dbb926d221b699720d1f9d76c9ee2036559e"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2023_nov_2_94624175\\crops\\question_question_4_v014_p014_01_542fb32425.png",
+          "sha256": "f542c72a50f34e240678aebce90b0c0a6213e1aac2ad80154db059602b12bc44"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2023_nov_2_94624175\\crops\\mark_scheme_4_b_v010_p010_01_afb18f88a4.png",
+          "sha256": "7f6096a1e929eb626921d57f9d5a94e23ee674e2cca7f869fb4be1ae32590217"
+        }
+      ]
+    },
+    {
+      "id": "23N.P2.SL.TZ1.Q4(a)",
+      "source_part_id": "ibchem_part_5210003e904e8ee5",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": null,
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2023_nov_2_94624175\\crops\\question_4_a_v014_p014_01_0bd658950b.png",
+          "sha256": "7d954b672f6863228e786e1c808aa9dc20d9dd8ce6f7194bf5657083b72d383a"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2023_nov_2_94624175\\crops\\question_question_4_v014_p014_01_542fb32425.png",
+          "sha256": "f542c72a50f34e240678aebce90b0c0a6213e1aac2ad80154db059602b12bc44"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2023_nov_2_94624175\\crops\\mark_scheme_4_a_v010_p010_01_d4a45ff026.png",
+          "sha256": "1204107b0d4e2de526a9786ff307cfd195393ee6a43df1d16cd8791a55cba8fa"
+        }
+      ]
+    },
+    {
+      "id": "25N.P1A.HL.TZ3.Q36(whole)",
+      "source_part_id": "ibchem_part_6f7d53b88d33ab29",
+      "topic_codes": [
+        "E.2"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": "D",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_1a_6d4c9d99\\crops\\question_36_v019_p019_01_664ba1101b.png",
+          "sha256": "d76d3976a56f7477a4eb72b7e85b4e67acf2e3433a30374efa0f73882a449774"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_1a_6d4c9d99\\crops\\mark_scheme_36_v003_p003_01_88e1c453a3.png",
+          "sha256": "2de14ef4731a7631bd10f1324c74779782a478608fe140b73c4dbc1df5470029"
+        }
+      ]
+    },
+    {
+      "id": "11M.P1.SL.TZ2.Q24(whole)",
+      "source_part_id": "ibchem_part_736cf82aead7d8c7",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [
+        "Selected for its E1 nuclear-notation component within a supplied nuclear reaction."
+      ],
+      "correct_option": "B",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2011_may_1_d7eeb565\\crops\\question_24_v013_p013_01_29afef0ff1.png",
+          "sha256": "bf8329f2533bc101d2b9f2eb0141365728490ba81b6c994a1082f67e48bfa189"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2011_may_1_d7eeb565\\crops\\mark_scheme_24_v002_p002_01_15ecfcdcd4.png",
+          "sha256": "c1ff039349f2286193ef6737f5213ba3797c246a187942fd606465ff98ff2d73"
+        }
+      ]
+    },
+    {
+      "id": "05N.P1.HL.TZ0.Q34(whole)",
+      "source_part_id": "ibchem_part_73e025be72dc5775",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [
+        "E1 focus: nuclear notation and proton/nucleon numbers in the supplied nuclear reaction."
+      ],
+      "correct_option": "A",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_nov_1_44403951\\crops\\question_34_v020_p020_01_a89b328807.png",
+          "sha256": "6758fc619fa796cf37723f20032e7a8cc64fb968073f0d6b7facdadf05558bdb"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_nov_1_44403951\\crops\\mark_scheme_34_v002_p002_01_6ca0505a03.png",
+          "sha256": "18d7a4df9435cedaf2a391be7a422d1ee2ceba1f9eed87762e89253d74a27dbe"
+        }
+      ]
+    },
+    {
+      "id": "21M.P2.SL.TZ2.Q4(a)",
+      "source_part_id": "ibchem_part_8038ee395e8b43da",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [
+        "Mixed-topic question: selected for E1 nuclear notation. The full decay equation also tests ideas beyond E1."
+      ],
+      "correct_option": null,
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_4eafafd2\\crops\\question_4_a_v009_p009_01_0adc6e187a.png",
+          "sha256": "4ff0446d6856eb1bca7d95cb7f3254ed48932a3073c8787137be8f097c5aa58f"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_4eafafd2\\crops\\question_question_4_v009_p009_01_eba310baaa.png",
+          "sha256": "08bb7470b6f3186775f02334184f396820427b490df337f60f273b933678e0fc"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_4eafafd2\\crops\\question_question_4_v010_p010_02_427ae2c492.png",
+          "sha256": "1da6fd613281dba3ba9a82d50baf90193c439ec23f30088ab9aa6af027622000"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_4eafafd2\\crops\\mark_scheme_4_a_v007_p007_01_28e31f0fc2.png",
+          "sha256": "5308a0aa630286df457b710de7ea42763d347e95eed48915ce38a870523ef59b"
+        }
+      ]
+    },
+    {
+      "id": "21M.P2.HL.TZ2.Q4(a_i)",
+      "source_part_id": "ibchem_part_a876d4e961e9fe62",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [
+        "Mixed-topic question: selected for E1 nuclear notation. The full decay equation also tests ideas beyond E1."
+      ],
+      "correct_option": null,
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_aa38efd7\\crops\\question_4_a__i_v011_p011_01_0b6119fca9.png",
+          "sha256": "71c3e50bc29b054946ad6d07cb9762642018f95be67a5afbb5f0fc5acb8c72a4"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_aa38efd7\\crops\\question_question_4_v011_p011_01_186c13b0f7.png",
+          "sha256": "86b35b600ec9333984a0eff074219b54f04fa39484bfb349fc5939323fd77d49"
+        },
+        {
+          "role": "context",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_aa38efd7\\crops\\question_question_4_v012_p012_02_ac4949848a.png",
+          "sha256": "1da6fd613281dba3ba9a82d50baf90193c439ec23f30088ab9aa6af027622000"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2021_may_2_aa38efd7\\crops\\mark_scheme_4_a__i_v008_p008_01_2ca0f4571b.png",
+          "sha256": "21f424937ba7e3c8b3cc8fe8d0a5487fd25f9a3e5c7d43c8377d8d6dfc7cb3ce"
+        }
+      ]
+    },
+    {
+      "id": "25N.P1A.HL.TZ1.Q38(whole)",
+      "source_part_id": "ibchem_part_ca4bd8608dd6c151",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": "B",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_1a_4747671b\\crops\\question_38_v023_p023_01_f8767dd8eb.png",
+          "sha256": "f63d22e7858de6f910907d030ec764d9d1b9394a13fd31408764fbfe88ace981"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_nov_1a_4747671b\\crops\\mark_scheme_38_v003_p003_01_c852618b3a.png",
+          "sha256": "6ff66caddd9e2a662af87be650007c872af40fdc3dc1e2520ff5bc2ddde358e0"
+        }
+      ]
+    },
+    {
+      "id": "05N.P1.SL.TZ0.Q29(whole)",
+      "source_part_id": "ibchem_part_e617003993a6b5e3",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [
+        "E1 focus: nuclear notation and proton/nucleon numbers in the supplied nuclear reaction."
+      ],
+      "correct_option": "A",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_nov_1_49c0d917\\crops\\question_29_v018_p018_01_f49fc2cbb9.png",
+          "sha256": "5a4926087a2f0640fc5073e0e3be56ea04cae0caf72a21bf921fdac02aecdb5b"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_nov_1_49c0d917\\crops\\mark_scheme_29_v002_p002_01_1353d1fd00.png",
+          "sha256": "6c4f6a3322a2f11d07b5f7d800fc36604ab48b43dbf972cf3ee73623bb4f03fe"
+        }
+      ]
+    },
+    {
+      "id": "25M.P1A.SL.TZ1.Q22(whole)",
+      "source_part_id": "ibchem_part_fafd136c321ef49a",
+      "topic_codes": [
+        "E.1"
+      ],
+      "practice_scope_notes": [],
+      "correct_option": "A",
+      "assets": [
+        {
+          "role": "question",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_5633f8c2\\crops\\question_22_v014_p014_01_bf893343c0.png",
+          "sha256": "e4615f6882f48868e047ddc67be2c6335e5826705f1ed5f257a0663758cf588b"
+        },
+        {
+          "role": "markscheme",
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_5633f8c2\\crops\\mark_scheme_22_v003_p003_01_5340aea60c.png",
+          "sha256": "efaed7852dce0a00fa14c10104614ed36c651439a23d8dc8dc5a3fb739bbb07d"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "This sample does not replace fixed-scope assessment review or full-corpus parent/twin/page/geometry checks.",
+    "No source crop, input, clearance, learner progress or public deployment was changed."
+  ]
+}

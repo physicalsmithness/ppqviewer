@@ -1,3 +1,335 @@
+## 2026-09-14: “also studied” co-strand panel (QoderWork)
+
+A part that belongs to more than one topic now says so on the question card,
+main strand first. Smith reached the 2014 November Paper 3 HL Q16(a)
+simultaneity part through A1 Kinematics and objected that “A1 is obviously such
+a minor part of this”: the tags row listed A5 and A1 as equal chips with no
+hierarchy. The card now carries a dedicated `.ppq-also-studied` panel above the
+source advisory. For Q16(a) it reads “This part is studied in 2 topics — Main:
+A5 Galilean and special relativity · A5.9 Simultaneity and signal order; Also:
+A1 Kinematics · Close the journey bookkeeping.” `topic_codes[0]` is the primary
+strand (the same one `groupKey` uses for progress); each strand shows the family
+descriptor the reviewed analysis attached to that topic, falling back to the
+atom label, then to the bare topic name.
+
+The panel is a new optional engine hook, `alsoStudiedOf(q)`, rendered by
+`_renderAlsoStudied`. It is DOM-inert for every consumer that does not supply
+it: the element is only created when `cfg.alsoStudiedOf` is a function, so the
+economics, chemistry, ESAT and single-topic physics cards are byte-for-byte
+unchanged. It deliberately does not use the `.ppq-notice` channel, preserving
+the existing contract that only reviewed practice-focus notes appear there.
+`analysisValuesForTopic` was refactored onto a shared `entryInTopic` matcher so
+the panel’s descriptors use exactly the filters’ topic-attribution rule.
+
+Bundle `e56bf638d0332e3e` assembles with the same 543 served parts and
+per-topic counts as `9392e1ca48403a54`; only the viewer code changed. The full
+release suite passed 33 checks, 252 MCQs and 2,016 fresh keyboard journeys;
+`test_physics` (99), `test_physics_e_topics` (9, including a new co-strand
+assertion) and every other physics and shared-engine consumer suite passed.
+
+Publication receipt: bundle `e56bf638d0332e3e` was staged into
+`deploy/ibphysicsppqs` and pushed as commit
+`4e6ee94c8e599da9aa6a5b0e22a6eb490a19edd1` on `main`. GitHub Pages served the
+new build, and live byte verification against
+`https://physicalsmithness.github.io/ibphysicsppqs/` PASSED at
+`2026-09-14T21:04:28.843Z`: 22 public files matched the published commit,
+build-info reports build `e56bf638d0332e3e` with 543 parts, and per-topic
+counts are unchanged (A.1 149/128, A.5 138/138, C.1 25/7, D.2 146/146,
+E.1 55/55, E.2 39/39). Only the viewer engine, its stylesheet and the physics
+consumer changed; the served part set is identical to `9392e1ca48403a54`.
+
+## 2026-09-14: IB Physics leads the public title (QoderWork)
+
+The practice viewer is now titled “IB Physics past-paper question viewer”: the
+course leads the title and “past-paper” is hyphenated, in the desktop title,
+the topic-home heading, the header home link and its aria-label, the release
+metadata and the IB config title. The now-redundant standalone “IB Physics”
+course line is gone from the topic home; its bottom spacing moved onto the
+heading so the chooser rhythm is unchanged. Consumer tests assert the new
+title. Local release bundle `9392e1ca48403a54` assembles and validates with
+the same 543 served parts and per-topic counts as before.
+
+Publication receipt: bundle `9392e1ca48403a54` was staged into
+`deploy/ibphysicsppqs` and pushed as commit
+`615a60af413b92a4672764e66cf34d3968f64421` on `main`. GitHub Pages reported
+that exact commit `built`. Live byte verification against
+`https://physicalsmithness.github.io/ibphysicsppqs/` PASSED at
+`2026-09-14T20:26:26.641Z`: 22 public files (nine text/data/engine files and
+sample crops) matched the published commit, build-info reports build
+`9392e1ca48403a54` with 543 parts, and per-topic counts are unchanged
+(A.1 149/128, A.5 138/138, C.1 25/7, D.2 146/146, E.1 55/55, E.2 39/39). Only
+the title strings changed; the served part set is identical to the previous
+public build `d5fa99e9dedd533b`.
+
+The same pass restored `Physics Categorisation/viewer/ibphysics_catalogue.js`
+to the byte-exact reviewed state (`050e5203…`) that every release clearance
+pins. An earlier 2026-09-14 catalogue rebuild had changed that file's hash and
+blocked release assembly at input load; the reviewed D.2 material remains
+available separately for a coordinated regeneration.
+
+## 2026-09-12: Driller sign-in publication receipt
+
+The owning Driller task reports that Smith published Driller v0.20.0. Its
+read-only check at `2026-09-12T18:30:18Z` matched local HEAD, GitHub main and
+six public assets to `71480bc62458e42fb10297e335c0bf158f6317f5`. The public
+Driller version 2 helper has SHA256
+`0a7ddcc249a304c38728db4affa11af41ad8c5080939d829c07ffbeda0b531b1`.
+PPQ remains on version 1; its version 2 candidate is still staged. No PPQ
+publication was requested or performed by this coordination update.
+
+## 2026-09-12: topic home and compact question layout
+
+Published build `ab0aa88396caf624`, assembled at `2026-09-12T17:19:11.156Z`,
+deployment `ca2810097f55624192bce19598ce729326480e57`. GitHub Pages reported
+that exact commit built. Public verification passed at
+`2026-09-12T17:30:02.003Z`: all eight public files and three sample PNGs matched.
+
+- The root topic chooser offers A5 and shows five future topics as unavailable.
+  “Past paper question viewer” returns home. Desktop title, account and filters
+  share a single row; the phone layout remains within its viewport.
+- One compact row identifies the exact question part and offers ordered part
+  chips before context. A neutral separator marks the current crop. HL and SL
+  badges have distinct purple and green styling without losing source labels.
+- Optional accessible image loading includes per-image retry and cancellation
+  of stale events after another group is selected. Old answer content clears
+  immediately. Key tips remains closed until requested.
+- Ask your teacher now uses cautious experimental wording before the form.
+  Notifications are described as planned; actual receipt checks remain intact.
+  The footer places Ask left, Report centre and Draw right.
+- All 2,426 shared assertions, ten loading, eight chooser, 14 teacher-help,
+  97 Physics and 18 release checks passed, including 32 MCQ keyboard journeys.
+  Browser checks found a 51 px desktop header, a 92 px header at 390 px phone
+  width and no horizontal overflow. No form was submitted.
+- The 146 parts, 72 parents and 371 images, catalogue and active version 1
+  identity helper are unchanged. Version 2 remains separately staged.
+  See `reports/ib-layout-navigation-validation.md`.
+
+## 2026-09-12: Key tips stays closed until requested
+
+Published as build `d58538cb2385018d`, deployment
+`1cf5c9048814103cb5b8cea8cb4dbae547d2aa0c`. Public byte verification passed
+at `2026-09-12T16:45:32.270Z`: eight public files and three PNGs matched,
+including the active version 1 identity helper. No new Pages API status is
+claimed by this record.
+
+- The guidance disclosure is now “Key tips” and starts closed, including after
+  selecting or switching groups. Explicit opening reveals the same authored
+  advice; selected rows, marking state and navigation are preserved.
+- All 26 affected guidance/tools/usability checks and 18 release checks passed,
+  including 32 MCQ keyboard journeys. Compared with `bca8a6f34a08360d`, data,
+  images and identity-helper bytes are unchanged; only engine and build-record
+  bytes differ. Existing source and assessment boundaries remain unchanged.
+- Identity recovery version 2 remains separately staged and unpublished. This
+  tips release continues to use version 1.
+
+## 2026-09-12: physics sign-in recovery — source-only, staged
+
+At the start of this source-only investigation the public release was
+`bca8a6f34a08360d`, deployment `ee4e024f16fb1a5ce622cad7d49e07060e0ddcf6`.
+The delegated investigation does not authorize recovery publication; the
+subsequent Key tips release above still uses the published version 1 helper.
+
+- The version 2 shared identity helper recovers physics sign-in metadata
+  omitted by Fields/ECM's legacy four-field estate writer. A durable
+  `smithics_physics_signin_v1` checkpoint applies only to the same ID and
+  cleaned display name; explicit false/sign-out remains authoritative.
+- Identity reads may update only the estate identity key, the new sign-in
+  checkpoint and an existing configured local identity mirror. They do not
+  alter progress or transmit data/reports across Smith's estate.
+- The original nine identity checks and ten independent recovery journeys pass;
+  unchanged deployed v1 fails the reproduced overwrite regression. Candidate v2
+  is frozen in `staged/physics-identity-v2/physics-identity.js`; active source
+  retains published v1 for the separate Key tips release. No v2 deployment is claimed.
+  See `reports/ib-physics-identity-recovery.md`.
+
+## 2026-09-12: visible saved marks and inline C
+
+Published as build `bca8a6f34a08360d`, deployment
+`ee4e024f16fb1a5ce622cad7d49e07060e0ddcf6`. GitHub Pages built that exact
+commit; all eight public files and three sample PNGs matched at
+`2026-09-12T16:02:25.814Z`.
+
+- Exact marks and uncertain range bounds stay visibly selected. A nearby
+  `Saved: 1/2` or `Saved: 0–2/2` status confirms the result immediately, and the
+  current attempt appears in the marks/C history without navigating away.
+- IB places C below the marks in the question pane. Saving marks reveals it
+  and scrolls that pane only as far as needed; phones use the same inline flow.
+  The shared `selfReport.autoReveal` option defaults to off, preserving other
+  consumers' existing placement.
+- Matching visible analysis categories flash immediately using the actual
+  facet memberships, including overlapping types. Filters and analysis scroll
+  position stay unchanged; incomplete range selection does not trigger a flash.
+- Approved physics C2–5 wording: “Only half understand”; “Mostly understand”;
+  “Fully understand, but I might miss it tomorrow”; “Fully understand,
+  comfortable with this”. C1 “No idea”, C6 “Trivial — never need to see this
+  again” and the shared engine's default scale are unchanged.
+- Validation passed: 2,426 shared assertions, seven new rating-flow checks,
+  six dashboard-pulse checks, 15 history, eight presentation, 12 shuffle,
+  13 teacher-help, seven question-tools, nine pacing and nine identity journeys.
+  The final release passed 18 checks, including 32 real MCQ keyboard journeys.
+- Independent comparison with `e55db219ef0bb748` confirmed all 146 records,
+  complete analysis metadata and all 371 PNG bytes are identical. Clearance
+  binds 72 parents, 449 source paths and 579 fingerprints. The two obsolete
+  reserved-row exceptions are retired; actual crop rectangles now pass the
+  ordinary overlap checks. See `reports/ib-rating-feedback-validation.md` for
+  exact local desktop/mobile geometry and public verification evidence.
+
+## 2026-09-12: teacher questions, reviewed crops and finer A5 practice
+
+Published as build `e55db219ef0bb748`, deployment
+`fae202def056b155a801fc2492cc1e301bac351f`. GitHub Pages and eight public
+HTML/JS/CSS/build-info files plus three crops matched at
+`2026-09-12T15:32:36.840Z`, including the repaired Q7(b)(i) diagram.
+
+- Optional shared `teacherHelp` adds Ask the teacher, explicit submission,
+  receipt confirmation, stable retry IDs and saved reply notifications.
+  Pending questions remain private; teachers review the question and answer
+  before publishing them for everyone, without pupil names. The pupil feed
+  renders public text only and sends no learner performance or image contents.
+- Report a display problem needs no typed explanation. Explicit Send includes
+  the source context and optional note, retains failed drafts and says “Thanks
+  for reporting.” after dispatch. Opaque feedback responses cannot privately
+  prove storage; teacher-help receipt confirmation remains a separate check.
+- Shared physics sign-in remembers a name and class in this browser, links to
+  the A5 coverage table and preserves the existing local progress history.
+  It has no password check and does not send PPQ attempts to the tracker.
+- Reviewed A5 metadata contains 45 authored question types, with 24 offered
+  in the current pool and 29 finer detail choices. Exact directly assessed
+  memberships drive filtering/counts; the 13 nonempty legacy groups remain.
+- Eight answer-diagram crops are complete, including 25M.P2.HL.TZ1.Q7(b)(i).
+  November 2024 Q4(b)(i), SL and HL, now uses its own answer row; neighbouring
+  and mislinked b(ii)/c(ii) crops are removed. The approved 146 source IDs,
+  72 parents and every question/context image remain unchanged.
+- Clearance binds 449 source images and 581 current fingerprints; identical
+  content deduplicates to 371 public assets. Independent old/new comparison,
+  18 release checks (four MCQs/32 keyboard journeys) and five reserved-geometry
+  checks passed with no unrelated scope widening.
+- TeacherViewer 20's empty queue and the public reply feed passed read-only
+  live checks. Synthetic client tests cover sending/retry/notification paths;
+  no real report, clarification or teacher publication was sent, so the live
+  write/answer round trip remains untested. See `IB_PHYSICS_RELEASE.md`.
+
+## 2026-09-12: question tools, readable guidance and learner pacing
+
+Published and publicly verified at 14:07 UTC as build `19069d1cf2b1158a`,
+deployment `30002287822b6c079a1e9dccb97014d49a61bf2e`.
+
+- Draw and Report a problem stay at the bottom-right of the question pane,
+  clear of the analysis. Reset is under Preferences > Manage saved progress,
+  with confirmation retained.
+- A selected group's named guidance is brought into view in the analysis
+  pane, with a tan accent, short paragraphs and spaced authored bullets.
+- My level persists HL/SL. Known marks determine current-practice targets;
+  visit snapshots preserve an open answer/timer when preferences change.
+  Current A5 HL and historical paper level are labelled separately.
+- Reports snapshot source metadata, send only on explicit submission, retain
+  failed drafts and distinguish dispatch from unconfirmed destination receipt.
+- Eight shared gates passed (2,426 assertions), plus focused learner, pacing,
+  tools, report and release journeys and desktop/mobile browser checks.
+- The source crop defect in 25M.P2.HL.TZ1.Q7(b)(i) is documented privately for
+  the cropper. Source question data and all 376 image bytes remain unchanged.
+
+## 2026-09-12: attempt history and practice preferences
+
+Published and publicly verified as build `f38b6d4216288094`, deployment
+`6c0536038885e879df5e30973345c2566c8be674` at 13:33 UTC. The reviewed
+146 parts and 376 distinct images remain unchanged.
+
+- IB practice shows a compact history beside the question heading. Each
+  attempt has its marks fraction above its own C rating, with green intensity
+  showing the result. Missing historical ratings remain blank rather than
+  borrowing the latest score for the question.
+- Preferences control history visibility and the practice selection:
+  Complete mix (default), Not attempted yet, or Previous errors. Errors use
+  the most recent completed result, including partial marks. Skips do not
+  count as attempts. Exhausting the selection offers an explicit next choice.
+- These shared features are opt-in for other consumers. Preferences and
+  per-attempt ratings stay in the existing browser-local progress store.
+- C controls and Next sit beside the question on desktop, above the scrolling
+  analysis list. On phones they remain in a compact bottom panel. The exact
+  scale descriptions are available in an expandable Scale section.
+- IB starts with Shuffle: whole-question groups are shuffled and their parts
+  remain in printed order, including nested Roman labels. In order remains
+  available, alongside an explicit Shuffle all parts choice. The practice queue
+  retains its order while completed parts leave it in unattempted mode.
+- Enter consumes the viewer navigation action so a focused Next button cannot
+  also fire a native click and skip the following part. Marks, preferences and
+  disclosure controls retain their own keyboard activation.
+- IB uses year-range filters, Paper 1 / Paper 2 practice categories (the latter
+  includes former Paper 3), and numbered A5 analysis groups in teaching order.
+  Individual question metadata continues to identify the original paper.
+
+## 2026-09-12: compact IB practice and answer loading
+
+Published and publicly verified as build `26469749a6f01468`, deployment
+`12f934aa992a05c9bd56de748d8a6a4e59c66070`. The same 146 parts and 376
+distinct images remain available.
+
+- The IB wrapper uses independent question and group-list scrolling on desktop,
+  smaller zoomable crops, prominent target-part headings and navigation above
+  the context. Redundant navigation modes and learner-facing release notices
+  are removed. Timing defaults to off.
+- Reviewed printed MCQ keys activate the existing A–D / 1–4 automatic marking.
+  The original cropped scheme appears after answering. Unknown keys continue
+  to use self-assessment.
+- Shared prefetching now includes context and cropped markschemes, with bounded,
+  deduplicated image caching. New navigation/layout hooks are optional; existing
+  consumers retain their defaults.
+- The six canonical scale descriptions remain in use, with the requested
+  “tomorrow/next week” wording and larger text in the IB wrapper.
+
+## 2026-09-12: shared group analysis and A5 publication
+
+- **Optional dashboard membership hooks:** `groupKeysOf(q)` lets a part
+  appear in each of its reviewed groups, while `groupLabelOf(key, q)` supplies
+  the correct label for each membership. Repeated keys count once. Existing
+  consumers retain their `groupKey` / `groupLabel` behaviour by default.
+- **The displayed unit can be a part:** `itemNoun: "part"` changes the
+  counter, finder, dashboard and progress wording. It defaults to "question".
+- **Authored guidance within a group:** a dependent dashboard-facet filter
+  can supply `facetGuidanceOf(groupCode)` returning `{summary, checks}`.
+  Selecting the group shows an expandable "About this group" card; its text
+  is escaped. The hook is optional and the existing facet filter remains the
+  source of truth for selection.
+- **IB Physics A5 published and verified.** The standalone
+  site is `physicalsmithness.github.io/ibphysicsppqs`: 146 parts in 13 groups,
+  build `ed5cf7f1f7458863`. Public files were verified against deployment commit
+  `e3d3603e275230c1c6974624dd096c627f869b1f`, with live browser checks of
+  question/markscheme loading and group guidance.
+  Current-test exclusions, the pre-2026 source
+  gate, reviewed current-A5 scope and crop checks remain independent gates.
+  Topic labels retain their A1/A5 prefixes; learner counts use parts.
+
+The new membership/guidance regression suite covers overlapping groups,
+default compatibility, part wording, facet navigation and escaped guidance.
+The A5 source projection has five passing scope/provenance regressions.
+The universal consumer notice is staged in
+`outbox/2026-09-12_to-consumers_group-analysis-and-part-counts.md` for relay;
+no external consumer notification has been sent. See `IB_PHYSICS_RELEASE.md`.
+
+## 2026-09-10: physics preview and assessment reservations
+
+Patrick requested at least four physics practice areas and exclusion of test
+questions. Added a local shared-engine consumer covering IB A1, A5, E1, E2,
+historical data analysis (including Paper 1B) and D2, plus Trilogy electricity/forces and a reviewed 4SS0
+Pre-IB forces collection. Close visual test review adds durable reservations
+for short, adapted and scanned questions missed by the initial text matcher.
+Incomplete IB answer-choice diagrams and retired D2-only mappings are withheld.
+The shared engine and existing deployments are unchanged.
+
+The coverage correction consumes existing DATA classifications back to 2004,
+restores specimens dated 2018 on their original covers, and holds the selected
+2025 assessment sources rather than every 2025 paper. Completed Pre-IB returns
+and reviewed Trilogy forces mappings extend the selection. Topic cards show
+both whole questions and assessed parts; all existing test reservations remain.
+
+Added a global pre-2026 source-year gate, conservative IB test-candidate
+reservations with parent/twin/duplicate closure and shared-page withholding,
+current shared-drive test comparisons, bounded Trilogy question/scheme crops,
+an isolated local server, and regression tests. Native text matching cannot
+certify every scanned or rewritten test item; the preview remains labelled
+for teacher review and has not been published. See `PHYSICS_PREVIEW.md`.
+
 ## 2026-09-05 — the site-name swap, phantom parts refused, and a gate that catches vocabulary drift
 
 - **`deploy\ibmathsdriller` is now `deploy\ibmathsppqs`** (their d030). A folder

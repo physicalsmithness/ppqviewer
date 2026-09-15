@@ -1,0 +1,617 @@
+{
+  "schema_version": 1,
+  "reviewed_utc": "2026-09-12T19:17:17.538Z",
+  "review_complete": true,
+  "topic": "A.5",
+  "baseline_build": "ab0aa88396caf624",
+  "scope": "Direct visual review of every existing question/context/markscheme asset of four A5 parts in three parents shared with newly considered A1 parts. Does not clear new A1 assets or waive missing reserved geometry.",
+  "source_part_ids": [
+    "ibchem_part_71630df3bdf6ab2f",
+    "ibchem_part_c07207339d141b80",
+    "ibchem_part_75329d9d7800e637",
+    "ibchem_part_e5b8f78121481cc1"
+  ],
+  "retain_unchanged_source_ids": [
+    "ibchem_part_75329d9d7800e637",
+    "ibchem_part_e5b8f78121481cc1"
+  ],
+  "requires_correction_source_ids": [
+    "ibchem_part_71630df3bdf6ab2f",
+    "ibchem_part_c07207339d141b80"
+  ],
+  "reserved_content_found": false,
+  "new_topic_source_ids_not_cleared": [
+    "ibchem_part_122a19eaab307de1",
+    "ibchem_part_badca1006692c0f7",
+    "ibchem_part_b23f0c9c67d13b6b"
+  ],
+  "unresolved_relevant_items": [],
+  "publication_ready_unchanged": false,
+  "findings": "10N D1(c/e) can remain unchanged on direct own-question/answer/context inspection. Both04N G2(d_iii) records cannot be certified unchanged: wrong c(ii) answer crops are assigned to both; SL also has an Option H heading, HL has a blank focused-question strip. The correct d(iii) answer is present in another assigned crop, and complete questions/setup are present in context. Suppress or replace exact misassigned assets and revalidate before treating those records as presentation-correct.",
+  "records": [
+    {
+      "id": "04N.P3.SL.TZ0.QG2(d_iii)",
+      "source_part_id": "ibchem_part_71630df3bdf6ab2f",
+      "parent_id": "04N.P3.SL.TZ0.QG2",
+      "review_complete": true,
+      "assets_match_current_public_build": true,
+      "disposition": "requires_presentation_correction_or_hold",
+      "assets": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\question_g2_d__iii_v027_p027_01_d5d726976c.png",
+          "sha256": "204835a2c638d9d47f50119cb1d529c6ca9f20e27bae712a096ea8798e586b59",
+          "role": "question",
+          "status": "complete_target_with_siblings",
+          "finding": "Shows all d(i-iii), including complete requested d(iii). Necessary frame/context is in preceding context images."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\question_question_g2_v026_p026_01_1269c11287.png",
+          "sha256": "4ed0c5ac67a85c3641c73b2bee9d3c8485ad75420c837949b9c6f647d9b6fd9b",
+          "role": "context",
+          "status": "complete_same_parent_context",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\question_question_g2_v027_p027_02_b97f0917c3.png",
+          "sha256": "ad8b7d5c4c64ca7790446bea85abe30e645e2b03daef7e4c580b1f36d55d0fcf",
+          "role": "context",
+          "status": "complete_same_parent_context",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v014_p014_01_99518edb5d.png",
+          "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43",
+          "role": "markscheme",
+          "status": "wrong_part",
+          "finding": "Contains c(ii), speed=distance/time, time=1.26ns; not d(iii)."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v014_p014_02_fb1b3c8a9c.png",
+          "sha256": "bf6c7859ed83e119a292cb4613135c2239c0f893adfcff8d98f73883ebdcfe7e",
+          "role": "markscheme",
+          "status": "correct_answer_with_previous_sibling",
+          "finding": "Contains correct d(iii) length contraction37/gamma=7.5cm and complete2 marks, plus preceding d(ii) speed."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v015_p015_03_a204b7f332.png",
+          "sha256": "babfc90929a3b0e38c397aca473c70d002c9c780e76043788e1fee376485a41b",
+          "role": "markscheme",
+          "status": "irrelevant_heading",
+          "finding": "Contains only Option H - Optics; no answer content."
+        }
+      ]
+    },
+    {
+      "id": "04N.P3.HL.TZ0.QG2(d_iii)",
+      "source_part_id": "ibchem_part_c07207339d141b80",
+      "parent_id": "04N.P3.HL.TZ0.QG2",
+      "review_complete": true,
+      "assets_match_current_public_build": true,
+      "disposition": "requires_presentation_correction_or_hold",
+      "assets": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\question_g2_d__iii_v020_p020_01_810754a631.png",
+          "sha256": "204835a2c638d9d47f50119cb1d529c6ca9f20e27bae712a096ea8798e586b59",
+          "role": "question",
+          "status": "blank_focused_crop",
+          "finding": "Tiny blank strip. Full d(iii) question is present in context page20, but focused image is unusable."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\question_question_g2_v019_p019_01_48e3cffce1.png",
+          "sha256": "c69222ec964588f7ca2eb43eff4de2fbdeb9e0cd885031df9e64775e777e3ff9",
+          "role": "context",
+          "status": "complete_same_parent_context",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\question_question_g2_v020_p020_02_842ba4e83e.png",
+          "sha256": "ad8b7d5c4c64ca7790446bea85abe30e645e2b03daef7e4c580b1f36d55d0fcf",
+          "role": "context",
+          "status": "complete_same_parent_context",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_d__iii_v013_p013_01_84e9ae0bb7.png",
+          "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43",
+          "role": "markscheme",
+          "status": "wrong_part",
+          "finding": "Contains c(ii), speed=distance/time, time=1.26ns; not d(iii)."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_d__iii_v013_p013_02_38318ca371.png",
+          "sha256": "d5aeb31e9142af13022401638eab8ec96a538e1bf3eebd3c7838627513862f50",
+          "role": "markscheme",
+          "status": "correct_answer_with_previous_sibling",
+          "finding": "Contains correct d(iii) length contraction37/gamma=7.5cm and complete2 marks, plus preceding d(ii) speed."
+        }
+      ]
+    },
+    {
+      "id": "10N.P3.SL.TZ0.QD1(c)",
+      "source_part_id": "ibchem_part_75329d9d7800e637",
+      "parent_id": "10N.P3.SL.TZ0.QD1",
+      "review_complete": true,
+      "assets_match_current_public_build": true,
+      "disposition": "retain_unchanged",
+      "assets": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_d1_c_v017_p017_01_0cd49d11eb.png",
+          "sha256": "36b355a7ae762676262bbb924305b8089990a2802f7e0660f30719f0f85394d3",
+          "role": "question",
+          "status": "complete_target",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_question_d1_v016_p016_01_05bb77dee4.png",
+          "sha256": "aa4e089452b6239459bf9916f0e2515cbafdde4c4b78441c63e2de7390f9f127",
+          "role": "context",
+          "status": "complete_same_parent_context",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_question_d1_v017_p017_02_a260a774af.png",
+          "sha256": "df2e1cf28c208d5fe772beaf31df10ac45abc70230f461ac0c0202fe3f0c206a",
+          "role": "context",
+          "status": "complete_same_parent_context",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\mark_scheme_d1_c_v009_p009_01_ac0b1c1c1c.png",
+          "sha256": "94d3bdd0b7ca762e2b17d875d0e99fb664e223d62fa596962435524b20da7f4d",
+          "role": "markscheme",
+          "status": "correct_own_answer",
+          "finding": "Correct(c) answer c delta-t and1 mark."
+        }
+      ]
+    },
+    {
+      "id": "10N.P3.SL.TZ0.QD1(e)",
+      "source_part_id": "ibchem_part_e5b8f78121481cc1",
+      "parent_id": "10N.P3.SL.TZ0.QD1",
+      "review_complete": true,
+      "assets_match_current_public_build": true,
+      "disposition": "retain_unchanged",
+      "assets": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_d1_e_v017_p017_01_f882682568.png",
+          "sha256": "85bf819f03082ea2f33002563d8c57b00506e24ed066fd258551a8bf9462b1d8",
+          "role": "question",
+          "status": "complete_target",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_question_d1_v016_p016_01_05bb77dee4.png",
+          "sha256": "aa4e089452b6239459bf9916f0e2515cbafdde4c4b78441c63e2de7390f9f127",
+          "role": "context",
+          "status": "complete_same_parent_context",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_question_d1_v017_p017_02_a260a774af.png",
+          "sha256": "df2e1cf28c208d5fe772beaf31df10ac45abc70230f461ac0c0202fe3f0c206a",
+          "role": "context",
+          "status": "complete_same_parent_context",
+          "finding": "Visually reviewed: full required question/setup, correct original parent, no reserved-question content visible."
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\mark_scheme_d1_e_v009_p009_01_fcf8c2c5ca.png",
+          "sha256": "f77ce22c1baf7d75603d63175efa7977dca8eed2ab538332877551c3ae72d105",
+          "role": "markscheme",
+          "status": "correct_own_answer",
+          "finding": "Correct(e) Lorentz factor2.3 substitution, rearrangement and0.90c;2 marks."
+        }
+      ]
+    }
+  ],
+  "parent_audits": [
+    {
+      "parent_id": "04N.P3.SL.TZ0.QG2",
+      "preview": "ib_physics_2004_nov_3_76f24f38",
+      "all_parent_source_ids": [
+        "ibchem_part_c78237e042ebf1d0",
+        "ibchem_part_b8e8316f4707e38e",
+        "ibchem_part_27e1846cddeeae83",
+        "ibchem_part_122a19eaab307de1",
+        "ibchem_part_df34f91324fffc16",
+        "ibchem_part_7c8a77a69b2582eb",
+        "ibchem_part_71630df3bdf6ab2f"
+      ],
+      "parent_has_reserved_source_part": false,
+      "reserved_markscheme_origins": [
+        {
+          "question": "A1",
+          "pages": [
+            4
+          ],
+          "unresolved_metadata_labels": []
+        },
+        {
+          "question": "B2",
+          "pages": [
+            6
+          ],
+          "unresolved_metadata_labels": []
+        },
+        {
+          "question": "C1",
+          "pages": [
+            8
+          ],
+          "unresolved_metadata_labels": []
+        },
+        {
+          "question": "D1",
+          "pages": [
+            9
+          ],
+          "unresolved_metadata_labels": []
+        },
+        {
+          "question": "E2",
+          "pages": [
+            11,
+            12
+          ],
+          "unresolved_metadata_labels": [
+            "E2(d)(ii)"
+          ]
+        }
+      ],
+      "finding": "Reserved original question content is on other pages of this preview. Reviewed G2 context contains only the actinium beta-particle setup and its own parts; no reserved source parent appears. Existing wrong/blank focused assignments require correction independently of test safety."
+    },
+    {
+      "parent_id": "04N.P3.HL.TZ0.QG2",
+      "preview": "ib_physics_2004_nov_3_c4d0287e",
+      "all_parent_source_ids": [
+        "ibchem_part_1831b54cae2e9b32",
+        "ibchem_part_f447ea52a4d8d1ee",
+        "ibchem_part_9c74db74f0404812",
+        "ibchem_part_badca1006692c0f7",
+        "ibchem_part_53403d365f0420ff",
+        "ibchem_part_7335254f2cd4c19e",
+        "ibchem_part_c07207339d141b80"
+      ],
+      "parent_has_reserved_source_part": false,
+      "reserved_markscheme_origins": [
+        {
+          "question": "D1",
+          "pages": [
+            4
+          ],
+          "unresolved_metadata_labels": []
+        },
+        {
+          "question": "E2",
+          "pages": [
+            8
+          ],
+          "unresolved_metadata_labels": [
+            "E2(d)(ii)"
+          ]
+        },
+        {
+          "question": "H3",
+          "pages": [
+            17
+          ],
+          "unresolved_metadata_labels": []
+        }
+      ],
+      "finding": "Reserved original question content is on other pages of this preview. Reviewed G2 context contains only the actinium beta-particle setup and its own parts; no reserved source parent appears. Existing wrong/blank focused assignments require correction independently of test safety."
+    },
+    {
+      "parent_id": "10N.P3.SL.TZ0.QD1",
+      "preview": "ib_physics_2010_nov_3_1b08d840",
+      "all_parent_source_ids": [
+        "ibchem_part_9da68fb38dbbeedf",
+        "ibchem_part_b23f0c9c67d13b6b",
+        "ibchem_part_a5da5659707dc83f",
+        "ibchem_part_75329d9d7800e637",
+        "ibchem_part_fd4e723b2214e023",
+        "ibchem_part_e5b8f78121481cc1"
+      ],
+      "parent_has_reserved_source_part": false,
+      "reserved_markscheme_origins": [
+        {
+          "question": "B1",
+          "pages": [
+            6
+          ],
+          "unresolved_metadata_labels": [
+            "B1(a)(i)"
+          ]
+        }
+      ],
+      "finding": "Reserved B1 photoelectric content is on markscheme page6. Reviewed D1(c/e) answer crops are own rows on page9. Full D1 question/context contains the Ben/Jill light clock, not B1. No placeholder geometry is waived."
+    }
+  ],
+  "source_files": [
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\current-ib-tests.json",
+      "sha256": "bd7da777a2b2dee6d1446d2edd9615bfe935132e8dab92a2c1e16472873f345f"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-a5-reviewed-test-exclusions.json",
+      "sha256": "88dc4b149665a081fb4c69eb91c13149af0c7ef65a7bdbffb07af9aeef3b00a6"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-a1-c1-reviewed-test-exclusions.json",
+      "sha256": "a79c1432dc1b7a1852ed67cdead8ad70621590dd480078ab7517c52eddc60be2"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\exports\\ib_physics_archive_flat_v5.csv",
+      "sha256": "6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\question_g2_d__iii_v027_p027_01_d5d726976c.png",
+      "sha256": "204835a2c638d9d47f50119cb1d529c6ca9f20e27bae712a096ea8798e586b59"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\question_question_g2_v026_p026_01_1269c11287.png",
+      "sha256": "4ed0c5ac67a85c3641c73b2bee9d3c8485ad75420c837949b9c6f647d9b6fd9b"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\question_question_g2_v027_p027_02_b97f0917c3.png",
+      "sha256": "ad8b7d5c4c64ca7790446bea85abe30e645e2b03daef7e4c580b1f36d55d0fcf"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v014_p014_01_99518edb5d.png",
+      "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v014_p014_02_fb1b3c8a9c.png",
+      "sha256": "bf6c7859ed83e119a292cb4613135c2239c0f893adfcff8d98f73883ebdcfe7e"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v015_p015_03_a204b7f332.png",
+      "sha256": "babfc90929a3b0e38c397aca473c70d002c9c780e76043788e1fee376485a41b"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\question_preview.json",
+      "sha256": "385e4b547295bbf159cad2af3de02b4a3c6aab7658ff77240fac6c03617d556a"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_04\\Examination papers\\Group 4\\English\\Physics SL Paper 3.pdf",
+      "sha256": "1a78d8dbc01815edafd7d501b9944d8308a16b5e38ee169ecbaa8f96454eac05"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\mark_scheme_preview.json",
+      "sha256": "bcfb708d35c4efcc188fa1125a8fca6a23e93132a9bf0412a2ee919ee7f4a8fb"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_04\\Markschemes\\Group 4\\English\\Physics SL Paper 3.pdf",
+      "sha256": "818ec983f3a752eaf36fabb84bf242108413cdedf1e42579cbc016787395c894"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\question_g2_d__iii_v020_p020_01_810754a631.png",
+      "sha256": "204835a2c638d9d47f50119cb1d529c6ca9f20e27bae712a096ea8798e586b59"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\question_question_g2_v019_p019_01_48e3cffce1.png",
+      "sha256": "c69222ec964588f7ca2eb43eff4de2fbdeb9e0cd885031df9e64775e777e3ff9"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\question_question_g2_v020_p020_02_842ba4e83e.png",
+      "sha256": "ad8b7d5c4c64ca7790446bea85abe30e645e2b03daef7e4c580b1f36d55d0fcf"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_d__iii_v013_p013_01_84e9ae0bb7.png",
+      "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_d__iii_v013_p013_02_38318ca371.png",
+      "sha256": "d5aeb31e9142af13022401638eab8ec96a538e1bf3eebd3c7838627513862f50"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\question_preview.json",
+      "sha256": "427089c84c66fdffe889deb9399e7447f6ae9b020c4ce5e5a897ee6854750801"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_04\\Examination papers\\Group 4\\English\\Physics HL Paper 3.pdf",
+      "sha256": "a3855444b339574a24cbb76a68ec035ed9ebbc77e1141939faaa72efe6c5e2c4"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\mark_scheme_preview.json",
+      "sha256": "28955c47ae894a92da631f5a728223698b8228361f3ce8f588415badaf44e9a4"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_04\\Markschemes\\Group 4\\English\\Physics HL Paper 3.pdf",
+      "sha256": "051f7ff19887820ef47a4fe5e4fc5be93d2698c99cf9a4c1e7daada6b2d8ac9f"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_d1_c_v017_p017_01_0cd49d11eb.png",
+      "sha256": "36b355a7ae762676262bbb924305b8089990a2802f7e0660f30719f0f85394d3"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_question_d1_v016_p016_01_05bb77dee4.png",
+      "sha256": "aa4e089452b6239459bf9916f0e2515cbafdde4c4b78441c63e2de7390f9f127"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_question_d1_v017_p017_02_a260a774af.png",
+      "sha256": "df2e1cf28c208d5fe772beaf31df10ac45abc70230f461ac0c0202fe3f0c206a"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\mark_scheme_d1_c_v009_p009_01_ac0b1c1c1c.png",
+      "sha256": "94d3bdd0b7ca762e2b17d875d0e99fb664e223d62fa596962435524b20da7f4d"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\question_preview.json",
+      "sha256": "d853ee149e34d2df1a54958f664dfc8ed2004600b48abf06d42584f229114af3"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_10\\Examination papers\\Group 4\\English\\Physics SL paper 3.pdf",
+      "sha256": "39323d28e03b76f7ee13a369fe138a024714da6572bbbd67119e4166e92848c6"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\mark_scheme_preview.json",
+      "sha256": "87223a6975e4fe0950458103a64368b43495c76c783761998bd3708b8c23dc6c"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_10\\Markschemes\\Group 4\\English\\Physics SL paper 3.pdf",
+      "sha256": "1b0fbecc9cfe2a683e773d452beba25439b5d0a432e9094607e1e5fbec1e60e4"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\question_d1_e_v017_p017_01_f882682568.png",
+      "sha256": "85bf819f03082ea2f33002563d8c57b00506e24ed066fd258551a8bf9462b1d8"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\mark_scheme_d1_e_v009_p009_01_fcf8c2c5ca.png",
+      "sha256": "f77ce22c1baf7d75603d63175efa7977dca8eed2ab538332877551c3ae72d105"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a1-c1-assessments\\candidate-parts.json",
+      "sha256": "8236911b63f7e72e34ea70c5cb8476759593762a1c497fcc32b079d58d5e76b4"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_c__ii_v014_p014_01_99423a31bc.png",
+      "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_c__ii_v014_p014_02_953e13f925.png",
+      "sha256": "bf6c7859ed83e119a292cb4613135c2239c0f893adfcff8d98f73883ebdcfe7e"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_c__ii_v015_p015_03_076283b7fd.png",
+      "sha256": "babfc90929a3b0e38c397aca473c70d002c9c780e76043788e1fee376485a41b"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_c__ii_v013_p013_01_ce4c1847d2.png",
+      "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_c__ii_v013_p013_02_b99d4e8a3c.png",
+      "sha256": "d5aeb31e9142af13022401638eab8ec96a538e1bf3eebd3c7838627513862f50"
+    },
+    {
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\mark_scheme_d1_b__i_v009_p009_01_1a31e77c9a.png",
+      "sha256": "298b283e85713de6ccf7dae8e4e7337e1e237d23c7f04fd1af52c7dd34556e48"
+    }
+  ],
+  "distinct_reviewed_image_paths": 17,
+  "limitations": [
+    "No source database, crop image, engine, clearance or deployment was changed by this review.",
+    "Review completion records both passes and defects; it is not blanket publication clearance.",
+    "Other-preview uncertain metadata rows remain uncertain; this record does not infer absent geometry or permit new A1 assets."
+  ],
+  "new_a1_scheme_alias_comparison": [
+    {
+      "source_part_id": "ibchem_part_122a19eaab307de1",
+      "id": "04N.P3.SL.TZ0.QG2(c_ii)",
+      "assets": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_c__ii_v014_p014_01_99423a31bc.png",
+          "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43",
+          "same_bytes_as_existing_a5": [
+            {
+              "id": "04N.P3.SL.TZ0.QG2(d_iii)",
+              "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v014_p014_01_99518edb5d.png",
+              "status": "wrong_part"
+            },
+            {
+              "id": "04N.P3.HL.TZ0.QG2(d_iii)",
+              "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_d__iii_v013_p013_01_84e9ae0bb7.png",
+              "status": "wrong_part"
+            }
+          ]
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_c__ii_v014_p014_02_953e13f925.png",
+          "sha256": "bf6c7859ed83e119a292cb4613135c2239c0f893adfcff8d98f73883ebdcfe7e",
+          "same_bytes_as_existing_a5": [
+            {
+              "id": "04N.P3.SL.TZ0.QG2(d_iii)",
+              "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v014_p014_02_fb1b3c8a9c.png",
+              "status": "correct_answer_with_previous_sibling"
+            }
+          ]
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_c__ii_v015_p015_03_076283b7fd.png",
+          "sha256": "babfc90929a3b0e38c397aca473c70d002c9c780e76043788e1fee376485a41b",
+          "same_bytes_as_existing_a5": [
+            {
+              "id": "04N.P3.SL.TZ0.QG2(d_iii)",
+              "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v015_p015_03_a204b7f332.png",
+              "status": "irrelevant_heading"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source_part_id": "ibchem_part_badca1006692c0f7",
+      "id": "04N.P3.HL.TZ0.QG2(c_ii)",
+      "assets": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_c__ii_v013_p013_01_ce4c1847d2.png",
+          "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43",
+          "same_bytes_as_existing_a5": [
+            {
+              "id": "04N.P3.SL.TZ0.QG2(d_iii)",
+              "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v014_p014_01_99518edb5d.png",
+              "status": "wrong_part"
+            },
+            {
+              "id": "04N.P3.HL.TZ0.QG2(d_iii)",
+              "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_d__iii_v013_p013_01_84e9ae0bb7.png",
+              "status": "wrong_part"
+            }
+          ]
+        },
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_c__ii_v013_p013_02_b99d4e8a3c.png",
+          "sha256": "d5aeb31e9142af13022401638eab8ec96a538e1bf3eebd3c7838627513862f50",
+          "same_bytes_as_existing_a5": [
+            {
+              "id": "04N.P3.HL.TZ0.QG2(d_iii)",
+              "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_d__iii_v013_p013_02_38318ca371.png",
+              "status": "correct_answer_with_previous_sibling"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source_part_id": "ibchem_part_b23f0c9c67d13b6b",
+      "id": "10N.P3.SL.TZ0.QD1(b_i)",
+      "assets": [
+        {
+          "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\crops\\mark_scheme_d1_b__i_v009_p009_01_1a31e77c9a.png",
+          "sha256": "298b283e85713de6ccf7dae8e4e7337e1e237d23c7f04fd1af52c7dd34556e48",
+          "same_bytes_as_existing_a5": []
+        }
+      ]
+    }
+  ],
+  "alias_finding": "All five04N c(ii) PNG assignments are byte-identical to existing d(iii) scheme assignments under different filenames. Path-disjointness is not evidence of image-disjointness. The10N D1(b_i) scheme has no byte-identical match among the reviewed A5 assets.",
+  "exact_proposed_suppressions": [
+    {
+      "source_part_id": "ibchem_part_71630df3bdf6ab2f",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v014_p014_01_99518edb5d.png",
+      "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43",
+      "reason": "Contains c(ii), speed=distance/time, time=1.26ns; not d(iii)."
+    },
+    {
+      "source_part_id": "ibchem_part_71630df3bdf6ab2f",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\crops\\mark_scheme_g2_d__iii_v015_p015_03_a204b7f332.png",
+      "sha256": "babfc90929a3b0e38c397aca473c70d002c9c780e76043788e1fee376485a41b",
+      "reason": "Contains only Option H - Optics; no answer content."
+    },
+    {
+      "source_part_id": "ibchem_part_c07207339d141b80",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\question_g2_d__iii_v020_p020_01_810754a631.png",
+      "sha256": "204835a2c638d9d47f50119cb1d529c6ca9f20e27bae712a096ea8798e586b59",
+      "reason": "Tiny blank strip. Full d(iii) question is present in context page20, but focused image is unusable."
+    },
+    {
+      "source_part_id": "ibchem_part_c07207339d141b80",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\crops\\mark_scheme_g2_d__iii_v013_p013_01_84e9ae0bb7.png",
+      "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43",
+      "reason": "Contains c(ii), speed=distance/time, time=1.26ns; not d(iii)."
+    }
+  ]
+}

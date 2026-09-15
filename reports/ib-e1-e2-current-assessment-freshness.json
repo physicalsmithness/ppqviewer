@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "topics": [
+    "E.1",
+    "E.2"
+  ],
+  "checked_at": "2026-09-13T15:59:18.180Z",
+  "source_root": "H:/Shared drives/0. Physics (Teachers)/1- IB Folder/3. Assessments",
+  "snapshot_root": "C:/CodexProjects/PaperDatabases/Physics Categorisation/reference/tests/3. Assessments",
+  "complete": true,
+  "source_files": [
+    {
+      "relative_path": "E/E1-E2 Test HL (temp).pdf",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\E1-E2 Test HL (temp).pdf",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E1-E2 Test HL (temp).pdf",
+      "sha256": "76a81f168794a6ca91e6fa581fb0b8d40cf63a9f6fcf27079c83f7be63000a62",
+      "snapshot_sha256": "76a81f168794a6ca91e6fa581fb0b8d40cf63a9f6fcf27079c83f7be63000a62",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/E1-E2 Test HL.docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\E1-E2 Test HL.docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E1-E2 Test HL.docx",
+      "sha256": "1fe4074c932db02a9a627b4dda8d30d12160b7a0b0de5a85cf7155cbff3f7282",
+      "snapshot_sha256": "1fe4074c932db02a9a627b4dda8d30d12160b7a0b0de5a85cf7155cbff3f7282",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/E1-E2 Test HL.pdf",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\E1-E2 Test HL.pdf",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E1-E2 Test HL.pdf",
+      "sha256": "9ba329e6831a40d1a9f5f68bafb8a54a1e8cd71c9a9e013de1edb02f5f690604",
+      "snapshot_sha256": "9ba329e6831a40d1a9f5f68bafb8a54a1e8cd71c9a9e013de1edb02f5f690604",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/E3-E5 Test HL (answers).docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\E3-E5 Test HL (answers).docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E3-E5 Test HL (answers).docx",
+      "sha256": "dc408d1bbce4921bfa4bb8a420faea7c2351b0872baf3588db0f6fd94c40f8a7",
+      "snapshot_sha256": "dc408d1bbce4921bfa4bb8a420faea7c2351b0872baf3588db0f6fd94c40f8a7",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/E3-E5 Test HL.docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\E3-E5 Test HL.docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E3-E5 Test HL.docx",
+      "sha256": "acbacfe42378d58775a9d854111e3511cb283e565e7140caf29562159159ab42",
+      "snapshot_sha256": "acbacfe42378d58775a9d854111e3511cb283e565e7140caf29562159159ab42",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/E3-E5 Test HL.pdf",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\E3-E5 Test HL.pdf",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\E3-E5 Test HL.pdf",
+      "sha256": "384a043d823c3d8044c07d7fef9ce962896ceb247d6713fef35c306b774d6088",
+      "snapshot_sha256": "384a043d823c3d8044c07d7fef9ce962896ceb247d6713fef35c306b774d6088",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/Topic E HL Test (answers).docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\Topic E HL Test (answers).docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E HL Test (answers).docx",
+      "sha256": "933a069d1b01d3ae9ac744271ee22f2453261066c9f18631a5d7cc2a57d56dc1",
+      "snapshot_sha256": "933a069d1b01d3ae9ac744271ee22f2453261066c9f18631a5d7cc2a57d56dc1",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/Topic E HL Test.docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\Topic E HL Test.docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E HL Test.docx",
+      "sha256": "00c72993fb767e6cf8e605e8b0cd4a999c2bc74055be3dc35ec169b6c0201824",
+      "snapshot_sha256": "00c72993fb767e6cf8e605e8b0cd4a999c2bc74055be3dc35ec169b6c0201824",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/Topic E HL Test.pdf",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\Topic E HL Test.pdf",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E HL Test.pdf",
+      "sha256": "6ef0985da90e31cf27f161389f5e93aefb6fa01e039a16696f64e92c453f56f9",
+      "snapshot_sha256": "6ef0985da90e31cf27f161389f5e93aefb6fa01e039a16696f64e92c453f56f9",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/Topic E Test (SL content only) (answers).docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\Topic E Test (SL content only) (answers).docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E Test (SL content only) (answers).docx",
+      "sha256": "b3983b49eff25c2c2bf135eebbac5bfeb6e341a33b0d3423fa172cac3baa9149",
+      "snapshot_sha256": "b3983b49eff25c2c2bf135eebbac5bfeb6e341a33b0d3423fa172cac3baa9149",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/Topic E Test (SL content only) 2026.docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\Topic E Test (SL content only) 2026.docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E Test (SL content only) 2026.docx",
+      "sha256": "417cd66d17379704916fec75ac63ffd399d53f5cf8f2dbb13bbbfbbc9c670bd4",
+      "snapshot_sha256": "417cd66d17379704916fec75ac63ffd399d53f5cf8f2dbb13bbbfbbc9c670bd4",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/Topic E Test (SL content only).docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\Topic E Test (SL content only).docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E Test (SL content only).docx",
+      "sha256": "9fc5eddb36a8374a93262973c38571387b1b8f1d9273acccc1af90df4354ec58",
+      "snapshot_sha256": "9fc5eddb36a8374a93262973c38571387b1b8f1d9273acccc1af90df4354ec58",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "E/Topic E1-E2 HL Test Answers.docx",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\E\\Topic E1-E2 HL Test Answers.docx",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\E\\Topic E1-E2 HL Test Answers.docx",
+      "sha256": "dc59935f1b1371f95005a794f93930f9d8d43baa3b49ce61e0f378c22564daa9",
+      "snapshot_sha256": "dc59935f1b1371f95005a794f93930f9d8d43baa3b49ce61e0f378c22564daa9",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "z. end of course mini-tests/E1 HL Minitest.pdf",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\z. end of course mini-tests\\E1 HL Minitest.pdf",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\z. end of course mini-tests\\E1 HL Minitest.pdf",
+      "sha256": "90dd84e2b53b60c92ac6f26b21b548ced239fcb9248d5b21f405cb3304cec0dc",
+      "snapshot_sha256": "90dd84e2b53b60c92ac6f26b21b548ced239fcb9248d5b21f405cb3304cec0dc",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "z. end of course mini-tests/E1 SL Minitest.pdf",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\z. end of course mini-tests\\E1 SL Minitest.pdf",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\z. end of course mini-tests\\E1 SL Minitest.pdf",
+      "sha256": "5d71b1834d4b0387487211a6584ecb6f9908e99df981250fd596dde48d759397",
+      "snapshot_sha256": "5d71b1834d4b0387487211a6584ecb6f9908e99df981250fd596dde48d759397",
+      "matches_snapshot": true
+    },
+    {
+      "relative_path": "z. end of course mini-tests/E2 Minitest.pdf",
+      "path": "H:\\Shared drives\\0. Physics (Teachers)\\1- IB Folder\\3. Assessments\\z. end of course mini-tests\\E2 Minitest.pdf",
+      "snapshot_path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\reference\\tests\\3. Assessments\\z. end of course mini-tests\\E2 Minitest.pdf",
+      "sha256": "98abfc90719177f5785174e6ee5fe23ba1387ae4e0fa0b93ba2884c607c5814b",
+      "snapshot_sha256": "98abfc90719177f5785174e6ee5fe23ba1387ae4e0fa0b93ba2884c607c5814b",
+      "matches_snapshot": true
+    }
+  ],
+  "inventory_matches": true,
+  "policy": "Read-only original/snapshot byte comparison. This is freshness evidence, not question-level assessment clearance."
+}

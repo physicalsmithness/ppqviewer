@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- QoderWork 2026-09-14: IB Physics leads the title; "past-paper" hyphenated -->
+  <title>IB Physics past-paper question viewer</title>
+  <link rel="stylesheet" href="engine/ppqviewer.css">
+  <style>
+    body { margin: 0; background: #faf6ed; color: #282b28; font-family: system-ui, sans-serif; }
+    .physics-preview { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; align-items: center; padding: .75rem 1.25rem; border-bottom: 1px solid #ded9cd; font-size: .88rem; }
+    .physics-preview a { color: #295b47; font-weight: 600; }
+    .physics-preview p { margin: 0; }
+    .physics-status { max-width: 42rem; margin: 2rem auto; padding: 1.25rem; }
+    .physics-status h1 { font-size: 1.4rem; }
+    .physics-transcription { white-space: pre-wrap; }
+    .physics-preview-notice { margin: 0; padding: .8rem 1.25rem; background: #fff1cd; border-bottom: 1px solid #e3cb83; line-height: 1.5; }
+    .physics-topic-home { max-width: 64rem; margin: 0 auto; padding: 1.3rem; }
+    /* QoderWork 2026-09-14: bottom spacing moved onto h1 now the course line is gone */
+    .physics-topic-home h1 { margin: 0 0 1.8rem; font-size: clamp(1.35rem,3vw,1.8rem); }
+    .physics-topic-home h1 a, .physics-viewer-home { color: inherit; text-decoration: none; }
+    .physics-topic-home h1 a:hover, .physics-viewer-home:hover { text-decoration: underline; }
+    .physics-topic-home h2 { margin: 0 0 .8rem; font-size: 1.15rem; }
+    .physics-topic-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,17rem),1fr)); gap: .85rem; margin-bottom: 1.8rem; }
+    .physics-topic-card { padding: 1rem 1.1rem; border: 1px solid #d8d6c9; border-radius: 10px; background: #fffdf6; }
+    .physics-topic-card h3 { margin: 0 0 .5rem; font-size: 1.08rem; line-height: 1.45; }
+    .physics-topic-card .physics-topic-link { color: #174f72; text-decoration: none; }
+    .physics-topic-card .physics-topic-link:hover { text-decoration: underline; }
+    .physics-topic-code { display: inline-block; color: #335f50; margin-right: .5rem; font-size: .9rem; }
+    .physics-topic-card p { margin: .45rem 0 0; color: #655f55; font-size: .9rem; line-height: 1.5; }
+    .physics-topic-card .physics-topic-coverage { display: inline-block; margin-top: .7rem; font-size: .86rem; color: #295b47; }
+    .physics-topic-card[aria-disabled="true"] { background: #f2efe7; }
+    .physics-workspace .ppq-header { grid-template-columns: minmax(0,1fr) auto auto; }
+    .physics-workspace .ppq-title { grid-column: 1; grid-row: 1; }
+    .physics-workspace .ppq-header .physics-account { grid-column: 2; grid-row: 1; padding: 0; border: 0; gap: .65rem; font-size: .8rem; flex-wrap: nowrap; }
+    .physics-workspace .ppq-filter-toggle { grid-column: 3; grid-row: 1; min-height: 36px; padding: .35rem .65rem; }
+    .physics-workspace .ppq-header .ppq-filters { grid-row: 2; }
+    @media (max-width: 760px) {
+      .physics-workspace .ppq-header { grid-template-columns: minmax(0,1fr) auto; }
+      .physics-workspace .ppq-filter-toggle { grid-column: 2; width: auto; font-size: .78rem; }
+      .physics-workspace .ppq-header .physics-account { grid-column: 1 / -1; grid-row: 2; justify-content: space-between; }
+      .physics-workspace .ppq-header .ppq-filters { grid-row: 3; }
+    }
+    @media (min-width: 821px) {
+      body.physics-workspace { height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+      body.physics-workspace #ppq-root { flex: 1; min-height: 0; }
+    }
+    @media (max-width: 600px) { .physics-preview { padding: .65rem .8rem; font-size: .8rem; } }
+  </style>
+</head>
+<body>
+  <nav class="physics-preview" aria-label="Physics practice">
+    <a id="physics-home" href="../index.html">← Choose a course</a>
+    <p id="physics-mode">Local preview · Your progress stays in this browser.</p>
+  </nav>
+  <p id="physics-preview-notice" class="physics-preview-notice" hidden></p>
+  <main id="ppq-root">
+    <div class="physics-status" role="status">Loading physics questions…</div>
+  </main>
+  <noscript><p class="physics-status">Enable JavaScript to use the question viewer.</p></noscript>
+  <script src="data/physics_catalogue.js"></script>
+  <script src="engine/ppqviewer.js"></script>
+  <script src="physics-identity.js"></script>
+  <script src="physics-login.js"></script>
+  <script src="physics-reporting.js"></script>
+  <script src="physics-config.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      var root = document.getElementById("ppq-root");
+      function unavailable(message) {
+        root.innerHTML = '<div class="physics-status" role="alert"><h1>Physics practice is not ready here yet</h1><p></p><a href="../index.html">Choose another course</a></div>';
+        root.querySelector("p").textContent = message;
+      }
+      if (!window.PHYSICS_META || !Array.isArray(window.PHYSICS_QUESTIONS)) {
+        unavailable("The question collection could not be loaded. Open the built physics preview from its course chooser.");
+        return;
+      }
+      if (!window.PHYSICS_QUESTIONS.length) {
+        unavailable("There are no approved practice questions in this collection yet.");
+        return;
+      }
+      if (!window.PPQViewer || !window.PPQ_CONFIG) {
+        unavailable("The viewer files could not be loaded. Rebuild the local preview and try again.");
+        return;
+      }
+      document.title = window.PPQ_CONFIG.title;
+      if (window.PHYSICS_META.release) {
+        document.querySelector(".physics-preview").remove();
+      }
+      var params = new URLSearchParams(window.location.search);
+      var availableTopics = Array.from(new Set(window.PHYSICS_QUESTIONS.flatMap(function (q) { return q.topic_codes || []; })));
+      function topicKey(value) { return String(value).replace(/[.\s]/g, "").toUpperCase(); }
+      function showTopicChooser() {
+        root.innerHTML = '<section class="physics-topic-home"><h1><a href="./">IB Physics past-paper question viewer</a></h1>' +
+          '<h2>Choose a topic</h2><div class="physics-topic-grid physics-topics-available"></div>' +
+          '<h2 class="physics-topics-soon-heading">More topics</h2><div class="physics-topic-grid physics-topics-soon"></div></section>';
+        var known = [
+          ["A.1", "Kinematics"], ["A.5", "Galilean and special relativity"], ["C.1", "Simple harmonic motion"],
+          ["D.2", "Electric and magnetic fields"], ["E.1", "Structure of the atom"],
+          ["E.2", "Quantum physics"], ["DATA", "Data analysis and experimental method"]
+        ];
+        function card(code, label, available) {
+          var article = document.createElement("article"); article.className = "physics-topic-card";
+          var heading = document.createElement("h3"), link = document.createElement(available ? "a" : "span");
+          link.className = "physics-topic-link";
+          if (available) link.href = "?topic=" + encodeURIComponent(code);
+          else article.setAttribute("aria-disabled", "true");
+          var prefix = document.createElement("span"); prefix.className = "physics-topic-code";
+          prefix.textContent = code === "DATA" ? "" : code.replace(".", "");
+          link.appendChild(prefix); link.appendChild(document.createTextNode(label)); heading.appendChild(link); article.appendChild(heading);
+          var note = document.createElement("p");
+          note.textContent = available ? window.PHYSICS_QUESTIONS.filter(function (q) { return (q.topic_codes || []).indexOf(code) >= 0; }).length + " question parts" : "Not yet available";
+          article.appendChild(note);
+          if (available && topicKey(code) === "A5") {
+            var coverage = document.createElement("a"); coverage.className = "physics-topic-coverage";
+            coverage.href = window.PHYSICS_META.release ? "/SpecialRelativityDriller/app/coverage.html" : "../SpecialRelativityDriller/app/coverage.html";
+            coverage.textContent = "Relativity coverage across the Driller and past papers"; article.appendChild(coverage);
+          }
+          return article;
+        }
+        availableTopics.forEach(function (code) {
+          var fallback = known.find(function (topic) { return topicKey(topic[0]) === topicKey(code); });
+          var label = (window.PHYSICS_META.topics || {})[code] || (fallback && fallback[1]) || code;
+          root.querySelector(".physics-topics-available").appendChild(card(code, label, true));
+        });
+        known.filter(function (topic) { return !availableTopics.some(function (code) { return topicKey(topic[0]) === topicKey(code); }); }).forEach(function (topic) {
+          root.querySelector(".physics-topics-soon").appendChild(card(topic[0], topic[1], false));
+        });
+        if (!root.querySelector(".physics-topics-soon").children.length) root.querySelector(".physics-topics-soon-heading").hidden = true;
+      }
+      var requestedTopics = (params.get("topic") || "").split(",");
+      var hasRequestedTopic = requestedTopics.some(function (requested) {
+        return availableTopics.some(function (code) { return topicKey(code) === topicKey(requested) || (code === "DATA" && topicKey(requested) === "1B"); });
+      });
+      if (window.PHYSICS_META.course === "ib" && !params.get("id") && !hasRequestedTopic) {
+        showTopicChooser();
+        return;
+      }
+      var reportingEnabled = window.PhysicsReporting && window.PhysicsReporting.isLive(window.PHYSICS_META, window.location);
+      var reporter = window.PhysicsReporting && window.PhysicsReporting.create({
+        enabled: reportingEnabled, identity: window.physicsIdentity,
+        viewer: function () { return window.physicsViewer; }, questions: window.PHYSICS_QUESTIONS
+      });
+      function start(identity) {
+        if (window.physicsViewer) return;
+        if (identity) window.PPQ_CONFIG.learnerId = identity.anonymous_id || "local";
+      try {
+        window.physicsViewer = window.PPQViewer.mount(root, {
+          config: window.PPQ_CONFIG,
+          questions: window.PHYSICS_QUESTIONS,
+          meta: window.PHYSICS_META,
+          report: reporter ? reporter.report : null
+        });
+        var requestedId = new URLSearchParams(window.location.search).get("id");
+        if (requestedId) {
+          var requestedQuestion = window.physicsViewer.byId[requestedId];
+          if (requestedQuestion) {
+            if (!window.physicsViewer.view.some(function (q) { return q.id === requestedId; })) window.physicsViewer.clearAllFilters();
+            window.physicsViewer.goToId(requestedId);
+          } else {
+            var missingNotice = document.createElement("p");
+            missingNotice.setAttribute("role", "status");
+            missingNotice.className = "physics-preview-notice";
+            missingNotice.textContent = "That question is not in this practice collection. The available questions are shown below.";
+            root.before(missingNotice);
+          }
+        }
+        if (window.PHYSICS_META.course === "ib") {
+          document.body.classList.add("physics-workspace");
+          root.classList.add("ppq-compact-workspace");
+          var title = root.querySelector(".ppq-title"), home = document.createElement("a");
+          home.href = "./"; home.className = "physics-viewer-home"; home.textContent = "IB Physics past-paper question viewer";
+          home.setAttribute("aria-label", "IB Physics past-paper question viewer: choose a topic");
+          title.textContent = ""; title.appendChild(home);
+          var account = document.querySelector(".physics-account");
+          if (account) root.querySelector(".ppq-header").appendChild(account);
+        }
+      } catch (error) {
+        unavailable("The viewer could not start. Check that browser storage is available, then reload this local preview.");
+        console.error("Physics preview could not start", error);
+      }
+      }
+      if (window.PHYSICS_META.course === "ib") {
+        if (!window.PhysicsLogin || !window.physicsIdentity) {
+          unavailable("The shared physics sign-in could not be loaded. Reload the page to try again. Your saved practice has not been changed.");
+          return;
+        }
+        var previousIdentity = null;
+        window.physicsLogin = window.PhysicsLogin.mount({
+          identity: window.physicsIdentity,
+          appEl: root,
+          trackingEnabled: reportingEnabled,
+          onEnter: start,
+          onIdentityChange: function (identity) {
+            var learnerId = identity.anonymous_id || "local", viewer = window.physicsViewer;
+            var changedPerson = previousIdentity && (previousIdentity.anonymous_id !== identity.anonymous_id ||
+              previousIdentity.display_name !== identity.display_name || previousIdentity.signed_in !== identity.signed_in);
+            window.PPQ_CONFIG.learnerId = learnerId;
+            if (viewer) {
+              viewer.cfg.learnerId = learnerId;
+              if (changedPerson && viewer.cur) {
+                // A clean visit removes the previous person's revealed answer,
+                // guess, marks, review and timer without writing an outcome.
+                var review = viewer._practiceReview, resume = viewer._practiceResumeId;
+                viewer._bankMs = 0;
+                viewer._sessionTimed = {count:0,totalMs:0,targetMs:0};
+                viewer.render(viewer.cur);
+                viewer._practiceReview = review; viewer._practiceResumeId = resume;
+              }
+              if (!identity.signed_in) viewer._stopTimer();
+            }
+            previousIdentity = {anonymous_id:identity.anonymous_id,display_name:identity.display_name,signed_in:identity.signed_in};
+          }
+        });
+      } else {
+        start();
+      }
+    })();
+  </script>
+</body>
+</html>

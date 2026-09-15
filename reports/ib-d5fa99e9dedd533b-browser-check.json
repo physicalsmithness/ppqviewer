@@ -1,0 +1,19 @@
+{
+  "build_id": "d5fa99e9dedd533b",
+  "reviewed_on": "2026-09-13",
+  "url": "http://127.0.0.1:8789/",
+  "result": "PASS",
+  "checks": [
+    "The chooser offers A1 149, A5 138, C1 25, D2 146, E1 55 and E2 39 parts.",
+    "E1 opens an original MCQ with all four options and readable current/original-level badges.",
+    "E1 written 21M.P2.SL.TZ2.Q4(a) shows the reviewed answer-free Practice focus, full context including the supplied equation, and its complete two-mark scheme.",
+    "The final package presents Q4(a) before Q4(b), including the existing D2 sibling.",
+    "E2 opens an original MCQ and its own authored question-type list.",
+    "Selecting E2.6B highlights the selected type, keeps Key tips collapsed, and opens 25N.P2.HL.TZ1.Q6(b_ii) with the exact one-mark target.",
+    "That E2 written question and its complete one-mark de Broglie calculation render correctly. The right-hand type selection remains visible during question scrolling."
+  ],
+  "content_witness": "Question and markscheme visual checks were performed on candidate 4282c8113aa31ec5. The final rebuild changes E part order only; the independent ordering review verified identical retained source IDs, metadata, keys and ordered crop arrays. The reported Q4 order was rechecked in the actual final browser package.",
+  "attempts_or_ratings_submitted": false,
+  "help_or_display_reports_submitted": false,
+  "publication_verified_by_this_record": false
+}

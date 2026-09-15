@@ -1,0 +1,539 @@
+{
+  "schema_version": 1,
+  "topic": "D.2",
+  "reviewed_on": "2026-09-12",
+  "review_kind": "bounded_independent_visual_sample_and_full_selection_reservation_check",
+  "reviewed_source_part_ids": [
+    "ibchem_part_92973452bc64c528",
+    "ibchem_part_f9c041f3d9c42a2d",
+    "ibchem_part_8231798b8e724b73",
+    "ibchem_part_4bc035a88f0d8896",
+    "ibchem_part_f4a07bf658be2c34",
+    "ibchem_part_448ca84dc8f85e1c",
+    "ibchem_part_569cd6fc35db56ab",
+    "ibchem_part_250f633ce14435c5",
+    "ibchem_part_f504bac67c9788a0"
+  ],
+  "selection_parts": 149,
+  "selection_parents": 138,
+  "reviewed_images": [
+    {
+      "source_part_id": "ibchem_part_92973452bc64c528",
+      "parent_id": "04N.P1.HL.TZ0.Q31",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_1_5bc0c286\\crops\\question_31_v020_p020_01_3a09fc1b59.png",
+      "sha256": "d6fb9a54278a247322e8b74771402c14329fb35db2f0b265dc226c62a0e683bb",
+      "owner_question": "31",
+      "owner_part": "31",
+      "source_region": {
+        "page_number": 20,
+        "bbox": [
+          42.52,
+          66.87,
+          555.76,
+          637.02
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_1_5bc0c286\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_92973452bc64c528",
+      "parent_id": "04N.P1.HL.TZ0.Q31",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_1_5bc0c286\\crops\\mark_scheme_31_v002_p002_01_005e66406a.png",
+      "sha256": "641b10c7c8304000c1df20f42826c88839fa6393c4f0aecbde31871c8bde77c6",
+      "owner_question": "31",
+      "owner_part": "31",
+      "source_region": {
+        "page_number": 2,
+        "bbox": [
+          314,
+          113.83,
+          392.68,
+          127.11
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_1_5bc0c286\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_f9c041f3d9c42a2d",
+      "parent_id": "06M.P1.HL.TZ1.Q26",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_1_947474ec\\crops\\question_26_v015_p015_01_bbc8368405.png",
+      "sha256": "5737ed303ea8603f7ca7176555baee651f367c6dee237b21a5769f709bbf5390",
+      "owner_question": "26",
+      "owner_part": "26",
+      "source_region": {
+        "page_number": 15,
+        "bbox": [
+          42.52,
+          66.88,
+          555.75,
+          519.58
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_1_947474ec\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_f9c041f3d9c42a2d",
+      "parent_id": "06M.P1.HL.TZ1.Q26",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_1_947474ec\\crops\\mark_scheme_26_v002_p002_01_d36e073c40.png",
+      "sha256": "e89edc00b88feb6ea3b3fdf82f15e7d16631624a0200fe360a3d18e90b7b73fd",
+      "owner_question": "26",
+      "owner_part": "26",
+      "source_region": {
+        "page_number": 2,
+        "bbox": [
+          172.16,
+          402.55,
+          254.12,
+          415.83
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_1_947474ec\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_f504bac67c9788a0",
+      "parent_id": "06M.P3.SL.TZ2.QB4",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_3_92cc5d22\\crops\\question_b4_b_v009_p009_01_254e9e0ac3.png",
+      "sha256": "3368ee1ae514a02e82ff474945c5cd3034e1c3a3e460574ff82a72e6429b6a6c",
+      "owner_question": "B4",
+      "owner_part": "B4(b)",
+      "source_region": {
+        "page_number": 9,
+        "bbox": [
+          70.87,
+          359.06,
+          551.96,
+          501.58
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_3_92cc5d22\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_f504bac67c9788a0",
+      "parent_id": "06M.P3.SL.TZ2.QB4",
+      "role": "context",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_3_92cc5d22\\crops\\question_question_b4_v009_p009_01_78d8cfb585.png",
+      "sha256": "b4336b9f505f6c6a90ab90f0602da80f091934f3987818f2a60a05caf444664e",
+      "owner_question": "B4",
+      "owner_part": null,
+      "source_region": {
+        "page_number": 9,
+        "bbox": [
+          42.52,
+          66.87,
+          551.96,
+          501.58
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_3_92cc5d22\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_f504bac67c9788a0",
+      "parent_id": "06M.P3.SL.TZ2.QB4",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_3_92cc5d22\\crops\\mark_scheme_b4_b_v006_p006_01_d449189370.png",
+      "sha256": "379b3812ab6b52cf9f5cf579e328352c5a27af59dcdb190aabfbf99ce72c18d9",
+      "owner_question": "B4",
+      "owner_part": "B4(b)",
+      "source_region": {
+        "page_number": 6,
+        "bbox": [
+          70.88,
+          466.58,
+          555.92,
+          534.03
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_3_92cc5d22\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_f504bac67c9788a0",
+      "parent_id": "06M.P3.SL.TZ2.QB4",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_3_92cc5d22\\crops\\mark_scheme_b4_b_v007_p007_02_303ecd2814.png",
+      "sha256": "c0251a804a9c7e348f1e86b417705fa3a3991d5dddac80c5cc34c7c9ecdbcc39",
+      "owner_question": "B4",
+      "owner_part": "B4(b)",
+      "source_region": {
+        "page_number": 7,
+        "bbox": [
+          42.56,
+          85.39,
+          202.28,
+          98.67
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2006_may_3_92cc5d22\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_8231798b8e724b73",
+      "parent_id": "25M.P1A.HL.TZ1.Q26",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_482eab55\\crops\\question_26_v017_p017_01_b7424e43c2.png",
+      "sha256": "3aa909713ac0c5aedff7892d498fc2a1e981f7ff1197d24283da11c42c9abe4c",
+      "owner_question": "26",
+      "owner_part": "26",
+      "source_region": {
+        "page_number": 17,
+        "bbox": [
+          42.52,
+          478.78,
+          349.84,
+          599.37
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_482eab55\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_8231798b8e724b73",
+      "parent_id": "25M.P1A.HL.TZ1.Q26",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_482eab55\\crops\\mark_scheme_26_v003_p003_01_6ed09e25ca.png",
+      "sha256": "d1680e0f241a48ab4ecf9e383c8f896bdc3874d544a253479adff16c2dfefcee",
+      "owner_question": "26",
+      "owner_part": "26",
+      "source_region": {
+        "page_number": 3,
+        "bbox": [
+          171.98,
+          363.74,
+          244.77,
+          376.05
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_482eab55\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_4bc035a88f0d8896",
+      "parent_id": "25M.P1A.SL.TZ1.Q18",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_5633f8c2\\crops\\question_18_v013_p013_01_65550f08ac.png",
+      "sha256": "d3e878c789c58b693b1d84087671449d49ae1e657a0cfa1b74edb68e6a9ca311",
+      "owner_question": "18",
+      "owner_part": "18",
+      "source_region": {
+        "page_number": 13,
+        "bbox": [
+          42.52,
+          67.13,
+          349.84,
+          187.72
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_5633f8c2\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_4bc035a88f0d8896",
+      "parent_id": "25M.P1A.SL.TZ1.Q18",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_5633f8c2\\crops\\mark_scheme_18_v003_p003_01_83acc9e53c.png",
+      "sha256": "550dff336c7a15f6eae17ae56425cb436ad43fea1f0f0fb268be081b836dd56c",
+      "owner_question": "18",
+      "owner_part": "18",
+      "source_region": {
+        "page_number": 3,
+        "bbox": [
+          171.98,
+          161.27,
+          244.77,
+          173.58
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_5633f8c2\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_f4a07bf658be2c34",
+      "parent_id": "25M.P1A.HL.TZ2.Q24",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_c17e4ba9\\crops\\question_24_v013_p013_01_35cb4da525.png",
+      "sha256": "062f150672faec652925e41c7b7b639418d297da2286a0f21b888598e0781f0d",
+      "owner_question": "24",
+      "owner_part": "24",
+      "source_region": {
+        "page_number": 13,
+        "bbox": [
+          42.52,
+          379.72,
+          551.13,
+          581.67
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_c17e4ba9\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_f4a07bf658be2c34",
+      "parent_id": "25M.P1A.HL.TZ2.Q24",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_c17e4ba9\\crops\\mark_scheme_24_v003_p003_01_d0ab0b239d.png",
+      "sha256": "171e321dc183bcf97eb2c37e952715f40a4012502c97447030fcdb8f09af0f45",
+      "owner_question": "24",
+      "owner_part": "24",
+      "source_region": {
+        "page_number": 3,
+        "bbox": [
+          171.97,
+          311.55,
+          244.74,
+          326.62
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_1a_c17e4ba9\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_250f633ce14435c5",
+      "parent_id": "25M.P2.HL.TZ3.Q5",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\crops\\question_5_b__iii_v015_p015_01_e12114850d.png",
+      "sha256": "929a080f03cca949d86d7f2a410703febf26dceb2a8ab5ca2c859f8055e55311",
+      "owner_question": "5",
+      "owner_part": "5(b)(iii)",
+      "source_region": {
+        "page_number": 15,
+        "bbox": [
+          70.87,
+          94.05,
+          552.75,
+          478.19
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_250f633ce14435c5",
+      "parent_id": "25M.P2.HL.TZ3.Q5",
+      "role": "context",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\crops\\question_question_5_v014_p014_01_e35716a04c.png",
+      "sha256": "ab22b4e75ed21868d1ae2cce3ee81a5cd806e22f7067f53ee66845189c0bde3a",
+      "owner_question": "5",
+      "owner_part": null,
+      "source_region": {
+        "page_number": 14,
+        "bbox": [
+          42.52,
+          67.76,
+          552.76,
+          432.99
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_250f633ce14435c5",
+      "parent_id": "25M.P2.HL.TZ3.Q5",
+      "role": "context",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\crops\\question_question_5_v015_p015_02_ed2c1793b7.png",
+      "sha256": "929a080f03cca949d86d7f2a410703febf26dceb2a8ab5ca2c859f8055e55311",
+      "owner_question": "5",
+      "owner_part": null,
+      "source_region": {
+        "page_number": 15,
+        "bbox": [
+          70.87,
+          94.05,
+          552.75,
+          478.19
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_250f633ce14435c5",
+      "parent_id": "25M.P2.HL.TZ3.Q5",
+      "role": "context",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\crops\\question_question_5_v016_p016_03_e03e1e3af1.png",
+      "sha256": "8c80848d695fc0b9d28099124e6d80e136d01a7e4c88cf24cffa97180d3a4236",
+      "owner_question": "5",
+      "owner_part": null,
+      "source_region": {
+        "page_number": 16,
+        "bbox": [
+          99.21,
+          109.17,
+          552.75,
+          147.56
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_250f633ce14435c5",
+      "parent_id": "25M.P2.HL.TZ3.Q5",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\crops\\mark_scheme_5_b__iii_v014_p014_01_7d325c9248.png",
+      "sha256": "e46c554d122ab2bbec386d29c4dac8266e12d1cc71348ef944f320c4d6867121",
+      "owner_question": "5",
+      "owner_part": "5(b)(iii)",
+      "source_region": {
+        "page_number": 14,
+        "bbox": [
+          52.08,
+          121.69,
+          785.83,
+          219.55
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_b520dfea\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_448ca84dc8f85e1c",
+      "parent_id": "25M.P2.SL.TZ3.Q5",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\crops\\question_5_a_v010_p010_01_45ea2c91c2.png",
+      "sha256": "b76e846b1e8982ab7633a7ebeac23935bc07d232748e99cbbffe25ee25bdb668",
+      "owner_question": "5",
+      "owner_part": "5(a)",
+      "source_region": {
+        "page_number": 10,
+        "bbox": [
+          70.87,
+          187.98,
+          552.76,
+          390.71
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_448ca84dc8f85e1c",
+      "parent_id": "25M.P2.SL.TZ3.Q5",
+      "role": "context",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\crops\\question_question_5_v010_p010_01_1718ff31c7.png",
+      "sha256": "3fc1760da35eb21b63687db40dedc51baed33fd617866c8030beb9fa95c3f910",
+      "owner_question": "5",
+      "owner_part": null,
+      "source_region": {
+        "page_number": 10,
+        "bbox": [
+          42.52,
+          67.76,
+          552.76,
+          570.67
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_448ca84dc8f85e1c",
+      "parent_id": "25M.P2.SL.TZ3.Q5",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\crops\\mark_scheme_5_a_v010_p010_01_459d1a4fb7.png",
+      "sha256": "9507640c7c2d031685e62c8e70656f14e5fd927b5f8179636054b88a4be5a658",
+      "owner_question": "5",
+      "owner_part": "5(a)",
+      "source_region": {
+        "page_number": 10,
+        "bbox": [
+          52.08,
+          109.69,
+          768.07,
+          268.15
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\mark_scheme_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_569cd6fc35db56ab",
+      "parent_id": "25M.P2.SL.TZ3.Q5",
+      "role": "question",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\crops\\question_5_b__i_v010_p010_01_da97c6e13a.png",
+      "sha256": "21088f13d0348ab6d1672ae992397b4c9742da7063bf3ce46c778ed6a735f105",
+      "owner_question": "5",
+      "owner_part": "5(b)(i)",
+      "source_region": {
+        "page_number": 10,
+        "bbox": [
+          70.87,
+          402.31,
+          552.75,
+          443.19
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_569cd6fc35db56ab",
+      "parent_id": "25M.P2.SL.TZ3.Q5",
+      "role": "context",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\crops\\question_question_5_v010_p010_01_1718ff31c7.png",
+      "sha256": "3fc1760da35eb21b63687db40dedc51baed33fd617866c8030beb9fa95c3f910",
+      "owner_question": "5",
+      "owner_part": null,
+      "source_region": {
+        "page_number": 10,
+        "bbox": [
+          42.52,
+          67.76,
+          552.76,
+          570.67
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\question_preview.json"
+    },
+    {
+      "source_part_id": "ibchem_part_569cd6fc35db56ab",
+      "parent_id": "25M.P2.SL.TZ3.Q5",
+      "role": "markscheme",
+      "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\crops\\mark_scheme_5_b__i_v010_p010_01_38b154e4df.png",
+      "sha256": "ff4d7c912a7da277066c5e7c7849e0b821674786b61b027e2639b04180cc1aeb",
+      "owner_question": "5",
+      "owner_part": "5(b)(i)",
+      "source_region": {
+        "page_number": 10,
+        "bbox": [
+          52.08,
+          297.94,
+          768.07,
+          338.95
+        ]
+      },
+      "metadata_path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2025_may_2_e1821998\\mark_scheme_preview.json"
+    }
+  ],
+  "unique_image_count": 24,
+  "source_files": [
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-d2-release-clearance.json",
+      "sha256": "0a1d756b3b41a89a6334f709b7becb55a22012c8b9aa95036fdc91bc11854d63"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-d2-reviewed-test-exclusions.json",
+      "sha256": "8bdaa64da765930d8d2dc6f2a877c8b628e475fef40ddc49463f3f8138dc9a63"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-review-note-reservations.json",
+      "sha256": "ab2b6e46a1ed924be4387cc4f3513292b47f774354c885803d8c651dd9bbd765"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-d2-reviewed-presentation.json",
+      "sha256": "fdb45db54b5fdbfd291b8aa632239c5a92fa9b51b14c74e0437fbc4739df2b4b"
+    }
+  ],
+  "reservation_check": {
+    "parts": 149,
+    "additive_exclusion_paths": 6,
+    "source_parent_and_question_context_page_violations": [],
+    "full_corpus_siblings_checked": true
+  },
+  "findings": [
+    {
+      "source_part_id": "ibchem_part_f504bac67c9788a0",
+      "disposition": "omit_exact_unrelated_heading_keep_complete_answer",
+      "evidence_file": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-d2-reviewed-presentation.json"
+    }
+  ],
+  "observations": [
+    "Five MCQ own crops and original answer crops were read, including2004/2006 legacy diagrams and2025 HL/SL copies. Source keys and visible question numbering agree.",
+    "Four structured parts were inspected with their exact own crops, complete retained parent-context images and supplied scheme crops. The25M HLQ5biii context spans three sourcepages and shows all original surrounding prompts.",
+    "The06M SLB4b first scheme crop contains the complete three-mark answer; its second crop is an unrelated following section heading. OriginalPDFpages6/7 and page renders were reviewed; the source-bound exact omission overlay records the correction.",
+    "No reserved test prompt was found in the sampled retained own/context/answer content. The separate full149-part reservation replay also found no source, parent/sibling or shared question-page violation."
+  ],
+  "limits": [
+    "This is a nine-part visual sample, not visual proofreading of all392sourceimagepaths.",
+    "The exact heading omission must be applied and final source/asset checks rerun before publication.",
+    "No learner attempts, help requests or external writes were made. Private audit only."
+  ]
+}

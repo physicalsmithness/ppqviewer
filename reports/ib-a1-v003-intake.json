@@ -1,0 +1,629 @@
+{
+  "schema_version": 1,
+  "topic": "A.1",
+  "review_kind": "read-only analyst handoff intake",
+  "reviewed_at": "2026-09-13T12:14:59.486Z",
+  "disposition": "not imported; published f600 unchanged",
+  "source_snapshot": "v003",
+  "source_override": {
+    "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/bank_browser/source_overrides.json",
+    "sha256": "621cfbc40cc517671d12c9751bfbe5f5f13b68f6fbe355b769f05f23da53b205"
+  },
+  "source_override_policy": "Only reviewed replacements for the listed parts; preserve other recovery. v001 is superseded.",
+  "source_pins": [
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/outputs/a1_membership_completion_2026-09-12/v003/manifest.json",
+      "sha256": "a5ad0aa86d54b3a4eb84ce103817e92a441221e2d7ffb811b9fda5466820bd8e",
+      "expected_sha256": "a5ad0aa86d54b3a4eb84ce103817e92a441221e2d7ffb811b9fda5466820bd8e",
+      "verified": true
+    },
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/outputs/a1_membership_completion_2026-09-12/v003/reviewed_scope_outcomes.csv",
+      "sha256": "67b4329844c7571a9e706f9ec6e47623934aef90859019de64be7de6bc41182c",
+      "expected_sha256": "67b4329844c7571a9e706f9ec6e47623934aef90859019de64be7de6bc41182c",
+      "verified": true
+    },
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/outputs/a1_membership_completion_2026-09-12/v003/reviewed_type_assignments.csv",
+      "sha256": "633e87e147713010d8d23cdab4d3038e019d2c106d2d60e701481a60fe9d64f6",
+      "expected_sha256": "633e87e147713010d8d23cdab4d3038e019d2c106d2d60e701481a60fe9d64f6",
+      "verified": true
+    },
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/outputs/a1_membership_completion_2026-09-12/v003/reviewed_syllabus_assignments.csv",
+      "sha256": "4729bd2088be7d0980bef1d9d4cb43b767fb79dc0a1e0eacd9e5dcc4d87dda21",
+      "expected_sha256": "4729bd2088be7d0980bef1d9d4cb43b767fb79dc0a1e0eacd9e5dcc4d87dda21",
+      "verified": true
+    },
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/outputs/a1_membership_completion_2026-09-12/v003/source_evidence.csv",
+      "sha256": "02fbb2e743646f5df13bba2a1522143d90b4e92cd315f07d3e9cd5cf9ab0ad48",
+      "expected_sha256": "02fbb2e743646f5df13bba2a1522143d90b4e92cd315f07d3e9cd5cf9ab0ad48",
+      "verified": true
+    }
+  ],
+  "additional_source_files": [
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/outputs/a1_membership_completion_2026-09-12/v003/HANDOVER.md",
+      "sha256": "8e7b5c822f45a0621506ac98356b44487887d737993384a01d0868b9968f5733"
+    },
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/reports/categorisation_audit_2026-09-13/a1_v003_integration.md",
+      "sha256": "3dc5a089e58a54afae5141634655bd949e3f5e61b4e25b93eeadad697e70ad79"
+    },
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/outputs/a1_membership_recovery_2026-09-12/versioned_types.csv",
+      "sha256": "8df50062a70edcf23b53cabfea169f1c10f6ea693a15830b7c68ebd18325d752"
+    }
+  ],
+  "public_baseline": {
+    "build_id": "f6004e904e4c69a8",
+    "build_info": {
+      "path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/deploy/ibphysicsppqs/build-info.json",
+      "sha256": "7952b878a68aafc76096bb9ced53d33e2ec8700e4b989670e19bebf2b2e22aab"
+    },
+    "catalogue": {
+      "path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/deploy/ibphysicsppqs/data/physics_catalogue.js",
+      "sha256": "5096dc718c648a96846a19411be73d71478b127e0aa3a24f45549359e8ff220e"
+    },
+    "parts": 454,
+    "a1_parts": 150,
+    "a1_typed_parts": 129,
+    "a1_source_ids": [
+      "ibchem_part_0020e9fc14ace315",
+      "ibchem_part_01307e3ca80c803c",
+      "ibchem_part_01aa1f0ee552d591",
+      "ibchem_part_02e387d6d50c085b",
+      "ibchem_part_03f511b474f0d857",
+      "ibchem_part_04764e60306d7f1b",
+      "ibchem_part_054c8c665f30b2b6",
+      "ibchem_part_07130555d5d506dd",
+      "ibchem_part_0714d5e4ffa53dbe",
+      "ibchem_part_08b44870c51909e1",
+      "ibchem_part_0b8b652b0609282c",
+      "ibchem_part_0dcd048eb0dbf949",
+      "ibchem_part_0ebabf4ad5cdc39e",
+      "ibchem_part_11d7fd9a6ba26c2f",
+      "ibchem_part_13130ebe636c3e79",
+      "ibchem_part_198879b574c4680d",
+      "ibchem_part_1a890fa92b9a3186",
+      "ibchem_part_1a9fd1cf26e906a1",
+      "ibchem_part_1c8c0fa374314522",
+      "ibchem_part_1c9681ba65c7422b",
+      "ibchem_part_1f581f0ff8059000",
+      "ibchem_part_24c262b94bf19f6e",
+      "ibchem_part_289fdfab0f4cde36",
+      "ibchem_part_29e2997ecaddfa21",
+      "ibchem_part_2f85e82c30b77d05",
+      "ibchem_part_30b0dfccc84862f1",
+      "ibchem_part_3104322f47d9b16d",
+      "ibchem_part_32b2fada3c495170",
+      "ibchem_part_33b353f4ef39378d",
+      "ibchem_part_33c09f8b6143e337",
+      "ibchem_part_34213f650d4f5927",
+      "ibchem_part_347fc000b347bf66",
+      "ibchem_part_36395de190cb4ceb",
+      "ibchem_part_366e2956a24a5319",
+      "ibchem_part_37e2d43dce14c4e2",
+      "ibchem_part_37f6c0b4ca6d2e88",
+      "ibchem_part_39563657b2dc5d9b",
+      "ibchem_part_3d626a5366008482",
+      "ibchem_part_3e1df4d9d191c59f",
+      "ibchem_part_42beb8eb0ed15c86",
+      "ibchem_part_45eda6823b6e50b4",
+      "ibchem_part_47ec4ea9a5de911e",
+      "ibchem_part_4bc7ec2012dd2357",
+      "ibchem_part_4c4508c567c12cbb",
+      "ibchem_part_4f19306abe1c67fe",
+      "ibchem_part_55642c351b7b288d",
+      "ibchem_part_557822036daacf8c",
+      "ibchem_part_5682d6787487b04b",
+      "ibchem_part_58303709a84a7de2",
+      "ibchem_part_5832ea92da806314",
+      "ibchem_part_593d18f6bb26d1f6",
+      "ibchem_part_59f87b9060facacd",
+      "ibchem_part_5a01edef9ea3feb4",
+      "ibchem_part_5b2ffc0c00316494",
+      "ibchem_part_5cf9a525fd41f694",
+      "ibchem_part_5fe6ac44665c0376",
+      "ibchem_part_61689e5a45b63a19",
+      "ibchem_part_6233a709dfd74d3d",
+      "ibchem_part_6564435538caa726",
+      "ibchem_part_6864157f9cd2a465",
+      "ibchem_part_692384dd1365818d",
+      "ibchem_part_69fa031c9f9ae393",
+      "ibchem_part_6a7117c4ca36765c",
+      "ibchem_part_6ef8eee54c7d7faf",
+      "ibchem_part_7101ecc090ff586a",
+      "ibchem_part_727345aee9540caa",
+      "ibchem_part_72a86d060abc2d51",
+      "ibchem_part_736c5ec00bd8e0b9",
+      "ibchem_part_73f681f273546242",
+      "ibchem_part_75a785f6070ed4e1",
+      "ibchem_part_75e21403adbaccc9",
+      "ibchem_part_7885b9e9771bf75d",
+      "ibchem_part_7b21edd4363bf45b",
+      "ibchem_part_7de8994f35a8a445",
+      "ibchem_part_7e902d3876935cac",
+      "ibchem_part_7ed0627009fc0899",
+      "ibchem_part_7ff5c70aabe3b9b7",
+      "ibchem_part_815c9aaff84163cf",
+      "ibchem_part_8290a7bc511d83b1",
+      "ibchem_part_8605e8532cd531b0",
+      "ibchem_part_8756d3eb94dcb7cb",
+      "ibchem_part_889c21cc4de7caa8",
+      "ibchem_part_89a8a41f5d03ea06",
+      "ibchem_part_8bd2c23dcde39394",
+      "ibchem_part_8c34e54944807d9e",
+      "ibchem_part_8c400c4d0c342686",
+      "ibchem_part_9009bb41737a95f5",
+      "ibchem_part_922f700a04c83d60",
+      "ibchem_part_9235650e4b3bb90f",
+      "ibchem_part_937ebf83bf69a8b9",
+      "ibchem_part_93aa3c546b185c68",
+      "ibchem_part_94d4d8081f1b6651",
+      "ibchem_part_94efe6655dedfd8c",
+      "ibchem_part_955c82abea7340c8",
+      "ibchem_part_95a9f9cea313d2ef",
+      "ibchem_part_9f822f9e463da69d",
+      "ibchem_part_a17cee62b97bdc48",
+      "ibchem_part_a213e4b24720648f",
+      "ibchem_part_a5da8a99b7277a68",
+      "ibchem_part_a639e5568d6dd73f",
+      "ibchem_part_a79f3ba7d342aa0f",
+      "ibchem_part_a81d0d0d461e71d4",
+      "ibchem_part_add47fc1a60f077d",
+      "ibchem_part_aee9c7dd08f6db0e",
+      "ibchem_part_b087424e924b8239",
+      "ibchem_part_b10cd94d6f97c812",
+      "ibchem_part_b1e13ffb26532588",
+      "ibchem_part_b1e294686cfa5656",
+      "ibchem_part_b30d0d5eb203d0c2",
+      "ibchem_part_b3ae5cc3204eba82",
+      "ibchem_part_b5f814b982bf12bb",
+      "ibchem_part_b63b7e388b9783cd",
+      "ibchem_part_b923385c8bb784a5",
+      "ibchem_part_bcf2df769b914050",
+      "ibchem_part_bcffe3a7eb3d26ce",
+      "ibchem_part_bea923263c909175",
+      "ibchem_part_c2b0001b32103b85",
+      "ibchem_part_c7c365d32ffc89ac",
+      "ibchem_part_c9e9e4dd2ada2471",
+      "ibchem_part_caace3a63eb8e8d3",
+      "ibchem_part_ccda5ab0c7d1c164",
+      "ibchem_part_cd942becca430535",
+      "ibchem_part_d3dde65265d81dd2",
+      "ibchem_part_d60ec5a960e0acfb",
+      "ibchem_part_d6e3c4852cc7bdd7",
+      "ibchem_part_ddff3fb1c0481b96",
+      "ibchem_part_de3ce233b79bee7e",
+      "ibchem_part_de77f2a3eb27c34a",
+      "ibchem_part_e3843f96b737e36f",
+      "ibchem_part_e41eeb874657f084",
+      "ibchem_part_e4e67879dcaa5710",
+      "ibchem_part_e54cbc745924f160",
+      "ibchem_part_e90c0572cd40682f",
+      "ibchem_part_ea7938a619b15dac",
+      "ibchem_part_ece611d0e524f9c4",
+      "ibchem_part_ecfd1c0e6acba8b8",
+      "ibchem_part_eddc634ca87b7c52",
+      "ibchem_part_f2272c2f64f59f93",
+      "ibchem_part_f5fd8108ab5d77b9",
+      "ibchem_part_f7886886cb5faf12",
+      "ibchem_part_f8caab29f037c8d8",
+      "ibchem_part_fa6c6fa8fb45e991",
+      "ibchem_part_fb0bc8061e590b4a",
+      "ibchem_part_fb343d7bdd29f93c",
+      "ibchem_part_fe2bdea63d2aa10b",
+      "ibchem_part_ff25ce11e340a3f4",
+      "ibchem_part_ff3a68de6396aebd",
+      "ibchem_part_ff7f62f0845eaa45",
+      "ibchem_part_ff9477836e45e196",
+      "ibchem_part_fff7944243163a08"
+    ]
+  },
+  "counts": {
+    "reviewed_ids": 154,
+    "unique_reviewed_ids": 154,
+    "type_links": 119,
+    "current_type_links": 117,
+    "retired_type_links": 2,
+    "all_typed_parts": 111,
+    "current_typed_parts": 109,
+    "current_direct_type_parts": 66,
+    "current_type_roles": {
+      "direct": 70,
+      "supporting_required": 25,
+      "supporting_normal": 2,
+      "alternative_route": 20
+    },
+    "syllabus_links": 123,
+    "scope_outcomes": {
+      "included_current_a1": 46,
+      "mixed_scope": 25,
+      "supporting_only": 40,
+      "unresolved_source": 1,
+      "outside_current_a1": 37,
+      "retired_a1": 2,
+      "current_a1_type_gap": 3
+    },
+    "public_overlaps": 8,
+    "public_difference_counts": {
+      "direct_type_replaced": 2,
+      "previously_untyped_now_direct": 4,
+      "unchanged": 2
+    },
+    "public_new_outside_retired_unresolved_or_typegap_parts": 0
+  },
+  "public_overlaps": [
+    {
+      "source_part_id": "ibchem_part_30b0dfccc84862f1",
+      "parent_id": "24M.P2.SL.TZ2.Q1",
+      "published_topics": [
+        "A.1"
+      ],
+      "source_content_sha256": "ab93835774e0a367418ac343a96d14e05da53ed70536e770a9a79d7b55d322ef",
+      "scope_outcome": "included_current_a1",
+      "review_status": "source_reviewed",
+      "old_direct_type_codes": [
+        "A1.2g"
+      ],
+      "new_types": [
+        {
+          "code": "A1.13c",
+          "type_id": "A1_007B_SECOND_2026-08-27:A1.13c",
+          "role": "direct",
+          "route_condition": "",
+          "decision_file": "reviews\\root\\batch_001.json"
+        }
+      ],
+      "syllabus_assignments": [
+        {
+          "code": "A.1.13",
+          "code_system": "Patrick_extended_A1_spine",
+          "role": "direct",
+          "route_condition": ""
+        }
+      ],
+      "difference": "direct_type_replaced",
+      "rationale": "The demand is how drag produces terminal speed. The scheme accepts either force/acceleration or energy-transfer explanations, so zero acceleration is not a universal separate assessed step. Replace the inherited zero-acceleration inference with the resisted-motion explanation."
+    },
+    {
+      "source_part_id": "ibchem_part_32b2fada3c495170",
+      "parent_id": "23M.P3.HL.TZ1.Q13",
+      "published_topics": [
+        "A.1"
+      ],
+      "source_content_sha256": "73629ae295af10ffaf685e58aa6275c0f502e5fbd85fa8634876f2ed812ad06e",
+      "scope_outcome": "mixed_scope",
+      "review_status": "source_reviewed",
+      "old_direct_type_codes": [
+        "A1.5b"
+      ],
+      "new_types": [
+        {
+          "code": "A1.1a",
+          "type_id": "A1_007B_SECOND_2026-08-27:A1.1a",
+          "role": "direct",
+          "route_condition": "",
+          "decision_file": "reviews\\review_a\\batch_001.json"
+        }
+      ],
+      "syllabus_assignments": [
+        {
+          "code": "A.1.1",
+          "code_system": "Patrick_extended_A1_spine",
+          "role": "direct",
+          "route_condition": ""
+        }
+      ],
+      "difference": "direct_type_replaced",
+      "rationale": "The scheme finds the longer reflected-ray path using critical-angle geometry, then uses common signal speed and the path difference to find the arrival delay. This is a genuine two-signal timing calculation in an optics context."
+    },
+    {
+      "source_part_id": "ibchem_part_7ed0627009fc0899",
+      "parent_id": "25M.P1A.SL.TZ3.Q4",
+      "published_topics": [
+        "A.1"
+      ],
+      "source_content_sha256": "e4272cd6325ea6be2b18e9b86dc90d98956be9e241bcaa7cb1711ad82119e517",
+      "scope_outcome": "included_current_a1",
+      "review_status": "source_reviewed",
+      "old_direct_type_codes": [],
+      "new_types": [
+        {
+          "code": "A1.13c",
+          "type_id": "A1_007B_SECOND_2026-08-27:A1.13c",
+          "role": "direct",
+          "route_condition": "",
+          "decision_file": "reviews\\review_c\\batch_001.json"
+        }
+      ],
+      "syllabus_assignments": [
+        {
+          "code": "A.1.13",
+          "code_system": "Patrick_extended_A1_spine",
+          "role": "direct",
+          "route_condition": ""
+        }
+      ],
+      "difference": "previously_untyped_now_direct",
+      "rationale": "Acceleration versus velocity for a raindrop tests decreasing acceleration as drag grows; image D falls to zero at terminal speed."
+    },
+    {
+      "source_part_id": "ibchem_part_8605e8532cd531b0",
+      "parent_id": "25M.P1A.HL.TZ3.Q4",
+      "published_topics": [
+        "A.1"
+      ],
+      "source_content_sha256": "e4272cd6325ea6be2b18e9b86dc90d98956be9e241bcaa7cb1711ad82119e517",
+      "scope_outcome": "included_current_a1",
+      "review_status": "source_reviewed",
+      "old_direct_type_codes": [
+        "A1.13a"
+      ],
+      "new_types": [
+        {
+          "code": "A1.13a",
+          "type_id": "A1_007B_SECOND_2026-08-27:A1.13a",
+          "role": "direct",
+          "route_condition": "",
+          "decision_file": "reviews\\root\\batch_001.json"
+        }
+      ],
+      "syllabus_assignments": [
+        {
+          "code": "A.1.13",
+          "code_system": "Patrick_extended_A1_spine",
+          "role": "direct",
+          "route_condition": ""
+        }
+      ],
+      "difference": "unchanged",
+      "rationale": "A raindrop's acceleration decreases toward zero as its speed approaches terminal speed. The actual axes are acceleration versus velocity (key D). A1.13a explicitly includes this source witness; no extra generic explanation membership is required."
+    },
+    {
+      "source_part_id": "ibchem_part_889c21cc4de7caa8",
+      "parent_id": "21N.P1.SL.TZ0.Q3",
+      "published_topics": [
+        "A.1"
+      ],
+      "source_content_sha256": "326df7fbb2620f080c2ea4979f8e2e95c87e4faa1faaa06de22f405c27f73816",
+      "scope_outcome": "included_current_a1",
+      "review_status": "source_reviewed",
+      "old_direct_type_codes": [],
+      "new_types": [
+        {
+          "code": "A1.2e",
+          "type_id": "A1_007B_SECOND_2026-08-27:A1.2e",
+          "role": "direct",
+          "route_condition": "",
+          "decision_file": "reviews\\review_c\\batch_002.json"
+        }
+      ],
+      "syllabus_assignments": [
+        {
+          "code": "A.1.2",
+          "code_system": "Patrick_extended_A1_spine",
+          "role": "direct",
+          "route_condition": ""
+        }
+      ],
+      "difference": "previously_untyped_now_direct",
+      "rationale": "Translate the concave-down velocity-time curve into its decreasing acceleration-time slope, which passes through zero at maximum velocity."
+    },
+    {
+      "source_part_id": "ibchem_part_a79f3ba7d342aa0f",
+      "parent_id": "25N.P2.SL.TZ1.Q1",
+      "published_topics": [
+        "A.1"
+      ],
+      "source_content_sha256": "03803ada643826dd8000abe4e2dbc2b1c253573a7753ba0b3e6475d981302026",
+      "scope_outcome": "included_current_a1",
+      "review_status": "source_reviewed",
+      "old_direct_type_codes": [],
+      "new_types": [
+        {
+          "code": "A1.13c",
+          "type_id": "A1_007B_SECOND_2026-08-27:A1.13c",
+          "role": "direct",
+          "route_condition": "",
+          "decision_file": "reviews\\review_a\\batch_001.json"
+        }
+      ],
+      "syllabus_assignments": [
+        {
+          "code": "A.1.13",
+          "code_system": "Patrick_extended_A1_spine",
+          "role": "direct",
+          "route_condition": ""
+        }
+      ],
+      "difference": "previously_untyped_now_direct",
+      "rationale": "The scheme explicitly explains changing acceleration through increasing fluid drag and decreasing resultant force. Buoyant upward motion uses the same changing-drag reasoning as terminal descent."
+    },
+    {
+      "source_part_id": "ibchem_part_b5f814b982bf12bb",
+      "parent_id": "18N.P1.SL.TZ0.Q5",
+      "published_topics": [
+        "A.1"
+      ],
+      "source_content_sha256": "afaa07f361e8d71564afe1156119c2ab36467c2736e27b0c3e01ac5fecf9661d",
+      "scope_outcome": "included_current_a1",
+      "review_status": "source_reviewed",
+      "old_direct_type_codes": [
+        "A1.10a"
+      ],
+      "new_types": [
+        {
+          "code": "A1.10a",
+          "type_id": "A1_007B_SECOND_2026-08-27:A1.10a",
+          "role": "direct",
+          "route_condition": "",
+          "decision_file": "reviews\\root\\batch_001.json"
+        }
+      ],
+      "syllabus_assignments": [
+        {
+          "code": "A.1.10",
+          "code_system": "Patrick_extended_A1_spine",
+          "role": "direct",
+          "route_condition": ""
+        }
+      ],
+      "difference": "unchanged",
+      "rationale": "The independent axis is distance, not time. From rest at constant acceleration, v squared equals 2as, so speed grows as the square root of distance (option A). Retain A1.10a; do not force the broad story-to-TIME-trace destination A1.11a."
+    },
+    {
+      "source_part_id": "ibchem_part_e3843f96b737e36f",
+      "parent_id": "25N.P2.HL.TZ1.Q1",
+      "published_topics": [
+        "A.1"
+      ],
+      "source_content_sha256": "2abb7e211b3222a1e41e144893fc36cf63e43886652593441ec5b64a064f8934",
+      "scope_outcome": "mixed_scope",
+      "review_status": "source_reviewed",
+      "old_direct_type_codes": [],
+      "new_types": [
+        {
+          "code": "A1.13c",
+          "type_id": "A1_007B_SECOND_2026-08-27:A1.13c",
+          "role": "direct",
+          "route_condition": "",
+          "decision_file": "reviews\\review_b\\batch_001.json"
+        }
+      ],
+      "syllabus_assignments": [
+        {
+          "code": "A.1.13",
+          "code_system": "Patrick_extended_A1_spine",
+          "role": "direct",
+          "route_condition": ""
+        }
+      ],
+      "difference": "previously_untyped_now_direct",
+      "rationale": "The rising droplet gains speed, increasing drag and decreasing the net upward force and acceleration. This directly assesses resisted-motion acceleration with buoyancy/force context."
+    }
+  ],
+  "public_scope_failures": [],
+  "nonpublic_source_conflicts_and_type_gaps": [
+    {
+      "source_part_id": "ibchem_part_0ca679bf2e54c0a0",
+      "scope_outcome": "unresolved_source",
+      "source_label": "2021 May 1 HL TZ1 18",
+      "source_content_sha256": "accc1f00b56c1c148b32fd53771e543b2d751581da73759295ee5d056ef78993",
+      "present_in_public": false,
+      "rationale": "The crop confirms an electron travelling parallel to the solenoid axis, which implies zero magnetic force and option C, whereas the supplied key crop states A. The old A1.2g link also runs the inference backward: velocity is not supplied as constant."
+    },
+    {
+      "source_part_id": "ibchem_part_346cc85197337cfd",
+      "scope_outcome": "current_a1_type_gap",
+      "source_label": "2023 Nov 1 HL TZ2 3",
+      "source_content_sha256": "69ce5b1176e8817a1eeceb3289f63fb28508f22db0b2d8ba6a2d77f89295545d",
+      "present_in_public": false,
+      "rationale": "The inspected projectile descends down-right. Drag points up-left and combines with weight into net down-left force (B). This qualitative force-direction demand does not compare complete resisted/ideal paths or track acceleration magnitude; do not force 13c or 13e."
+    },
+    {
+      "source_part_id": "ibchem_part_ba74f4f5ddcecedd",
+      "scope_outcome": "current_a1_type_gap",
+      "source_label": "2025 Nov 1B SL TZ3 1(e)",
+      "source_content_sha256": "e8484670ebaae8edc0804396b5a24e41a81a5e3c7707b99247117ee9235ac11d",
+      "present_in_public": false,
+      "rationale": "The one-mark demand verifies terminal velocity from the straight constant-gradient portion of a POSITION-time graph. It is neither acceleration from a velocity-time slope nor a demanded zero-acceleration inference; no trace is constructed. The final vocabulary lacks an exact qualitative position-time slope/constant-velocity verification type, so preserve syllabus evidence without forcing A1.2d or A1.2g."
+    },
+    {
+      "source_part_id": "ibchem_part_fe9c9d74a8fa630a",
+      "scope_outcome": "current_a1_type_gap",
+      "source_label": "2025 Nov 1B HL TZ3 1(e)",
+      "source_content_sha256": "6198021abba0c5e09a5e0d2a127ce78d5d3d8aee509678c1aa22e9f2d169850c",
+      "present_in_public": false,
+      "rationale": "The one-mark demand verifies terminal velocity from the straight constant-gradient portion of a POSITION-time graph. It is neither acceleration from a velocity-time slope nor a demanded zero-acceleration inference; no trace is constructed. The final vocabulary lacks an exact qualitative position-time slope/constant-velocity verification type, so preserve syllabus evidence without forcing A1.2d or A1.2g."
+    }
+  ],
+  "twin_concern": {
+    "status": "analyst reconciliation needed before importing the disputed new label",
+    "source_part_ids": [
+      "ibchem_part_7ed0627009fc0899",
+      "ibchem_part_8605e8532cd531b0"
+    ],
+    "cross_level_group_id": "ibchem_xlvl_d2b23a50a22340b4",
+    "same_declared_source_content_sha256": "e4272cd6325ea6be2b18e9b86dc90d98956be9e241bcaa7cb1711ad82119e517",
+    "source_evidence_rows": [
+      {
+        "part_id": "ibchem_part_7ed0627009fc0899",
+        "field": "question_text",
+        "source_content_sha256": "e4272cd6325ea6be2b18e9b86dc90d98956be9e241bcaa7cb1711ad82119e517",
+        "decision_file": "reviews\\review_c\\batch_001.json"
+      },
+      {
+        "part_id": "ibchem_part_7ed0627009fc0899",
+        "field": "ms_text",
+        "source_content_sha256": "e4272cd6325ea6be2b18e9b86dc90d98956be9e241bcaa7cb1711ad82119e517",
+        "decision_file": "reviews\\review_c\\batch_001.json"
+      },
+      {
+        "part_id": "ibchem_part_8605e8532cd531b0",
+        "field": "question_text",
+        "source_content_sha256": "e4272cd6325ea6be2b18e9b86dc90d98956be9e241bcaa7cb1711ad82119e517",
+        "decision_file": "reviews\\root\\batch_001.json"
+      }
+    ],
+    "assignments": [
+      {
+        "source_part_id": "ibchem_part_7ed0627009fc0899",
+        "level": "SL",
+        "current_direct_type_codes": [],
+        "new_direct_type_codes": [
+          "A1.13c"
+        ],
+        "marks": 1,
+        "correct_option": "D"
+      },
+      {
+        "source_part_id": "ibchem_part_8605e8532cd531b0",
+        "level": "HL",
+        "current_direct_type_codes": [
+          "A1.13a"
+        ],
+        "new_direct_type_codes": [
+          "A1.13a"
+        ],
+        "marks": 1,
+        "correct_option": "D"
+      }
+    ],
+    "authored_type_labels": [
+      {
+        "code": "A1.13a",
+        "label": "Sketch or select a falling-motion trace with fluid resistance"
+      },
+      {
+        "code": "A1.13c",
+        "label": "Explain or compare changing acceleration under fluid resistance"
+      }
+    ],
+    "visually_reviewed_images": [
+      {
+        "source_part_id": "ibchem_part_7ed0627009fc0899",
+        "path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/deploy/ibphysicsppqs/assets/8bdea0925cce3709950ea8f5fcbea60efcb4c8200c1ee4d447d64be16d9c722c.png",
+        "sha256": "8bdea0925cce3709950ea8f5fcbea60efcb4c8200c1ee4d447d64be16d9c722c"
+      },
+      {
+        "source_part_id": "ibchem_part_8605e8532cd531b0",
+        "path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/deploy/ibphysicsppqs/assets/b7098627a77a601e3dc1c04c22b1e0e2c222bcc52175627d0c08c26645e5d0ee.png",
+        "sha256": "b7098627a77a601e3dc1c04c22b1e0e2c222bcc52175627d0c08c26645e5d0ee"
+      }
+    ],
+    "finding": "Both rendered crops visibly ask the same graph-selection task with the same four diagrams, one mark and answer D. v003 assigns SL A1.13c but HL A1.13a despite identical source-content hashes and cross-level group. The HL root decision explicitly retains the trace type; the SL earlier decision uses the explanation type. No local relabel or source correction was made."
+  },
+  "integration_notes": [
+    "Treat v003 as replacement of A1 memberships for precisely its154 source IDs, never append to inherited type rows.",
+    "Keep roles and route conditions distinct: only direct rows become direct type membership; supporting and alternative routes must not be upgraded.",
+    "The published eight overlaps all have direct roles. Six labels would change: four additions and two replacements. A1 topic membership need not change for these eight.",
+    "Type-gap and unresolved-source cases are absent from the entire454-part published package. This is not a clearance for adding them.",
+    "Syllabus codes are the extended local A1 spine, not official IB numbering.",
+    "Do not import effective_type_assignments as wholly reviewed:764 links remain inherited.",
+    "The handoff HANDOVER.md still quotes159 as an older release subset; this receipt uses the actual published f600150-part A1 baseline.",
+    "No new assessment or crop review was performed, and no exclusion, builder, catalogue, source database or deployment was modified."
+  ]
+}

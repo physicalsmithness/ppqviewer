@@ -1,0 +1,16 @@
+{
+  "build_id": "f6004e904e4c69a8",
+  "reviewed_on_local_date": "2026-09-13",
+  "url": "http://127.0.0.1:8789/",
+  "result": "PASS",
+  "checks": [
+    "Topic chooser visibly offers A1 150 parts, A5 138 parts, C1 25 parts and D2 149 parts.",
+    "D2 displays the authored question-type labels and concise codes rather than internal version namespaces.",
+    "Selecting D2.1b highlights that type, shows Key tips collapsed, and displays a mapped electric-field MCQ with its complete diagram.",
+    "Finder opens 06M.P3.SL.TZ2.QB4(b) with its original context and exact three-mark target.",
+    "Revealed markscheme for that part visibly contains the complete three-mark answer and no following Option C heading."
+  ],
+  "attempts_or_ratings_submitted": false,
+  "help_or_display_reports_submitted": false,
+  "scope": "Actual browser accessibility and visual checks of the local assembled release. This does not certify publication; live bytes must be checked separately."
+}

@@ -1,0 +1,1731 @@
+{
+  "schema": "ib-a1-overclaim-candidates/v1",
+  "generated": "2026-09-14",
+  "generated_by": "QoderWork 2026-09-14",
+  "note": "REVERSIBLE REVIEW QUEUE. This file FLAGS candidates only; it does NOT edit dist/physics-inputs/ib-a1-analysis.json or any clearance. No reclassification is applied until Smith confirms.",
+  "source": {
+    "analysis": "dist/physics-inputs/ib-a1-analysis.json",
+    "catalogue_sha256": "050e5203246af6f79f667353c7a8b3668b0657cdaf412a9a0809b1be4e584448",
+    "release_build": "e56bf638d0332e3e"
+  },
+  "summary": {
+    "included_pool": 756,
+    "a1_catalogue_primary": 606,
+    "joinable": 630,
+    "unjoinable_no_parent": 126,
+    "hard_divergence_catalogue_primary_not_a1": 22,
+    "hard_divergence_served": 9,
+    "soft_flagged": 181,
+    "soft_flagged_served": 48
+  },
+  "hard_divergence": [
+    {
+      "native_part_id": "25N.P1B.HL.TZ1.Q2(b)",
+      "parent_id": "25N.P1B.HL.TZ1.Q2",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "19M.P3.HL.TZ1.Q1(b_i)",
+      "parent_id": "19M.P3.HL.TZ1.Q1",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "05M.P3.SL.TZ1.QE2(a_ii)",
+      "parent_id": "05M.P3.SL.TZ1.QE2",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "24N.P3.HL.TZ0.Q2(c)",
+      "parent_id": "24N.P3.HL.TZ0.Q2",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "24N.P3.HL.TZ0.Q2(a)",
+      "parent_id": "24N.P3.HL.TZ0.Q2",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "12M.P3.HL.TZ2.QH1(b_ii)",
+      "parent_id": "12M.P3.HL.TZ2.QH1",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "14N.P3.SL.TZ0.Q11(a)",
+      "parent_id": "14N.P3.SL.TZ0.Q11",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "24N.P3.SL.TZ0.Q2(c)",
+      "parent_id": "24N.P3.SL.TZ0.Q2",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "14N.P3.HL.TZ0.Q16(a)",
+      "parent_id": "14N.P3.HL.TZ0.Q16",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "05M.P3.HL.TZ1.QE2(a_ii)",
+      "parent_id": "05M.P3.HL.TZ1.QE2",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "12M.P3.SL.TZ2.QD1(b_ii)",
+      "parent_id": "12M.P3.SL.TZ2.QD1",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "04N.P2.HL.TZ0.QA1(a_ii)",
+      "parent_id": "04N.P2.HL.TZ0.QA1",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "14M.P3.HL.TZ1.Q15(d)",
+      "parent_id": "14M.P3.HL.TZ1.Q15",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "04N.P2.SL.TZ0.QA1(a_ii)",
+      "parent_id": "04N.P2.SL.TZ0.QA1",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "14M.P3.SL.TZ1.Q8(d)",
+      "parent_id": "14M.P3.SL.TZ1.Q8",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "10N.P3.SL.TZ0.QD1(b_i)",
+      "parent_id": "10N.P3.SL.TZ0.QD1",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "25N.P1B.SL.TZ3.Q1(e)",
+      "parent_id": "25N.P1B.SL.TZ3.Q1",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "18M.P3.HL.TZ2.Q1(b)",
+      "parent_id": "18M.P3.HL.TZ2.Q1",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "08N.P2.HL.TZ0.QB3(a_iii)",
+      "parent_id": "08N.P2.HL.TZ0.QB3",
+      "catalogue_topic_codes": [
+        "E.2"
+      ],
+      "catalogue_primary_class": "E.2",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "25N.P1B.SL.TZ1.Q2(b)",
+      "parent_id": "25N.P1B.SL.TZ1.Q2",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "25N.P1B.HL.TZ3.Q1(e)",
+      "parent_id": "25N.P1B.HL.TZ3.Q1",
+      "catalogue_topic_codes": [
+        "DATA"
+      ],
+      "catalogue_primary_class": "DATA",
+      "served": false,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    },
+    {
+      "native_part_id": "10N.P3.HL.TZ0.QH1(b_i)",
+      "parent_id": "10N.P3.HL.TZ0.QH1",
+      "catalogue_topic_codes": [
+        "A.5"
+      ],
+      "catalogue_primary_class": "A.5",
+      "served": true,
+      "authored_part_confidence": "sure",
+      "reason": "Exact source-owned current question-type membership with matching current v5 lit"
+    }
+  ],
+  "soft_flagged": [
+    {
+      "native_part_id": "18M.P1.HL.TZ2.Q10(whole)",
+      "parent_id": "18M.P1.HL.TZ2.Q10",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "11M.P1.HL.TZ2.Q2(whole)",
+      "parent_id": "11M.P1.HL.TZ2.Q2",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.SL.TZ1.QB3(c_iii)",
+      "parent_id": "12M.P2.SL.TZ1.QB3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "19M.P1.SL.TZ1.Q8(whole)",
+      "parent_id": "19M.P1.SL.TZ1.Q8",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "18M.P1.SL.TZ2.Q7(whole)",
+      "parent_id": "18M.P1.SL.TZ2.Q7",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "11M.P1.SL.TZ1.Q4(whole)",
+      "parent_id": "11M.P1.SL.TZ1.Q4",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "14N.P1.HL.TZ0.Q2(whole)",
+      "parent_id": "14N.P1.HL.TZ0.Q2",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "05M.P3.SL.TZ1.QA1(a_i)",
+      "parent_id": "05M.P3.SL.TZ1.QA1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P1.SL.TZ1.Q6(whole)",
+      "parent_id": "12M.P1.SL.TZ1.Q6",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "09M.P3.HL.TZ1.QI2(d_i)",
+      "parent_id": "09M.P3.HL.TZ1.QI2",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "21M.P2.HL.TZ2.Q3(c)",
+      "parent_id": "21M.P2.HL.TZ2.Q3",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "07N.P2.SL.TZ0.QB1(a_ii)",
+      "parent_id": "07N.P2.SL.TZ0.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12N.P1.SL.TZ0.Q9(whole)",
+      "parent_id": "12N.P1.SL.TZ0.Q9",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "13M.P1.HL.TZ1.Q2(whole)",
+      "parent_id": "13M.P1.HL.TZ1.Q2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "05N.P1.SL.TZ0.Q8(whole)",
+      "parent_id": "05N.P1.SL.TZ0.Q8",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "16M.P1.HL.TZ0.Q2(whole)",
+      "parent_id": "16M.P1.HL.TZ0.Q2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "22M.P1.SL.TZ1.Q13(whole)",
+      "parent_id": "22M.P1.SL.TZ1.Q13",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "21M.P1.HL.TZ2.Q2(whole)",
+      "parent_id": "21M.P1.HL.TZ2.Q2",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "18M.P1.SL.TZ1.Q3(whole)",
+      "parent_id": "18M.P1.SL.TZ1.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "10N.P2.HL.TZ0.QB4(c_ii)",
+      "parent_id": "10N.P2.HL.TZ0.QB4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "14M.P1.HL.TZ2.Q2(whole)",
+      "parent_id": "14M.P1.HL.TZ2.Q2",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25M.P1A.SL.TZ2.Q3(whole)",
+      "parent_id": "25M.P1A.SL.TZ2.Q3",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "07M.P1.SL.TZ1.Q5(whole)",
+      "parent_id": "07M.P1.SL.TZ1.Q5",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.HL.TZ2.QB4(c_ii)",
+      "parent_id": "12M.P2.HL.TZ2.QB4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "11N.P1.HL.TZ0.Q3(whole)",
+      "parent_id": "11N.P1.HL.TZ0.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.SL.TZ2.QB1(c_ii)",
+      "parent_id": "12M.P2.SL.TZ2.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "21M.P2.SL.TZ1.Q1(b)",
+      "parent_id": "21M.P2.SL.TZ1.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "07N.P2.HL.TZ0.QB1(d_ii)",
+      "parent_id": "07N.P2.HL.TZ0.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "22M.P1.HL.TZ1.Q13(whole)",
+      "parent_id": "22M.P1.HL.TZ1.Q13",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25M.P1A.SL.TZ1.Q2(whole)",
+      "parent_id": "25M.P1A.SL.TZ1.Q2",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25N.P1A.HL.TZ3.Q3(whole)",
+      "parent_id": "25N.P1A.HL.TZ3.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "21M.P1.HL.TZ1.Q3(whole)",
+      "parent_id": "21M.P1.HL.TZ1.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "07M.P2.SL.TZ1.QB1(g)",
+      "parent_id": "07M.P2.SL.TZ1.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "24M.P2.SL.TZ2.Q1(b_ii)",
+      "parent_id": "24M.P2.SL.TZ2.Q1",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "23M.P3.HL.TZ1.Q13(b)",
+      "parent_id": "23M.P3.HL.TZ1.Q13",
+      "served": true,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "08M.P3.SL.TZ1.QA1(b)",
+      "parent_id": "08M.P3.SL.TZ1.QA1",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "24N.P1.HL.TZ0.Q3(whole)",
+      "parent_id": "24N.P1.HL.TZ0.Q3",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "13N.P1.HL.TZ0.Q21(whole)",
+      "parent_id": "13N.P1.HL.TZ0.Q21",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "04N.P1.HL.TZ0.Q4(whole)",
+      "parent_id": "04N.P1.HL.TZ0.Q4",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "12M.P1.HL.TZ2.Q2(whole)",
+      "parent_id": "12M.P1.HL.TZ2.Q2",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "24M.P2.HL.TZ2.Q1(b_ii)",
+      "parent_id": "24M.P2.HL.TZ2.Q1",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "06N.P2.HL.TZ0.QB1(c_iii)",
+      "parent_id": "06N.P2.HL.TZ0.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "14M.P1.SL.TZ2.Q3(whole)",
+      "parent_id": "14M.P1.SL.TZ2.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "14M.P1.HL.TZ1.Q14(whole)",
+      "parent_id": "14M.P1.HL.TZ1.Q14",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P1.SL.TZ1.Q3(whole)",
+      "parent_id": "12M.P1.SL.TZ1.Q3",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "23M.P1.SL.TZ1.Q4(whole)",
+      "parent_id": "23M.P1.SL.TZ1.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "24N.P3.HL.TZ0.Q2(a)",
+      "parent_id": "24N.P3.HL.TZ0.Q2",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "21M.P2.HL.TZ1.Q1(b)",
+      "parent_id": "21M.P2.HL.TZ1.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "11N.P1.SL.TZ0.Q5(whole)",
+      "parent_id": "11N.P1.SL.TZ0.Q5",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25M.P1A.HL.TZ2.Q17(whole)",
+      "parent_id": "25M.P1A.HL.TZ2.Q17",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "06N.P2.SL.TZ0.QB1(c_ii)",
+      "parent_id": "06N.P2.SL.TZ0.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "22N.P1.HL.TZ0.Q9(whole)",
+      "parent_id": "22N.P1.HL.TZ0.Q9",
+      "served": false,
+      "soft_flags": [
+        "unsure",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "11M.P1.SL.TZ2.Q4(whole)",
+      "parent_id": "11M.P1.SL.TZ2.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25M.P1A.HL.TZ1.Q2(whole)",
+      "parent_id": "25M.P1A.HL.TZ1.Q2",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "08M.P2.SL.TZ2.QB1(b_iii)",
+      "parent_id": "08M.P2.SL.TZ2.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "05M.P1.SL.TZ2.Q6(whole)",
+      "parent_id": "05M.P1.SL.TZ2.Q6",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "06M.P1.HL.TZ1.Q5(whole)",
+      "parent_id": "06M.P1.HL.TZ1.Q5",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "18M.P3.SL.TZ2.Q12(b)",
+      "parent_id": "18M.P3.SL.TZ2.Q12",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.HL.TZ2.QB3(d_ii)",
+      "parent_id": "12M.P2.HL.TZ2.QB3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P1.SL.TZ2.Q4(whole)",
+      "parent_id": "12M.P1.SL.TZ2.Q4",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "19N.P2.HL.TZ0.Q3(a_i)",
+      "parent_id": "19N.P2.HL.TZ0.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "18M.P1.SL.TZ2.Q23(whole)",
+      "parent_id": "18M.P1.SL.TZ2.Q23",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "07M.P1.HL.TZ1.Q11(whole)",
+      "parent_id": "07M.P1.HL.TZ1.Q11",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "19N.P1.HL.TZ0.Q5(whole)",
+      "parent_id": "19N.P1.HL.TZ0.Q5",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "15M.P1.SL.TZ1.Q3(whole)",
+      "parent_id": "15M.P1.SL.TZ1.Q3",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "19M.P1.HL.TZ1.Q3(whole)",
+      "parent_id": "19M.P1.HL.TZ1.Q3",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "17M.P1.HL.TZ1.Q3(whole)",
+      "parent_id": "17M.P1.HL.TZ1.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "21M.P1.SL.TZ2.Q3(whole)",
+      "parent_id": "21M.P1.SL.TZ2.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "13M.P1.SL.TZ2.Q4(whole)",
+      "parent_id": "13M.P1.SL.TZ2.Q4",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "11M.P1.SL.TZ2.Q5(whole)",
+      "parent_id": "11M.P1.SL.TZ2.Q5",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "21M.P1.HL.TZ2.Q4(whole)",
+      "parent_id": "21M.P1.HL.TZ2.Q4",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25N.P1A.HL.TZ1.Q8(whole)",
+      "parent_id": "25N.P1A.HL.TZ1.Q8",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "21M.P1.SL.TZ1.Q4(whole)",
+      "parent_id": "21M.P1.SL.TZ1.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "11M.P1.HL.TZ1.Q2(whole)",
+      "parent_id": "11M.P1.HL.TZ1.Q2",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "07M.P3.SL.TZ2.QA1(a_i)",
+      "parent_id": "07M.P3.SL.TZ2.QA1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "18M.P3.SL.TZ2.Q12(a)",
+      "parent_id": "18M.P3.SL.TZ2.Q12",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "23M.P1.SL.TZ2.Q5(whole)",
+      "parent_id": "23M.P1.SL.TZ2.Q5",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "09M.P1.SL.TZ2.Q4(whole)",
+      "parent_id": "09M.P1.SL.TZ2.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "21M.P2.HL.TZ1.Q1(d_i)",
+      "parent_id": "21M.P2.HL.TZ1.Q1",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.HL.TZ2.QA2(b_ii)",
+      "parent_id": "12M.P2.HL.TZ2.QA2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25N.P1A.HL.TZ1.Q3(whole)",
+      "parent_id": "25N.P1A.HL.TZ1.Q3",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "08M.P1.SL.TZ1.Q10(whole)",
+      "parent_id": "08M.P1.SL.TZ1.Q10",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25M.P1A.SL.TZ3.Q4(whole)",
+      "parent_id": "25M.P1A.SL.TZ3.Q4",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "25M.P1A.HL.TZ3.Q4(whole)",
+      "parent_id": "25M.P1A.HL.TZ3.Q4",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "23M.P1.SL.TZ2.Q2(whole)",
+      "parent_id": "23M.P1.SL.TZ2.Q2",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "12M.P1.SL.TZ2.Q3(whole)",
+      "parent_id": "12M.P1.SL.TZ2.Q3",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "21N.P1.SL.TZ0.Q3(whole)",
+      "parent_id": "21N.P1.SL.TZ0.Q3",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "06M.P1.HL.TZ2.Q14(whole)",
+      "parent_id": "06M.P1.HL.TZ2.Q14",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "12M.P1.SL.TZ1.Q4(whole)",
+      "parent_id": "12M.P1.SL.TZ1.Q4",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "13N.P1.SL.TZ0.Q3(whole)",
+      "parent_id": "13N.P1.SL.TZ0.Q3",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "07M.P1.HL.TZ1.Q4(whole)",
+      "parent_id": "07M.P1.HL.TZ1.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "23M.P1.HL.TZ2.Q2(whole)",
+      "parent_id": "23M.P1.HL.TZ2.Q2",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "14M.P1.SL.TZ1.Q12(whole)",
+      "parent_id": "14M.P1.SL.TZ1.Q12",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "17M.P1.SL.TZ1.Q4(whole)",
+      "parent_id": "17M.P1.SL.TZ1.Q4",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "10M.P1.SL.TZ1.Q3(whole)",
+      "parent_id": "10M.P1.SL.TZ1.Q3",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "07M.P3.SL.TZ2.QA1(a_ii)",
+      "parent_id": "07M.P3.SL.TZ2.QA1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "20N.P1.SL.TZ0.Q6(whole)",
+      "parent_id": "20N.P1.SL.TZ0.Q6",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "09N.P2.SL.TZ0.QB1(c_iii)",
+      "parent_id": "09N.P2.SL.TZ0.QB1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "07N.P1.SL.TZ0.Q5(whole)",
+      "parent_id": "07N.P1.SL.TZ0.Q5",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "19M.P1.SL.TZ2.Q3(whole)",
+      "parent_id": "19M.P1.SL.TZ2.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "09M.P1.SL.TZ1.Q4(whole)",
+      "parent_id": "09M.P1.SL.TZ1.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "18N.P1.HL.TZ0.Q3(whole)",
+      "parent_id": "18N.P1.HL.TZ0.Q3",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "05M.P2.HL.TZ2.QA2(a_iv)",
+      "parent_id": "05M.P2.HL.TZ2.QA2",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "23M.P2.HL.TZ2.Q1(b)",
+      "parent_id": "23M.P2.HL.TZ2.Q1",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "14M.P1.HL.TZ2.Q6(whole)",
+      "parent_id": "14M.P1.HL.TZ2.Q6",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "19N.P1.HL.TZ0.Q32(whole)",
+      "parent_id": "19N.P1.HL.TZ0.Q32",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "18M.P3.HL.TZ2.Q17(a)",
+      "parent_id": "18M.P3.HL.TZ2.Q17",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.HL.TZ1.QB1(a_i)",
+      "parent_id": "12M.P2.HL.TZ1.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25N.P2.SL.TZ1.Q1(b)",
+      "parent_id": "25N.P2.SL.TZ1.Q1",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "08N.P1.SL.TZ0.Q5(whole)",
+      "parent_id": "08N.P1.SL.TZ0.Q5",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "19N.P1.HL.TZ0.Q2(whole)",
+      "parent_id": "19N.P1.HL.TZ0.Q2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "08M.P2.HL.TZ2.QB1(d_iii)",
+      "parent_id": "08M.P2.HL.TZ2.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "05N.P1.HL.TZ0.Q7(whole)",
+      "parent_id": "05N.P1.HL.TZ0.Q7",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25N.P2.HL.TZ1.Q8(b_i)",
+      "parent_id": "25N.P2.HL.TZ1.Q8",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "19N.P1.SL.TZ0.Q4(whole)",
+      "parent_id": "19N.P1.SL.TZ0.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "18N.P1.SL.TZ0.Q5(whole)",
+      "parent_id": "18N.P1.SL.TZ0.Q5",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "22M.P2.HL.TZ2.Q1(c_iii)",
+      "parent_id": "22M.P2.HL.TZ2.Q1",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.HL.TZ1.QB1(a_ii)",
+      "parent_id": "12M.P2.HL.TZ1.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "16M.P2.HL.TZ0.Q1(c)",
+      "parent_id": "16M.P2.HL.TZ0.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "25N.P1B.SL.TZ3.Q1(e)",
+      "parent_id": "25N.P1B.SL.TZ3.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "18M.P3.HL.TZ2.Q1(b)",
+      "parent_id": "18M.P3.HL.TZ2.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "23M.P1.HL.TZ2.Q4(whole)",
+      "parent_id": "23M.P1.HL.TZ2.Q4",
+      "served": false,
+      "soft_flags": [
+        "unsure",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "19M.P3.SL.TZ1.Q5(b)",
+      "parent_id": "19M.P3.SL.TZ1.Q5",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "08N.P2.HL.TZ0.QB3(a_iii)",
+      "parent_id": "08N.P2.HL.TZ0.QB3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "08M.P2.HL.TZ1.QA2(b)",
+      "parent_id": "08M.P2.HL.TZ1.QA2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "25M.P1A.SL.TZ2.Q12(whole)",
+      "parent_id": "25M.P1A.SL.TZ2.Q12",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "24M.P2.SL.TZ2.Q1(c_ii)",
+      "parent_id": "24M.P2.SL.TZ2.Q1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "07N.P2.HL.TZ0.QB1(a_ii)",
+      "parent_id": "07N.P2.HL.TZ0.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "19N.P2.SL.TZ0.Q3(a_i)",
+      "parent_id": "19N.P2.SL.TZ0.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "23N.P1.HL.TZ1.Q2(whole)",
+      "parent_id": "23N.P1.HL.TZ1.Q2",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "18N.P1.SL.TZ0.Q4(whole)",
+      "parent_id": "18N.P1.SL.TZ0.Q4",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "05N.P2.HL.TZ0.QB4(e_ii)",
+      "parent_id": "05N.P2.HL.TZ0.QB4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "17M.P1.HL.TZ1.Q2(whole)",
+      "parent_id": "17M.P1.HL.TZ1.Q2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "24M.P2.HL.TZ2.Q1(c_ii)",
+      "parent_id": "24M.P2.HL.TZ2.Q1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "07N.P2.SL.TZ0.QB1(c_ii)",
+      "parent_id": "07N.P2.SL.TZ0.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "22M.P2.HL.TZ2.Q1(c_ii)",
+      "parent_id": "22M.P2.HL.TZ2.Q1",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "07N.P3.SL.TZ0.QA1(a)",
+      "parent_id": "07N.P3.SL.TZ0.QA1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "12M.P1.HL.TZ2.Q3(whole)",
+      "parent_id": "12M.P1.HL.TZ2.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "08M.P3.SL.TZ1.QA1(a_iii)",
+      "parent_id": "08M.P3.SL.TZ1.QA1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "08M.P3.SL.TZ2.QA1(b)",
+      "parent_id": "08M.P3.SL.TZ2.QA1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "10N.P1.SL.TZ0.Q3(whole)",
+      "parent_id": "10N.P1.SL.TZ0.Q3",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "04N.P1.SL.TZ0.Q5(whole)",
+      "parent_id": "04N.P1.SL.TZ0.Q5",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "09M.P1.SL.TZ1.Q3(whole)",
+      "parent_id": "09M.P1.SL.TZ1.Q3",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "21N.P2.HL.TZ0.Q1(b_ii)",
+      "parent_id": "21N.P2.HL.TZ0.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "19M.P3.HL.TZ1.Q5(b)",
+      "parent_id": "19M.P3.HL.TZ1.Q5",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "25N.P2.HL.TZ1.Q1(b)",
+      "parent_id": "25N.P2.HL.TZ1.Q1",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "12N.P1.SL.TZ0.Q5(whole)",
+      "parent_id": "12N.P1.SL.TZ0.Q5",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch",
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "22M.P1.SL.TZ2.Q4(whole)",
+      "parent_id": "22M.P1.SL.TZ2.Q4",
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "16N.P1.SL.TZ0.Q17(whole)",
+      "parent_id": "16N.P1.SL.TZ0.Q17",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "18N.P1.HL.TZ0.Q4(whole)",
+      "parent_id": "18N.P1.HL.TZ0.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "06M.P2.HL.TZ2.QB1(d_ii)",
+      "parent_id": "06M.P2.HL.TZ2.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "09M.P1.HL.TZ1.Q2(whole)",
+      "parent_id": "09M.P1.HL.TZ1.Q2",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12N.P2.HL.TZ0.QB1(a_ii)",
+      "parent_id": "12N.P2.HL.TZ0.QB1",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "12M.P1.HL.TZ1.Q2(whole)",
+      "parent_id": "12M.P1.HL.TZ1.Q2",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "10M.P2.HL.TZ1.QB2(b)",
+      "parent_id": "10M.P2.HL.TZ1.QB2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "19M.P1.SL.TZ1.Q3(whole)",
+      "parent_id": "19M.P1.SL.TZ1.Q3",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "17M.P2.SL.TZ2.Q1(g)",
+      "parent_id": "17M.P2.SL.TZ2.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.HL.TZ1.QB2(e_ii)",
+      "parent_id": "12M.P2.HL.TZ1.QB2",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "unsure"
+      ]
+    },
+    {
+      "native_part_id": "08N.P1.HL.TZ0.Q4(whole)",
+      "parent_id": "08N.P1.HL.TZ0.Q4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": null,
+      "parent_id": null,
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "21N.P1.HL.TZ0.Q2(whole)",
+      "parent_id": "21N.P1.HL.TZ0.Q2",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "25N.P1A.SL.TZ3.Q3(whole)",
+      "parent_id": "25N.P1A.SL.TZ3.Q3",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "15N.P1.HL.TZ0.Q2(whole)",
+      "parent_id": "15N.P1.HL.TZ0.Q2",
+      "served": true,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "12M.P2.SL.TZ2.QA2(b_ii)",
+      "parent_id": "12M.P2.SL.TZ2.QA2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "16M.P2.HL.TZ0.Q1(b_ii)",
+      "parent_id": "16M.P2.HL.TZ0.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "08M.P2.HL.TZ2.QB4(a_iii)",
+      "parent_id": "08M.P2.HL.TZ2.QB4",
+      "served": false,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    },
+    {
+      "native_part_id": "10M.P2.HL.TZ1.QB2(g)",
+      "parent_id": "10M.P2.HL.TZ1.QB2",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "25N.P1B.HL.TZ3.Q1(e)",
+      "parent_id": "25N.P1B.HL.TZ3.Q1",
+      "served": false,
+      "soft_flags": [
+        "pending_shape_branch"
+      ]
+    },
+    {
+      "native_part_id": "18M.P3.HL.TZ2.Q17(b)",
+      "parent_id": "18M.P3.HL.TZ2.Q17",
+      "served": true,
+      "soft_flags": [
+        "source_corpus_defect"
+      ]
+    }
+  ]
+}

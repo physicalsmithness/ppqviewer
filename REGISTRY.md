@@ -1,9 +1,41 @@
 # ppqviewer consumer registry
 
-Last audited: 2026-07-30 (Claude takeover audit)
+IB Physics status updated: 13 September 2026. Other consumer rows retain their
+previous audit/deployment dates.
 
-This is the drift detector and capability-awareness map. Update it on every
-consumer migration and material module change.
+**IB Physics published and publicly verified:** build `d5fa99e9dedd533b`,
+commit `d3195abc9940e3bbb63ad47d5ffd67a9eed9e55e`, contains 543 distinct parts
+and 1,316 public PNGs. Topic counts: A1 149 (128 typed), A5 138, C1 25 (7 typed),
+D2 146, E1 55 and E2 39. Nine shared parts explain overlapping topic totals.
+Actual public chooser and22 live files were checked; Pages built the exact
+commit. Full QA passed33 checks and2,016 fresh keyboard journeys across252
+MCQs. Before publication3,406 evidence fingerprints were rechecked.
+
+E1/E2 use pinned source eligibility and exact authored type versions. All
+eligible candidates received current-test comparison. New additive holds removed
+one prior A1 and three prior D2 parts. Six mixed E1 parts show answer-free
+Practice focus notes. Source part order and cross-topic part chips were checked.
+C1's appended analyst update leaves its accepted scope and mappings unchanged.
+
+The existing attempt receiver and `ppqviewer_ibphysics` tab in **Smithics driller
+responses** remain verified and connected. New production activity is reported;
+historical browser attempts are never replayed. No new production test attempt
+was sent in this release. Shared sign-in/progress remain intact.
+
+Every2026+ exam remains excluded. Whole-parent/twin/duplicate and possible
+rewritten-test matches, reserved shared pages and unsafe crops remain additive
+holds. Private test/audit material never enters public files. Original source
+papers and tests were not edited.
+
+Current release records: `IB_PHYSICS_RELEASE.md`, `RESTART_STATE.md` and
+`reports/ib-d5fa99e9dedd533b-release-verification.json`.
+
+**Historical public baseline:** build `74bc30c663ec86cf`, commit
+`0c71e82be7db4c782755f3fcde065b15c43e0f2b`, was verified live on
+12 September with 321 distinct A1/A5/C1 parts and 787 PNGs. Earlier A5-only
+records used 146 parts and 371 PNGs; those are historical counts, not this
+current selection. See `IB_PHYSICS_RELEASE.md` for publication history and
+`reports/ib-physics-attempt-logging.md` for the receiver evidence.
 
 | Consumer | Current status | Location/surface | Shared viewer state | Enabled/known capabilities |
 | --- | --- | --- | --- | --- |
@@ -11,15 +43,47 @@ consumer migration and material module change.
 | Chemistry | Live own copy; shared-engine migration not complete | `C:\Claude (not on Gdrive, nor OneDrive)\chemistrydriller` | Donor/consumer, not yet one runtime source | reference booklet, structured papers, mixed question types, maths, split dashboard |
 | Chemistry G: mirror | Stale; retire | `G:\My Drive\github local files\chemistrydriller` | Not authoritative | Do not use as source |
 | Special Relativity | Intended near-term embed | `C:\Claude (not on Gdrive, nor OneDrive)\Special Relativity Driller` | No ppqviewer adapter recorded here | Requires embedded mount |
-| IB Physics | QUEUED with a deployment name (d026, Smith 2026-08-17): its own site, **`ibphysicsppqs`**, launched standalone first because that scales, then attached to the individual physics drillers as each is ready. Repo does not exist yet; Smith creates it at publish time | content seat `C:\CodexProjects\PaperDatabases\Physics Categorisation` (founded 2026-08-01; extended 2025 spine of 652 coded lines plus an inductive family axis) | Not connected; no catalogue delivered yet | Rich tagging/error taxonomy and eventual assistance/history |
+| IB Physics | Six-topic build `d5fa99e9dedd533b` published and publicly verified, 13 September 2026; commit `d3195abc9940e3bbb63ad47d5ffd67a9eed9e55e` | wrapper `example\\physics.html` + `example\\physics-config.js`; source seat `C:\\CodexProjects\\PaperDatabases\\Physics Categorisation`; site `physicalsmithness.github.io/ibphysicsppqs` | Shared engine;543 distinct parts: A1 149,A5 138,C1 25,D2 146,E1 55,E2 39;1,316 public PNGs;identity helper v1 | Reviewed source/crop/test gates;authored topic/type filters;ordered parts,inline marks/C/history,pacing;teacher help/display reports;production-only new activity reporting to `ppqviewer_ibphysics`,no history backfill |
 | Economics | WRAPPED, not published (2026-08-06). **Deployment target ruled 2026-08-17 (d026): a sub-path of the existing economics site, `ibeconomics/ppqviewer`, not a repo of its own.** First sub-path deployment in the project: the assembler writes into the `ibeconomics` working copy and touches nothing else there; Smith pushes that repo. Analytics are not inherited (each page on that site carries its own snippet), and whether the viewer wears the site's design system is open. Catalogue delivered 2026-08-03 (1,021 records, 3,498 parts, 2004-2025); wrapper + suite built by the first bounded builder dispatch. Needs Smith at publish time for the deploy repository name and the school-served content ruling | wrapper `example\economics.html`; suite `test\test_economics.js` (91 assertions); catalogue `C:\CodexProjects\PaperDatabases\Economics Categorisation\viewer\economics_catalogue.js`; assets `PaperDatabases\outputs\previews\ib_economics_*` in `crops\`/`pages\` subfolders | engine 0.19.0, no engine change required | Auto-marked MCQ (73 of the 80 legacy 2004 P1; 7 have OCR-scrambled option tables and fall back), marks self-assessment against level bands (3,298), flashcard reveal where the printed marks are unrecoverable (127), structuredPaper part navigation, examiner commentary + paper reports, eight filters incl. syllabus status defaulting to the practisable subset, eight progress axes. NOT built: the essay criteria checklist (1,185 parts), paused into the post-question redesign so economics and maths get one ticking surface |
 | IB Maths | PUBLISHED (d014, pushed 2026-07-29: 12,585 assets incl. 5,633 complete ms pages at 12:57, final v0.13.0/v0.1.1 assembly at 19:09, origin up to date; Pages-serving browser check owed) | wrapper `example\ibmaths.html` (teacher preview reads assets locally); canonical catalogue `C:\CodexProjects\PaperDatabases\Maths Categorisation\viewer\maths_catalogue.js` (their builder; 2,195 questions, both syllabi); deploy checkout `deploy\ibmathsdriller` (engine 0.13.0 + full asset set incl. complete ms pages) | engine API 0.14.0; wrapper v0.2.0; d016 part-by-part live (5,368 markable-unit records from 2,195 questions; 1,459 questions part-level) | Question-unit marks self-assessment (their per-part marks still carry aggregation quirks); filters: syllabus/AA-fit(default Yes)/topic/subtopic/family/paper/year; d012 taxonomy seeded; timer up; generic feedback shell; 840 missing-ms-crop questions now served by the ms_pages fallback (VF-15); examiner reports default-on (part/question commentary, match-note provenance, paper subject reports; 2026-08-03) |
-| Trilogy Physics | Intended future past-paper viewer | external project | Not connected | Mapping exists elsewhere; no viewer adapter recorded here |
-| pre-IB Physics | Intended future past-paper viewer | external project | Not connected | No viewer adapter recorded here |
+| Trilogy Physics | Local preview; no public deployment claimed | `example\physics.html?course=trilogy`; source data in PaperDatabases | Shared physics adapter for electricity and forces | Reviewed source/test/crop filtering; separate from the IB public release |
+| pre-IB Physics | Local preview; no public deployment claimed | `example\physics.html?course=preib`; source data in PaperDatabases | Shared physics adapter for reviewed forces | Reviewed source/test/crop filtering; separate from the IB public release |
 
 ## Shared capabilities consumers should know about
 
+- opt-in `selfReport.autoReveal` reveals inline C after committing an
+  answer and scrolls only the question container as needed; it defaults to off.
+  Facet progress pulses now match the displayed field's actual memberships
+  and preserve the analysis reading position; legacy topic pulses retain
+  their existing behaviour;
+- optional `questionTools` docks tools to the question column and/or puts
+  confirmed Reset under Preferences; `problemReport` supplies an endpoint,
+  project and source-only `contextOf`/`sourceLabelOf` hooks for explicit reports;
+- optional `teacherHelp` supplies endpoint/project and source label, URL and
+  context hooks for explicit clarification requests; receipt checks and stable
+  retry IDs avoid false success or duplicate submission, and browser-local
+  request/read state supports notifications for reviewed public replies;
+  only published question/answer text is public, without pupil names;
+- shared physics `PhysicsIdentity`/`PhysicsLogin` adapters remember name/class
+  across participating pages in the same browser, without a password check,
+  rekeying the existing progress store. Identity itself is not a transport;
+  IB uses a separate, production-only reporting adapter for approved new activity;
+- optional `learnerLevel` saves HL/SL, snapshots it with each visit and passes it
+  to `timing.targetOf(q, {learnerLevel})`; `questionBadgesOf(q)` provides escaped
+  source/current-syllabus labels independently of learner preferences;
+- `focusGuidanceOnSelect` on a dashboard facet brings named group guidance into
+  view on selection, without scrolling the analysis on ordinary attempt updates;
+- bounded preloading of question, context and markscheme crops, including
+  neighbouring structured parts; MCQ markscheme crops reveal after answering
+  and support click/keyboard enlargement;
+- optional compact practice navigation with target-part headings before
+  context, part buttons at the top and a configurable question scroll container;
 - namespaced attempt/rating storage;
+- optional `attemptHistory`, `practiceSelection` and `sideRating` interfaces;
+  saved inclusion preferences use the most recent completed outcome for error
+  focus, and ratings are attached to individual attempts;
+- optional `shuffleGroupKeyOf` for whole-question shuffling with ordered parts,
+  alongside an explicit independent-part shuffle;
 - filtering, ordered/shuffled navigation and question finding;
 - drawing and keyboard control;
 - structured papers, reference-booklet linking, mixed question types and maths;
@@ -28,6 +92,16 @@ consumer migration and material module change.
 - event reporting and lightweight identity;
 - timing capture and basic display;
 - multi-label classification hierarchy;
+- optional standard-dashboard memberships via `groupKeysOf(q)` and
+  per-membership labels via `groupLabelOf(key, q)`; repeated keys count once,
+  and the existing single-group hooks remain the default;
+- configurable `itemNoun` (default "question", e.g. "part") for counters,
+  finding, dashboard and progress wording;
+- authored selected-group guidance via a dependent dashboard filter's
+  `facetGuidanceOf(groupCode) -> {summary, checks}`; escaped text in an
+  closed-by-default Key tips disclosure. Selecting a group never opens the
+  advice automatically. The existing facet requires single-select parent and
+  child filters. Group guidance is general advice, not a per-part diagnosis;
 - content-safety gate (engine 0.4.0): consumer withheld list + damage
   heuristics; unsafe analysis falls back to the generic shell and can never
   present as Full/Provisional.
@@ -55,7 +129,7 @@ consumer migration and material module change.
 - full timing preference/bank/pause system;
 - configurable generic error taxonomy and before/after rating;
 - functional flagged/revisit queue and recommendations;
-- assistance/teacher replies;
+- general rollout of the optional teacher-clarification service beyond IB Physics;
 - real accounts/classes and cross-consumer analytics.
 
 — Codex registry refresh for Claude, 2026-07-28

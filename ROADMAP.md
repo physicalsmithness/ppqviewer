@@ -1,5 +1,12 @@
 # ppqviewer roadmap
 
+Physics onboarding update (2026-09-10): a local preview now covers all nine of
+Patrick's requested areas using the shared engine. All 2026 exam papers are
+reserved for mocks. Known and possible test matches are withheld, including
+whole parents and linked duplicates; remaining scanned/rewritten test items
+must be reconciled before pupil release. D2 and the reviewed 4SS0 Pre-IB
+forces starter set are connected. Run/status details: `PHYSICS_PREVIEW.md`.
+
 Last audited: 2026-07-30 (Claude takeover audit)  
 Maintainer: Claude  
 Current public ESAT release: **v0.2.17** (checkout synced + pushed 2026-07-29;

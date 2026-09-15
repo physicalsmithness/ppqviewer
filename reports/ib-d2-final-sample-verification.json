@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "topic": "D.2",
+  "checked_at": "2026-09-12T23:01:14.920Z",
+  "review_kind": "independent_final_projection_and_sample_binding",
+  "review_complete": true,
+  "source_files": [
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-d2-release-clearance.json",
+      "sha256": "25ae91376305cdd0fe4dab7cc07cf69a14f7fb45e06c0a24e9426bad5c2a8344"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-d2-visual-sample-review.json",
+      "sha256": "f17f7be07d666d9778200d2f29783693c0f56c72c8515b0e65981ed890cfa89f"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-d2-reviewed-presentation.json",
+      "sha256": "fdb45db54b5fdbfd291b8aa632239c5a92fa9b51b14c74e0437fbc4739df2b4b"
+    }
+  ],
+  "counts": {
+    "fixed_candidate_parts": 184,
+    "parts": 149,
+    "parents": 138,
+    "new_parts": 65,
+    "matched_mcq_keys": 96,
+    "assets": 391
+  },
+  "reviewed_source_part_ids": [
+    "ibchem_part_92973452bc64c528",
+    "ibchem_part_f9c041f3d9c42a2d",
+    "ibchem_part_8231798b8e724b73",
+    "ibchem_part_4bc035a88f0d8896",
+    "ibchem_part_f4a07bf658be2c34",
+    "ibchem_part_448ca84dc8f85e1c",
+    "ibchem_part_569cd6fc35db56ab",
+    "ibchem_part_250f633ce14435c5",
+    "ibchem_part_f504bac67c9788a0"
+  ],
+  "retained_sample_unique_images": 23,
+  "final_source_ids_sha256": "f1612501b40c22874bd4269f84cdbb44c58d9877001db25801ce6e64f33688b3",
+  "tests": {
+    "recovery": 10,
+    "release_preflight": 9,
+    "presentation": 7,
+    "merge": 5,
+    "total": 31,
+    "failures": []
+  },
+  "checks": {
+    "default_prepareRelease_assessment_complete": true,
+    "default_prepareRelease_unresolved_items": [],
+    "final_clearance_hash_matches": true,
+    "final_source_id_set_matches": true,
+    "suppressed_heading_absent": true,
+    "complete_first_answer_present_with_exact_hash": true,
+    "all_sample_retained_asset_roles_and_hashes_match": true
+  },
+  "limits": [
+    "The31test checks include nine intentionally uncertified release-preflight checks; a separate default prepareRelease run verified complete assessment status,149parts and391assets.",
+    "Nine-part visual sample carried forward with the one reviewed heading omitted:23unique retained sample images. This is not individual visual proofreading of every offered image.",
+    "No report used by release clearance, source database or publication files were changed."
+  ],
+  "previous_clearance_sha256": "06979e31b7ac506650c63ad1a58d76833dcf29e361f1246203a473806778f28c",
+  "revalidated_at": "2026-09-12T23:11:19.437Z",
+  "projection_comparison": {
+    "baseline_build": "307804d8d4e408bd",
+    "source_parts": 149,
+    "distinct_source_assets": 391,
+    "ordered_asset_references": 408,
+    "source_ids_unchanged": true,
+    "each_source_role_image_byte_and_order_unchanged": true,
+    "final_source_ids_sha256": "f1612501b40c22874bd4269f84cdbb44c58d9877001db25801ce6e64f33688b3",
+    "assessment_complete": true,
+    "unresolved_relevant_items": [],
+    "change": "D2 public taxonomy carries its explicit topic; selected source IDs and displayed images are unchanged."
+  },
+  "prior_test_run_preserved": true
+}

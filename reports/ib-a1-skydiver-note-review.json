@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "topic": "A.1",
+  "reviewed_on": "2026-09-12",
+  "review_complete": true,
+  "blocked_source_ids": ["ibchem_part_df4014d007195024"],
+  "disposition": "conservative_hold_plausible_subtask_rewrite",
+  "confirmed_copy": false,
+  "source_reference": "09M.P1.SL.TZ1.Q3",
+  "corpus_sha256": "6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c",
+  "evidence": "The complete school question is an authored table, not the same complete MCQ. However, its columns at one second and thirty seconds after parachute deployment explicitly ask velocity direction and acceleration. The cited archive MCQ distinguishes continued downward motion from rising immediately after deployment, and arrival at a lower terminal speed. Those table subparts plausibly reuse the same qualitative task and misconception. The weak retrieval/bespoke note is therefore insufficient to clear this candidate. This is a precautionary subtask-overlap hold, not proof that the school question was copied.",
+  "link_integrity_finding": "All three PACKET_006D source_results_v4.csv Q19 notes name 2009 May TZ1 P1 SL Q3, but their rank1_part_id names a different corpus row. Existing structured-ID exclusions did not include the correctly resolved historical reference.",
+  "test_questions": [
+    {"relative_path": "A/A.1/A.1 Test 2024.pdf", "page": 22, "question": "19", "review_complete": true},
+    {"relative_path": "A/A.1/A.1 Test 2025.pdf", "page": 21, "question": "19", "review_complete": true},
+    {"relative_path": "A/A.1/A.1 Test 2026.pdf", "page": 21, "question": "19", "review_complete": true}
+  ],
+  "source_files": [
+    {"path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2024.pdf", "sha256": "4dea58263039e979388bfc7e0dfde6d161c000bfe4807e209f92947434cc8f05"},
+    {"path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2025.pdf", "sha256": "d872cda4575e52dd6d8899f06bff10bcd4db6745eb7ab49426c00f2aac7b010d"},
+    {"path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2026.pdf", "sha256": "c4ddebc6ad090a0ccdeb995b4fe9b8b4667b68d335b7a35f278c86d62d9ea235"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2009_may_1_c42d8ff5/crops/question_3_v003_p003_01_2e68af7df2.png", "sha256": "4771053050731ba6721c9f0934b91dbf0b5f2b71e688d81d7273851c64e3f83b"},
+    {"path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/tmp/pdfs/named-assessment-review/a1-2024-22.png", "sha256": "711c26b12eda31601dcc07a09145cbed23efbc85d2a826f1c6f87ec7bcc4e9db"},
+    {"path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/tmp/pdfs/named-assessment-review/a1-2025-21.png", "sha256": "c48102d8a50f2eac1f5593329d45aed6c3445e8a18ba2a15342e13845bfb29cb"},
+    {"path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/tmp/pdfs/named-assessment-review/a1-2026-21.png", "sha256": "10982df7624c84e2e774426fd4e4ee2ffff943f6fd1f997c8c403b272731b9a3"}
+  ],
+  "unresolved_relevant_items": [],
+  "limitations": "This record determines only the named candidate and three named Q19 occurrences. The hold must expand through full parent/twin/duplicate and shared-page context before publication. It does not replace other assessment exclusions or authorize new content. Private teacher audit; do not publish test details."
+}

@@ -1,0 +1,25 @@
+{
+  "prepared_at": "2026-09-12T15:18:22.189Z",
+  "endpoint": "https://script.google.com/macros/s/AKfycbygTx2TEpXvqECcWT0mbVhn_Jc_emoT3tk1iKD3EkmgJAv__vSW_oixb8RAlEFyjpRt/exec",
+  "mode": "teacher",
+  "receipts": [
+    {
+      "target": "staged",
+      "sourceCode": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\integration\\teacher-clarifications\\remote-before\\Code.js",
+      "sourceHtml": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\integration\\teacher-clarifications\\remote-before\\teacherviewer.html",
+      "sourceCodeSha256": "a225c4f1d0c672b5c362ab681118075ed2b870baa895e5c5ff8261373054dc90",
+      "sourceHtmlSha256": "e11a834b0ec70ffa4870df97fb44ba6caee49934c040989f7d915b17de9b47c8",
+      "codeSha256": "a8faaf6f39964ec029074e8a9f2c2f21b2306c2ce87c778be61f69142a92402b",
+      "htmlSha256": "20e3d18f0a56ae2903575f976a9a3324142ab75793f5e82b939b95fbf3ce1af7"
+    },
+    {
+      "target": "canonical-proposed",
+      "sourceCode": "C:\\Claude (not on Gdrive, nor OneDrive)\\TeacherViewer\\shared_script\\teacher-tracking.gs",
+      "sourceHtml": "C:\\Claude (not on Gdrive, nor OneDrive)\\TeacherViewer\\app\\teacherviewer.html",
+      "sourceCodeSha256": "401c8bce11a560d6fca78c8c30e490669836b66cf487482384aecaae70e43f74",
+      "sourceHtmlSha256": "3b0e225ab2d112da2cf30c2a666541ecf11377e96a2b8659f84c9410f09aa5ac",
+      "codeSha256": "9a436ff0aaa1f58d625519e06d2c28c57fd641152889064defcddbaaf757134f",
+      "htmlSha256": "2285328b7be827b9b396f3b8e81df01fcc9b0ae8ade8d0e38350ae2fbf4942ad"
+    }
+  ]
+}

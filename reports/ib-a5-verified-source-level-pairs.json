@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-12",
+  "private_unserved": true,
+  "status": "strict_rendered_pair_evidence_only",
+  "public_data_changed": false,
+  "source_files": [
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\data\\physics_catalogue.js",
+      "sha256": "92b35df372b7709cf0294ee78b9033a88ee42d28f13d42d1964f4c29e2453f94"
+    },
+    {
+      "path": "C:/CodexProjects/PaperDatabases/outputs/exports/ib_physics_archive_flat_v5.csv",
+      "sha256": "6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c"
+    }
+  ],
+  "method": "Require equal marks and identical ordered image sets for own question, full context and markscheme; verify corresponding question/shared-stem/parent-context/MS normalized text equality and bind all rendered image hashes. This records visual-content identity, not current syllabus eligibility or completeness of archive cross-level matching.",
+  "verified_shared_source_pairs": [
+    {
+      "source_group_id": "ibchem_xlvl_83e9ca5a5a6ecac2",
+      "hl_source_part_id": "ibchem_part_f07bcbb2e63c4ed6",
+      "sl_source_part_id": "ibchem_part_28df659858a95d02",
+      "hl_viewer_id": "06M.P3.HL.TZ2.QG1(a)",
+      "sl_viewer_id": "06M.P3.SL.TZ2.QG1(a)",
+      "marks": 2,
+      "source_group_method": "exact_context",
+      "matching_normalized_fields": [
+        "question_text",
+        "shared_stem",
+        "parent_context",
+        "ms_text"
+      ],
+      "complete_image_roles_match": true,
+      "assets": [
+        {
+          "role": "question_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\0bc04a97eb3ad12a904172680bfeb21132b5b1093d614581f650473f4b308922.png",
+          "sha256": "0bc04a97eb3ad12a904172680bfeb21132b5b1093d614581f650473f4b308922"
+        },
+        {
+          "role": "context_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\8346011ac1976edf1b76307bf1282eee19dc58a20856e21f9a1f316b969bfabb.png",
+          "sha256": "8346011ac1976edf1b76307bf1282eee19dc58a20856e21f9a1f316b969bfabb"
+        },
+        {
+          "role": "markscheme_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\a7c27aa42b4d58277cdc4333159f48aefaf63efae49267e2e6970129b6aa0316.png",
+          "sha256": "a7c27aa42b4d58277cdc4333159f48aefaf63efae49267e2e6970129b6aa0316"
+        }
+      ]
+    },
+    {
+      "source_group_id": "ibchem_xlvl_afa085ddd8a5b91d",
+      "hl_source_part_id": "ibchem_part_c50ca97b969fdf8a",
+      "sl_source_part_id": "ibchem_part_40756e64530ff5c1",
+      "hl_viewer_id": "07N.P3.HL.TZ0.QG2(a_ii)",
+      "sl_viewer_id": "07N.P3.SL.TZ0.QG2(a_ii)",
+      "marks": 2,
+      "source_group_method": "exact_context",
+      "matching_normalized_fields": [
+        "question_text",
+        "shared_stem",
+        "parent_context",
+        "ms_text"
+      ],
+      "complete_image_roles_match": true,
+      "assets": [
+        {
+          "role": "question_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\528838889a43e027826510dab7e222cf6462f714c9717ea5f49ae1566f256747.png",
+          "sha256": "528838889a43e027826510dab7e222cf6462f714c9717ea5f49ae1566f256747"
+        },
+        {
+          "role": "context_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\788f60701c00875ff6a511eb6758d86ed99007bcd48b1bd9d31b0f754a7df016.png",
+          "sha256": "788f60701c00875ff6a511eb6758d86ed99007bcd48b1bd9d31b0f754a7df016"
+        },
+        {
+          "role": "markscheme_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\20ac43e80cca77056ef79c341de5727619aedad318cdd2be0dace0a82072fbb6.png",
+          "sha256": "20ac43e80cca77056ef79c341de5727619aedad318cdd2be0dace0a82072fbb6"
+        }
+      ]
+    },
+    {
+      "source_group_id": "ibchem_xlvl_571b1062232f9673",
+      "hl_source_part_id": "ibchem_part_a4340611af4a6009",
+      "sl_source_part_id": "ibchem_part_0e72152bfaa02498",
+      "hl_viewer_id": "24N.P3.HL.TZ0.Q3(a)",
+      "sl_viewer_id": "24N.P3.SL.TZ0.Q3(a)",
+      "marks": 1,
+      "source_group_method": "exact_context",
+      "matching_normalized_fields": [
+        "question_text",
+        "shared_stem",
+        "parent_context",
+        "ms_text"
+      ],
+      "complete_image_roles_match": true,
+      "assets": [
+        {
+          "role": "question_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\bed13bfbddd5a156bb5316ba3565d69a59bd6edc0d79b3477b636d2765925a41.png",
+          "sha256": "bed13bfbddd5a156bb5316ba3565d69a59bd6edc0d79b3477b636d2765925a41"
+        },
+        {
+          "role": "context_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\b963d2222b93525e144239a7dd18b55cfda948383b7bc4ffc1cd5a0760ef9eeb.png",
+          "sha256": "b963d2222b93525e144239a7dd18b55cfda948383b7bc4ffc1cd5a0760ef9eeb"
+        },
+        {
+          "role": "context_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\01bb7496b4847189aa364edf008f6ad1a3508b171f1f54445e7b3ad9ac773363.png",
+          "sha256": "01bb7496b4847189aa364edf008f6ad1a3508b171f1f54445e7b3ad9ac773363"
+        },
+        {
+          "role": "markscheme_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\44aa342be3cf4e811ba3486140f0254a303b3a1ae4dbc5d484f1a951c84af8c5.png",
+          "sha256": "44aa342be3cf4e811ba3486140f0254a303b3a1ae4dbc5d484f1a951c84af8c5"
+        }
+      ]
+    },
+    {
+      "source_group_id": "ibchem_xlvl_83a26b4e24e2a1cc",
+      "hl_source_part_id": "ibchem_part_cff2647cc6af5d93",
+      "sl_source_part_id": "ibchem_part_2968676be5764d54",
+      "hl_viewer_id": "24N.P3.HL.TZ0.Q3(b)",
+      "sl_viewer_id": "24N.P3.SL.TZ0.Q3(b)",
+      "marks": 2,
+      "source_group_method": "exact_context",
+      "matching_normalized_fields": [
+        "question_text",
+        "shared_stem",
+        "parent_context",
+        "ms_text"
+      ],
+      "complete_image_roles_match": true,
+      "assets": [
+        {
+          "role": "question_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\486643fca6bdff7e9b310be618b7d9c73e0b1058edde0d454b0213590492bcd6.png",
+          "sha256": "486643fca6bdff7e9b310be618b7d9c73e0b1058edde0d454b0213590492bcd6"
+        },
+        {
+          "role": "context_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\b963d2222b93525e144239a7dd18b55cfda948383b7bc4ffc1cd5a0760ef9eeb.png",
+          "sha256": "b963d2222b93525e144239a7dd18b55cfda948383b7bc4ffc1cd5a0760ef9eeb"
+        },
+        {
+          "role": "context_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\01bb7496b4847189aa364edf008f6ad1a3508b171f1f54445e7b3ad9ac773363.png",
+          "sha256": "01bb7496b4847189aa364edf008f6ad1a3508b171f1f54445e7b3ad9ac773363"
+        },
+        {
+          "role": "markscheme_images",
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\f38b6d4216288094-1789219817545\\assets\\eb14726692243318d438e0405ea93df48024dc2aa605e8229a5dbca55a51494c.png",
+          "sha256": "eb14726692243318d438e0405ea93df48024dc2aa605e8229a5dbca55a51494c"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "candidate_cross_level_groups_in_A5": 27,
+    "verified_complete_rendered_pairs": 4,
+    "verified_source_parts": 8,
+    "other_candidate_groups_not_certified_here": 23
+  },
+  "known_unsafe_group": {
+    "source_group_id": "ibchem_xlvl_a5f3ec4a28660e15",
+    "reason": "Identical own question crop/text/marks but different inherited diagrams and marking answers: SL 0.40c, HL 0.60c. Own-image or part-text identity alone is insufficient."
+  },
+  "safe_display_contract": {
+    "printed_level": "Retain original paper HL or SL without claiming exclusivity.",
+    "current_syllabus_levels": "Independent authored eligibility; all currently released A5 parts are current HL.",
+    "verified_source_shared": "May be true only for explicitly approved identity pairs such as those fingerprinted here.",
+    "unverified_match": "Keep unknown; never treat missing or rejected match as proof that an appearance is HL-only or SL-only."
+  },
+  "recommended_labels": {
+    "verified_shared": "Shared HL/SL (verified)",
+    "original_hl_unknown": "Original HL paper",
+    "original_sl_unknown": "Original SL paper"
+  },
+  "limitations": [
+    "These four exact image matches are not a complete reviewed pair map for all146 source parts.",
+    "No image was changed and no source classification was edited.",
+    "The 23 other candidate groups need full source-context/diagram review before a shared-source claim.",
+    "An original SL appearance does not establish current SL eligibility for A5."
+  ]
+}

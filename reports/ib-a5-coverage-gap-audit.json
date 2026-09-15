@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-12",
+  "private_unserved": true,
+  "scope_changed": false,
+  "review_kind": "Read-only catalogue and existing-release audit; no new release clearance",
+  "fingerprints": [
+    {"path":"C:/CodexProjects/PaperDatabases/outputs/exports/ib_physics_archive_flat_v5.csv","sha256":"6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c"},
+    {"path":"C:/CodexProjects/PaperDatabases/Physics Categorisation/viewer/ibphysics_catalogue.js","sha256":"46ea6f49949f47ee7ea67ef1f819eacfda8a45c58601cfc9cf6d01e0096be4f4"},
+    {"path":"dist/physics-inputs/ib-a5-analysis.json","sha256":"ac806b4a80b6ffc0ccd418a0c3a764393a3b70f2648a936921c881842e5bbfaa"},
+    {"path":"reports/ib-a5-release-clearance.json","sha256":"752ce25375be616122e6a18f9935800dd96bdfddf8dea8654e538be3fa31e0a8"},
+    {"path":"reports/ib-a5-reviewed-test-exclusions.json","sha256":"88dc4b149665a081fb4c69eb91c13149af0c7ef65a7bdbffb07af9aeef3b00a6"},
+    {"path":"dist/physics-audit/current-ib-tests.json","sha256":"bd7da777a2b2dee6d1446d2edd9615bfe935132e8dab92a2c1e16472873f345f"},
+    {"path":"reports/ib-reviewed-crop-exclusions.json","sha256":"9737708eee76359fa9853ba768ceac4418dfc776977577d7e5dab84d208e9559"}
+  ],
+  "current_release": {
+    "parts": 146,
+    "parents": 72,
+    "served_papers": {"3":131,"2":11,"1A":4},
+    "native_A5_candidates": 1178,
+    "exact_retained_set_reconstruction_matches_clearance": true,
+    "first_withholding_reason_counts": {
+      "served":146,
+      "existing_test_parent_twin_or_duplicate_reservation":499,
+      "reviewed_A5_definition_parent_twin_or_duplicate_reservation":171,
+      "shares_reserved_question_page":159,
+      "outside_authored_current_A5_scope_unmapped":51,
+      "outside_authored_current_A5_scope_excluded":87,
+      "outside_current_syllabus":46,
+      "outside_authored_current_A5_scope_mixed":1,
+      "reviewed_incomplete_crop":10,
+      "no_cropped_markscheme":8
+    },
+    "served_parts_by_year": {"2004":6,"2005":6,"2006":4,"2007":10,"2008":8,"2009":18,"2010":6,"2011":8,"2012":20,"2013":4,"2014":8,"2015":1,"2016":14,"2017":0,"2018":8,"2019":0,"2020":0,"2021":0,"2022":0,"2023":0,"2024":10,"2025":15},
+    "historical_format_note": "All 131 served pre-2025 parts are Paper 3 option material. The 2025 selection has 11 Paper 2 and four Paper 1A parts."
+  },
+  "requested_gap_years_private": [
+    {"year":2017,"native_A5_candidates":77,"served":0,"first_reasons":{"parent_or_duplicate_holds":50,"reserved_page_holds":21,"authored_scope_excluded":6}},
+    {"year":2019,"native_A5_candidates":72,"served":0,"first_reasons":{"parent_or_duplicate_holds":38,"reserved_page_holds":28,"authored_scope_excluded":6}},
+    {"year":2020,"native_A5_candidates":26,"served":0,"first_reasons":{"parent_or_duplicate_holds":8,"reserved_page_holds":12,"authored_scope_excluded":3,"outside_current_syllabus":2,"unmapped":1}},
+    {"year":2021,"native_A5_candidates":6,"served":0,"first_reasons":{"parent_or_duplicate_holds":6},"authored_current_A5_inclusions":0,"flat_archive_papers":{"1":210,"2":234}},
+    {"year":2022,"native_A5_candidates":0,"served":0,"authored_current_A5_inclusions":0,"flat_archive_papers":{"1":210,"2":199}},
+    {"year":2023,"native_A5_candidates":84,"served":0,"first_reasons":{"parent_or_duplicate_holds":53,"reserved_page_holds":28,"authored_scope_excluded":1,"unmapped":2}}
+  ],
+  "authored_scope_projection_gap": {
+    "authored_included_source_parts_without_native_A5_tag":74,
+    "parent_or_duplicate_held":53,
+    "additional_reserved_page_held":7,
+    "remaining_projection_review_candidates":14,
+    "remaining_by_year":{"2009":3,"2011":5,"2012":4,"2015":2},
+    "remaining_already_native_under_A1":4,
+    "remaining_missing_native_part_projection":10,
+    "remaining_all_source_question_and_markscheme_images_exist":true,
+    "remaining_source_question_images":16,
+    "remaining_source_markscheme_images":14,
+    "remaining_known_crop_holds":0,
+    "remaining_certified_for_release":false,
+    "method":"Exact authored included stable source IDs compared with native A5-tagged source IDs, then checked with buildIbExclusions using both current-ib-tests and supplemental A5 exclusions, full-parent/twin/duplicate closure, reserved question pages and reviewed crop exclusions. Source QP/MS image files were checked for existence. No prompt, crop or source was changed.",
+    "candidate_records":[
+      {"source_part_id":"ibchem_part_226e0f3b70b1e149","parent_id":"09M.P3.SL.TZ2.QD1","part_label":"D1(c)(iii)","preview":"ib_physics_2009_may_3_14be0e41","native_A1_part":true,"source_rows":["Q135"],"group":"A5.LC"},
+      {"source_part_id":"ibchem_part_29ff0476f72206ce","parent_id":"09M.P3.HL.TZ2.QH1","part_label":"H1(c)(iii)","preview":"ib_physics_2009_may_3_84385e26","native_A1_part":true,"source_rows":["Q140"],"canonical_rows":["Q135"],"group":"A5.LC"},
+      {"source_part_id":"ibchem_part_68b8e61ed350f70d","parent_id":"09N.P3.HL.TZ0.QH2","part_label":"H2(b)(i)","preview":"ib_physics_2009_nov_3_50bba109","native_A1_part":false,"native_parent_exists":false,"source_rows":["T076"],"group":"A5.VEL"},
+      {"source_part_id":"ibchem_part_ef62c80d198ec0d3","parent_id":"11M.P3.SL.TZ2.QD1","part_label":"D1(b)","preview":"ib_physics_2011_may_3_d95726ec","native_A1_part":false,"source_rows":["S064"],"group":"A5.TD"},
+      {"source_part_id":"ibchem_part_87a77018daae632e","parent_id":"11M.P3.SL.TZ2.QD1","part_label":"D1(c)","preview":"ib_physics_2011_may_3_d95726ec","native_A1_part":false,"source_rows":["S065"],"group":"A5.SIGNAL"},
+      {"source_part_id":"ibchem_part_25c013291893d854","parent_id":"11M.P3.HL.TZ2.QH1","part_label":"H1(b)","preview":"ib_physics_2011_may_3_e492e839","native_A1_part":false,"source_rows":["S067"],"canonical_rows":["S064"],"group":"A5.TD"},
+      {"source_part_id":"ibchem_part_4d982d869edf1b53","parent_id":"11M.P3.HL.TZ2.QH1","part_label":"H1(c)","preview":"ib_physics_2011_may_3_e492e839","native_A1_part":false,"source_rows":["S068"],"canonical_rows":["S065"],"group":"A5.SIGNAL"},
+      {"source_part_id":"ibchem_part_fbdfae3b5fa72a1a","parent_id":"11M.P3.HL.TZ2.QH4","part_label":"H4(b)(i)","preview":"ib_physics_2011_may_3_e492e839","native_A1_part":false,"source_rows":["Q218"],"group":"A5.WORLDLINE"},
+      {"source_part_id":"ibchem_part_da6916b175da6f81","parent_id":"12M.P3.HL.TZ1.QH1","part_label":"H1(b)","preview":"ib_physics_2012_may_3_a54e09b0","native_A1_part":false,"source_rows":["S074"],"canonical_rows":["S073"],"group":"A5.TD"},
+      {"source_part_id":"ibchem_part_7ea082d4318ecf32","parent_id":"12M.P3.HL.TZ2.QH2","part_label":"H2(a)(ii)","preview":"ib_physics_2012_may_3_b0d7c487","native_A1_part":false,"source_rows":["S082"],"group":"A5.TD"},
+      {"source_part_id":"ibchem_part_4f636285ed93c062","parent_id":"12M.P3.HL.TZ2.QH2","part_label":"H2(b)","preview":"ib_physics_2012_may_3_b0d7c487","native_A1_part":false,"source_rows":["S083"],"group":"A5.LC"},
+      {"source_part_id":"ibchem_part_739d0081781f2b3a","parent_id":"12M.P3.HL.TZ2.QH2","part_label":"H2(c)","preview":"ib_physics_2012_may_3_b0d7c487","native_A1_part":false,"source_rows":["S084"],"group":"A5.VEL"},
+      {"source_part_id":"ibchem_part_05d75a76e5d46714","parent_id":"15M.P3.SL.TZ1.Q11","part_label":"11(b)(i)","preview":"ib_physics_2015_may_3_402d4969","native_A1_part":true,"source_rows":["S119"],"group":"A5.TD"},
+      {"source_part_id":"ibchem_part_75e21403adbaccc9","parent_id":"15M.P3.SL.TZ1.Q11","part_label":"11(b)(iii)","preview":"ib_physics_2015_may_3_402d4969","native_A1_part":true,"source_rows":["S121"],"group":"A5.SIGNAL"}
+    ],
+    "asset_lookup":"Read exact question_crop_paths and ms_crop_paths from the fingerprinted flat CSV by source_part_id, relative to C:/CodexProjects/PaperDatabases/outputs/previews/<preview>. Authored mapping is in analysis.parts[source_part_id].",
+    "remaining_checks_before_any_addition":[
+      "Visually verify source part, full context, question crop boundaries and markscheme attribution.",
+      "Verify mixed/current and retired sibling boundaries; included authored scope does not certify every surrounding crop.",
+      "Build additive native projection preserving exact source IDs and source assets; restore A5 only from authored included mappings.",
+      "Apply all parent/twin/duplicate/page/crop holds to the merged full metadata, including previously unprojected siblings.",
+      "Re-review the expanded set and assets against current assessments and refresh the bound release clearance before publication."
+    ]
+  },
+  "interpretation_limits":[
+    "Native A5 tags do not prove complete coverage or current eligibility. The audit found a real source-to-viewer projection mismatch.",
+    "The 14 candidates are source appearances, including level duplicates, not 14 unique exam questions and not 14 cleared additions.",
+    "2019's two additional authored-included A1-only parts hit reserved-page holds; they cannot be added under current policy.",
+    "All additional included 2017 and 2023 appearances are already held by parent/duplicate closure.",
+    "The local flat corpus contains only Paper 1 and Paper 2 records for 2021/2022, with no authored current-A5 inclusions. No exam-policy reason or raw-archive completeness claim was inferred.",
+    "First withholding reasons are precedence-dependent. The counts do not enumerate every overlapping reason.",
+    "This private report must remain unserved. Exact assessment-linked years, question IDs and exclusion reasons must not be exposed in learner metadata."
+  ]
+}

@@ -188,6 +188,7 @@ function extractFnOptional(name) {
 }
 
 const V = {}; // fake viewer holding the real methods
+let renderedRecordedTimeHeaders = [];
 ["_appendMethodsV2", "_methodBlockV2", "_methodKindLabel", "_elimChipsV2El",
  "_optionRailLegendEl", "_appendSelfReportV2", "_promptBlockV2", "_stateLabel",
  "_verdictEl", "_reviewerDiagnosticsV2", "_feedbackOptionMatchV2",
@@ -195,7 +196,7 @@ const V = {}; // fake viewer holding the real methods
  "_matchFeedbackV2", "_thingsUsedItemsV2", "_thingsUsedStatesV2",
  "_thingsUsedRowV2", "_appendThingsUsedV2", "_appendFreeformReflectionV2",
  "_interrogationResponseCue", "_renderInterrogationFeedback", "_filterValue",
- "_filterValues", "_parentFilterValue", "_fillSingleFilterOptions", "_syncSingleFilterStyle",
+ "_filterValues", "_itemNoun", "_groupKeys", "_saveRating", "_renderAttemptHistory", "_syncSideRating", "_parentFilterValue", "_fillSingleFilterOptions", "_syncSingleFilterStyle",
  "_refreshDependentFilters", "_dashboardFacet", "_activeDashboardFacet",
  "_matchesQuestionFilters", "filterQuestions", "setGroupFilter",
  "_setDashboardFacetValue", "_clearDashboardFacet", "_zeroRatings",
@@ -219,7 +220,7 @@ function makeCtx(rec) {
   const reports = [];
   return {
     cur: { id: (rec.identity && rec.identity.id) || "test-question" },
-    cfg: { idOf: (q) => q.id || ((rec.identity || {}).id || "test-question") },
+    cfg: { itemNoun: "question", idOf: (q) => q.id || ((rec.identity || {}).id || "test-question") },
     store: { attempts: [{ attempt_id: "test-attempt" }] },
     _saveStore: () => {},
     _optionLabels: () => (rec.identity && rec.identity.option_labels) || [],
@@ -236,6 +237,7 @@ function makeCtx(rec) {
     _renderInterrogationFeedback: () => {},
     _analysisReviewMode: () => false, /* VF-13 */
     // bind the real methods
+    _itemNoun: V._itemNoun, _groupKeys: V._groupKeys,
     _appendMethodsV2: V._appendMethodsV2, _methodBlockV2: V._methodBlockV2,
     _promptMethodAskV2: V._promptMethodAskV2, /* VF-13 */
     _syncAnalysisReminder: () => {}, /* VF-13: no modal in this harness */
@@ -832,6 +834,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
       _showExaminer() { this._examinerShown++; },
       _renderInterrogation: V._renderInterrogation,
       _afterAnswer: afterAnswer,
+      _syncSideRating: V._syncSideRating,
       _revealCommittedAnswer: revealCommittedAnswer || (() => {}),
       selectOption: selectOption,
       selectMCQ: selectMCQ,
@@ -950,6 +953,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     qa: () => [],
     store: { attempts: [{ attempt_id: "missing-attempt" }], scores: {} },
     _saveStore: () => { fallbackSaves++; },
+    _saveRating: V._saveRating,
+    _renderAttemptHistory: V._renderAttemptHistory,
     _fireReport: (payload) => fallbackReports.push(payload),
     _answerLabels: ["A", "B", "C"],
     _optionLabels: () => ["A", "B", "C"],
@@ -1237,6 +1242,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const subjectLabels = { maths: "Maths", physics: "Physics", chemistry: "Chemistry" };
   const ctx = {
     cfg: {
+      practiceSelection: { enabled: false },
       filters: [
         { field: "subject", multi: true },
         { field: "year" },
@@ -1252,6 +1258,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
             .map((subject) => subjectLabels[subject]).join(" + ");
         }
       },
+      itemNoun: "question",
       idOf: (q) => q.id,
       sort: (a, b) => a.id.localeCompare(b.id),
       groupKey: (q) => q.topic_code || q.subject
@@ -1270,6 +1277,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _filterValue: V._filterValue,
     _filterValues: V._filterValues,
     _matchesQuestionFilters: V._matchesQuestionFilters,
+    _itemNoun: V._itemNoun, _groupKeys: V._groupKeys,
     q(selector) {
       if (selector === ".ppq-order") return order;
       if (selector === ".ppq-start") return start;
@@ -1419,10 +1427,13 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const ctx = {
     cfg: {
       filters,
+      practiceSelection: { enabled: false },
+      itemNoun: "question",
       selfReport: { levels: 6, ramp: { 1: "1,1,1", 2: "2,2,2", 3: "3,3,3", 4: "4,4,4", 5: "5,5,5", 6: "6,6,6" } },
       idOf: (q) => q.id,
       groupKey: (q) => q.topic_code,
       groupLabel: (q) => q.topic_code + " Geometry",
+      groupLabelOf: (key, q) => q.topic_code + " Geometry",
       isUntagged: () => false
     },
     questions,
@@ -1451,6 +1462,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _refreshDependentFilters: V._refreshDependentFilters,
     _matchesQuestionFilters: V._matchesQuestionFilters,
     filterQuestions: V.filterQuestions,
+    _itemNoun: V._itemNoun, _groupKeys: V._groupKeys,
     _zeroRatings: V._zeroRatings,
     _questionScores: V._questionScores, /* VF-14r2 */
     _catHtml: V._catHtml
@@ -1862,7 +1874,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
 
   // discard flows through to the stored row
   const rowCtx = {
-    cfg: { learnerId: "x", idOf: (q) => q.id, timingMode: "none", timing: { targetOf: () => 90, defaultMode: "none" }, appVersion: "t", attemptFields: () => ({}), groupKey: () => "T" },
+    cfg: { learnerId: "x", idOf: (q) => q.id, timingMode: "none", timing: { targetOf: () => 90, defaultMode: "none" }, appVersion: "t", attemptFields: () => ({}), groupKey: () => "T", practiceSelection: { enabled: false } },
     cur: { id: "q9" },
     shownAt: Date.now() - 5000,
     store: { attempts: [] },
@@ -1893,7 +1905,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   };
   const panelCalls = { set: null, closed: 0, started: 0 };
   const pctx = {
-    cfg: { timing: { targetOf: () => 90, defaultMode: "clock" } },
+    cfg: { timing: { targetOf: () => 90, defaultMode: "clock" }, attemptHistory: { enabled: false }, practiceSelection: { enabled: false } },
     store: { prefs: {} },
     _sessionTimed: { count: 2, totalMs: 150000, targetMs: 180000 },
     _bankMs: 30000,
@@ -1901,6 +1913,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _reducedMotion: () => false,
     _fmtClock: V._fmtClock,
     _setTimingPrefs: (p) => { panelCalls.set = p; },
+    _saveStore() { panelCalls.set = this.store.prefs.timing; },
+    _renderAttemptHistory: V._renderAttemptHistory,
     _fireReport: () => {},
     closeModal: () => { panelCalls.closed++; },
     _startTiming: () => { panelCalls.started++; },
@@ -2035,12 +2049,13 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     ".ppq-modal": makeEl("div")
   };
   const aPage = Object.assign({}, axisCtx, {
-    cfg: Object.assign({ metaLine: (q) => "Q " + q.id, modules: {} }, axisCtx.cfg),
+    cfg: Object.assign({ itemNoun: "question", metaLine: (q) => "Q " + q.id, modules: {} }, axisCtx.cfg),
     q: (sel) => aNodes[sel] || null,
     _progressStats: V._progressStats,
     _feedbackReadiness: () => ({ code: "pending", label: "Solution pending" }),
     _jumpToAttempt: () => {},
     _renderProgressPage: V._renderProgressPage,
+    _itemNoun: V._itemNoun,
     /* Recorded-times table (Smith, 2026-07-31) */
     _stemSnippet: V._stemSnippet,
     _deleteRecordedTime: V._deleteRecordedTime,
@@ -2049,6 +2064,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _saveStore: () => {}
   });
   aPage._renderProgressPage();
+  const recordedTimes = collect(aNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-progress-times") >= 0)[0];
+  renderedRecordedTimeHeaders = recordedTimes.querySelectorAll("th").map((n) => n.innerHTML || n.textContent || "");
   const axisTables = collect(aNodes[".ppq-modal-body"], (n) => (n.className || "").indexOf("ppq-progress-axis") >= 0);
   check(axisTables.length === 2, "one table renders per axis");
   const clusters = collect(axisTables[0], (n) => (n.className || "") === "ppq-qcluster");
@@ -2103,7 +2120,16 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   check(extractFn("renderDashboard").toString().indexOf("_questionScores") >= 0 &&
     extractFn("_renderDashboardFacet").toString().indexOf("_questionScores") >= 0,
     "both the grouped dashboard and the subtopic facet carry the boxes");
-  check(src.indexOf("One box per question — grey until tried") >= 0,
+  const legend = { textContent: "" };
+  const dashboardContent = { parentNode: { querySelector: (selector) => selector === ".ppq-dash-sub" ? legend : null } };
+  extractFn("renderDashboard").call({
+    cfg: { itemNoun: "question", dashboardTitle: "Mastery" }, questions: [],
+    store: { attempts: [], scores: {} }, byId: {},
+    _activeDashboardFacet: () => null, _questionScores: () => ({}),
+    _learnedScopeBiting: () => false, _wireCats: () => {},
+    _itemNoun: V._itemNoun, q: () => dashboardContent
+  });
+  check(legend.textContent.indexOf("One box per question — grey until tried") >= 0,
     "the dashboard legend explains the boxes");
 })();
 
@@ -2271,7 +2297,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   function navCtx(view) {
     const questions = [{ id: "qa" }, { id: "qb" }, { id: "qc" }, { id: "qd" }];
     return {
-      cfg: { idOf: (q) => q.id },
+      cfg: { idOf: (q) => q.id, practiceSelection: { enabled: false } },
       questions: questions,
       view: view === "shuffled" ? [questions[3], questions[2], questions[1], questions[0]] : questions.slice(),
       idx: 0,
@@ -2387,6 +2413,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _renderInterrogationFeedback: () => {},
     _commitPreVerdictGuess: () => {},
     closeModal: V.closeModal,
+    _syncSideRating: V._syncSideRating,
     next: () => {},
     _renderInterrogation: V._renderInterrogation,
     _lastAttemptFor: V._lastAttemptFor,
@@ -2489,7 +2516,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
   const nodes = progressNodes();
   const jumps = [];
   const pageCtx = Object.assign({}, statsCtx, {
-    cfg: Object.assign({ metaLine: (q) => "Q " + q.id, modules: {} }, statsCtx.cfg),
+    cfg: Object.assign({ itemNoun: "question", metaLine: (q) => "Q " + q.id, modules: {} }, statsCtx.cfg),
     q: (sel) => nodes[sel] || null,
     _progressStats: V._progressStats,
     _feedbackReadiness: () => ({ code: "pending", label: "Solution pending" }),
@@ -2500,7 +2527,8 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _fmtClock: V._fmtClock,
     _fireReport: () => {},
     _saveStore: () => {},
-    _renderProgressPage: function () { return V._renderProgressPage.call(this); }
+    _renderProgressPage: function () { return V._renderProgressPage.call(this); },
+    _itemNoun: V._itemNoun
   });
   check(V._renderProgressPage.call(pageCtx) === true, "the progress page renders into the modal shell");
   const body = nodes[".ppq-modal-body"];
@@ -3152,7 +3180,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     "a historical time can be struck, leaving the answer and rating in place");
   check(/row\.attempt_id === this\._attemptId\) \{\s*\n\s*this\._discardCommittedTime\(\);/.test(src),
     "striking THIS session's just-recorded time delegates to the exact bank unwind, never double-counting");
-  check(/ppq-progress-times/.test(src) && /headerRow\(\["Question", "What it asked", "Time", ""\]\)/.test(src),
+  check(JSON.stringify(renderedRecordedTimeHeaders) === JSON.stringify(["Question", "What it asked", "Time", ""]),
     "the progress page lists recorded times with the question, what it asked, and the time");
   check(/ppq-time-del-all/.test(src) && /Delete every recorded time/.test(src),
     "and offers to clear them all at once");

@@ -1,0 +1,18 @@
+"use strict";
+const assert=require("node:assert/strict"),path=require("node:path"),crypto=require("node:crypto");
+const {applyReviewedPresentation}=require("../tools/ib-d2-release");
+const sha=x=>crypto.createHash("sha256").update(x).digest("hex");
+const answer=path.resolve("answer.png"),heading=path.resolve("heading.png");
+const content=new Map([[answer,Buffer.from("complete answer")],[heading,Buffer.from("next section heading")]]);
+const record={source_part_id:"ibchem_part_abc",parent_id:"parent",markscheme_images:[answer,heading]};
+const asset=file=>({source_part_id:record.source_part_id,parent_id:record.parent_id,role:"markscheme",path:file,sha256:sha(content.get(file))});
+const review={schema_version:1,topic:"D.2",review_complete:true,unresolved_relevant_items:[],suppressed_assets:[{...asset(heading),remaining_answer_complete:true}],required_assets:[asset(answer)]};
+const apply=(r=review,q=[record])=>applyReviewedPresentation(q,r,file=>content.get(file));
+assert.deepEqual(apply()[0].markscheme_images,[answer]);assert.deepEqual(record.markscheme_images,[answer,heading]);
+assert.throws(()=>apply({...review,review_complete:false}),/incomplete/);
+assert.throws(()=>apply({...review,required_assets:[]}),/required answer/);
+assert.throws(()=>apply({...review,suppressed_assets:[{...review.suppressed_assets[0],sha256:"changed"}]}),/changed/);
+assert.throws(()=>apply({...review,suppressed_assets:[{...review.suppressed_assets[0],source_part_id:"other"}]}),/complete retained/);
+assert.throws(()=>apply({...review,required_assets:[asset(heading)]}),/required complete/);
+assert.throws(()=>apply(review,[{...record,markscheme_images:[heading]}]),/entire markscheme/);
+console.log("7 reviewed D2 presentation checks passed");

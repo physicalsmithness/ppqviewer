@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "topics": ["A.1", "C.1"],
+  "review_complete": true,
+  "scope": "Current A1/C1 assessment snapshots and source-owned native A1/C1 practice candidates; existing all-assessment precautionary reservations remain additive.",
+  "visually_reviewed_documents": [
+    {"relative_path":"A/A.1/A.1 Test 2026.pdf","pages":21},
+    {"relative_path":"C/C1-C2-C5 test 2026.pdf","pages":27},
+    {"relative_path":"C/C.1 Mini-Test.pdf","pages":11}
+  ],
+  "manual_reservations": [
+    {
+      "test_relative_path":"C/A1-3 and C1 knowledge test 2025.docx",
+      "test_item":"Part 2, Q7 amplitude and Q8 definition of SHM",
+      "method":"same_standalone_definition_or_equivalent_two_condition_recall",
+      "reason":"Explicit definition/meaning/conditions tasks reproduce the same assessed recall. Numerical applications, graph-derived values and requests to demonstrate SHM for a particular force law are not included merely because their context mentions SHM.",
+      "source_ids":["ibchem_part_ac73ddaa01e26e98","ibchem_part_ab97811c851685df","ibchem_part_64d62f0ddd9837f3","ibchem_part_ed08ed60ffaa6e3b","ibchem_part_970fae8ea6ecbb97","ibchem_part_cb14e8f2ffaa4006","ibchem_part_593c77750834decc","ibchem_part_1a19492e1bf36370","ibchem_part_d78e9385497e43e9","ibchem_part_df8a85cf45818cef","ibchem_part_a3d26f06ad72e2fb","ibchem_part_db47126b02510986","ibchem_part_844c2acd66d0bc93","ibchem_part_b1e644b468cfe154","ibchem_part_35a7d278a0944d2c","ibchem_part_b4d850ead89831e5","ibchem_part_03b76c65f52237db","ibchem_part_c12cda238120b7e5","ibchem_part_940403f43b14891b","ibchem_part_d83bc6174aa6fa73","ibchem_part_3280d591b58ed1e1","ibchem_part_c61e491469f29163"]
+    },
+    {
+      "test_relative_path":"C/A1-3 and C1 knowledge resit 2025.docx",
+      "test_item":"Part 2, Q11 definition of frequency",
+      "method":"same_standalone_definition_including_inherited_instruction",
+      "reason":"05M.P2.HL.TZ2.QB2 frequency part inherits '(b) Define, for a wave,' from parent_context; the SL appearance combines frequency and wavelength. Both reproduce the standalone frequency definition and are reserved with their full parents.",
+      "source_ids":["ibchem_part_a74ae9842532244d","ibchem_part_e0b99a2f0d28865f"]
+    },
+    {
+      "test_relative_path":"C/C1-C2-C5 test 2026.pdf",
+      "test_page":5,
+      "test_item":"Q7, phase between displacement and acceleration",
+      "method":"visually_reviewed_same_question_with_changed_distractors",
+      "reason":"19M.P1.HL.TZ1.Q11 and SLQ14 ask the same phase difference. The school version changes distractor order/values; the demanded phase and physical conditions are unchanged. HL original crop was visually verified; SL native text and source identity match and whole-level closure withholds both. The SL focused crop currently contains only its printed number, which is also unsuitable for serving.",
+      "source_ids":["ibchem_part_4096264693ebcab5","ibchem_part_718ead9bdca9c6d1"]
+    },
+    {
+      "test_relative_path":"A/A.1/A.1 Test 2026.pdf",
+      "test_page":20,
+      "test_item":"Part 2 Q18(a)(i), horizontal and vertical acceleration without air resistance",
+      "method":"contained_test_equivalent_two_value_recall",
+      "reason":"05N.P3.SL.TZ0.QA1(a) asks the horizontal and vertical acceleration of a stone in flight with negligible air resistance: zero and g downwards. This is the same two-value recall requested for the rock on its way up in the current test; launch direction and unused numerical context do not change that task. Reserve the whole source parent without claiming that the entire authored rock/beach-ball test question was copied.",
+      "source_ids":["ibchem_part_4c2bba1f12b969b0"]
+    },
+    {
+      "test_relative_path":"A/A.1/A.1 Test 2026.pdf",
+      "test_page":21,
+      "test_item":"Part 2 Q19, direction of velocity and acceleration just after the parachute opens",
+      "method":"contained_test_equivalent_two_direction_recall",
+      "reason":"19M.P1.HL.TZ1.Q3 and its SL twin ask the directions of the skydiver's velocity and acceleration after opening a parachute, before reaching a new terminal speed. These reproduce the downwards/upwards answers in the current test table's one-second-after-opening column. Reserve both appearances; this does not identify the entire custom 800 N / 40 s / two-minute timeline as an original exam question.",
+      "source_ids":["ibchem_part_63fe4d06d4495cd7","ibchem_part_f15feb6d113a5168"]
+    },
+    {
+      "test_relative_path":"C/A1-3 and C1 knowledge test 2025.docx",
+      "test_item":"Part 2 Q8, displacement-proportionality criterion of SHM",
+      "method":"contained_test_equivalent_single_definition_criterion",
+      "reason":"09M.P1.SL.TZ2.Q11 and13M.P1.SL.TZ1.Q12 ask which quantity the restoring force or acceleration is proportional to. This reproduces the displacement-from-equilibrium criterion explicitly allocated one mark in the knowledge-test definition. These are direct conceptual recall MCQs with no numerical application; the13M original crop was visually verified.",
+      "source_ids":["ibchem_part_5a219661c287f1bc","ibchem_part_2c996de905d56238"]
+    },
+    {
+      "test_relative_path":"C/A1-3 and C1 knowledge resit 2025.docx",
+      "test_item":"Part 2 Q9, meaning of displacement-time gradient",
+      "method":"contained_test_equivalent_graph_meaning_recall",
+      "reason":"10N.P1.SL.TZ0.Q4 asks which graph feature gives speed at a point on an increasing displacement-time curve. Its visually reviewed graph has symbolic coordinates and no numerical calculation; selecting the gradient repeats the knowledge-resit gradient/velocity relation. The source uses speed on a positive-gradient branch, so this is a conservative equivalent-recall reservation rather than an exact wording claim.",
+      "source_ids":["ibchem_part_87075ba145c3d920"]
+    }
+  ],
+  "reviewed_nonmatches": [
+    {"test_relative_path":"C/C1-C2-C5 test 2026.pdf","test_page":1,"test_item":"Q1 phase constant","finding":"Complete Smith-authored cosine initial-condition question; PACKET_006D records bespoke/custom_shm_phase_mcq. No matching task in the44 authored-positive C1 native candidates remaining after existing reservation closure."},
+    {"test_relative_path":"C/C1-C2-C5 test 2026.pdf","test_page":1,"test_item":"Q2 greatest distance timing","finding":"Existing partial candidates remain reserved. No current retained C1 part repeats the equilibrium-at-t=0 to first-extreme MCQ. Different initial-condition calculations are not silently classified as the same question."},
+    {"test_relative_path":"C/C1-C2-C5 test 2026.pdf","test_page":8,"test_item":"Q19","finding":"Real image-only Doppler question about a decelerating train, not a blank fragment. Visually reviewed; C5 rather than A1/C1. Universal assessment matching is not claimed."},
+    {"test_relative_path":"A/A.1/A.1 Test 2026.pdf","test_page":1,"test_item":"Part1 Q1","finding":"Smith-authored car16m/s, deceleration2.0m/s2 stopping-distance question. Existing bespoke verdict and weak candidate reservations retained. 2018Nov truck20m/s at4.0m/s2 is a different numerical task, not promoted to an exact identity on generic SUVAT wording alone."},
+    {"test_relative_path":"A/A.1/A.1 Test 2026.pdf","test_page":20,"test_item":"Part2 Q18","finding":"Smith-authored rock/beach-ball comparison; visually reviewed, no diagram-only hidden prompt. Existing all-candidate closure retains precautionary links. Broadly related projectile applications are not invented as exact source matches."},
+    {"test_relative_path":"A/A.1/A.1 Test 2026.pdf","test_page":21,"test_item":"Part2 Q19","finding":"Smith-authored skydiver table with800N and40s/two-minute timeline; visually reviewed. Existing bespoke evidence and weak candidate reservations retained."},
+    {"test_relative_path":"C/C.1 Mini-Test.pdf","test_page":1,"test_item":"C12.1 Q2 acceleration/displacement graph","source_id":"ibchem_part_e0a077e39fb9395a","finding":"25N.P1A.HL.TZ3.Q18 is different: source graph spans +/-0.2m and +/-4m/s2 and asks f squared; test spans +/-2cm and +/-8m/s2 and asks period. Visually compared, not declared identical solely from shared skill."},
+    {"test_relative_path":"C/C.1 Mini-Test.pdf","test_page":1,"test_item":"C12.1 Q1 SHM recognition","source_id":"ibchem_part_8b5956c0ede232e6","finding":"Test supplies a single negative straight line and asks which combination of its properties establishes SHM. Source09M.P1.HL.TZ1.Q13 asks which of four a/x graphs describes SHM. Related recall, different question operation/options; not an exact image/question match."},
+    {"test_relative_path":"C/C.1 Mini-Test.pdf","test_item":"All20 C12.1/C12.2 mini-test questions","finding":"All11 pages were visually read and compared against the29 fixed C1 candidates, using complete native prompt/stem/context fields and targeted source crop comparisons. No additional identical task was found. Specific counterexamples include source16M.HLQ24 mass4M/length0.25l versus the mini-test mass2M/length2l; source20N.HLQ27 compares mass changes in pendulum and spring systems, whereas the mini-test changes gravity for one mass-spring system. Different numerical or initial-condition tasks were not equated merely through common SHM vocabulary."},
+    {"test_relative_path":"A/A.1/A.1 Test 2026.pdf","test_item":"Authored Q1, Q18 and Q19 against fixed197 A1 candidates","finding":"All candidate identities and native question/stem/parent-context fields were checked, with targeted rereading of short recall and projectile/drag/skydiver tasks. Added exact source-ID reservations for acceleration-component and post-parachute vector recall. Other surviving tasks require different numerical data, diagram transformations, initial conditions, motion stages or operations. Existing weak/candidate reservations remain fully additive; absence of automated text hits alone was not used as clearance."}
+  ],
+  "limitations":["Review completion is scoped to A1/C1 and does not certify every assessment item across all IB topics.","Whole-parent, cross-level, duplicate and page/geometry closure must be applied downstream before serving either question or context images.","School tests dated2026 were read only for exclusion evidence; no exam-paper content dated2026 or later is eligible.","The final image/geometry gate remains a separate prerequisite; this file does not authorize any question-image publication."]
+}

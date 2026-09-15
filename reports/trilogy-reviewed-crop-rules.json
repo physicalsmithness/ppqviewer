@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "rules": [
+    {
+      "parent_id": "trilogy_specimen_set1_p2f::Q05",
+      "source_sha256": "f248c589cdf6e8d6ecd4d6ec8d08fb3e142f4860b3d391739224c1ab9fcf64f0",
+      "source_relative_path": "Trilogy (and Synergy)/trilogy past papers, ms and examiners reports/AQA-84646P2F-SQP.PDF",
+      "expected_raw_bounds": [
+        45.36,
+        790.07,
+        161.28,
+        803.35
+      ],
+      "page": 19,
+      "action": "drop_page",
+      "evidence": {
+        "affected_source_part": "05.7",
+        "source_part_page19_text_blocks": [
+          "DRAFT SPECIMEN MATERIAL"
+        ],
+        "source_part_page19_asset_count": 0,
+        "source_part_page19_answer_space_count": 0,
+        "native_page_image_count": 0,
+        "native_page_text_without_whitespace": "19DRAFTSPECIMENMATERIALTurnover\uf034Turnoverforthenextquestion",
+        "actual_question_content_page": 18,
+        "reason": "The extractor incorrectly extended part05.7 onto a blank turn-over page by assigning its footer. Original p19 contains no question, diagram, answer space or marks; part05.7 question content finishes on p18. Drop the p19 crop only after these exact source bounds/evidence are verified.",
+        "question_preview_relative_path": "outputs/previews/trilogy_specimen_set1_p2f/question_preview.json",
+        "question_preview_sha256": "87e23fb1b037c9ab77e10d970ce28586d54f6d2addc29e1c48a9f21f5b6acf25"
+      }
+    },
+    {
+      "parent_id": "trilogy_specimen_set1_p2h::Q03",
+      "source_sha256": "655d278772214e97f0233270dab270def97fc64f93b451969264086f810f164c",
+      "source_relative_path": "Trilogy (and Synergy)/trilogy past papers, ms and examiners reports/AQA-84646P2H-SQP.pdf",
+      "expected_raw_bounds": [
+        56.7,
+        82.08,
+        552.84,
+        803.35
+      ],
+      "page": 10,
+      "action": "set_top",
+      "top": 64,
+      "evidence": {
+        "affected_source_part": "03.5",
+        "printed_number_top_y": 68.04,
+        "printed_number_text_top_y": 69.02,
+        "other_question_parents_on_page": [],
+        "reason": "The source crop begins with the swimmer image at y82.08 and omits the printed question number at y68.04-82.08. Extend only the top margin to y64, below the page header at y57.78. Original p10 contains only Q03.5; neighbouring Q04 starts on p11, so the added strip cannot expose another parent.",
+        "question_preview_relative_path": "outputs/previews/trilogy_specimen_set1_p2h/question_preview.json",
+        "question_preview_sha256": "44663f4fd545a4e30755ed42a0cc076aa2a46697c524812df05bd2f550e6b296"
+      }
+    }
+  ]
+}

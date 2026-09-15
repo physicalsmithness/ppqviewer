@@ -6,6 +6,11 @@ than in subject forks.
 
 **Current maintainer: Claude (from 2026-07-28).**
 
+Physics onboarding (September 2026, Smith's request): A1, A5 and C1 now have
+a reviewed public IB release. See [IB_PHYSICS_RELEASE.md](IB_PHYSICS_RELEASE.md)
+for current counts, taxonomy provenance and publication status, and
+[PHYSICS_PREVIEW.md](PHYSICS_PREVIEW.md) for the broader local preview.
+
 ## Read first
 
 1. `OPERATING_MODEL.md` — seats, single-writer boundaries and release trains

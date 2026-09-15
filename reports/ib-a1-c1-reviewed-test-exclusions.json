@@ -1,0 +1,918 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-12T19:10:11.612501+00:00",
+  "course": "ib",
+  "topics": [
+    "A.1",
+    "C.1"
+  ],
+  "scope": "Current A1/C1 assessment snapshots and source-owned native A1/C1 practice candidates; existing all-assessment precautionary reservations remain additive.",
+  "review_complete": true,
+  "unresolved_relevant_items": [],
+  "complete_test_exclusion_certified": false,
+  "corpus_sha256": "6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c",
+  "source_files": [
+    {
+      "path": "outputs/exports/ib_physics_archive_flat_v5.csv",
+      "sha256": "6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2024 ms.docx",
+      "sha256": "1a19c5127f5ef0486fca74970d00fbb3f1e4ff0976e75ef21839f86caf7f721c"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2024.docx",
+      "sha256": "89117d19aa9013022ddc49449a82a57eadc4a66ebc68967a15e6c892cb918146"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2024.pdf",
+      "sha256": "4dea58263039e979388bfc7e0dfde6d161c000bfe4807e209f92947434cc8f05"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2025.docx",
+      "sha256": "bc725d2c6dd6c2bbee7fd40ed045c923332bd3226014e66e44dde29fea5a8814"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2025.pdf",
+      "sha256": "d872cda4575e52dd6d8899f06bff10bcd4db6745eb7ab49426c00f2aac7b010d"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2026.docx",
+      "sha256": "f6de95067e5aea0a45b4208a6a12ade090fe10cb930eaad52638c1e61db7443d"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/A/A.1/A.1 Test 2026.pdf",
+      "sha256": "c4ddebc6ad090a0ccdeb995b4fe9b8b4667b68d335b7a35f278c86d62d9ea235"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/2025 C1-C2-C5 test SL answers.docx",
+      "sha256": "ed828f8e1bced3b318d2d037f0db76470449a6169a26e3db3599d23a0aef5d1c"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/2025 C1-C2-C5 test SL.docx",
+      "sha256": "0200d4f53e61651478699609088badf668ccf555b377c906baebe8dfa0e86ec5"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/A1-3 and C1 knowledge resit 2025.docx",
+      "sha256": "32a421b37a6d3b5ef5c3b947b3c7392acc35a160df889f2c4c82476ac939cff2"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/A1-3 and C1 knowledge test 2025.docx",
+      "sha256": "c6b85e80372980ac8f5ba18baa281de335c4a139ccb96e70984c3670cfb4ee60"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C.1 Mini-Test (with answers).pdf",
+      "sha256": "661f3a4f932dfe6d5c6e3cd5acb8d9bde1f472ba7c4853b56a62811743b116c8"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C.1 Mini-Test.pdf",
+      "sha256": "3dd8c25c9ba3644771425fc39115d53f477f11a021297522b1ea9586c03d6129"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1,2,3,5 RAM Lea.docx",
+      "sha256": "567ec8ea06c027c3c2492385aa3b3b4546f520654d9be5d438329e1363a9ec5a"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1,2,3,5 RAM Part 1.docx",
+      "sha256": "1f01f0ce3c43d9b9ba81b1cf79ffd7896882b5867dda7ff9ef5a9465f877edf1"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1,2,3,5 RAM Part 2.docx",
+      "sha256": "b60d64f12204eba22224cde30f97975dd875feb7efac578a8c30bc3645ea61d6"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1-C2-C5 test 2026 answers.docx",
+      "sha256": "20067abb6a41790bfe310049ad2c342c94d514d0016e9db4bb9f576d3022f1a2"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1-C2-C5 test 2026.docx",
+      "sha256": "3e9bddad741bcbd9c007ac937c8be64452a4de4bc606c51701907a49f3ee4fb1"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1-C2-C5 test 2026.pdf",
+      "sha256": "56eb2be04d6342d5de8950a40bb39a06551d6b38ce6f7fafc348d0e7852a31ca"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1-C2-C5 test answers.docx",
+      "sha256": "dc295e59b5d71a9692086e32156090dcea4d6a2b350e6880efc7de3102032adf"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1-C2-C5 test.docx",
+      "sha256": "77bbed80559d31e40a1a557c2901d0e10cd3b58d2aa51cc8225dcb9ef6d36d47"
+    },
+    {
+      "path": "Physics Categorisation/reference/tests/3. Assessments/C/C1-C2-C5 test.pdf",
+      "sha256": "d3d26021b75604b23902499796f4702e9e85b7b3299dd950eaca41517eef1604"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\tools\\record_ib_a1_c1_test_review.py",
+      "sha256": "deb90cedc3954346a0fc17e32296d2604a06b9fb2950353bc8514abbbfcb38ce"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\reports\\ib-a1-c1-test-review-notes.json",
+      "sha256": "2e7f33e5f24dadd2d669f4e82a1ffe893aa0c412d31a816c99a5d97984116754"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a1-c1-assessments\\freshness.json",
+      "sha256": "2fc94465f1b17fe69e7864f8105b79cec9b1c99a29ffcac5612782a54260f380"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a1-c1-assessments\\native-review.json",
+      "sha256": "b1dffbc00fe7bf3cd491c26f9a8ad9968da307629690e331bd3d1e83a0aca448"
+    },
+    {
+      "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a1-c1-assessments\\candidate-parts.json",
+      "sha256": "8236911b63f7e72e34ea70c5cb8476759593762a1c497fcc32b079d58d5e76b4"
+    }
+  ],
+  "read_failures": [],
+  "assessment_freshness_checked_at": "2026-09-12T18:45:51.568452+00:00",
+  "reviewed_candidate_file": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a1-c1-assessments\\candidate-parts.json",
+  "reviewed_candidate_sha256": "8236911b63f7e72e34ea70c5cb8476759593762a1c497fcc32b079d58d5e76b4",
+  "reviewed_candidate_source_ids": [
+    "ibchem_part_0020e9fc14ace315",
+    "ibchem_part_00c030e18982b908",
+    "ibchem_part_01307e3ca80c803c",
+    "ibchem_part_019e2d15e35830b4",
+    "ibchem_part_01aa1f0ee552d591",
+    "ibchem_part_02e387d6d50c085b",
+    "ibchem_part_03f511b474f0d857",
+    "ibchem_part_04764e60306d7f1b",
+    "ibchem_part_054c8c665f30b2b6",
+    "ibchem_part_07130555d5d506dd",
+    "ibchem_part_0714d5e4ffa53dbe",
+    "ibchem_part_08b44870c51909e1",
+    "ibchem_part_0b8b652b0609282c",
+    "ibchem_part_0d9f1bd13dd2a0f8",
+    "ibchem_part_0dcd048eb0dbf949",
+    "ibchem_part_0ebabf4ad5cdc39e",
+    "ibchem_part_0f98a188190312d5",
+    "ibchem_part_0fa4a308f9ab4113",
+    "ibchem_part_11d7fd9a6ba26c2f",
+    "ibchem_part_122a19eaab307de1",
+    "ibchem_part_12dd991c37546af8",
+    "ibchem_part_13130ebe636c3e79",
+    "ibchem_part_14a2aafd5e90ef8c",
+    "ibchem_part_159f6cbe4d8b4fec",
+    "ibchem_part_198879b574c4680d",
+    "ibchem_part_1a890fa92b9a3186",
+    "ibchem_part_1a9fd1cf26e906a1",
+    "ibchem_part_1c8c0fa374314522",
+    "ibchem_part_1c9681ba65c7422b",
+    "ibchem_part_1e0be2a6c2190dcc",
+    "ibchem_part_1f34636ceb620e37",
+    "ibchem_part_1f581f0ff8059000",
+    "ibchem_part_210fbb39e54907eb",
+    "ibchem_part_21ad6837e7ee32a7",
+    "ibchem_part_2470eb0bac394180",
+    "ibchem_part_248753616d974103",
+    "ibchem_part_24c262b94bf19f6e",
+    "ibchem_part_289fdfab0f4cde36",
+    "ibchem_part_29e2997ecaddfa21",
+    "ibchem_part_2c996de905d56238",
+    "ibchem_part_2e8d445dd648698e",
+    "ibchem_part_2f85e82c30b77d05",
+    "ibchem_part_30b0dfccc84862f1",
+    "ibchem_part_30c229a2e29b2c23",
+    "ibchem_part_3104322f47d9b16d",
+    "ibchem_part_3196f2340dc44c89",
+    "ibchem_part_32b2fada3c495170",
+    "ibchem_part_3301d57e57eacffe",
+    "ibchem_part_33b353f4ef39378d",
+    "ibchem_part_33c09f8b6143e337",
+    "ibchem_part_34213f650d4f5927",
+    "ibchem_part_347fc000b347bf66",
+    "ibchem_part_36395de190cb4ceb",
+    "ibchem_part_366e2956a24a5319",
+    "ibchem_part_37e2d43dce14c4e2",
+    "ibchem_part_37f6c0b4ca6d2e88",
+    "ibchem_part_39563657b2dc5d9b",
+    "ibchem_part_3b653e1c1aca24c6",
+    "ibchem_part_3d626a5366008482",
+    "ibchem_part_3e1df4d9d191c59f",
+    "ibchem_part_410f21d5118b1579",
+    "ibchem_part_42beb8eb0ed15c86",
+    "ibchem_part_441451d6605152a6",
+    "ibchem_part_45eda6823b6e50b4",
+    "ibchem_part_46b27b7f85be3550",
+    "ibchem_part_479594651a35926e",
+    "ibchem_part_47ec4ea9a5de911e",
+    "ibchem_part_49ee4d746548ef08",
+    "ibchem_part_4bc7ec2012dd2357",
+    "ibchem_part_4c2bba1f12b969b0",
+    "ibchem_part_4c4508c567c12cbb",
+    "ibchem_part_4f19306abe1c67fe",
+    "ibchem_part_51311b101cd74122",
+    "ibchem_part_546a1e729ce13f2b",
+    "ibchem_part_54f3d99a0db6dbdf",
+    "ibchem_part_55642c351b7b288d",
+    "ibchem_part_557822036daacf8c",
+    "ibchem_part_5682d6787487b04b",
+    "ibchem_part_58303709a84a7de2",
+    "ibchem_part_5832ea92da806314",
+    "ibchem_part_593d18f6bb26d1f6",
+    "ibchem_part_59f87b9060facacd",
+    "ibchem_part_5a01edef9ea3feb4",
+    "ibchem_part_5a219661c287f1bc",
+    "ibchem_part_5ad1b21bfb327296",
+    "ibchem_part_5ad2c7f3602fb187",
+    "ibchem_part_5b2ffc0c00316494",
+    "ibchem_part_5cf9a525fd41f694",
+    "ibchem_part_5fd56c82e241ed28",
+    "ibchem_part_5fe6ac44665c0376",
+    "ibchem_part_61689e5a45b63a19",
+    "ibchem_part_6233a709dfd74d3d",
+    "ibchem_part_63fe4d06d4495cd7",
+    "ibchem_part_6564435538caa726",
+    "ibchem_part_6864157f9cd2a465",
+    "ibchem_part_692384dd1365818d",
+    "ibchem_part_69fa031c9f9ae393",
+    "ibchem_part_6a3a8874e1ff9ec8",
+    "ibchem_part_6a7117c4ca36765c",
+    "ibchem_part_6ef8eee54c7d7faf",
+    "ibchem_part_6f8bad3b312ff6d7",
+    "ibchem_part_7101ecc090ff586a",
+    "ibchem_part_727345aee9540caa",
+    "ibchem_part_72a86d060abc2d51",
+    "ibchem_part_736c5ec00bd8e0b9",
+    "ibchem_part_73f681f273546242",
+    "ibchem_part_7513e55c605fa736",
+    "ibchem_part_75a785f6070ed4e1",
+    "ibchem_part_75e21403adbaccc9",
+    "ibchem_part_7885b9e9771bf75d",
+    "ibchem_part_7a6e4a69c8e772f8",
+    "ibchem_part_7b21edd4363bf45b",
+    "ibchem_part_7de8994f35a8a445",
+    "ibchem_part_7e902d3876935cac",
+    "ibchem_part_7ed0627009fc0899",
+    "ibchem_part_7ff5c70aabe3b9b7",
+    "ibchem_part_805adf1b7f1937ec",
+    "ibchem_part_815c9aaff84163cf",
+    "ibchem_part_8290a7bc511d83b1",
+    "ibchem_part_8605e8532cd531b0",
+    "ibchem_part_87075ba145c3d920",
+    "ibchem_part_8756d3eb94dcb7cb",
+    "ibchem_part_886ff0949622d7c2",
+    "ibchem_part_889c21cc4de7caa8",
+    "ibchem_part_89a21ac429e3942f",
+    "ibchem_part_89a8a41f5d03ea06",
+    "ibchem_part_8bd2c23dcde39394",
+    "ibchem_part_8c347e4d86a646cb",
+    "ibchem_part_8c34e54944807d9e",
+    "ibchem_part_8c400c4d0c342686",
+    "ibchem_part_8e3123eef95605c4",
+    "ibchem_part_9009bb41737a95f5",
+    "ibchem_part_922f700a04c83d60",
+    "ibchem_part_9235650e4b3bb90f",
+    "ibchem_part_937ebf83bf69a8b9",
+    "ibchem_part_93aa3c546b185c68",
+    "ibchem_part_93e6434ce41f101c",
+    "ibchem_part_94d4d8081f1b6651",
+    "ibchem_part_94efe6655dedfd8c",
+    "ibchem_part_955c82abea7340c8",
+    "ibchem_part_95a9f9cea313d2ef",
+    "ibchem_part_973a78efe6d53bfe",
+    "ibchem_part_9a099a760f8dc0b2",
+    "ibchem_part_9aeaf4c1cf662cff",
+    "ibchem_part_9d82b231b1ea69dd",
+    "ibchem_part_9f822f9e463da69d",
+    "ibchem_part_a173e50d000c73ef",
+    "ibchem_part_a17cee62b97bdc48",
+    "ibchem_part_a213e4b24720648f",
+    "ibchem_part_a5da8a99b7277a68",
+    "ibchem_part_a639e5568d6dd73f",
+    "ibchem_part_a79f3ba7d342aa0f",
+    "ibchem_part_a81d0d0d461e71d4",
+    "ibchem_part_add47fc1a60f077d",
+    "ibchem_part_ae1d159aa61651f1",
+    "ibchem_part_aeb8019d75125123",
+    "ibchem_part_aee9c7dd08f6db0e",
+    "ibchem_part_af1f8bdc6a4d805a",
+    "ibchem_part_b087424e924b8239",
+    "ibchem_part_b10cd94d6f97c812",
+    "ibchem_part_b1e13ffb26532588",
+    "ibchem_part_b1e294686cfa5656",
+    "ibchem_part_b23f0c9c67d13b6b",
+    "ibchem_part_b30d0d5eb203d0c2",
+    "ibchem_part_b3ae5cc3204eba82",
+    "ibchem_part_b5f814b982bf12bb",
+    "ibchem_part_b63b7e388b9783cd",
+    "ibchem_part_b681e983a4f7eca9",
+    "ibchem_part_b923385c8bb784a5",
+    "ibchem_part_badca1006692c0f7",
+    "ibchem_part_bcf2df769b914050",
+    "ibchem_part_bcffe3a7eb3d26ce",
+    "ibchem_part_bea923263c909175",
+    "ibchem_part_c2b0001b32103b85",
+    "ibchem_part_c4e6ff2f409b1160",
+    "ibchem_part_c7127fe7a03ac0ac",
+    "ibchem_part_c7c365d32ffc89ac",
+    "ibchem_part_c8f52bbfcaaf0f69",
+    "ibchem_part_c9e9e4dd2ada2471",
+    "ibchem_part_caace3a63eb8e8d3",
+    "ibchem_part_ccda5ab0c7d1c164",
+    "ibchem_part_cd6a102e8a89fc5c",
+    "ibchem_part_cd942becca430535",
+    "ibchem_part_d3dde65265d81dd2",
+    "ibchem_part_d431760b077435f6",
+    "ibchem_part_d60ec5a960e0acfb",
+    "ibchem_part_d648b97b41f000b7",
+    "ibchem_part_d6e3c4852cc7bdd7",
+    "ibchem_part_dc0c10868219d325",
+    "ibchem_part_dd4da9f2d6f5e830",
+    "ibchem_part_ddff3fb1c0481b96",
+    "ibchem_part_de3ce233b79bee7e",
+    "ibchem_part_de77f2a3eb27c34a",
+    "ibchem_part_df0da867c8470b0f",
+    "ibchem_part_df140ad1565fc650",
+    "ibchem_part_df4014d007195024",
+    "ibchem_part_e0a077e39fb9395a",
+    "ibchem_part_e3843f96b737e36f",
+    "ibchem_part_e41eeb874657f084",
+    "ibchem_part_e4e67879dcaa5710",
+    "ibchem_part_e54cbc745924f160",
+    "ibchem_part_e90c0572cd40682f",
+    "ibchem_part_e9428ec699958ebd",
+    "ibchem_part_ea1e56f6002bf91a",
+    "ibchem_part_ea7938a619b15dac",
+    "ibchem_part_ece611d0e524f9c4",
+    "ibchem_part_ecfd1c0e6acba8b8",
+    "ibchem_part_eddc634ca87b7c52",
+    "ibchem_part_eff98b012723d970",
+    "ibchem_part_f1dbcae21a8dbc09",
+    "ibchem_part_f2272c2f64f59f93",
+    "ibchem_part_f5fd8108ab5d77b9",
+    "ibchem_part_f7886886cb5faf12",
+    "ibchem_part_f7b1ce262b10dc4c",
+    "ibchem_part_f8caab29f037c8d8",
+    "ibchem_part_fa6c6fa8fb45e991",
+    "ibchem_part_fa74bb7a7f30abfd",
+    "ibchem_part_fb0bc8061e590b4a",
+    "ibchem_part_fb343d7bdd29f93c",
+    "ibchem_part_fe2bdea63d2aa10b",
+    "ibchem_part_ff25ce11e340a3f4",
+    "ibchem_part_ff3a68de6396aebd",
+    "ibchem_part_ff47c6f7cc59a6b2",
+    "ibchem_part_ff7f62f0845eaa45",
+    "ibchem_part_ff9477836e45e196",
+    "ibchem_part_fff7944243163a08"
+  ],
+  "reviewed_candidate_counts": {
+    "A.1": 197,
+    "C.1": 29
+  },
+  "blocked_source_ids": [
+    "ibchem_part_03b76c65f52237db",
+    "ibchem_part_1a19492e1bf36370",
+    "ibchem_part_2c996de905d56238",
+    "ibchem_part_3280d591b58ed1e1",
+    "ibchem_part_35a7d278a0944d2c",
+    "ibchem_part_4096264693ebcab5",
+    "ibchem_part_4c2bba1f12b969b0",
+    "ibchem_part_593c77750834decc",
+    "ibchem_part_5a219661c287f1bc",
+    "ibchem_part_63fe4d06d4495cd7",
+    "ibchem_part_64d62f0ddd9837f3",
+    "ibchem_part_718ead9bdca9c6d1",
+    "ibchem_part_844c2acd66d0bc93",
+    "ibchem_part_87075ba145c3d920",
+    "ibchem_part_940403f43b14891b",
+    "ibchem_part_970fae8ea6ecbb97",
+    "ibchem_part_a3d26f06ad72e2fb",
+    "ibchem_part_a74ae9842532244d",
+    "ibchem_part_ab97811c851685df",
+    "ibchem_part_ac73ddaa01e26e98",
+    "ibchem_part_b1e644b468cfe154",
+    "ibchem_part_b4d850ead89831e5",
+    "ibchem_part_c12cda238120b7e5",
+    "ibchem_part_c61e491469f29163",
+    "ibchem_part_cb14e8f2ffaa4006",
+    "ibchem_part_d78e9385497e43e9",
+    "ibchem_part_d83bc6174aa6fa73",
+    "ibchem_part_db47126b02510986",
+    "ibchem_part_df8a85cf45818cef",
+    "ibchem_part_e0b99a2f0d28865f",
+    "ibchem_part_ed08ed60ffaa6e3b",
+    "ibchem_part_f15feb6d113a5168"
+  ],
+  "manual_reservations": [
+    {
+      "test_relative_path": "C/A1-3 and C1 knowledge test 2025.docx",
+      "test_item": "Part 2, Q7 amplitude and Q8 definition of SHM",
+      "method": "same_standalone_definition_or_equivalent_two_condition_recall",
+      "reason": "Explicit definition/meaning/conditions tasks reproduce the same assessed recall. Numerical applications, graph-derived values and requests to demonstrate SHM for a particular force law are not included merely because their context mentions SHM.",
+      "source_ids": [
+        "ibchem_part_ac73ddaa01e26e98",
+        "ibchem_part_ab97811c851685df",
+        "ibchem_part_64d62f0ddd9837f3",
+        "ibchem_part_ed08ed60ffaa6e3b",
+        "ibchem_part_970fae8ea6ecbb97",
+        "ibchem_part_cb14e8f2ffaa4006",
+        "ibchem_part_593c77750834decc",
+        "ibchem_part_1a19492e1bf36370",
+        "ibchem_part_d78e9385497e43e9",
+        "ibchem_part_df8a85cf45818cef",
+        "ibchem_part_a3d26f06ad72e2fb",
+        "ibchem_part_db47126b02510986",
+        "ibchem_part_844c2acd66d0bc93",
+        "ibchem_part_b1e644b468cfe154",
+        "ibchem_part_35a7d278a0944d2c",
+        "ibchem_part_b4d850ead89831e5",
+        "ibchem_part_03b76c65f52237db",
+        "ibchem_part_c12cda238120b7e5",
+        "ibchem_part_940403f43b14891b",
+        "ibchem_part_d83bc6174aa6fa73",
+        "ibchem_part_3280d591b58ed1e1",
+        "ibchem_part_c61e491469f29163"
+      ],
+      "test_sha256": "c6b85e80372980ac8f5ba18baa281de335c4a139ccb96e70984c3670cfb4ee60",
+      "resolved_source_parts": [
+        {
+          "source_id": "ibchem_part_ac73ddaa01e26e98",
+          "preview": "ib_physics_2009_may_2_a7d433cf",
+          "source_parent": "09M.P2.HL.TZ1.QB3",
+          "part": "B3(a)",
+          "question_text": "(a) A particle of mass m that is attached to a light spring is executing simple harmonic motion in a horizontal direction. State the condition relating to the net force acting on the particle that is necessary for it to execute simple harmonic motion. [answer space] [2]",
+          "shared_stem": "B3. This question is in two parts. Part 1 is about simple harmonic motion and waves and Part 2 is about gravitational fields and potential. Part 1 Simple harmonic motion and waves",
+          "parent_context": "",
+          "ms_text": "is proportional to the displacement/distance (of the particle) from its equilibrium position; is directed towards the equilibrium position; definition: the force exerted per unit mass; on a small/point/test mass; relationship: field strength = (negative) gradient of potential / formula with terms defined; [2] [3]"
+        },
+        {
+          "source_id": "ibchem_part_ab97811c851685df",
+          "preview": "ib_physics_2009_may_2_e7e0f793",
+          "source_parent": "09M.P2.SL.TZ1.QB2",
+          "part": "B2(a)",
+          "question_text": "(a) A particle of mass m that is attached to a light spring is executing simple harmonic motion in a horizontal direction. State the condition relating to the net force acting on the particle that is necessary for it to execute simple harmonic motion. [answer space] [2]",
+          "shared_stem": "B2. This question is in two parts. Part 1 is about simple harmonic motion and waves and Part 2 is about the decay of radium-226. Part 1 Simple harmonic motion and waves",
+          "parent_context": "",
+          "ms_text": "is proportional to the displacement/distance (of the particle) from its equilibrium position; is directed towards the equilibrium position; isotopes: nuclei with the same number of protons but different number of neutrons / same proton/atomic number but different nucleon/mass number; half-life: time it takes for the activity of a (radioactive) sample to halve / OWTTE; [2] [2]"
+        },
+        {
+          "source_id": "ibchem_part_64d62f0ddd9837f3",
+          "preview": "ib_physics_2009_nov_2_573e5d8d",
+          "source_parent": "09N.P2.SL.TZ0.QB2",
+          "part": "B2(a)",
+          "question_text": "(a) In terms of the acceleration, state two conditions necessary for a system to perform simple harmonic motion. 1. [answer space] 2. [answer space] [2]",
+          "shared_stem": "B2. This question is in two parts. Part 1 is about simple harmonic motion. Part 2 is about electric circuits. Part 1 Simple harmonic motion",
+          "parent_context": "",
+          "ms_text": "1. acceleration proportional to displacement from equilibrium/centre (of motion) /mean position; 2. acceleration directed to equilibrium/centre/mean position; any circuit in which the current will flow through the lamp; variable resistor connected as a potential divider; voltmeter across lamp; ammeter in series with lamp; [2] [4]"
+        },
+        {
+          "source_id": "ibchem_part_ed08ed60ffaa6e3b",
+          "preview": "ib_physics_2009_nov_2_8e997ca0",
+          "source_parent": "09N.P2.HL.TZ0.QB3",
+          "part": "B3(a)",
+          "question_text": "(a) In terms of the acceleration, state two conditions necessary for a system to perform simple harmonic motion. 1. [answer space] 2. [answer space] [2]",
+          "shared_stem": "B3. This question is in two parts. Part 1 is about simple harmonic motion. Part 2 is about thermodynamics. Part 1 Simple harmonic motion",
+          "parent_context": "",
+          "ms_text": "1. acceleration proportional to displacement from equilibrium/centre (of motion) /mean position; 2. acceleration directed to equilibrium/centre/mean position; Q: thermal energy transfer to system; : U change in/difference in internal energy; W: work done by system; Accept valid alternative is \"transfer from\" and \"done on\". [2] [3]"
+        },
+        {
+          "source_id": "ibchem_part_970fae8ea6ecbb97",
+          "preview": "ib_physics_2011_may_2_5d7e8acd",
+          "source_parent": "11M.P2.SL.TZ2.QB1",
+          "part": "B1(a)",
+          "question_text": "(a) By reference to simple harmonic motion, state what is meant by amplitude. [1] [answer space] (Question B1, part 1 continued)",
+          "shared_stem": "B1. This question is in two parts. Part 1 is about simple harmonic motion (SHM) and a wave in a string. Part 2 is about the unified atomic mass unit and a nuclear reaction. Part 1 Simple harmonic motion and a wave in a string",
+          "parent_context": "",
+          "ms_text": "the maximum displacement of the system from equilibrium/from centre of motion / OWTTE; 1 12 th mass of an atom of carbon-12/ 12C; [1] [1]"
+        },
+        {
+          "source_id": "ibchem_part_cb14e8f2ffaa4006",
+          "preview": "ib_physics_2011_may_2_e85fab04",
+          "source_parent": "11M.P2.HL.TZ2.QB4",
+          "part": "B4(a)",
+          "question_text": "(a) By reference to simple harmonic motion, state what is meant by amplitude. [1] [answer space]",
+          "shared_stem": "B4. This question is about simple harmonic motion (SHM), wave motion and polarization.",
+          "parent_context": "",
+          "ms_text": "the maximum displacement of the system from equilibrium/from centre of motion / OWTTE; [1]"
+        },
+        {
+          "source_id": "ibchem_part_593c77750834decc",
+          "preview": "ib_physics_2012_may_2_24bd1330",
+          "source_parent": "12M.P2.HL.TZ1.QB2",
+          "part": "B2(a)",
+          "question_text": "(a) Define simple harmonic motion. [2] [answer space]",
+          "shared_stem": "B2. This question is in two parts. Part 1 is about simple harmonic motion and the superposition of waves. Part 2 is about thermodynamics. Part 1 Simple harmonic motion and the superposition of waves An object of mass m is placed on a frictionless surface and attached to a light horizontal spring. The other end of the spring is fixed. m positive direction A B C The equilibrium position is at B. The direction B to C is taken to be positive. The object is released from position A and executes simple harmonic motion between positions A and C.",
+          "parent_context": "",
+          "ms_text": "the force/acceleration is proportional to the displacement from the equilibrium position/centre; the force/acceleration is directed towards the equilibrium position/centre / the force/acceleration is in the opposite direction to the displacement; process AB: isobaric; process BC: isochoric / isovolumetric; process CA: isothermal; [2] [3]"
+        },
+        {
+          "source_id": "ibchem_part_1a19492e1bf36370",
+          "preview": "ib_physics_2012_may_2_3ee595f4",
+          "source_parent": "12M.P2.SL.TZ1.QB2",
+          "part": "B2(a)",
+          "question_text": "(a) Define simple harmonic motion. [2] [answer space]",
+          "shared_stem": "B2. This question is in two parts. Part 1 is about simple harmonic motion and the superposition of waves. Part 2 is about gravitational fields. Part 1 Simple harmonic motion and the superposition of waves An object of mass m is placed on a frictionless surface and attached to a light horizontal spring. The other end of the spring is fixed. m positive direction A B C The equilibrium position is at B. The direction B to C is taken to be positive. The object is released from position A and executes simple harmonic motion between positions A and C.",
+          "parent_context": "",
+          "ms_text": "the force/acceleration is proportional to the displacement from the equilibrium position/centre; the force/acceleration is directed towards the equilibrium position/centre / the force/acceleration is in the opposite direction to the displacement; [2]"
+        },
+        {
+          "source_id": "ibchem_part_d78e9385497e43e9",
+          "preview": "ib_physics_2012_may_2_6021c527",
+          "source_parent": "12M.P2.SL.TZ2.QB1",
+          "part": "B1(a)(i)",
+          "question_text": "(i) State what is meant by the expression \"W performs SHM\". [2] [answer space]",
+          "shared_stem": "B1. This question is in two parts. Part 1 is about ideal gases and specific heat capacity. Part 2 is about simple harmonic motion and waves. Part 1 Ideal gases and specific heat capacity",
+          "parent_context": "(a) One end of a light spring is attached to a rigid horizontal support. rigid horizontal support spring W mass =0.15 kg An object W of mass 0.15 kg is suspended from the other end of the spring. The extension x of the spring is proportional to the force F causing the extension. The force per unit extension of the spring k is 18 N m-1. A student pulls W down such that the extension of the spring increases by 0.040 m. The student releases W and as a result W performs simple harmonic motion (SHM).",
+          "ms_text": "the acceleration of (force acting on) W is proportional to its displacement from equilibrium; and directed towards equilibrium; [2]"
+        },
+        {
+          "source_id": "ibchem_part_df8a85cf45818cef",
+          "preview": "ib_physics_2012_may_2_8d77f5af",
+          "source_parent": "12M.P2.HL.TZ2.QB4",
+          "part": "B4(a)(i)",
+          "question_text": "(i) State what is meant by the expression \"W performs SHM\". [2] [answer space]",
+          "shared_stem": "B4. This question is in two parts. Part 1 is about simple harmonic motion and waves. Part 2 is about the energy levels of the hydrogen atom. Part 1 Simple harmonic motion and waves",
+          "parent_context": "(a) One end of a light spring is attached to a rigid horizontal support. rigid horizontal support spring W mass =0.15 kg An object W of mass 0.15 kg is suspended from the other end of the spring. The extension x of the spring is proportional to the force F causing the extension. The force per unit extension of the spring k is 18 N m-1. A student pulls W down such that the extension of the spring increases by 0.040 m. The student releases W and as a result W performs simple harmonic motion (SHM).",
+          "ms_text": "the acceleration of (force acting on) W is proportional to its displacement from equilibrium; and directed towards equilibrium; spectral lines are discrete; therefore energy of photon is discrete/quantized; photon energy is equivalent to difference in energy that electron has in each (discrete) level / E hf Δ = / OWTTE; (so electron levels are themselves discrete) F = ( 18 × 0.04 = ) 0.72N ; acceleration = 0.72 = 4.8ms − 2 ; 0.15 Part 2 Energy levels of the hydrogen atom ( 1 1 ) frequency = = = 1.25Hz ; ( T 0.80 ) wavelength = v = 3.0 = 2.4 cm or 2.4 × 10 − 2 m ; f 1.25 (iii) x / cm t / s graph: positive cosine; (line must cross axis at 0.2 and 0.6 as shown) explanation: 1.8 cm is 3 4 of a wavelength; [ 1 1 ] difference in energy = hc λ | − | ; | [ γ λ α | ] = 6.6 × 10 − 34 ×× 3 10 8 × 10 7 × 0.0780 = 1.54 × 10 − 19 J ; or [ hc ] 6.6 × 10 − 34 ×× 3 10 8 − 19  E α = | | = − 7 = 3.02 × 10 J or 1.89 eV  [ λ α ] 6.56 × 10  (both needed [ hc ] 6.6 × 10 − 34 ×× 3 10 8 − 19   for the mark) E γ = | | = − 7 = 4.56 × 10 J or 2.85 eV; | [ λ γ | ] 4.34 × 10  difference in energy = 1.54 × 10 − 19 J or 0.963 eV; 2L (allowed wavelengths of electron) λ= n ; n ( p 2 ) h 2 E n = = 2 ; ( 2 m e ) 2 λ n m e substitute for λ ; (substitution must be explicit) n ( n h 2 2 ) to get E n = 2 ( 8 m L e ) [2] [3] [2] [2] [2] [2] [3]"
+        },
+        {
+          "source_id": "ibchem_part_a3d26f06ad72e2fb",
+          "preview": "ib_physics_2013_may_2_2db4d373",
+          "source_parent": "13M.P2.HL.TZ2.QB3",
+          "part": "B3(a)",
+          "question_text": "(a) A gas is contained in a horizontal cylinder by a freely moving piston P. Initially P is at rest at the equilibrium position E. E A P The piston P is displaced a small distance A from E and released. As a result, P executes simple harmonic motion (SHM). Define simple harmonic motion as applied to P. [2] [answer space] (Question B3, part 1 continued)",
+          "shared_stem": "B3. This question is in two parts. Part 1 is about simple harmonic motion (SHM) and waves. Part 2 is about a charge-coupled device (CCD). Part 1 Simple harmonic motion (SHM) and waves",
+          "parent_context": "",
+          "ms_text": "the acceleration of piston/P is proportional to its displacement from equilibrium; and directed towards equilibrium; [2] There must be a clear indication what is accelerating otherwise award [1 max]."
+        },
+        {
+          "source_id": "ibchem_part_db47126b02510986",
+          "preview": "ib_physics_2013_may_2_b8d60f01",
+          "source_parent": "13M.P2.SL.TZ2.QB3",
+          "part": "B3(a)",
+          "question_text": "(a) A gas is contained in a horizontal cylinder by a freely moving piston P. Initially P is at rest at the equilibrium position E. E A P The piston P is displaced a small distance A from E and released. As a result, P executes simple harmonic motion (SHM). Define simple harmonic motion as applied to P. [2] [answer space] (Question B3, part 1 continued)",
+          "shared_stem": "B3. This question is in two parts. Part 1 is about simple harmonic motion (SHM) and waves. Part 2 is about wind power and the greenhouse effect. Part 1 Simple harmonic motion (SHM) and waves",
+          "parent_context": "",
+          "ms_text": "the acceleration of piston/P is proportional to its displacement from equilibrium; and directed towards equilibrium; power output of a turbine = 0.3 × 1 2 ρ Av 3 = 0.3 × 0.5 × 1.2 × 3.14 × [42] 2 × [12] ( 1723kW) 3 4 × 10 9 number of turbines needed = 6 ( = 2322) ; 1.723 × 10 area needed = 2322 × 5.0 × 10 4 ; = 1.2 × 10 8 m 2 ; [2] = ; [4]"
+        },
+        {
+          "source_id": "ibchem_part_844c2acd66d0bc93",
+          "preview": "ib_physics_2013_nov_2_b97bc247",
+          "source_parent": "13N.P2.HL.TZ0.Q10",
+          "part": "10(a)(i)",
+          "question_text": "(i) State, with reference to the motion of P, what is meant by simple harmonic motion. [2] [answer space]",
+          "shared_stem": "10. This question is in two parts. Part 1 is about simple harmonic motion (SHM) and waves. Part 2 is about atomic and nuclear energy levels. Part 1 Simple harmonic motion (SHM) and waves",
+          "parent_context": "(a) A particle P moves with simple harmonic motion.",
+          "ms_text": "the acceleration (of a particle/P) is (directly) proportional to displacement; and is directed towards equilibrium/in the opposite direction to displacement; [2] Do not accept \"directed towards the centre\"."
+        },
+        {
+          "source_id": "ibchem_part_b1e644b468cfe154",
+          "preview": "ib_physics_2013_nov_2_d64e63ba",
+          "source_parent": "13N.P2.SL.TZ0.Q5",
+          "part": "5(a)",
+          "question_text": "(a) A particle P moves with simple harmonic motion. State, with reference to the motion of P, what is meant by simple harmonic motion. [2] [answer space]",
+          "shared_stem": "5. This question is in two parts. Part 1 is about simple harmonic motion (SHM) and waves. Part 2 is about voltage-current (V-I ) characteristics. Part 1 Simple harmonic motion (SHM) and waves",
+          "parent_context": "",
+          "ms_text": "the acceleration (of a particle/P) is (directly) proportional to displacement; and is directed towards equilibrium/in the opposite direction to displacement; [2] Do not accept \"directed towards the centre\"."
+        },
+        {
+          "source_id": "ibchem_part_35a7d278a0944d2c",
+          "preview": "ib_physics_2014_may_2_92f29e56",
+          "source_parent": "14M.P2.HL.TZ1.Q2",
+          "part": "2(a)",
+          "question_text": "(a) Outline the conditions necessary for the object to execute simple harmonic motion. [2] [answer space]",
+          "shared_stem": "2. This question is about a mass on a spring. An object is placed on a frictionless surface and attached to a light horizontal spring. [diagram/graph layout text omitted; see source clipping] The other end of the spring is attached to a stationary point P. Air resistance is negligible. The equilibrium position is at O. The object is moved to position Y and released.",
+          "parent_context": "",
+          "ms_text": "the force (of the spring on the object)/acceleration (of the object/point O) must be proportional to the displacement (from the equilibrium position/centre/point O); and in the opposite direction to the displacement / always directed towards the equilibrium position/centre/point O; [2]"
+        },
+        {
+          "source_id": "ibchem_part_b4d850ead89831e5",
+          "preview": "ib_physics_2014_may_2_b0337395",
+          "source_parent": "14M.P2.SL.TZ1.Q4",
+          "part": "4(h)",
+          "question_text": "(h) Outline the conditions necessary for the object to execute simple harmonic motion. [2] [answer space] (Question 4, part 2 continued)",
+          "shared_stem": "4. This question is in two parts. Part 1 is about solar radiation and the greenhouse effect. Part 2 is about a mass on a spring. Part 1 Solar radiation and the greenhouse effect The following data are available. Quantity Symbol Value Radius of Sun R 7.0×10⁸ m Surface temperature of Sun T 5.8×10³ K Distance from Sun to Earth d 1.5×10¹¹ m Stefan-Boltzmann constant σ 5.7×10⁻⁸ W m-2 K-4",
+          "parent_context": "",
+          "ms_text": "the force (of the spring on the object)/acceleration (of the object/point O) must be proportional to the displacement (from the equilibrium position/centre/point O); and in the opposite direction to the displacement / always directed towards the equilibrium position/centre/point O; [2]"
+        },
+        {
+          "source_id": "ibchem_part_03b76c65f52237db",
+          "preview": "ib_physics_2015_may_2_4edbcf63",
+          "source_parent": "15M.P2.HL.TZ1.Q8",
+          "part": "8(e)",
+          "question_text": "(e) Define simple harmonic motion (SHM). [2] [answer space]",
+          "shared_stem": "8. This question is in two parts. Part 1 is about the electrical and magnetic characteristics of a loudspeaker. Part 2 is about vibrations and waves. Part 1 Electrical and magnetic characteristics of a loudspeaker The diagram shows the main features of a loudspeaker L. A current-carrying coil is positioned within the magnetic field provided by a permanent magnet. The diagram also shows the directions of the magnetic field and of the current in the coil at a particular instant. The dust cap D prevents dust from blocking the gap between the cardboard tube and the south pole of the magnet. [diagram/graph layout text omitted; see source clipping] coil out of plane of page [diagram/graph layout text omitted; see source clipping] (Question 8, part 1 continued) The coil consists of 150 turns, each of average diameter 2.5 cm. The magnetic field of the permanent magnet has strength 0.40 mT. The peak current in the coil is 0.45 mA.",
+          "parent_context": "",
+          "ms_text": "(periodic) motion in which acceleration/restoring force is proportional to the displacement from a fixed point; directed towards the fixed point / in the opposite direction to the displacement; [2]"
+        },
+        {
+          "source_id": "ibchem_part_c12cda238120b7e5",
+          "preview": "ib_physics_2015_may_2_e802f4e2",
+          "source_parent": "15M.P2.SL.TZ1.Q5",
+          "part": "5(c)",
+          "question_text": "(c) Define simple harmonic motion (SHM). [2] [answer space]",
+          "shared_stem": "5. This question is in two parts. Part 1 is about a thermistor circuit. Part 2 is about vibrations and waves. Part 1 Thermistor circuit The circuit shows a negative temperature coefficient (NTC) thermistor X and a 100 kΩ fixed resistor R connected across a battery. The battery has an electromotive force (emf) of 12.0 V and negligible internal resistance.",
+          "parent_context": "",
+          "ms_text": "(periodic) motion in which acceleration/restoring force is proportional to the displacement from a fixed point; directed towards the fixed point / in the opposite direction to the displacement; [2]"
+        },
+        {
+          "source_id": "ibchem_part_940403f43b14891b",
+          "preview": "ib_physics_2015_nov_2_78778fd5",
+          "source_parent": "15N.P2.SL.TZ0.Q3",
+          "part": "3(a)",
+          "question_text": "(a) Define simple harmonic motion (SHM). [2] [answer space]",
+          "shared_stem": "3. This question is about simple harmonic motion (SHM). The graph shows the variation with time t of the acceleration a of an object X undergoing simple harmonic motion (SHM). a / m s⁻² 3 2 1 0 - 1 - 2 - 3 [diagram/graph layout text omitted; see source clipping]",
+          "parent_context": "",
+          "ms_text": "force/acceleration proportional to the displacement/distance from a (fixed/equilibrium) point/mean position; directed towards this (equilibrium) point / in opposite direction to displacement/ distance; [2] Allow algebra only if symbols are fully explained."
+        },
+        {
+          "source_id": "ibchem_part_d83bc6174aa6fa73",
+          "preview": "ib_physics_2015_nov_2_d310a1ba",
+          "source_parent": "15N.P2.HL.TZ0.Q3",
+          "part": "3(a)",
+          "question_text": "(a) Define simple harmonic motion (SHM). [2] [answer space]",
+          "shared_stem": "3. This question is about simple harmonic motion (SHM). The graph shows the variation with time t of the acceleration a of an object X undergoing simple harmonic motion (SHM). a / m s⁻² 3 2 1 0 - 1 - 2 - 3 [diagram/graph layout text omitted; see source clipping]",
+          "parent_context": "",
+          "ms_text": "force/acceleration proportional to the displacement/distance from a (fixed/equilibrium) point/mean position; directed towards this (equilibrium) point / in opposite direction to displacement/ distance; [2] Allow algebra only if symbols are fully explained."
+        },
+        {
+          "source_id": "ibchem_part_3280d591b58ed1e1",
+          "preview": "ib_physics_2017_may_2_9152ddd2",
+          "source_parent": "17M.P2.HL.TZ2.Q2",
+          "part": "2(a)",
+          "question_text": "(a) Outline the conditions necessary for simple harmonic motion (SHM) to occur. [2] [answer space]",
+          "shared_stem": "2.",
+          "parent_context": "",
+          "ms_text": "force/acceleration proportional to displacement «from equilibrium position» ✓ Do not award marks for stating the defining equation for SHM. Award [1 max] for a ω−=2x with a and x defined. 2 and directed towards equilibrium position/point OR and directed in opposite direction to the displacement from equilibrium position/point ✓"
+        },
+        {
+          "source_id": "ibchem_part_c61e491469f29163",
+          "preview": "ib_physics_2017_may_2_d805fe45",
+          "source_parent": "17M.P2.HL.TZ1.Q7",
+          "part": "7(a)",
+          "question_text": "(a) Describe the conditions required for an object to perform simple harmonic motion (SHM). [2] [answer space]",
+          "shared_stem": "7. A student is investigating a method to measure the mass of a wooden block by timing the period of its oscillations on a spring.",
+          "parent_context": "",
+          "ms_text": "acceleration/restoring force is proportional to displacement ✓ and in the opposite direction/directed towards equilibrium ✓ coils to the right of P move right and the coils to the left move left ✓ hence P at centre of rarefaction ✓ Do not allow a bald statement of rarefaction or answers that don't include reference to the movement of coils. Allow ECF from MP1 if the movement of the coils imply a compression. 2 2"
+        }
+      ]
+    },
+    {
+      "test_relative_path": "C/A1-3 and C1 knowledge resit 2025.docx",
+      "test_item": "Part 2, Q11 definition of frequency",
+      "method": "same_standalone_definition_including_inherited_instruction",
+      "reason": "05M.P2.HL.TZ2.QB2 frequency part inherits '(b) Define, for a wave,' from parent_context; the SL appearance combines frequency and wavelength. Both reproduce the standalone frequency definition and are reserved with their full parents.",
+      "source_ids": [
+        "ibchem_part_a74ae9842532244d",
+        "ibchem_part_e0b99a2f0d28865f"
+      ],
+      "test_sha256": "32a421b37a6d3b5ef5c3b947b3c7392acc35a160df889f2c4c82476ac939cff2",
+      "resolved_source_parts": [
+        {
+          "source_id": "ibchem_part_a74ae9842532244d",
+          "preview": "ib_physics_2005_may_2_ae975dbc",
+          "source_parent": "05M.P2.HL.TZ2.QB2",
+          "part": "B2(b)(i)",
+          "question_text": "(i) frequency. [answer space] [1]",
+          "shared_stem": "B2. This question is about waves and wave properties.",
+          "parent_context": "(b) Define, for a wave,",
+          "ms_text": "frequency: number of oscillations/vibrations per unit time; [1] Do not accept specific units e.g. seconds."
+        },
+        {
+          "source_id": "ibchem_part_e0b99a2f0d28865f",
+          "preview": "ib_physics_2005_may_2_3729b96a",
+          "source_parent": "05M.P2.SL.TZ2.QB2",
+          "part": "B2(b)(i)",
+          "question_text": "(i) Define frequency and wavelength. Frequency: [answer space] Wavelength: [answer space] [2]",
+          "shared_stem": "B2. This question is about travelling waves and stationary waves.",
+          "parent_context": "(b) A travelling wave has speed v, frequency f and wavelength λ.",
+          "ms_text": "frequency: number of oscillations/vibrations per unit time; [1] Do not accept specific units e.g. seconds. wavelength: distance moved by wave during one oscillation of the source; [1] Accept distance between successive crests or troughs."
+        }
+      ]
+    },
+    {
+      "test_relative_path": "C/C1-C2-C5 test 2026.pdf",
+      "test_page": 5,
+      "test_item": "Q7, phase between displacement and acceleration",
+      "method": "visually_reviewed_same_question_with_changed_distractors",
+      "reason": "19M.P1.HL.TZ1.Q11 and SLQ14 ask the same phase difference. The school version changes distractor order/values; the demanded phase and physical conditions are unchanged. HL original crop was visually verified; SL native text and source identity match and whole-level closure withholds both. The SL focused crop currently contains only its printed number, which is also unsuitable for serving.",
+      "source_ids": [
+        "ibchem_part_4096264693ebcab5",
+        "ibchem_part_718ead9bdca9c6d1"
+      ],
+      "test_sha256": "56eb2be04d6342d5de8950a40bb39a06551d6b38ce6f7fafc348d0e7852a31ca",
+      "resolved_source_parts": [
+        {
+          "source_id": "ibchem_part_4096264693ebcab5",
+          "preview": "ib_physics_2019_may_1_33acc41e",
+          "source_parent": "19M.P1.HL.TZ1.Q11",
+          "part": "11",
+          "question_text": "11. A particle performs simple harmonic motion (shm). What is the phase difference between the displacement and the acceleration of the particle? A. 0 B. π 2 C. π D. 3π 2",
+          "shared_stem": "11. A particle performs simple harmonic motion (shm). What is the phase difference between the displacement and the acceleration of the particle? A. 0 B. π 2 C. π D. 3π 2",
+          "parent_context": "",
+          "ms_text": "Answer: C"
+        },
+        {
+          "source_id": "ibchem_part_718ead9bdca9c6d1",
+          "preview": "ib_physics_2019_may_1_d26ba53b",
+          "source_parent": "19M.P1.SL.TZ1.Q14",
+          "part": "14",
+          "question_text": "14. A particle performs simple harmonic motion (shm). What is the phase difference between the displacement and the acceleration of the particle? A. 0 B. π 2 C. π D. 3π 2",
+          "shared_stem": "14. A particle performs simple harmonic motion (shm). What is the phase difference between the displacement and the acceleration of the particle? A. 0 B. π 2 C. π D. 3π 2",
+          "parent_context": "",
+          "ms_text": "Answer: C"
+        }
+      ]
+    },
+    {
+      "test_relative_path": "A/A.1/A.1 Test 2026.pdf",
+      "test_page": 20,
+      "test_item": "Part 2 Q18(a)(i), horizontal and vertical acceleration without air resistance",
+      "method": "contained_test_equivalent_two_value_recall",
+      "reason": "05N.P3.SL.TZ0.QA1(a) asks the horizontal and vertical acceleration of a stone in flight with negligible air resistance: zero and g downwards. This is the same two-value recall requested for the rock on its way up in the current test; launch direction and unused numerical context do not change that task. Reserve the whole source parent without claiming that the entire authored rock/beach-ball test question was copied.",
+      "source_ids": [
+        "ibchem_part_4c2bba1f12b969b0"
+      ],
+      "test_sha256": "c4ddebc6ad090a0ccdeb995b4fe9b8b4667b68d335b7a35f278c86d62d9ea235",
+      "resolved_source_parts": [
+        {
+          "source_id": "ibchem_part_4c2bba1f12b969b0",
+          "preview": "ib_physics_2005_nov_3_4296b018",
+          "source_parent": "05N.P3.SL.TZ0.QA1",
+          "part": "A1(a)",
+          "question_text": "(a) State values for the horizontal and for the vertical acceleration of the stone. Horizontal acceleration: [answer space] Vertical acceleration: [answer space] [2]",
+          "shared_stem": "A1. This question is about projectile motion. A stone is thrown horizontally from the top of a vertical cliff of height 33 m as shown below. 18 m s⁻¹ 33 m sea level The initial horizontal velocity of the stone is 18 m s⁻¹ and air resistance may be assumed to be negligible.",
+          "parent_context": "",
+          "ms_text": "horizontally: zero; vertically: 2 9.8(1)ms− (downwards); [2] N. B. Part (b) and part (c) to be marked independently of part (a). Deduct [1] if answer uses 2 g 10 ms− = , but only once in either part (a) or part (b) but not both."
+        }
+      ]
+    },
+    {
+      "test_relative_path": "A/A.1/A.1 Test 2026.pdf",
+      "test_page": 21,
+      "test_item": "Part 2 Q19, direction of velocity and acceleration just after the parachute opens",
+      "method": "contained_test_equivalent_two_direction_recall",
+      "reason": "19M.P1.HL.TZ1.Q3 and its SL twin ask the directions of the skydiver's velocity and acceleration after opening a parachute, before reaching a new terminal speed. These reproduce the downwards/upwards answers in the current test table's one-second-after-opening column. Reserve both appearances; this does not identify the entire custom 800 N / 40 s / two-minute timeline as an original exam question.",
+      "source_ids": [
+        "ibchem_part_63fe4d06d4495cd7",
+        "ibchem_part_f15feb6d113a5168"
+      ],
+      "test_sha256": "c4ddebc6ad090a0ccdeb995b4fe9b8b4667b68d335b7a35f278c86d62d9ea235",
+      "resolved_source_parts": [
+        {
+          "source_id": "ibchem_part_63fe4d06d4495cd7",
+          "preview": "ib_physics_2019_may_1_33acc41e",
+          "source_parent": "19M.P1.HL.TZ1.Q3",
+          "part": "3",
+          "question_text": "3. A sky diver is falling at terminal speed when she opens her parachute. What are the direction of her velocity vector and the direction of her acceleration vector before she reaches the new terminal speed? Direction of velocity vector Direction of acceleration vector A. upwards upwards B. upwards downwards C. downwards upwards D. downwards downwards",
+          "shared_stem": "3. A sky diver is falling at terminal speed when she opens her parachute. What are the direction of her velocity vector and the direction of her acceleration vector before she reaches the new terminal speed? Direction of velocity vector Direction of acceleration vector A. upwards upwards B. upwards downwards C. downwards upwards D. downwards downwards",
+          "parent_context": "",
+          "ms_text": "Answer: C"
+        },
+        {
+          "source_id": "ibchem_part_f15feb6d113a5168",
+          "preview": "ib_physics_2019_may_1_d26ba53b",
+          "source_parent": "19M.P1.SL.TZ1.Q3",
+          "part": "3",
+          "question_text": "3. A sky diver is falling at terminal speed when she opens her parachute. What are the direction of her velocity vector and the direction of her acceleration vector before she reaches the new terminal speed? Direction of velocity vector Direction of acceleration vector A. upwards upwards B. upwards downwards C. downwards upwards D. downwards downwards",
+          "shared_stem": "3. A sky diver is falling at terminal speed when she opens her parachute. What are the direction of her velocity vector and the direction of her acceleration vector before she reaches the new terminal speed? Direction of velocity vector Direction of acceleration vector A. upwards upwards B. upwards downwards C. downwards upwards D. downwards downwards",
+          "parent_context": "",
+          "ms_text": "Answer: C"
+        }
+      ]
+    },
+    {
+      "test_relative_path": "C/A1-3 and C1 knowledge test 2025.docx",
+      "test_item": "Part 2 Q8, displacement-proportionality criterion of SHM",
+      "method": "contained_test_equivalent_single_definition_criterion",
+      "reason": "09M.P1.SL.TZ2.Q11 and13M.P1.SL.TZ1.Q12 ask which quantity the restoring force or acceleration is proportional to. This reproduces the displacement-from-equilibrium criterion explicitly allocated one mark in the knowledge-test definition. These are direct conceptual recall MCQs with no numerical application; the13M original crop was visually verified.",
+      "source_ids": [
+        "ibchem_part_5a219661c287f1bc",
+        "ibchem_part_2c996de905d56238"
+      ],
+      "test_sha256": "c6b85e80372980ac8f5ba18baa281de335c4a139ccb96e70984c3670cfb4ee60",
+      "resolved_source_parts": [
+        {
+          "source_id": "ibchem_part_5a219661c287f1bc",
+          "preview": "ib_physics_2009_may_1_5caccbe4",
+          "source_parent": "09M.P1.SL.TZ2.Q11",
+          "part": "11",
+          "question_text": "11. For a system executing simple harmonic motion, the restoring force acting on the system is proportional to the A. displacement of the system from equilibrium. B. amplitude of oscillation. C. elastic potential energy. D. frequency of oscillation.",
+          "shared_stem": "11. For a system executing simple harmonic motion, the restoring force acting on the system is proportional to the A. displacement of the system from equilibrium. B. amplitude of oscillation. C. elastic potential energy. D. frequency of oscillation.",
+          "parent_context": "",
+          "ms_text": "Answer: A"
+        },
+        {
+          "source_id": "ibchem_part_2c996de905d56238",
+          "preview": "ib_physics_2013_may_1_04aa8dc6",
+          "source_parent": "13M.P1.SL.TZ1.Q12",
+          "part": "12",
+          "question_text": "12. The acceleration of an object executing simple harmonic motion is proportional to the A. displacement of the object from equilibrium. B. velocity of the object. C. amplitude of oscillation. D. frequency of oscillation.",
+          "shared_stem": "12. The acceleration of an object executing simple harmonic motion is proportional to the A. displacement of the object from equilibrium. B. velocity of the object. C. amplitude of oscillation. D. frequency of oscillation.",
+          "parent_context": "",
+          "ms_text": "Answer: A"
+        }
+      ]
+    },
+    {
+      "test_relative_path": "C/A1-3 and C1 knowledge resit 2025.docx",
+      "test_item": "Part 2 Q9, meaning of displacement-time gradient",
+      "method": "contained_test_equivalent_graph_meaning_recall",
+      "reason": "10N.P1.SL.TZ0.Q4 asks which graph feature gives speed at a point on an increasing displacement-time curve. Its visually reviewed graph has symbolic coordinates and no numerical calculation; selecting the gradient repeats the knowledge-resit gradient/velocity relation. The source uses speed on a positive-gradient branch, so this is a conservative equivalent-recall reservation rather than an exact wording claim.",
+      "source_ids": [
+        "ibchem_part_87075ba145c3d920"
+      ],
+      "test_sha256": "32a421b37a6d3b5ef5c3b947b3c7392acc35a160df889f2c4c82476ac939cff2",
+      "resolved_source_parts": [
+        {
+          "source_id": "ibchem_part_87075ba145c3d920",
+          "preview": "ib_physics_2010_nov_1_57af6c2b",
+          "source_parent": "10N.P1.SL.TZ0.Q4",
+          "part": "4",
+          "question_text": "4. The graph shows how the displacement d of an object varies with time t. The tangent to the curve at time t1 is also shown. d / m d1 0 P 0 t1 t / s Which of the following gives the speed of the object at point P? A. the gradient at P B. the shaded area C. 1 gradient at P D. d t 1 1",
+          "shared_stem": "4. The graph shows how the displacement d of an object varies with time t. The tangent to the curve at time t1 is also shown. d / m d1 0 P 0 t1 t / s Which of the following gives the speed of the object at point P? A. the gradient at P B. the shaded area C. 1 gradient at P D. d t 1 1",
+          "parent_context": "",
+          "ms_text": "Answer: A"
+        }
+      ]
+    }
+  ],
+  "visually_reviewed_documents": [
+    {
+      "relative_path": "A/A.1/A.1 Test 2026.pdf",
+      "pages": 21
+    },
+    {
+      "relative_path": "C/C1-C2-C5 test 2026.pdf",
+      "pages": 27
+    },
+    {
+      "relative_path": "C/C.1 Mini-Test.pdf",
+      "pages": 11
+    }
+  ],
+  "reviewed_nonmatches": [
+    {
+      "test_relative_path": "C/C1-C2-C5 test 2026.pdf",
+      "test_page": 1,
+      "test_item": "Q1 phase constant",
+      "finding": "Complete Smith-authored cosine initial-condition question; PACKET_006D records bespoke/custom_shm_phase_mcq. No matching task in the44 authored-positive C1 native candidates remaining after existing reservation closure."
+    },
+    {
+      "test_relative_path": "C/C1-C2-C5 test 2026.pdf",
+      "test_page": 1,
+      "test_item": "Q2 greatest distance timing",
+      "finding": "Existing partial candidates remain reserved. No current retained C1 part repeats the equilibrium-at-t=0 to first-extreme MCQ. Different initial-condition calculations are not silently classified as the same question."
+    },
+    {
+      "test_relative_path": "C/C1-C2-C5 test 2026.pdf",
+      "test_page": 8,
+      "test_item": "Q19",
+      "finding": "Real image-only Doppler question about a decelerating train, not a blank fragment. Visually reviewed; C5 rather than A1/C1. Universal assessment matching is not claimed."
+    },
+    {
+      "test_relative_path": "A/A.1/A.1 Test 2026.pdf",
+      "test_page": 1,
+      "test_item": "Part1 Q1",
+      "finding": "Smith-authored car16m/s, deceleration2.0m/s2 stopping-distance question. Existing bespoke verdict and weak candidate reservations retained. 2018Nov truck20m/s at4.0m/s2 is a different numerical task, not promoted to an exact identity on generic SUVAT wording alone."
+    },
+    {
+      "test_relative_path": "A/A.1/A.1 Test 2026.pdf",
+      "test_page": 20,
+      "test_item": "Part2 Q18",
+      "finding": "Smith-authored rock/beach-ball comparison; visually reviewed, no diagram-only hidden prompt. Existing all-candidate closure retains precautionary links. Broadly related projectile applications are not invented as exact source matches."
+    },
+    {
+      "test_relative_path": "A/A.1/A.1 Test 2026.pdf",
+      "test_page": 21,
+      "test_item": "Part2 Q19",
+      "finding": "Smith-authored skydiver table with800N and40s/two-minute timeline; visually reviewed. Existing bespoke evidence and weak candidate reservations retained."
+    },
+    {
+      "test_relative_path": "C/C.1 Mini-Test.pdf",
+      "test_page": 1,
+      "test_item": "C12.1 Q2 acceleration/displacement graph",
+      "source_id": "ibchem_part_e0a077e39fb9395a",
+      "finding": "25N.P1A.HL.TZ3.Q18 is different: source graph spans +/-0.2m and +/-4m/s2 and asks f squared; test spans +/-2cm and +/-8m/s2 and asks period. Visually compared, not declared identical solely from shared skill."
+    },
+    {
+      "test_relative_path": "C/C.1 Mini-Test.pdf",
+      "test_page": 1,
+      "test_item": "C12.1 Q1 SHM recognition",
+      "source_id": "ibchem_part_8b5956c0ede232e6",
+      "finding": "Test supplies a single negative straight line and asks which combination of its properties establishes SHM. Source09M.P1.HL.TZ1.Q13 asks which of four a/x graphs describes SHM. Related recall, different question operation/options; not an exact image/question match."
+    },
+    {
+      "test_relative_path": "C/C.1 Mini-Test.pdf",
+      "test_item": "All20 C12.1/C12.2 mini-test questions",
+      "finding": "All11 pages were visually read and compared against the29 fixed C1 candidates, using complete native prompt/stem/context fields and targeted source crop comparisons. No additional identical task was found. Specific counterexamples include source16M.HLQ24 mass4M/length0.25l versus the mini-test mass2M/length2l; source20N.HLQ27 compares mass changes in pendulum and spring systems, whereas the mini-test changes gravity for one mass-spring system. Different numerical or initial-condition tasks were not equated merely through common SHM vocabulary."
+    },
+    {
+      "test_relative_path": "A/A.1/A.1 Test 2026.pdf",
+      "test_item": "Authored Q1, Q18 and Q19 against fixed197 A1 candidates",
+      "finding": "All candidate identities and native question/stem/parent-context fields were checked, with targeted rereading of short recall and projectile/drag/skydiver tasks. Added exact source-ID reservations for acceleration-component and post-parachute vector recall. Other surviving tasks require different numerical data, diagram transformations, initial conditions, motion stages or operations. Existing weak/candidate reservations remain fully additive; absence of automated text hits alone was not used as clearance."
+    }
+  ],
+  "required_additive_exclusions": [
+    "dist/physics-audit/current-ib-tests.json",
+    "reports/ib-a5-reviewed-test-exclusions.json"
+  ],
+  "limitations": [
+    "Review completion is scoped to A1/C1 and does not certify every assessment item across all IB topics.",
+    "Whole-parent, cross-level, duplicate and page/geometry closure must be applied downstream before serving either question or context images.",
+    "School tests dated2026 were read only for exclusion evidence; no exam-paper content dated2026 or later is eligible.",
+    "The final image/geometry gate remains a separate prerequisite; this file does not authorize any question-image publication."
+  ]
+}

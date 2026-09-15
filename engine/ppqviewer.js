@@ -66,7 +66,7 @@ window.PPQViewer = (function () {
     "No idea",
     "Don't fully understand",
     "Got it wrong, but now I've seen the answer I get it",
-    "Got it right, but it's not stable — I might miss it tomorrow",
+    "Got it right, but it's not stable — I might miss it tomorrow/next week",
     "Got it — strong and comfortable",
     "Trivial — never need to see this again"
   ];
@@ -158,7 +158,28 @@ window.PPQViewer = (function () {
     cfg.learnerId = cfg.learnerId || "local";
     cfg.timingMode = cfg.timingMode || "none";
     cfg.showTimerUI = !!cfg.showTimerUI;
-    cfg.prefetchAhead = cfg.prefetchAhead == null ? 3 : cfg.prefetchAhead;
+    // Explicit issue reporting is separate from the optional attempt reporter.
+    // The host supplies its real feedback service and source-only context.
+    const problemIn = cfg.problemReport;
+    cfg.problemReport = problemIn && problemIn.enabled !== false && typeof problemIn.endpoint === "string" && /^https:\/\//.test(problemIn.endpoint) ? {
+      endpoint: problemIn.endpoint,
+      project: String(problemIn.project || cfg.title),
+      sourceLabelOf: typeof problemIn.sourceLabelOf === "function" ? problemIn.sourceLabelOf : function (q) { return cfg.metaLine(q); },
+      contextOf: typeof problemIn.contextOf === "function" ? problemIn.contextOf : null
+    } : null;
+    const teacherHelpIn = cfg.teacherHelp;
+    cfg.teacherHelp = teacherHelpIn && teacherHelpIn.enabled !== false && typeof teacherHelpIn.endpoint === "string" && /^https:\/\//.test(teacherHelpIn.endpoint) ? {
+      endpoint: teacherHelpIn.endpoint,
+      project: String(teacherHelpIn.project || cfg.title),
+      label: typeof teacherHelpIn.label === "string" && teacherHelpIn.label.trim() ? teacherHelpIn.label.trim() : "Ask the teacher",
+      introduction: typeof teacherHelpIn.introduction === "string" ? teacherHelpIn.introduction : "Ask about this question. A teacher can publish the question and answer for everyone, without your name. Replies are remembered in this browser; keep this browser’s saved data to receive them.",
+      receivedText: typeof teacherHelpIn.receivedText === "string" && teacherHelpIn.receivedText.trim() ? teacherHelpIn.receivedText : "Your question has been received. A new-reply notice will appear here when a teacher answers.",
+      sourceLabelOf: typeof teacherHelpIn.sourceLabelOf === "function" ? teacherHelpIn.sourceLabelOf : function (q) { return cfg.metaLine(q); },
+      sourceUrlOf: typeof teacherHelpIn.sourceUrlOf === "function" ? teacherHelpIn.sourceUrlOf : function () { return window.location.href; },
+      contextOf: typeof teacherHelpIn.contextOf === "function" ? teacherHelpIn.contextOf : null
+    } : null;
+    const ahead = cfg.prefetchAhead == null ? 3 : Number(cfg.prefetchAhead);
+    cfg.prefetchAhead = Number.isFinite(ahead) ? Math.max(0, Math.min(12, Math.floor(ahead))) : 3;
     cfg.filters = cfg.filters || [];
     cfg.dashboardLayout = cfg.dashboardLayout || "single";
     cfg.dashboardColumns = cfg.dashboardColumns || null;
@@ -193,12 +214,25 @@ window.PPQViewer = (function () {
     cfg.idOf = cfg.idOf || function (q) { return q.id; };
     cfg.groupKey = cfg.groupKey || function () { return "ALL"; };
     cfg.groupLabel = cfg.groupLabel || function () { return "All"; };
+    // Opt in to overlapping dashboard groups without copying question records
+    // or their saved attempts. Existing consumers retain one group per record.
+    cfg.groupKeysOf = typeof cfg.groupKeysOf === "function" ? cfg.groupKeysOf : null;
+    cfg.groupLabelOf = typeof cfg.groupLabelOf === "function" ? cfg.groupLabelOf : function (key, q) { return cfg.groupLabel(q); };
+    cfg.itemNoun = typeof cfg.itemNoun === "string" && cfg.itemNoun.trim() ? cfg.itemNoun.trim() : "question";
     cfg.isUntagged = cfg.isUntagged || function (k) { return String(k).indexOf("UT_") === 0; };
     const sr = cfg.selfReport || {};
-    cfg.selfReport = { levels: sr.levels || 6, prompt: sr.prompt || "How did that feel? (1 = lost, 6 = easy)", labels: sr.labels || null, meanings: sr.meanings || DEFAULT_SCALE_MEANINGS, ramp: sr.ramp || DEFAULT_RAMP };
+    cfg.selfReport = { levels: sr.levels || 6, prompt: sr.prompt || "How did that feel? (1 = lost, 6 = easy)", labels: sr.labels || null, meanings: sr.meanings || DEFAULT_SCALE_MEANINGS, ramp: sr.ramp || DEFAULT_RAMP, autoReveal: sr.autoReveal === true };
     cfg.options = cfg.options || { mode: "labels" };
     // per-question hooks
     cfg.cropsOf = cfg.cropsOf || function (q) { return q.crops || (q.crop_url ? [q.crop_url] : []); };
+    cfg.contextCropsOf = typeof cfg.contextCropsOf === "function" ? cfg.contextCropsOf : null;
+    cfg.targetPartHeadingOf = typeof cfg.targetPartHeadingOf === "function" ? cfg.targetPartHeadingOf : null;
+    cfg.compactQuestionHeader = cfg.compactQuestionHeader === true;
+    cfg.questionLoading = { enabled: !!(cfg.questionLoading && cfg.questionLoading.enabled === true) };
+    cfg.structuredNavBeforeStem = !!cfg.structuredNavBeforeStem;
+    cfg.structuredNavigationOnly = !!cfg.structuredNavigationOnly;
+    cfg.structuredQuestionLabelOf = typeof cfg.structuredQuestionLabelOf === "function" ? cfg.structuredQuestionLabelOf : null;
+    cfg.questionScrollContainer = typeof cfg.questionScrollContainer === "string" || typeof cfg.questionScrollContainer === "function" ? cfg.questionScrollContainer : null;
     cfg.correctOf = cfg.correctOf || function (q) { return (q.correct_answer || q.answer_key || "").toString(); };
     cfg.metaLine = cfg.metaLine || function (q) { return cfg.idOf(q); };
     cfg.tagsOf = cfg.tagsOf || function () { return []; };
@@ -242,6 +276,7 @@ window.PPQViewer = (function () {
     const tgIn = cfg.timing || null;
     cfg.timing = tgIn ? {
       targetOf: typeof tgIn.targetOf === "function" ? tgIn.targetOf : null,
+      description: typeof tgIn.description === "string" ? tgIn.description : "",
       defaultMode: TIMING_MODES.indexOf(tgIn.defaultMode) >= 0 ? tgIn.defaultMode : "none"
     } : null;
     /* VF-14 (Smith 2026-07-29): extra performance axes for the progress page —
@@ -320,6 +355,24 @@ window.PPQViewer = (function () {
     }, cfg.classificationLabels || {});
     cfg.classificationSummaryLabel = cfg.classificationSummaryLabel || "More topic details";
     cfg.questionFinder = !!cfg.questionFinder;
+    cfg.finderPreserveFilters = !!cfg.finderPreserveFilters;
+    cfg.sideRating = { enabled: !!(cfg.sideRating && cfg.sideRating.enabled) };
+    cfg.shuffleGroupKeyOf = typeof cfg.shuffleGroupKeyOf === "function" ? cfg.shuffleGroupKeyOf : null;
+    const ah = cfg.attemptHistory || {};
+    cfg.attemptHistory = { enabled: ah.enabled === true, defaultVisible: ah.defaultVisible !== false };
+    const ps = cfg.practiceSelection || {};
+    cfg.practiceSelection = { enabled: ps.enabled === true, defaultMode: ["unattempted", "mix", "errors"].includes(ps.defaultMode) ? ps.defaultMode : "unattempted" };
+    const ll = cfg.learnerLevel || {};
+    cfg.learnerLevel = { enabled: ll.enabled === true, defaultValue: ll.defaultValue === "SL" ? "SL" : "HL" };
+    cfg.questionBadgesOf = typeof cfg.questionBadgesOf === "function" ? cfg.questionBadgesOf : null;
+    /* QoderWork 2026-09-14: an optional per-question "also studied" panel that
+       names every topic a part belongs to, main strand first, so a pupil who
+       reaches a relativity part through a minor kinematics strand can see what
+       else the part really assesses. Consumers that do not supply it are
+       untouched: the panel element is never created and no DOM changes. */
+    cfg.alsoStudiedOf = typeof cfg.alsoStudiedOf === "function" ? cfg.alsoStudiedOf : null;
+    const qt = cfg.questionTools || {};
+    cfg.questionTools = { dock: qt.dock === true, resetInPreferences: qt.resetInPreferences === true };
     return cfg;
   };
 
@@ -363,13 +416,126 @@ window.PPQViewer = (function () {
   };
 
   // ---------------------------------------------------------------- init/DOM
-  Viewer.prototype.init = function () { this._buildDom(); this._bindGlobalKeys(); this.filterQuestions(); this.renderDashboard(); this._fireReport({ status: "session_start" }); return this; };
+  function completedAttempt(row) {
+    return row && row.id != null && row.skipped !== true && !/^(skip|skipped)$/i.test(row.status || "");
+  }
+  function attemptOutcome(row) {
+    const number = (v) => v == null || v === "" || !Number.isFinite(Number(v)) ? null : Number(v);
+    const max = number(row.marks_max), awarded = number(row.marks_awarded);
+    if (max > 0) {
+      if (awarded != null && awarded >= 0 && awarded <= max) return { text: awarded + "/" + max, strength: awarded / max, error: awarded < max };
+      const range = row.marks_range;
+      if (Array.isArray(range) && range.length === 2) {
+        const lo = number(range[0]), hi = number(range[1]);
+        if (lo != null && hi != null && lo >= 0 && hi >= lo && hi <= max) return { text: lo + "–" + hi + "/" + max, strength: (lo + hi) / (2 * max), error: lo < max };
+      }
+      return { text: "—", strength: null, error: false };
+    }
+    const correct = typeof row.correct === "boolean" ? row.correct : row.is_correct === "right" ? true : row.is_correct === "wrong" ? false : null;
+    return correct == null ? { text: "—", strength: null, error: false } : { text: correct ? "1/1" : "0/1", strength: correct ? 1 : 0, error: !correct };
+  }
+  Viewer.prototype._saveRating = function (value) {
+    if (!this.cur) return;
+    const id = String(this.cfg.idOf(this.cur)), attempts = this.store.attempts || [];
+    this.store.scores[id] = value;
+    let row = this._reviewingAttempt;
+    if (!(row && attempts.includes(row) && String(row.id) === id)) {
+      row = this.answered && this._attemptId ? attempts.find((a) => a.attempt_id === this._attemptId && String(a.id) === id) : null;
+    }
+    if (row) row.self_report = value;
+    if (this.cfg.selfReport.autoReveal) this._pendingDashboardPulse = this.cfg.groupKey(this.cur);
+    this._saveStore();
+    this._renderAttemptHistory();
+    if (this.cfg.selfReport.autoReveal) this._firePendingDashboardPulse();
+  };
+  Viewer.prototype._attemptHistoryVisible = function () {
+    const saved = (this.store.prefs || {}).attemptHistory || {};
+    return typeof saved.visible === "boolean" ? saved.visible : this.cfg.attemptHistory.defaultVisible;
+  };
+  Viewer.prototype._learnerLevel = function () {
+    const saved = (this.store.prefs || {}).learnerLevel;
+    return saved === "HL" || saved === "SL" ? saved : this.cfg.learnerLevel.defaultValue;
+  };
+  Viewer.prototype._renderQuestionBadges = function () {
+    const box = this.q(".ppq-question-badges");
+    if (!box) return;
+    box.innerHTML = "";
+    let badges = null;
+    try { badges = this.cur && this.cfg.questionBadgesOf(this.cur); } catch (_) { badges = null; }
+    (Array.isArray(badges) ? badges : []).forEach((badge) => {
+      if (!badge || typeof badge.label !== "string" || !badge.label.trim()) return;
+      const span = el("span", { class: "ppq-question-badge" }, esc(badge.label));
+      const levelClass = badge.level === "HL" ? "hl" : badge.level === "SL" ? "sl" : badge.level === "HLSL" ? "shared" : null;
+      if (levelClass) span.classList.add("ppq-question-badge-" + levelClass);
+      if (typeof badge.title === "string") span.title = badge.title;
+      box.appendChild(span);
+    });
+    box.hidden = !box.children.length;
+  };
+  /* QoderWork 2026-09-14: fill the optional "also studied" panel. It stays
+     hidden unless the consumer supplies alsoStudiedOf and the current question
+     returns at least one strand, so single-topic parts and other consumers are
+     unaffected. Each strand is escaped; the main strand is emphasised. */
+  Viewer.prototype._renderAlsoStudied = function () {
+    const box = this.q(".ppq-also-studied");
+    if (!box) return;
+    box.innerHTML = "";
+    let data = null;
+    try { data = this.cur && typeof this.cfg.alsoStudiedOf === "function" ? this.cfg.alsoStudiedOf(this.cur) : null; }
+    catch (_) { data = null; }
+    const items = data && Array.isArray(data.items)
+      ? data.items.filter((item) => item && typeof item.text === "string" && item.text.trim())
+      : [];
+    if (!items.length) { box.hidden = true; return; }
+    if (data.label) box.appendChild(el("b", { class: "ppq-also-studied-label" }, esc(data.label)));
+    items.forEach((item) => {
+      const span = el("span", { class: "ppq-also-studied-item" + (item.primary ? " ppq-also-studied-main" : "") }, esc(item.text));
+      if (typeof item.title === "string") span.title = item.title;
+      box.appendChild(span);
+    });
+    box.hidden = false;
+  };
+  Viewer.prototype._renderAttemptHistory = function () {
+    const box = this.q(".ppq-attempt-history");
+    if (!box) return;
+    box.innerHTML = "";
+    box.hidden = !this._attemptHistoryVisible() || !this.cur;
+    if (box.hidden) return;
+    const id = String(this.cfg.idOf(this.cur));
+    const rows = (this.store.attempts || []).map((row, index) => ({ row, index })).filter(({row}) => completedAttempt(row) && String(row.id) === id);
+    rows.sort((a, b) => { const x = Date.parse(a.row.ts), y = Date.parse(b.row.ts); return Number.isFinite(x) && Number.isFinite(y) && x !== y ? x - y : a.index - b.index; });
+    box.appendChild(el("div", { class: "ppq-attempt-history-title" }, rows.some(({row}) => row.attempt_id && row.attempt_id === this._attemptId) ? "Attempts" : "Previous attempts"));
+    if (!rows.length) { box.appendChild(el("span", { class: "ppq-attempt-history-empty" }, "None yet")); return; }
+    const list = el("div", { class: "ppq-attempt-history-list" });
+    rows.forEach(({row}, index) => {
+      const result = attemptOutcome(row), rating = row.self_report != null && row.self_report !== "" ? Number(row.self_report) : null;
+      const validRating = Number.isInteger(rating) && rating >= 1 && rating <= 6;
+      const date = Date.parse(row.ts), when = Number.isFinite(date) ? new Date(date).toLocaleString() : "Date not recorded";
+      const description = "Attempt " + (index + 1) + ", " + when + "; result " + (result.text === "—" ? "not recorded" : result.text) + "; C " + (validRating ? rating : "not recorded");
+      const column = el("span", { class: "ppq-attempt-history-column", tabIndex: 0, title: description, ariaLabel: description, "data-attempt-id": row.attempt_id || "" });
+      if (row.attempt_id && row.attempt_id === this._attemptId) {
+        column.classList.add("current");
+        column.title = column.ariaLabel = "This attempt; " + description;
+      }
+      const outcome = el("span", { class: "ppq-attempt-outcome", ariaLabel: "Result " + result.text }, esc(result.text));
+      const confidence = el("span", { class: "ppq-attempt-confidence", ariaLabel: "C " + (validRating ? rating : "not recorded") }, validRating ? "C " + rating : "C —");
+      if (result.strength != null) outcome.style.setProperty("--ppq-history-strength", String(result.strength));
+      else outcome.classList.add("missing");
+      if (validRating) confidence.style.setProperty("--ppq-history-strength", String((rating - 1) / 5));
+      else confidence.classList.add("missing");
+      column.appendChild(outcome); column.appendChild(confidence); list.appendChild(column);
+    });
+    box.appendChild(list);
+  };
+
+  Viewer.prototype.init = function () { this._buildDom(); this._bindGlobalKeys(); this.filterQuestions(); this.renderDashboard(); this._initTeacherHelp(); this._fireReport({ status: "session_start" }); return this; };
   Viewer.prototype.q = function (sel) { return this.root.querySelector(sel); };
   Viewer.prototype.qa = function (sel) { return Array.prototype.slice.call(this.root.querySelectorAll(sel)); };
 
   Viewer.prototype._buildDom = function () {
     const cfg = this.cfg;
     this.root.classList.add("ppq");
+    this.root.classList.toggle("ppq-compact-question-header", cfg.compactQuestionHeader);
     if (cfg.presentation.enabled) this.root.classList.add("ppq-presentation");
     if (cfg.presentation.compactMobileFilters) this.root.classList.add("ppq-compact-mobile-filters");
     if (cfg.presentation.guidedReview) this.root.classList.add("ppq-guided-review");
@@ -415,8 +581,8 @@ window.PPQViewer = (function () {
       finder.appendChild(el("input", {
         class: "ppq-find-input",
         type: "search",
-        placeholder: "Find question…",
-        ariaLabel: "Find a specific question",
+        placeholder: "Find " + this._itemNoun(false) + "…",
+        ariaLabel: "Find a specific " + this._itemNoun(false),
         autocomplete: "off"
       }));
       finder.appendChild(el("div", {
@@ -427,9 +593,16 @@ window.PPQViewer = (function () {
       filters.appendChild(finder);
     }
     const orderSel = el("select", { class: "ppq-select ppq-order" });
-    orderSel.appendChild(el("option", { value: "order" }, "In order"));
-    orderSel.appendChild(el("option", { value: "shuffle" }, "Shuffle"));
-    if (cfg.defaultOrder === "shuffle") orderSel.value = "shuffle"; /* QoderWork 2026-07-22: Smith: "make the standard to be shuffle" */
+    if (cfg.shuffleGroupKeyOf) {
+      orderSel.appendChild(el("option", { value: "shuffle" }, "Shuffle questions; keep parts in order"));
+      orderSel.appendChild(el("option", { value: "shuffle-parts" }, "Shuffle all parts"));
+      orderSel.appendChild(el("option", { value: "order" }, "In order"));
+      orderSel.value = cfg.defaultOrder === "order" || cfg.defaultOrder === "ordered" ? "order" : cfg.defaultOrder === "shuffle-parts" ? "shuffle-parts" : "shuffle";
+    } else {
+      orderSel.appendChild(el("option", { value: "order" }, "In order"));
+      orderSel.appendChild(el("option", { value: "shuffle" }, "Shuffle"));
+      if (cfg.defaultOrder === "shuffle") orderSel.value = "shuffle";
+    }
     filters.appendChild(orderSel);
     filters.appendChild(el("input", { class: "ppq-start", type: "number", min: "1", placeholder: "Start #", style: "display:none;" }));
     /* VF-02 (Claude 2026-07-29): the pupil's own progress page. */
@@ -447,12 +620,12 @@ window.PPQViewer = (function () {
       }, esc(cfg.learnedScope.label)));
     }
     /* d013/VF-04: timing preferences (only when the consumer supplies timing). */
-    if (cfg.timing) {
+    if (cfg.timing || cfg.attemptHistory.enabled || cfg.practiceSelection.enabled || cfg.learnerLevel.enabled || cfg.questionTools.resetInPreferences) {
       filters.appendChild(el("button", {
         class: "ppq-btn-mini ppq-timing-btn",
         type: "button",
-        title: "Timing: off, reveal, clock, pacing ring or time bank — and your extra time"
-      }, "Timing"));
+        title: cfg.attemptHistory.enabled || cfg.practiceSelection.enabled || cfg.learnerLevel.enabled || cfg.questionTools.resetInPreferences ? "Practice and display preferences" : "Timing: off, reveal, clock, pacing ring or time bank — and your extra time"
+      }, cfg.attemptHistory.enabled || cfg.practiceSelection.enabled || cfg.learnerLevel.enabled || cfg.questionTools.resetInPreferences ? "Preferences" : "Timing"));
     }
     /* VF-07 (Claude 2026-07-28): flagged-questions filter toggle. Lives with the
        interrogation module, whose pop-up owns the flag control; hidden until the
@@ -471,10 +644,25 @@ window.PPQViewer = (function () {
 
     const layout = el("div", { class: "ppq-layout" });
     const centre = el("div", { class: "ppq-centre" });
+    const questionColumn = cfg.questionTools.dock ? el("div", { class: "ppq-question-column" }) : centre;
+    if (questionColumn !== centre) questionColumn.appendChild(centre);
     const card = el("div", { class: "ppq-card", style: "display:none;" });
-    card.appendChild(el("div", { class: "ppq-meta" },
+    const questionMeta = el("div", { class: "ppq-meta" },
       '<span class="ppq-qid"></span><span class="ppq-feedback-status"></span>' +
-      '<span class="ppq-tags"></span><span class="ppq-classification-details"></span>'));
+      '<span class="ppq-tags"></span><span class="ppq-classification-details"></span>');
+    if (cfg.attemptHistory.enabled || cfg.questionBadgesOf) {
+      const top = el("div", { class: "ppq-question-top" });
+      top.appendChild(questionMeta);
+      const right = cfg.questionBadgesOf ? el("div", { class: "ppq-question-top-right" }) : top;
+      if (cfg.questionBadgesOf) right.appendChild(el("div", { class: "ppq-question-badges", role: "group", ariaLabel: "Question information", hidden: true }));
+      if (cfg.attemptHistory.enabled) right.appendChild(el("div", { class: "ppq-attempt-history", role: "group", ariaLabel: "Previous attempts for this question" }));
+      if (right !== top) top.appendChild(right);
+      card.appendChild(top);
+    } else card.appendChild(questionMeta);
+    /* QoderWork 2026-09-14: the "also studied" panel exists only for consumers
+       that supply alsoStudiedOf, so every other consumer's card DOM is byte for
+       byte unchanged. It sits just under the question meta, above the advisory. */
+    if (cfg.alsoStudiedOf) card.appendChild(el("div", { class: "ppq-also-studied", role: "note", hidden: true }));
     card.appendChild(el("div", {
       class: "ppq-source-advisory",
       role: "note",
@@ -506,15 +694,27 @@ window.PPQViewer = (function () {
        crop already shows the printed options; the rail is just the picker. Off by
        default so other consumers keep the stacked layout. */
     const optionsEl = el("div", { class: "ppq-options" });
+    const structuredEl = el("div", { class: "ppq-struct" });
+    if (cfg.compactQuestionHeader) {
+      const targetRow = el("div", { class: "ppq-question-target-row" });
+      targetRow.appendChild(el("h2", { class: "ppq-target-part" }));
+      targetRow.appendChild(structuredEl);
+      card.appendChild(targetRow);
+    } else if (cfg.structuredNavBeforeStem) card.appendChild(structuredEl);
+    if (cfg.questionLoading.enabled) {
+      const loading = el("div", { class: "ppq-question-loading", role: "status", hidden: true });
+      loading.setAttribute("aria-live", "polite"); loading.setAttribute("aria-atomic", "true");
+      card.appendChild(loading);
+    }
     if (cfg.optionsLeft) {
       const qarea = el("div", { class: "ppq-qarea" });
       qarea.appendChild(optionsEl);
       qarea.appendChild(drawContainer);
       card.appendChild(qarea);
-      card.appendChild(el("div", { class: "ppq-struct" }));
+      if (!cfg.structuredNavBeforeStem && !cfg.compactQuestionHeader) card.appendChild(structuredEl);
     } else {
       card.appendChild(drawContainer);
-      card.appendChild(el("div", { class: "ppq-struct" }));   // structured-paper nav + whole-question
+      if (!cfg.structuredNavBeforeStem && !cfg.compactQuestionHeader) card.appendChild(structuredEl); // structured-paper nav + whole-question
       card.appendChild(optionsEl);
     }
     /* QoderWork 2026-07-22 (analyst handoff): pre-answer guess declaration. The
@@ -559,6 +759,7 @@ window.PPQViewer = (function () {
     card.appendChild(answerPanel);
 
     const comp = el("div", { class: "ppq-competence" });
+    if (cfg.selfReport.autoReveal && !cfg.sideRating.enabled) comp.classList.add("ppq-inline-rating");
     comp.appendChild(el("div", { class: "ppq-competence-prompt" }, esc(cfg.selfReport.prompt)));
     const scale = el("div", { class: "ppq-scale" });
     const meanings = cfg.selfReport.meanings || [];
@@ -577,7 +778,7 @@ window.PPQViewer = (function () {
 
     card.appendChild(el("div", { class: "ppq-kb-hint" }));
     centre.appendChild(card);
-    centre.appendChild(el("div", { class: "ppq-empty" }, "<h2>Loading questions…</h2>"));
+    centre.appendChild(el("div", { class: "ppq-empty" }, "<h2>Loading " + esc(this._itemNoun(true)) + "…</h2>"));
 
     /* QoderWork 2026-07-22: a split dashboard renders as three columns — left
        mastery panel, centre question, right mastery panel — matching the original
@@ -590,24 +791,54 @@ window.PPQViewer = (function () {
       p.appendChild(el("div", { class: "ppq-dash-content" }));
       return p;
     };
+    const appendRightPanel = (dash) => {
+      if (!cfg.sideRating.enabled) { layout.appendChild(dash); return; }
+      const right = el("div", { class: "ppq-right-column" });
+      const rating = el("aside", { class: "ppq-side-rating", hidden: true, ariaLabel: "Confidence rating for the current question" });
+      rating.appendChild(el("strong", { class: "ppq-side-rating-current" }));
+      const legend = comp.querySelector(".ppq-scale-legend");
+      if (legend) {
+        const help = el("details", { class: "ppq-side-scale-help" });
+        help.appendChild(el("summary", null, "Scale"));
+        comp.insertBefore(help, legend);
+        help.appendChild(legend);
+        const media = typeof window.matchMedia === "function" ? window.matchMedia("(max-width: 820px)") : null;
+        help.open = !media || !media.matches;
+        if (media) {
+          const update = (event) => { help.open = !event.matches; };
+          if (media.addEventListener) media.addEventListener("change", update);
+          else if (media.addListener) media.addListener(update);
+          this._sideRatingMedia = media;
+          this._sideRatingMediaHandler = update;
+        }
+      }
+      rating.appendChild(comp); // Move the existing controls: one state and one set of handlers.
+      right.appendChild(rating); right.appendChild(dash); layout.appendChild(right);
+    };
     if (isSplit) {
       layout.classList.add("ppq-layout-split");
       layout.appendChild(makeDashPanel(cfg.dashboardColumns[0], "ppq-dash-left"));
-      layout.appendChild(centre);
-      layout.appendChild(makeDashPanel(cfg.dashboardColumns[1], "ppq-dash-right"));
+      layout.appendChild(questionColumn);
+      appendRightPanel(makeDashPanel(cfg.dashboardColumns[1], "ppq-dash-right"));
     } else {
-      layout.appendChild(centre);
+      layout.appendChild(questionColumn);
       const dash = el("div", { class: "ppq-dash" });
       dash.appendChild(el("h3", null, esc(cfg.dashboardTitle)));
       dash.appendChild(el("div", { class: "ppq-dash-sub" }, "Recent ticks/crosses and your self-rating spread, per group. Click a group to filter."));
       dash.appendChild(el("div", { class: "ppq-dash-content" }));
-      layout.appendChild(dash);
+      appendRightPanel(dash);
     }
     this.root.appendChild(layout);
 
     const toolbar = el("div", { class: "ppq-toolbar" });
-    toolbar.innerHTML = '<button class="ppq-btn-mini ppq-draw-toggle">Draw</button><button class="ppq-btn-mini ppq-reset">Reset progress</button>';
-    this.root.appendChild(toolbar);
+    toolbar.innerHTML = (cfg.teacherHelp ? '<button class="ppq-btn-mini ppq-teacher-help" type="button">' + esc(cfg.teacherHelp.label) + '</button>' : '') +
+      (cfg.problemReport ? '<button class="ppq-btn-mini ppq-problem-report" type="button">Report a display problem</button>' : '') +
+      '<button class="ppq-btn-mini ppq-draw-toggle" type="button">Draw</button>' +
+      (cfg.questionTools.resetInPreferences ? '' : '<button class="ppq-btn-mini ppq-reset" type="button">Reset progress</button>');
+    if (cfg.questionTools.dock) {
+      toolbar.classList.add("ppq-question-tools");
+      questionColumn.appendChild(toolbar);
+    } else this.root.appendChild(toolbar);
 
     const modal = el("div", { class: "ppq-modal" });
     /* QoderWork 2026-07-24 (handoff #1): the pop-up is minimisable so the pupil can
@@ -644,6 +875,15 @@ window.PPQViewer = (function () {
     const value = this._filterValue(q, f);
     if (value == null || value === "") return [];
     return (Array.isArray(value) ? value : [value]).map(String).filter(Boolean);
+  };
+  Viewer.prototype._groupKeys = function (q) {
+    if (!this.cfg.groupKeysOf) return [this.cfg.groupKey(q)];
+    const keys = this.cfg.groupKeysOf(q);
+    return Array.isArray(keys) ? Array.from(new Set(keys.filter((key) => key != null && key !== "").map(String))) : [];
+  };
+  Viewer.prototype._itemNoun = function (plural, capitalized) {
+    const noun = this.cfg.itemNoun + (plural ? "s" : "");
+    return capitalized ? noun.charAt(0).toUpperCase() + noun.slice(1) : noun;
   };
   /* A dependent, array-valued filter may opt into an in-place dashboard
      drill-down. The parent filter remains the single source of truth: choosing a
@@ -850,6 +1090,7 @@ window.PPQViewer = (function () {
       self.groupFilter = null;
       self.filterQuestions();
       self.renderDashboard();
+      if (f && f.focusGuidanceOnSelect) self._focusDashboardGuidance();
       });
     });
     this.q(".ppq-order").addEventListener("change", (e) => { self.q(".ppq-start").style.display = e.target.value === "order" ? "inline-block" : "none"; self.filterQuestions(); });
@@ -897,7 +1138,12 @@ window.PPQViewer = (function () {
       if (row) self._reopenAttempt(row);
     });
     this.q(".ppq-next").addEventListener("click", () => self.next());
-    this.q(".ppq-reset").addEventListener("click", () => self.reset());
+    const resetBtn = this.q(".ppq-reset");
+    if (resetBtn) resetBtn.addEventListener("click", () => self.reset());
+    const problemBtn = this.q(".ppq-problem-report");
+    if (problemBtn) problemBtn.addEventListener("click", () => self._openProblemReport());
+    const helpBtn = self.q(".ppq-teacher-help");
+    if (helpBtn) helpBtn.addEventListener("click", () => self._openTeacherHelp());
     if (this.cfg.headerButtons) this.qa(".ppq-headbtn").forEach((b) => b.addEventListener("click", () => {
       const hb = self.cfg.headerButtons[parseInt(b.dataset.hb, 10)];
       if (hb && hb.open) self.openModal(hb.open);
@@ -907,7 +1153,7 @@ window.PPQViewer = (function () {
       self.qa(".ppq-scale-btn").forEach((b) => b.classList.remove("sel"));
       e.target.classList.add("sel");
       if (self.cur) {
-        self.store.scores[self.cfg.idOf(self.cur)] = val; self._saveStore();
+        self._saveRating(val);
         /* QoderWork 2026-07-22: report the self-rating */
         self._fireReport({ status: "rated", qtype: "self_report", extra_json: JSON.stringify({ rating: val }) });
       }
@@ -1035,7 +1281,7 @@ window.PPQViewer = (function () {
         ? matches.map((q) => '<button type="button" class="ppq-find-result" role="option" data-id="' +
             esc(self.cfg.idOf(q)) + '"><b>' + esc(self.cfg.metaLine(q)) + '</b><span>' +
             esc((self.cfg.tagsOf(q) || []).slice(0, 3).join(" · ")) + "</span></button>").join("")
-        : '<div class="ppq-find-none">No exact question found</div>';
+        : '<div class="ppq-find-none">No exact ' + esc(self._itemNoun(false)) + ' found</div>';
       results.style.display = "";
     }
     input.addEventListener("input", show);
@@ -1061,23 +1307,27 @@ window.PPQViewer = (function () {
   Viewer.prototype._jumpToQuestion = function (id) {
     const q = this.byId[id];
     if (!q) return false;
-    this.groupFilter = null;
-    this._groupFilterLabel = null;
-    this.qa(".ppq-select").forEach((sel) => {
-      if (!sel.classList.contains("ppq-order")) sel.value = "ALL";
-    });
-    this.cfg.filters.forEach((f, i) => {
-      if (f.multi) {
-        this._multiSel[i] = null;
-        this._syncMultiFilter(i);
-      } else {
-        this._syncSingleFilterStyle(i);
-      }
-    });
-    this._refreshAllDependentFilters();
-    this.q(".ppq-order").value = "order";
-    this.q(".ppq-start").style.display = "inline-block";
-    this.filterQuestions();
+    const finderPool = this.cfg.practiceSelection.enabled ? this._practiceBaseView || this.view : this.view;
+    const keepFilters = this.cfg.finderPreserveFilters && finderPool.some((item) => this.cfg.idOf(item) === this.cfg.idOf(q));
+    if (!keepFilters) {
+      this.groupFilter = null;
+      this._groupFilterLabel = null;
+      this.qa(".ppq-select").forEach((sel) => {
+        if (!sel.classList.contains("ppq-order")) sel.value = "ALL";
+      });
+      this.cfg.filters.forEach((f, i) => {
+        if (f.multi) {
+          this._multiSel[i] = null;
+          this._syncMultiFilter(i);
+        } else {
+          this._syncSingleFilterStyle(i);
+        }
+      });
+      this._refreshAllDependentFilters();
+      this.q(".ppq-order").value = "order";
+      this.q(".ppq-start").style.display = "inline-block";
+      this.filterQuestions();
+    }
     this.goToId(id);
     const card = this.q(".ppq-card");
     if (card) {
@@ -1088,7 +1338,8 @@ window.PPQViewer = (function () {
         filterToggle.ariaExpanded = "false";
         filterToggle.textContent = "Filters and finder";
       }
-      card.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (this.cfg.questionScrollContainer) this._scrollQuestionToTop();
+      else card.scrollIntoView({ behavior: "smooth", block: "start" });
       card.classList.remove("ppq-question-fired");
       void card.offsetWidth;
       card.classList.add("ppq-question-fired");
@@ -1352,7 +1603,7 @@ window.PPQViewer = (function () {
     if (this._flaggedOnly && !(((this.store || {}).flags) || {})[cfg.idOf(qq)]) return false;
     /* d011: within-learned scope (only bites once something is ticked). */
     if (this._questionInLearnedScope && !this._questionInLearnedScope(qq)) return false;
-    if (this.groupFilter && cfg.groupKey(qq) !== this.groupFilter) return false;
+    if (this.groupFilter && this._groupKeys(qq).indexOf(this.groupFilter) < 0) return false;
     return true;
   };
 
@@ -1732,7 +1983,7 @@ window.PPQViewer = (function () {
 
     if (!s.totals.attempts && !s.totals.flags && !s.topics.length) {
       page.appendChild(el("div", { class: "ppq-progress-empty" },
-        "Nothing here yet — answer some questions and this page fills up."));
+        "Nothing here yet — answer some " + esc(this._itemNoun(true)) + " and this page fills up."));
     } else {
       const fmtTime = function (ms) {
         const m = Math.round(ms / 60000);
@@ -1741,7 +1992,7 @@ window.PPQViewer = (function () {
       };
       const strip = el("div", { class: "ppq-progress-totals" });
       [["Attempts", s.totals.attempts],
-       ["Questions tried", s.totals.questions],
+       [this._itemNoun(true, true) + " tried", s.totals.questions],
        ["Correct", s.totals.pctCorrect != null ? s.totals.pctCorrect + "%" : "—"],
        ["Average rating", s.totals.avgRating != null ? s.totals.avgRating.toFixed(1) + " / 6" : "—"],
        ["Guesses declared", s.totals.guesses],
@@ -1803,7 +2054,7 @@ window.PPQViewer = (function () {
         if (!axis.rows.length) return;
         page.appendChild(el("div", { class: "ppq-progress-subhead" }, esc(axis.label)));
         const table = el("table", { class: "ppq-progress-table ppq-progress-axis" });
-        table.appendChild(headerRow([axis.label.replace(/^By /, ""), "Questions (tried / available)", "Attempts", "Correct %", "Average rating", "Average time (s)"]));
+        table.appendChild(headerRow([axis.label.replace(/^By /, ""), self._itemNoun(true, true) + " (tried / available)", "Attempts", "Correct %", "Average rating", "Average time (s)"]));
         const tbody = el("tbody");
         const maxA = axis.rows.reduce(function (m, r) { return Math.max(m, r.attempts); }, 1);
         const maxT = axis.rows.reduce(function (m, r) { return Math.max(m, r.avgTimeS || 0); }, 1);
@@ -1858,7 +2109,7 @@ window.PPQViewer = (function () {
       const recentAttempts = ((this.store || {}).attempts || []).slice(-40).reverse();
       if (recentAttempts.length) {
         page.appendChild(el("div", { class: "ppq-progress-subhead" },
-          "Recent questions — click one to reopen it"));
+          "Recent " + esc(this._itemNoun(true)) + " — click one to reopen it"));
         const list = el("div", { class: "ppq-progress-attempts" });
         recentAttempts.forEach(function (row) {
           const q = self._questionById(row.id);
@@ -1905,7 +2156,7 @@ window.PPQViewer = (function () {
           "Delete a time that does not reflect the work (interrupted, looked something up, walked away). " +
           "The answer and rating stay; only the time is struck, exactly as “don't record this one” does."));
         const table = el("table", { class: "ppq-progress-table ppq-progress-times" });
-        table.appendChild(headerRow(["Question", "What it asked", "Time", ""]));
+        table.appendChild(headerRow([this._itemNoun(false, true), "What it asked", "Time", ""]));
         const tbody = el("tbody");
         timed.slice(-60).reverse().forEach(function (row) {
           const q = self._questionById(row.id);
@@ -1977,6 +2228,53 @@ window.PPQViewer = (function () {
     b.style.display = (n || this._flaggedOnly) ? "" : "none";
   };
 
+  Viewer.prototype._practiceMode = function () {
+    const mode = ((this.store.prefs || {}).practiceSelection || {}).mode;
+    return ["unattempted", "mix", "errors"].includes(mode) ? mode : this.cfg.practiceSelection.defaultMode;
+  };
+  Viewer.prototype._practiceCandidates = function () {
+    const mode = this._practiceMode(), latest = new Map();
+    (this.store.attempts || []).forEach((row) => { if (completedAttempt(row)) latest.set(String(row.id), row); });
+    return (this._practiceBaseView || []).filter((q) => {
+      const row = latest.get(String(this.cfg.idOf(q)));
+      return mode === "mix" || (mode === "unattempted" ? !row : !!row && attemptOutcome(row).error);
+    });
+  };
+  Viewer.prototype._updatePracticeCounter = function () {
+    const mode = this._practiceMode(), total = (this._practiceBaseView || []).length, n = this._practiceCandidates().length;
+    let html = n + (mode === "unattempted" ? " unattempted" : mode === "errors" ? " previous errors" : " in complete mix") + " / " + total + " " + esc(this._itemNoun(true));
+    if (this.groupFilter) html += ' · <button class="ppq-filterchip" type="button" title="Clear this topic filter">' + esc(this._groupFilterLabel || this.groupFilter) + " ✕</button>";
+    this.q(".ppq-counter").innerHTML = html;
+  };
+  Viewer.prototype._nextPractice = function () {
+    const cfg = this.cfg, base = this._practiceBaseView || [];
+    this._histPos = null; this._returnIdx = null;
+    this.view = this._practiceCandidates();
+    this._updatePracticeCounter();
+    if (!this.view.length) {
+      this._stopTimer(); this.cur = null; this._marksPending = false;
+      this._showEmpty("No " + this._itemNoun(true) + " match this practice selection.");
+      if (!base.length) { this.q(".ppq-empty").classList.remove("ppq-practice-empty"); return; }
+      const empty = this.q(".ppq-empty"); empty.classList.add("ppq-practice-empty");
+      const message = !base.length ? "No questions match these topic filters." : this._practiceMode() === "unattempted" ? "You have attempted every question in this selection." : "No previous errors in this selection.";
+      empty.innerHTML = '<h2>' + esc(message) + '</h2><p>Choose how to practise next.</p><button class="ppq-btn ppq-practice-preferences" type="button">Preferences</button> <button class="ppq-btn" data-practice-mode="mix" type="button">Complete mix</button> <button class="ppq-btn" data-practice-mode="errors" type="button">Previous errors</button>';
+      empty.querySelector(".ppq-practice-preferences").addEventListener("click", () => this._openTimingPanel());
+      empty.querySelectorAll("[data-practice-mode]").forEach((button) => button.addEventListener("click", () => {
+        if (!this.store.prefs) this.store.prefs = {};
+        this.store.prefs.practiceSelection = { mode: button.dataset.practiceMode }; this._saveStore(); this._nextPractice();
+      }));
+      return;
+    }
+    let target = this._practiceResumeId && (!this.cur || cfg.idOf(this.cur) !== this._practiceResumeId) && this.view.find((q) => cfg.idOf(q) === this._practiceResumeId);
+    if (!target) {
+      const anchor = base.findIndex((q) => cfg.idOf(q) === this._practiceAnchorId), eligible = new Set(this.view.map((q) => cfg.idOf(q)));
+      for (let step = 1; step <= base.length; step++) { const q = base[(anchor + step) % base.length]; if (eligible.has(cfg.idOf(q))) { target = q; break; } }
+    }
+    this._practiceResumeId = null; this._practiceReview = false;
+    this._practiceAnchorId = cfg.idOf(target); this.idx = this.view.indexOf(target);
+    this.q(".ppq-empty").classList.remove("ppq-practice-empty"); this.render();
+  };
+
   Viewer.prototype.filterQuestions = function () {
     const cfg = this.cfg;
     const self = this;
@@ -1987,16 +2285,36 @@ window.PPQViewer = (function () {
     const order = this.q(".ppq-order").value || "order";
     const start = parseInt(this.q(".ppq-start").value, 10) || 1;
     this.view = this.questions.filter((qq) => self._matchesQuestionFilters(qq));
-    if (order === "shuffle") { shuffleInPlace(this.view); this.idx = -1; }
+    if (order === "shuffle" || order === "shuffle-parts") {
+      if (order === "shuffle" && cfg.shuffleGroupKeyOf) {
+        const cmp = cfg.sort || function (a, b) { return String(cfg.idOf(a)).localeCompare(String(cfg.idOf(b)), undefined, { numeric: true, sensitivity: "base" }); };
+        this.view.sort(cmp);
+        const groups = new Map();
+        this.view.forEach((q) => {
+          const value = cfg.shuffleGroupKeyOf(q), key = value == null || value === "" ? "item:" + cfg.idOf(q) : "group:" + value;
+          if (!groups.has(key)) groups.set(key, []);
+          groups.get(key).push(q);
+        });
+        const shuffled = Array.from(groups.values()); shuffleInPlace(shuffled); this.view = [].concat(...shuffled);
+      } else shuffleInPlace(this.view);
+      this.idx = -1;
+    }
     else {
       const cmp = cfg.sort || function (a, b) { return String(cfg.idOf(a)).localeCompare(String(cfg.idOf(b)), undefined, { numeric: true, sensitivity: "base" }); };
       this.view.sort(cmp);
       this.idx = (start > 1 && start <= this.view.length) ? start - 2 : -1;
     }
+    if (cfg.practiceSelection.enabled) {
+      this._practiceBaseView = this.view.slice();
+      this._practiceAnchorId = this.idx >= 0 ? cfg.idOf(this.view[this.idx]) : null;
+      this._practiceResumeId = null;
+      this._practiceReview = false;
+      this.view = this._practiceCandidates();
+    }
     /* QoderWork 2026-07-22: the active topic filter is shown as a removable chip
        (Smith clicked P3 Mechanics, saw "no questions match", and couldn't see the
        filter was stuck or how to undo it). */
-    let counterHtml = this.view.length + " questions";
+    let counterHtml = this.view.length + " " + esc(this._itemNoun(true));
     const counterScope = cfg.counterScope;
     if (counterScope && Array.isArray(counterScope.ignoreFilterFields) &&
         counterScope.ignoreFilterFields.length) {
@@ -2012,6 +2330,7 @@ window.PPQViewer = (function () {
     }
     if (this.groupFilter) counterHtml += ' · <button class="ppq-filterchip" type="button" title="Clear this topic filter">' + esc(this._groupFilterLabel || this.groupFilter) + " ✕</button>";
     this.q(".ppq-counter").innerHTML = counterHtml;
+    if (cfg.practiceSelection.enabled) this._updatePracticeCounter();
     this.next();
   };
   Viewer.prototype.setGroupFilter = function (key) {
@@ -2051,6 +2370,18 @@ window.PPQViewer = (function () {
     this._refreshDependentFilters(filter.field);
     this.filterQuestions();
     this.renderDashboard();
+    if (filter.focusGuidanceOnSelect) this._focusDashboardGuidance();
+  };
+  Viewer.prototype._focusDashboardGuidance = function () {
+    const guidance = this.q(".ppq-facet-guidance"), dash = this.q(".ppq-dash");
+    if (!dash) return;
+    dash.scrollTop = 0;
+    if (guidance) {
+      const heading = guidance.querySelector("summary");
+      if (heading) heading.focus({ preventScroll: true });
+      const media = typeof window.matchMedia === "function" ? window.matchMedia("(max-width: 820px)") : null;
+      if (media && media.matches && typeof guidance.scrollIntoView === "function") guidance.scrollIntoView({ block: "start", behavior: "auto" });
+    }
   };
   Viewer.prototype._clearDashboardFacet = function (clearParent) {
     const facet = this._dashboardFacet();
@@ -2069,12 +2400,18 @@ window.PPQViewer = (function () {
   };
 
   // --------------------------------------------------------------- navigation
+  Viewer.prototype._scrollQuestionToTop = function () {
+    const hook = this.cfg.questionScrollContainer;
+    const target = typeof hook === "function" ? hook(this.root, this) : (hook ? this.q(hook) : null);
+    if (target && this.root.contains(target)) { target.scrollTop = 0; target.scrollLeft = 0; }
+  };
   /* VF-03 (Claude 2026-07-28): Previous walks the SESSION HISTORY — the
      questions actually attempted this session, in the order they were
      attempted — which survives filter changes and reshuffles. Next walks
      forward through that history and then resumes the live run where it left
      off. With no history yet, both keep their original positional behaviour. */
   Viewer.prototype.next = function () {
+    if (this.cfg.practiceSelection.enabled) { this._nextPractice(); return; }
     const hist = this._sessionHistory || [];
     if (this._histPos != null) {
       if (this._histPos < hist.length - 1) { this._histPos++; this._renderHistoryEntry(); return; }
@@ -2089,7 +2426,7 @@ window.PPQViewer = (function () {
         /* already showing the resume point (it was the newest attempt): advance */
       }
     }
-    if (this.view.length === 0) { this._showEmpty("No questions match these filters."); return; }
+    if (this.view.length === 0) { this._showEmpty("No " + this._itemNoun(true) + " match these filters."); return; }
     this.idx++; if (this.idx >= this.view.length) this.idx = 0; this.render();
   };
   Viewer.prototype.prev = function () {
@@ -2105,6 +2442,11 @@ window.PPQViewer = (function () {
       } else {
         return; /* at the oldest attempted question — nowhere sensible further back */
       }
+    }
+    if (this.cfg.practiceSelection.enabled) {
+      const base = this._practiceBaseView || []; if (!base.length) return;
+      const at = base.findIndex((q) => this.cur && this.cfg.idOf(q) === this.cfg.idOf(this.cur));
+      this.render(base[(at - 1 + base.length) % base.length]); return;
     }
     if (this.view.length === 0) return;
     this.idx--; if (this.idx < 0) this.idx = this.view.length - 1; this.render();
@@ -2175,11 +2517,13 @@ window.PPQViewer = (function () {
     if (!this._renderInterrogation()) this._reviewingAttempt = null;
   };
   Viewer.prototype.goToId = function (id) {
+    if (this.cfg.practiceSelection.enabled && this.byId[id]) { this._histPos = null; this._returnIdx = null; this.render(this.byId[id]); return; }
     const i = this.view.findIndex((q) => this.cfg.idOf(q) === id);
     if (i >= 0) { this.idx = i - 1; this.next(); }
     else { const t = this.q('.ppq-wq-part[data-part-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]'); if (t) t.scrollIntoView({ behavior: "smooth", block: "center" }); }
   };
   Viewer.prototype._showEmpty = function (msg) {
+    this._cancelQuestionImages();
     this.q(".ppq-empty").style.display = "block";
     /* QoderWork 2026-07-22: say WHICH filter is stuck and offer one obvious undo
        (Smith: "there's no indication that that should be the case… I don't know
@@ -2189,6 +2533,7 @@ window.PPQViewer = (function () {
     html += '<p><button class="ppq-btn ppq-clear-filters" type="button">Clear all filters</button></p>';
     this.q(".ppq-empty").innerHTML = html;
     this.q(".ppq-card").style.display = "none";
+    this._syncSideRating();
     const self = this;
     const cb = this.q(".ppq-clear-filters");
     if (cb) cb.addEventListener("click", () => self.clearAllFilters());
@@ -2214,13 +2559,34 @@ window.PPQViewer = (function () {
   };
 
   // --------------------------------------------------------------- prefetch
-  Viewer.prototype._preload = function (url) { if (!url) return; if (!this._preloaded) this._preloaded = []; const img = new Image(); img.src = url; this._preloaded.push(img); while (this._preloaded.length > 80) this._preloaded.shift(); };
-  Viewer.prototype._prefetch = function (q) {
+  Viewer.prototype._preload = function (url, batch) {
+    if (typeof url !== "string" || !url) return;
+    if (batch) {
+      if (batch.has(url) || batch.size >= 80) return;
+      batch.add(url);
+    }
+    if (!this._preloaded) this._preloaded = new Map();
+    // Retain one Image per URL; refreshing an entry keeps the current crop warm
+    // as older pages fall out of this bounded cache.
+    let img = this._preloaded.get(url);
+    this._preloaded.delete(url);
+    if (!img) { img = new Image(); img.src = url; }
+    this._preloaded.set(url, img);
+    while (this._preloaded.size > 80) this._preloaded.delete(this._preloaded.keys().next().value);
+  };
+  Viewer.prototype._prefetch = function (q, batch) {
     if (!q) return;
-    this.cfg.cropsOf(q).forEach((s) => this._preload(s));
-    this._preload(this.cfg.stemUrlOf(q));
-    this._preload(this.cfg.answerUrlOf(q)); // answer warmed separately (Smith 2026-07-01)
-    if (this.cfg.modules.structuredPaper) this._blockParts(q).forEach((p) => this.cfg.cropsOf(p).forEach((s) => this._preload(s)));
+    batch = batch || new Set();
+    const warm = (p) => {
+      const cfg = this.cfg;
+      [cfg.cropsOf, cfg.contextCropsOf, cfg.msCropsOf, cfg.stemPagesOf].forEach((hook) => {
+        if (typeof hook === "function") (hook.call(cfg, p) || []).forEach((s) => this._preload(s, batch));
+      });
+      this._preload(cfg.stemUrlOf(p), batch);
+      this._preload(cfg.answerUrlOf(p), batch);
+    };
+    warm(q);
+    if (this.cfg.modules.structuredPaper) this._blockParts(q).forEach(warm);
   };
 
   // ----------------------------------------------- content safety (VSAFE-01)
@@ -2562,6 +2928,11 @@ window.PPQViewer = (function () {
 
   Viewer.prototype.render = function (explicitQ) {
     const cfg = this.cfg;
+    this._cancelQuestionImages();
+    if (cfg.practiceSelection.enabled && explicitQ) {
+      if (!this._practiceReview && this.cur && !this.answered) this._practiceResumeId = cfg.idOf(this.cur);
+      this._practiceReview = true;
+    }
     /* VF-03 (Claude 2026-07-28): render can now show an EXPLICIT question (the
        session-history walk), independent of the current view and its filters.
        Any positional render (live advance, finder jump, filter change) ends the
@@ -2577,6 +2948,15 @@ window.PPQViewer = (function () {
        attempt — session+item is not enough when an item is attempted twice. */
     this._attemptId = "att_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
     this._preGuessDeclaration = null;
+    // Learner preferences belong to this visit. Saving a new level or timing
+    // choice never changes the target or recorded level of an open attempt.
+    this._visitLearnerLevel = cfg.learnerLevel.enabled ? this._learnerLevel() : null;
+    this._visitTimingPrefs = cfg.learnerLevel.enabled && cfg.timing ? this._timingPrefs() : null;
+    this._visitTimingQuestion = null;
+    if (this._visitTimingPrefs) {
+      this._visitTimingTargetMs = this._timingTargetMsFor(this.cur);
+      this._visitTimingQuestion = this.cur;
+    }
     this._startTimer(); /* QoderWork 2026-07-22: exam timer (no-op unless config.timer) */
     if (this._drawOn) this.toggleDraw();
     this.clearCanvas();
@@ -2586,6 +2966,9 @@ window.PPQViewer = (function () {
     this.q(".ppq-card").style.display = "flex";
     this.q(".ppq-qid").textContent = cfg.metaLine(this.cur) +
       (this._histPos != null ? "  ·  looking back" : "");
+    this._renderAttemptHistory();
+    this._renderQuestionBadges();
+    this._renderAlsoStudied(); // QoderWork 2026-09-14
     /* VF-03: a question with a recorded previous attempt offers a visible way
        back into its verdict, declaration, responses and analysis. */
     const reviewBtn = this.q(".ppq-review-attempt");
@@ -2630,9 +3013,10 @@ window.PPQViewer = (function () {
       }
     }
 
-    this._renderStem(this.cur);
     this._resetAnswerUi();
+    this._renderStem(this.cur);
     this._renderAnswerArea(this.cur, this._curType);
+    this._watchQuestionImages();
 
     // restore prior self-rating
     this.qa(".ppq-scale-btn").forEach((b) => b.classList.remove("sel"));
@@ -2640,16 +3024,22 @@ window.PPQViewer = (function () {
     if (prior) { const sb = this.q('.ppq-scale-btn[data-val="' + prior + '"]'); if (sb) sb.classList.add("sel"); }
 
     if (cfg.modules.math) this._applyMath(this.q(".ppq-card"));
+    if (cfg.questionScrollContainer) this._scrollQuestionToTop();
 
-    this._prefetch(this.cur);
-    for (let k = 1; k <= cfg.prefetchAhead; k++) { const a = this.view[(this.idx + k) % this.view.length]; if (a && a !== this.cur) this._prefetch(a); }
+    const preloadBatch = new Set();
+    this._prefetch(this.cur, preloadBatch);
+    for (let k = 1; k <= Math.min(cfg.prefetchAhead, this.view.length - 1); k++) { const a = this.view[(this.idx + k) % this.view.length]; if (a && a !== this.cur) this._prefetch(a, preloadBatch); }
   };
 
   Viewer.prototype._resetAnswerUi = function () {
     this.q(".ppq-answer-line").className = "ppq-answer-line";
     this.q(".ppq-answer-line").textContent = "";
     this.q(".ppq-answer-panel").className = "ppq-answer-panel";
-    this.q(".ppq-competence").className = "ppq-competence";
+    this.q(".ppq-markscheme").innerHTML = "";
+    this.q(".ppq-examiner-body").innerHTML = "";
+    const previousMarksBar = this.q(".ppq-marksbar");
+    if (previousMarksBar) previousMarksBar.remove();
+    this.q(".ppq-competence").classList.remove("show");
     this.q(".ppq-competence").style.display = ""; /* QoderWork 2026-07-22: may have been hidden while the pop-up held the 1-6 */
     this.q(".ppq-next").style.display = "none";
     this.q(".ppq-skip").style.display = "inline-block";
@@ -2681,6 +3071,19 @@ window.PPQViewer = (function () {
     this.q(".ppq-modal").classList.remove("show", "ppq-modal-analysis", "ppq-modal-progress");
     this.root.classList.remove("ppq-analysis-open");
     this.q(".ppq-modal-body").innerHTML = "";
+    this._syncSideRating();
+  };
+
+  Viewer.prototype._syncSideRating = function () {
+    const panel = this.q(".ppq-side-rating");
+    if (!panel) return;
+    const comp = panel.querySelector(".ppq-competence");
+    const label = panel.querySelector(".ppq-side-rating-current");
+    label.textContent = this.cur ? ((this.cfg.targetPartHeadingOf && this.cfg.targetPartHeadingOf(this.cur)) || this.cfg.metaLine(this.cur) || "Current question") : "";
+    const visible = !!(this.cur && this.answered && !this._answerRevealPending && !this._iqOpen &&
+      comp && comp.classList.contains("show") && comp.style.display !== "none" && this.q(".ppq-card").style.display !== "none");
+    panel.hidden = !visible;
+    this.root.classList.toggle("ppq-side-rating-open", visible);
   };
 
   // --------------------------------------------------------------- stem
@@ -2704,6 +3107,13 @@ window.PPQViewer = (function () {
       html += '<div class="ppq-notice ppq-notice-' + esc(n.tone === "warn" ? "warn" : "info") + '">' +
         (n.label ? '<b>' + esc(n.label) + "</b> " : "") + esc(n.text) + "</div>";
     });
+    const targetHeading = cfg.targetPartHeadingOf && cfg.targetPartHeadingOf(q);
+    const compactHeading = cfg.compactQuestionHeader && this.q(".ppq-question-target-row > .ppq-target-part");
+    if (compactHeading) {
+      compactHeading.textContent = targetHeading || cfg.metaLine(q);
+      const marks = typeof cfg.partMarksOf === "function" && cfg.partMarksOf(q);
+      if (marks != null && marks !== false) compactHeading.appendChild(el("span", { class: "ppq-target-marks" }, esc(marks) + " mark" + (marks === 1 ? "" : "s")));
+    } else if (targetHeading) html += '<h2 class="ppq-target-part">' + esc(targetHeading) + "</h2>";
     if (text && !pagesFirst) html += '<div class="ppq-qtext">' + text + "</div>";
     /* Smith, 2026-07-31: "we're not getting the stem... you get the WORDS of
        the stem, but if there's any maths in the stem you'll be lucky if you can
@@ -2730,11 +3140,14 @@ window.PPQViewer = (function () {
     if (crops.length) {
       const partName = (typeof cfg.partLabelOf === "function" && cfg.partLabelOf(q)) || "";
       const marks = (typeof cfg.partMarksOf === "function" && cfg.partMarksOf(q)) || null;
-      const lead = stemPages.length
+      const lead = targetHeading
+        ? esc(targetHeading) + (marks ? ", " + esc(marks) + " mark" + (marks === 1 ? "" : "s") : "")
+        : stemPages.length
         ? ("The part you are answering now" + (partName && partName !== "(whole)" ? ": " + esc(partName) : "") +
            (marks ? ", " + marks + " mark" + (marks === 1 ? "" : "s") : ""))
         : ("This question" + (marks ? ", " + marks + " mark" + (marks === 1 ? "" : "s") : ""));
-      html += '<div class="ppq-stem-partlead">' + lead + "</div>";
+      if (!compactHeading) html += '<div class="ppq-stem-partlead">' + lead + "</div>";
+      else if (text || stemPages.length) html += '<div class="ppq-stem-partlead ppq-current-part-label">Current part</div>';
       crops.forEach((s) => { html += '<img src="' + esc(s) + '" loading="lazy" class="ppq-crop" alt="question clipping">'; });
     }
     if (text && pagesFirst) {
@@ -2753,6 +3166,69 @@ window.PPQViewer = (function () {
 
     // module: reference booklet
     if (cfg.modules.referenceBooklet) this._appendReferenceBooklet(q, stem);
+  };
+
+  // Only the current question owns this batch. Cached loads, failed images and
+  // late events from a previous selection cannot change a newer loading state.
+  Viewer.prototype._cancelQuestionImages = function () {
+    const batch = this._questionImageBatch;
+    this._questionImageBatch = null;
+    if (batch) batch.items.forEach(item => {
+      item.image.removeEventListener("load", item.loaded);
+      item.image.removeEventListener("error", item.failed);
+    });
+    const stem = this.q(".ppq-stem"), status = this.q(".ppq-question-loading");
+    if (stem) stem.removeAttribute("aria-busy");
+    if (status) { status.hidden = true; status.textContent = ""; status.classList.remove("ppq-question-loading-error"); }
+  };
+  Viewer.prototype._watchQuestionImages = function () {
+    if (!this.cfg.questionLoading.enabled) return;
+    const stem = this.q(".ppq-stem"), status = this.q(".ppq-question-loading");
+    if (!stem || !status) return;
+    const images = Array.from(stem.querySelectorAll("img[src]")).filter(im => im.getAttribute("src"));
+    const batch = { items: [] };
+    this._questionImageBatch = batch;
+    const active = () => this._questionImageBatch === batch;
+    const paint = () => {
+      if (!active()) return;
+      const pending = batch.items.filter(item => item.state === "pending").length;
+      const failed = batch.items.filter(item => item.state === "failed").length;
+      stem.setAttribute("aria-busy", pending ? "true" : "false");
+      status.hidden = !pending && !failed;
+      status.classList.toggle("ppq-question-loading-error", !pending && !!failed);
+      status.textContent = pending ? "Loading question and context… (" + (batch.items.length - pending) + " of " + batch.items.length + ")" :
+        failed ? failed + " image" + (failed === 1 ? "" : "s") + " could not be loaded. Use Retry image below." : "";
+    };
+    images.forEach(image => {
+      const item = { image, state: "pending", fallback: null };
+      const settle = failed => {
+        if (!active() || !image.isConnected || item.state !== "pending") return;
+        item.state = failed ? "failed" : "loaded";
+        image.classList.remove("ppq-question-image-pending");
+        image.hidden = failed;
+        if (failed) {
+          const fallback = el("div", { class: "ppq-question-image-error", role: "group", ariaLabel: "Image unavailable" });
+          fallback.appendChild(el("span", null, (image.closest("details") ? "Context image" : "Question image") + " could not be loaded."));
+          const retry = el("button", { type: "button", class: "ppq-btn-mini ppq-image-retry" }, "Retry image");
+          retry.addEventListener("click", () => {
+            if (!active()) return;
+            item.state = "pending"; fallback.remove(); item.fallback = null;
+            image.hidden = false; image.classList.add("ppq-question-image-pending"); paint();
+            const src = image.getAttribute("src"); image.removeAttribute("src"); image.setAttribute("src", src);
+          });
+          fallback.appendChild(retry); image.insertAdjacentElement("afterend", fallback); item.fallback = fallback;
+        }
+        paint();
+      };
+      item.loaded = () => settle(false); item.failed = () => settle(true);
+      image.addEventListener("load", item.loaded); image.addEventListener("error", item.failed);
+      // Context may be below the fold, but it belongs to this question. Eager
+      // loading avoids waiting indefinitely for a lazy image to enter view.
+      image.loading = "eager"; image.classList.add("ppq-question-image-pending");
+      batch.items.push(item);
+    });
+    paint();
+    batch.items.forEach(item => { if (item.image.complete) (item.image.naturalWidth ? item.loaded : item.failed)(); });
   };
 
   // --------------------------------------------------------------- answer area
@@ -2887,7 +3363,21 @@ window.PPQViewer = (function () {
     this._recordAttempt("", !!full, extras);
     const bar = this.q(".ppq-marksbar");
     if (bar) {
-      bar.querySelectorAll(".ppq-mark-btn, .ppq-marks-unsure").forEach((b) => { b.disabled = true; });
+      bar.querySelectorAll(".ppq-mark-btn").forEach((b) => {
+        const mark = Number(b.dataset.mark);
+        const selected = outcome.awarded != null ? mark === outcome.awarded :
+          !!(outcome.range && mark >= outcome.range[0] && mark <= outcome.range[1]);
+        b.classList.remove("lo");
+        b.classList.toggle("selected", selected);
+        b.setAttribute("aria-pressed", String(selected));
+        b.disabled = true;
+      });
+      const unsureButton = bar.querySelector(".ppq-marks-unsure");
+      if (unsureButton) unsureButton.hidden = true;
+      const saved = bar.querySelector(".ppq-marksbar-prompt");
+      saved.classList.add("ppq-marks-saved");
+      saved.setAttribute("role", "status");
+      saved.textContent = "Saved: " + (outcome.awarded != null ? outcome.awarded : outcome.range.join("–")) + "/" + outcome.max;
       bar.classList.add("done");
     }
     this._afterAnswer();
@@ -2952,7 +3442,19 @@ window.PPQViewer = (function () {
       else if (label === chosen) b.classList.add("incorrect");
     });
     if (this._curType === "mcq") {
+      const msImgs = (typeof this.cfg.msCropsOf === "function" ? this.cfg.msCropsOf(this.cur) : null) || [];
+      if (reveal && msImgs.length) {
+        let ms = this._formatMarkscheme(this.cfg.markschemeOf(this.cur));
+        const note = (typeof this.cfg.markschemeNoteOf === "function" && this.cfg.markschemeNoteOf(this.cur)) || "";
+        if (note) ms = '<div class="ppq-notice ppq-notice-warn">' + esc(note) + "</div>" + ms;
+        Array.from(new Set(msImgs)).forEach((src) => { ms += '<img class="ppq-ms-crop" src="' + esc(src) + '" alt="Printed markscheme for this question">'; });
+        this.q(".ppq-markscheme").innerHTML = ms;
+        this.q(".ppq-answer-panel").classList.add("show");
+        this._wireMarkschemeZoom();
+        if (this.cfg.modules.math) this._applyMath(this.q(".ppq-answer-panel"));
+      }
       this._showExaminer(this.cur);
+      this._syncSideRating();
       return;
     }
     const al = this.q(".ppq-answer-line");
@@ -2960,6 +3462,21 @@ window.PPQViewer = (function () {
     al.textContent = reveal
       ? (this._wasRight ? "Correct, " + correct : "Marked wrong, correct answer is " + correct)
       : "Answer saved.";
+    this._syncSideRating();
+  };
+
+  Viewer.prototype._wireMarkschemeZoom = function () {
+    this.qa(".ppq-markscheme img").forEach((img) => {
+      img.style.cursor = "zoom-in";
+      img.tabIndex = 0;
+      img.setAttribute("role", "button");
+      img.setAttribute("aria-label", (img.alt || "Markscheme image") + ". Open full size");
+      const open = () => this.openModal(img.getAttribute("src"));
+      img.addEventListener("click", open);
+      img.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); open(); }
+      });
+    });
   };
 
   Viewer.prototype.reveal = function () {
@@ -3009,6 +3526,7 @@ window.PPQViewer = (function () {
         ms += '<details class="ppq-ms-full"><summary>Show full markscheme page <span class="ppq-spoiler">(may well contain spoilers for other parts)</span></summary><img src="' + esc(ansImg) + '"></details>';
       }
       this.q(".ppq-markscheme").innerHTML = ms;
+      this._wireMarkschemeZoom();
       this.q(".ppq-answer-panel").className = "ppq-answer-panel show";
       this._showExaminer(this.cur);
       this.q(".ppq-reveal").style.display = "none";
@@ -3025,6 +3543,7 @@ window.PPQViewer = (function () {
       // QoderWork 2026-07-22: softened spoiler wording, aligned with the Chemistry viewer
       if (ansImg) ms += '<details class="ppq-ms-full"><summary>Show full markscheme page <span class="ppq-spoiler">(may well contain spoilers for other parts)</span></summary><img src="' + esc(ansImg) + '"></details>';
       this.q(".ppq-markscheme").innerHTML = ms;
+      this._wireMarkschemeZoom();
       this.q(".ppq-answer-panel").className = "ppq-answer-panel show";
       this._showExaminer(this.cur);
       this.q(".ppq-reveal").style.display = "none";
@@ -3043,7 +3562,7 @@ window.PPQViewer = (function () {
     this.q(".ppq-reveal").style.display = "none";
     const reviewBtn = this.q(".ppq-review-attempt"); /* VF-03: the live attempt supersedes it */
     if (reviewBtn) reviewBtn.style.display = "none";
-    this.q(".ppq-competence").className = "ppq-competence show";
+    this.q(".ppq-competence").classList.add("show");
     /* QoderWork 2026-07-22 (analyst handoff): the outer "Actually, I wasn't sure"
        control is superseded by the post-answer guess correction that now sits
        inside the modal right after the verdict. Keep it hidden (DOM + wiring
@@ -3057,6 +3576,28 @@ window.PPQViewer = (function () {
       this._revealCommittedAnswer();
       this._firePendingDashboardPulse();
     }
+    this._syncSideRating();
+    if (this.cfg.selfReport && this.cfg.selfReport.autoReveal) this._revealInlineRating();
+  };
+
+  Viewer.prototype._revealInlineRating = function () {
+    if (!this.cfg.selfReport.autoReveal || this.cfg.sideRating.enabled || this._iqOpen || this._answerRevealPending) return;
+    const comp = this.q(".ppq-competence.show");
+    if (!comp || comp.style.display === "none") return;
+    const hook = this.cfg.questionScrollContainer;
+    const pane = typeof hook === "function" ? hook(this.root, this) : (hook ? this.q(hook) : null);
+    const behavior = this._reducedMotion() ? "auto" : "smooth";
+    if (pane && this.root.contains(pane) && pane.clientHeight > 0 && pane.scrollHeight > pane.clientHeight) {
+      const frame = pane.getBoundingClientRect(), box = comp.getBoundingClientRect();
+      const delta = box.height > pane.clientHeight - 24 ? box.top - frame.top - 12 :
+        box.bottom > frame.bottom - 12 ? box.bottom - frame.bottom + 12 :
+        box.top < frame.top + 12 ? box.top - frame.top - 12 : 0;
+      if (delta) {
+        const top = Math.max(0, pane.scrollTop + delta);
+        if (typeof pane.scrollTo === "function") pane.scrollTo({top:top, behavior:behavior});
+        else pane.scrollTop = top;
+      }
+    } else if (typeof comp.scrollIntoView === "function") comp.scrollIntoView({block:"nearest", behavior:behavior});
   };
 
   Viewer.prototype._showExaminer = function (q) {
@@ -3089,6 +3630,7 @@ window.PPQViewer = (function () {
       app_version: cfg.appVersion, context: { view: "viewer", id: cfg.idOf(this.cur), type: this._curType },
       attempt_id: this._attemptId || "" /* QoderWork 2026-07-22 (analyst handoff) */
     }, cfg.attemptFields(this.cur), extras || {} /* d012: marks fields ride on the row */);
+    if (cfg.learnerLevel && cfg.learnerLevel.enabled) row.learner_level = this._visitLearnerLevel;
     if (this._timeDiscarded) { row.time_ms = null; row.time_discarded = true; }
     /* QoderWork 2026-07-22 (analyst handoff): attach the pre-answer guess snapshot
        so a later correction can be reconciled with what was declared up front. */
@@ -3101,11 +3643,14 @@ window.PPQViewer = (function () {
     if (this._sessionHistory[this._sessionHistory.length - 1] !== histId) this._sessionHistory.push(histId);
     this._pendingDashboardPulse = cfg.groupKey(this.cur);
     this._saveStore();
+    if (cfg.attemptHistory && cfg.attemptHistory.enabled) this._renderAttemptHistory();
+    if (cfg.practiceSelection.enabled) this._updatePracticeCounter();
     /* QoderWork 2026-07-22: report the attempt to the hosting page's callback.
        When the exam timer is on, _commitTimer has stored the time-pressure context
        (time_remaining_ms + time_pressure) so a fast answer can be told apart from a
        guess downstream — fast-with-clock-to-spare vs forced-by-an-expiring-timer. */
     const extra = { correct: !!isRight, time_ms: row.time_ms, attempt_id: this._attemptId || "" };
+    if (row.learner_level) extra.learner_level = row.learner_level;
     if (this._preGuessDeclaration) extra.pre_guess_declaration = this._preGuessDeclaration;
     if (this._timerCtx) {
       if (this._timerCtx.time_remaining_ms != null) extra.time_remaining_ms = this._timerCtx.time_remaining_ms;
@@ -3156,7 +3701,7 @@ window.PPQViewer = (function () {
   };
   /* Compact axes string for attempt rows and reports. */
   Viewer.prototype._timingModeNow = function () {
-    const p = this._timingPrefs();
+    const p = this._visitTimingPrefs || this._timingPrefs();
     if (p.visibility === "off") return "off";
     const bits = [p.visibility, p.direction];
     if (p.clock) bits.push("clock");
@@ -3169,10 +3714,14 @@ window.PPQViewer = (function () {
   Viewer.prototype._timingTargetMsFor = function (q) {
     const t = this.cfg.timing;
     if (!t || !t.targetOf || !q) return null;
+    if (this._visitTimingQuestion === q) return this._visitTimingTargetMs;
+    const learnerEnabled = this.cfg.learnerLevel && this.cfg.learnerLevel.enabled;
+    const context = learnerEnabled ? { learnerLevel: this._visitLearnerLevel || this._learnerLevel() } : {};
     let base = null;
-    try { base = t.targetOf(q); } catch (_) { base = null; }
-    if (base == null || !(base > 0)) return null;
-    return Math.round(base * 1000 * (1 + this._timingPrefs().extraPct / 100));
+    try { base = t.targetOf(q, context); } catch (_) { base = null; }
+    if (base == null || !Number.isFinite(Number(base)) || !(base > 0)) return null;
+    const prefs = this._visitTimingPrefs || this._timingPrefs();
+    return Math.round(base * 1000 * (1 + prefs.extraPct / 100));
   };
   Viewer.prototype._elapsedTimingMs = function () {
     let ms = Date.now() - this.shownAt - (this._pausedMs || 0);
@@ -3195,7 +3744,7 @@ window.PPQViewer = (function () {
     if (!this._sessionTimed) this._sessionTimed = { count: 0, totalMs: 0, targetMs: 0 };
     const tel = this.q(".ppq-timer");
     if (!tel) return;
-    const prefs = this._timingPrefs();
+    const prefs = this._visitTimingPrefs || this._timingPrefs();
     tel.className = "ppq-timer ppq-timing";
     /* off / reveal_end: nothing during the question (revealed at commit for
        reveal_end). show: live row. */
@@ -3283,7 +3832,7 @@ window.PPQViewer = (function () {
   Viewer.prototype._tickTiming = function () {
     const tel = this.q(".ppq-timer");
     if (!tel || tel.style.display === "none") return;
-    const prefs = this._timingPrefs();
+    const prefs = this._visitTimingPrefs || this._timingPrefs();
     const elapsed = this._elapsedTimingMs();
     const target = this._timingTargetMsFor(this.cur);
     const disp = tel.querySelector(".ppq-timing-display");
@@ -3317,7 +3866,7 @@ window.PPQViewer = (function () {
     if (this._pauseStartedAt) { this._pausedMs += Date.now() - this._pauseStartedAt; this._pauseStartedAt = null; }
     const spent = this._elapsedTimingMs();
     const target = this._timingTargetMsFor(this.cur);
-    const prefs = this._timingPrefs();
+    const prefs = this._visitTimingPrefs || this._timingPrefs();
     this._attemptTimeMs = this._timeDiscarded ? null : spent;
     this._timerCtx = { time_ms: spent };
     if (target != null) {
@@ -3433,9 +3982,40 @@ window.PPQViewer = (function () {
   Viewer.prototype._openTimingPanel = function () {
     const self = this;
     const p = this._timingPrefs(); /* mutable working copy */
+    const timingBefore = JSON.stringify(p);
+    const general = this.cfg.attemptHistory.enabled || this.cfg.practiceSelection.enabled || (this.cfg.learnerLevel && this.cfg.learnerLevel.enabled) || (this.cfg.questionTools && this.cfg.questionTools.resetInPreferences);
     const hasTargets = !!(this.cfg.timing && this.cfg.timing.targetOf);
     const page = el("div", { class: "ppq-progress ppq-timing-panel" });
-    page.appendChild(el("div", { class: "ppq-progress-title" }, "Timing"));
+    page.appendChild(el("div", { class: "ppq-progress-title" }, general ? "Preferences" : "Timing"));
+    let historyInput = null, practiceInput = null, learnerInput = null;
+    if (this.cfg.learnerLevel && this.cfg.learnerLevel.enabled) {
+      const label = el("label", { class: "ppq-learner-level-option" }, "My level ");
+      learnerInput = el("select", { class: "ppq-learner-level", ariaLabel: "My level" });
+      [["HL", "HL"], ["SL", "SL"]].forEach(([value, text]) => learnerInput.appendChild(el("option", { value }, text)));
+      learnerInput.value = this._learnerLevel(); label.appendChild(learnerInput); page.appendChild(label);
+      page.appendChild(el("p", { class: "ppq-learner-level-note" }, "Applies from the next question. Your current answer stays open."));
+    }
+    if (this.cfg.practiceSelection.enabled) {
+      const label = el("label", { class: "ppq-practice-selection-option" }, "Questions to practise ");
+      practiceInput = el("select", { class: "ppq-practice-selection", ariaLabel: "Questions to practise" });
+      [["unattempted", "Not attempted yet"], ["mix", "Complete mix"], ["errors", "Previous errors"]].forEach(([value, text]) => practiceInput.appendChild(el("option", { value }, text)));
+      const includeLabel = el("label", { class: "ppq-include-attempted-option" });
+      const includeInput = el("input", { class: "ppq-include-attempted-toggle", type: "checkbox", checked: this._practiceMode() !== "unattempted" });
+      includeLabel.appendChild(includeInput); includeLabel.appendChild(el("span", null, "Include questions already done"));
+      includeInput.addEventListener("change", () => { practiceInput.value = includeInput.checked ? "mix" : "unattempted"; });
+      practiceInput.addEventListener("change", () => { includeInput.checked = practiceInput.value !== "unattempted"; });
+      page.appendChild(includeLabel);
+      practiceInput.value = this._practiceMode(); label.appendChild(practiceInput); page.appendChild(label);
+      page.appendChild(el("p", { class: "ppq-practice-selection-note" }, "Applies from the next question. Your current answer stays open."));
+    }
+    if (this.cfg.attemptHistory.enabled) {
+      const label = el("label", { class: "ppq-attempt-history-option" });
+      historyInput = el("input", { class: "ppq-attempt-history-toggle", type: "checkbox", checked: this._attemptHistoryVisible() });
+      label.appendChild(historyInput); label.appendChild(el("span", null, "Show previous attempts")); page.appendChild(label);
+    }
+    const timingPage = el("div", { class: "ppq-timing-preferences" });
+    if (this.cfg.timing) page.appendChild(timingPage);
+    if (this.cfg.timing && this.cfg.timing.description) timingPage.appendChild(el("p", { class: "ppq-timing-description" }, esc(this.cfg.timing.description)));
 
     const SCALES = [["S", 0.85], ["M", 1], ["L", 1.4], ["XL", 1.9]];
     function nearestScale(v) {
@@ -3502,16 +4082,16 @@ window.PPQViewer = (function () {
       return row;
     }
     const needTargets = hasTargets ? null : "Needs pacing targets from the subject setup.";
-    page.appendChild(seg("Show it", [["off", "Off"], ["show", "Show while working"], ["reveal_end", "Reveal after answering"]], p.visibility, function (v) { p.visibility = v; }));
-    page.appendChild(seg("Direction", [["up", "Count up"], ["down", "Count down"]], p.direction, function (v) { p.direction = v; }, needTargets));
-    page.appendChild(seg("Digital clock", [["on", "On"], ["off", "Off"]], p.clock ? "on" : "off", function (v) { p.clock = v === "on"; }));
-    page.appendChild(seg("Clock size", SCALES.map(function (s) { return [s[0], s[0]]; }), nearestScale(p.clockScale), function (v) { p.clockScale = scaleOf(v); }));
-    page.appendChild(seg("Pacing ring", [["on", "On"], ["off", "Off"]], p.ring ? "on" : "off", function (v) { p.ring = v === "on"; }, needTargets ||
+    timingPage.appendChild(seg("Show it", [["off", "Off"], ["show", "Show while working"], ["reveal_end", "Reveal after answering"]], p.visibility, function (v) { p.visibility = v; }));
+    timingPage.appendChild(seg("Direction", [["up", "Count up"], ["down", "Count down"]], p.direction, function (v) { p.direction = v; }, needTargets));
+    timingPage.appendChild(seg("Digital clock", [["on", "On"], ["off", "Off"]], p.clock ? "on" : "off", function (v) { p.clock = v === "on"; }));
+    timingPage.appendChild(seg("Clock size", SCALES.map(function (s) { return [s[0], s[0]]; }), nearestScale(p.clockScale), function (v) { p.clockScale = scaleOf(v); }));
+    timingPage.appendChild(seg("Pacing ring", [["on", "On"], ["off", "Off"]], p.ring ? "on" : "off", function (v) { p.ring = v === "on"; }, needTargets ||
       (this._reducedMotion() ? "Reduced motion is on — the ring shows as numbers instead." : null)));
-    page.appendChild(seg("Ring size", SCALES.map(function (s) { return [s[0], s[0]]; }), nearestScale(p.ringScale), function (v) { p.ringScale = scaleOf(v); }, needTargets));
-    page.appendChild(seg("When allocation is up", [["reset", "Start from zero (+0:01)"], ["continue", "Keep counting"]], p.overtimeReset ? "reset" : "continue", function (v) { p.overtimeReset = v === "reset"; }, needTargets));
-    page.appendChild(seg("Time bank", [["on", "On"], ["off", "Off"]], p.bank ? "on" : "off", function (v) { p.bank = v === "on"; }, needTargets));
-    page.appendChild(preview);
+    timingPage.appendChild(seg("Ring size", SCALES.map(function (s) { return [s[0], s[0]]; }), nearestScale(p.ringScale), function (v) { p.ringScale = scaleOf(v); }, needTargets));
+    timingPage.appendChild(seg("When allocation is up", [["reset", "Start from zero (+0:01)"], ["continue", "Keep counting"]], p.overtimeReset ? "reset" : "continue", function (v) { p.overtimeReset = v === "reset"; }, needTargets));
+    timingPage.appendChild(seg("Time bank", [["on", "On"], ["off", "Off"]], p.bank ? "on" : "off", function (v) { p.bank = v === "on"; }, needTargets));
+    timingPage.appendChild(preview);
     redrawPreview();
 
     const extraRow = el("div", { class: "ppq-timing-extra" });
@@ -3525,7 +4105,7 @@ window.PPQViewer = (function () {
     });
     extraRow.appendChild(extraInput);
     extraRow.appendChild(el("span", { class: "ppq-timing-extra-pc" }, "%"));
-    page.appendChild(extraRow);
+    timingPage.appendChild(extraRow);
 
     const st = this._sessionTimed || { count: 0, totalMs: 0, targetMs: 0 };
     const sess = el("div", { class: "ppq-timing-session" });
@@ -3542,31 +4122,371 @@ window.PPQViewer = (function () {
       sessText += " · bank " + (b < 0 ? "−" : "+") + this._fmtClock(Math.abs(b));
     }
     sess.appendChild(el("span", null, esc(sessText)));
-    page.appendChild(sess);
+    timingPage.appendChild(sess);
 
     const save = el("button", { class: "ppq-btn ppq-primary ppq-timing-save", type: "button" }, "Save — remembered on this device");
     save.addEventListener("click", function () {
       let pct = parseFloat(extraInput.value);
       if (!isFinite(pct)) pct = 0;
       p.extraPct = Math.max(-50, Math.min(100, pct));
-      self._setTimingPrefs(p);
-      self._fireReport({ status: "timing_prefs", qtype: "timing", extra_json: JSON.stringify(p) });
+      if (!self.store.prefs) self.store.prefs = {};
+      if (historyInput) self.store.prefs.attemptHistory = { visible: historyInput.checked };
+      if (practiceInput) self.store.prefs.practiceSelection = { mode: practiceInput.value };
+      if (learnerInput && ["HL", "SL"].includes(learnerInput.value)) self.store.prefs.learnerLevel = learnerInput.value;
+      const timingChanged = !!self.cfg.timing && JSON.stringify(p) !== timingBefore;
+      if (timingChanged) self.store.prefs.timing = p;
+      self._saveStore();
+      self._renderAttemptHistory();
+      if (timingChanged) self._fireReport({ status: "timing_prefs", qtype: "timing", extra_json: JSON.stringify(p) });
       self.closeModal();
-      self._startTiming();
+      if (timingChanged && !general) self._startTiming();
+      if (!self.cur && self.cfg.practiceSelection.enabled) self._nextPractice();
     });
     page.appendChild(save);
+
+    if (this.cfg.questionTools && this.cfg.questionTools.resetInPreferences) {
+      const progressTools = el("details", { class: "ppq-progress-tools" });
+      progressTools.appendChild(el("summary", null, "Manage saved progress"));
+      progressTools.appendChild(el("p", null, "Clear marks and confidence ratings saved on this device. This cannot be undone."));
+      const reset = el("button", { class: "ppq-btn-mini ppq-reset", type: "button" }, "Reset progress");
+      reset.addEventListener("click", () => self.reset());
+      progressTools.appendChild(reset); page.appendChild(progressTools);
+    }
 
     const body = this.q(".ppq-modal-body");
     if (!body) return false;
     body.innerHTML = "";
     body.appendChild(page);
     const reminder = this.q(".ppq-modal-reminder");
-    if (reminder) reminder.textContent = "Timing";
+    if (reminder) reminder.textContent = general ? "Preferences" : "Timing";
     const minBtn = this.q(".ppq-modal-min");
     if (minBtn) minBtn.style.display = "none";
     const badge = this.q(".ppq-modal-feedback-status");
     if (badge) badge.style.display = "none";
     this.q(".ppq-modal").classList.add("show", "ppq-modal-progress");
+    return true;
+  };
+
+  // Published explanations are public; private messages and browser receipt IDs
+  // are separate from attempt/progress storage and are never sent as telemetry.
+  Viewer.prototype._initTeacherHelp = function () {
+    if (!this.cfg.teacherHelp) return;
+    this._helpKey = "ppq_teacher_help_" + this.cfg.teacherHelp.project + "_v1";
+    this._helpData = { requests: [], drafts: {}, read: {} };
+    this._helpSending = new Set();
+    this._helpLoad(); this._helpBadge();
+    this._helpWake = () => { if (document.visibilityState !== "hidden") { this._helpLoad(); this._helpPoll(); } };
+    window.addEventListener("focus", this._helpWake);
+    document.addEventListener("visibilitychange", this._helpWake);
+    this._helpInterval = setInterval(this._helpWake, 60000);
+    this._helpWake();
+  };
+  Viewer.prototype._helpLoad = function () {
+    try {
+      const saved = JSON.parse(localStorage.getItem(this._helpKey) || "null");
+      if (saved && Array.isArray(saved.requests)) {
+        this._helpData = { requests: saved.requests.filter(r => r && typeof r.request_id === "string").slice(-500),
+          drafts: saved.drafts || {}, read: saved.read || {} };
+      }
+    } catch (_) { /* Keep the in-memory mailbox when storage is unavailable. */ }
+  };
+  Viewer.prototype._helpSave = function () {
+    try { localStorage.setItem(this._helpKey, JSON.stringify(this._helpData)); return true; }
+    catch (_) { return false; }
+  };
+  Viewer.prototype._helpBadge = function () {
+    const button = this.q(".ppq-teacher-help"); if (!button || !this._helpData) return;
+    const unread = this._helpData.requests.filter(r => r.reply && this._helpData.read[r.reply.id] !== r.reply.published_at).length;
+    button.innerHTML = esc(this.cfg.teacherHelp.label) + (unread ? ' <span class="ppq-help-unread">' + unread + ' new ' + (unread === 1 ? 'reply' : 'replies') + '</span>' : '');
+    button.title = "Ask for clarification and read teacher replies";
+    button.setAttribute("aria-live", "polite");
+  };
+  Viewer.prototype._helpGet = function (action, params) {
+    // ContentService redirects cross-origin reads. JSONP is used exclusively for
+    // the public, whitelisted reply/receipt endpoints, never the teacher inbox.
+    return new Promise((resolve, reject) => {
+      const callback = "ppqHelp_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2);
+      const url = new URL(this.cfg.teacherHelp.endpoint);
+      Object.entries(Object.assign({ action, project: this.cfg.teacherHelp.project, callback }, params)).forEach(([key, value]) => url.searchParams.set(key, value));
+      const script = document.createElement("script");
+      let timer;
+      const finish = (error, value) => {
+        clearTimeout(timer); script.remove(); delete window[callback];
+        if (error) reject(error); else resolve(value);
+      };
+      window[callback] = value => value && value.ok === true ? finish(null, value) : finish(new Error("Reply service unavailable"));
+      script.onerror = () => finish(new Error("Reply service unavailable"));
+      timer = setTimeout(() => finish(new Error("Reply service timed out")), 15000);
+      script.src = url.href; document.head.appendChild(script);
+    });
+  };
+  Viewer.prototype._helpPoll = async function () {
+    if (this._helpPolling || !this._helpData || !this._helpData.requests.length || this._helpDestroyed) return;
+    this._helpPolling = true;
+    try {
+      const rows = this._helpData.requests;
+      for (let i = 0; i < rows.length; i += 40) {
+        const batch = rows.slice(i, i + 40);
+        const result = await this._helpGet("ppq_help_status", { request_ids: batch.map(r => r.request_id).join(",") });
+        if (this._helpDestroyed) return;
+        this._helpApplyStatus(result);
+      }
+      this._helpSave(); this._helpBadge();
+      if (this._helpPaintInbox) this._helpPaintInbox();
+      if (this._helpPaintForm) this._helpPaintForm();
+    } catch (_) { /* Quietly keep pending receipts; an open form gives explicit errors. */ }
+    finally { this._helpPolling = false; }
+  };
+  Viewer.prototype._helpApplyStatus = function (result) {
+    (result.requests || []).forEach(receipt => {
+      const own = this._helpData.requests.find(r => r.request_id === receipt.request_id);
+      if (own && ["pending", "answered", "received", "published"].includes(receipt.status)) own.status = receipt.status;
+    });
+    (result.replies || []).forEach(reply => {
+      const own = this._helpData.requests.find(r => r.request_id === reply.request_id && r.item_id === reply.item_id);
+      if (own && reply.project === this.cfg.teacherHelp.project && typeof reply.answer === "string" && typeof reply.question === "string" && reply.id && reply.published_at) {
+        own.reply = reply; own.status = "answered";
+      }
+    });
+    Object.keys(this._helpData.drafts).forEach(itemId => {
+      const draft = this._helpData.drafts[itemId];
+      const own = draft && this._helpData.requests.find(r => r.request_id === draft.request_id);
+      if (own && own.status !== "unknown" && !this._helpSending.has(own.request_id)) delete this._helpData.drafts[itemId];
+    });
+  };
+  Viewer.prototype._helpReplyCard = function (reply) {
+    const card = el("article", { class: "ppq-help-reply" });
+    card.appendChild(el("h4", null, esc(reply.question)));
+    card.appendChild(el("p", null, esc(reply.answer)));
+    const date = Date.parse(reply.published_at);
+    if (Number.isFinite(date)) card.appendChild(el("small", { class: "ppq-help-date" }, "Teacher reply · " + esc(new Date(date).toLocaleDateString())));
+    return card;
+  };
+  Viewer.prototype._openTeacherHelp = function () {
+    const cfg = this.cfg.teacherHelp;
+    if (!cfg || !this.cur || this._iqOpen || this._reviewingAttempt) return false;
+    const current = this.cur, itemId = String(this.cfg.idOf(current));
+    const body = this.q(".ppq-modal-body"), modal = this.q(".ppq-modal");
+    this._helpLoad();
+    let source = itemId, context = {}, sourceUrl = "";
+    try { source = String(cfg.sourceLabelOf(current) || itemId); } catch (_) { /* Use the stable ID. */ }
+    try { if (cfg.contextOf) context = JSON.parse(JSON.stringify(cfg.contextOf(current) || {})); } catch (_) { /* Optional metadata. */ }
+    try {
+      const url = new URL(cfg.sourceUrlOf(current) || window.location.href);
+      url.search = ""; url.hash = ""; url.searchParams.set("id", itemId);
+      if (url.protocol === "https:") sourceUrl = url.href;
+    } catch (_) { /* Explain an invalid public source link on explicit Send. */ }
+    const panel = el("div", { class: "ppq-help-panel" });
+    panel.appendChild(el("h2", null, esc(cfg.label)));
+    panel.appendChild(el("p", { class: "ppq-help-note" }, esc(cfg.introduction)));
+    panel.appendChild(el("p", { class: "ppq-help-source" }, esc(source)));
+    const inbox = el("details", { class: "ppq-help-inbox" });
+    const inboxSummary = el("summary", null, "Your questions and replies");
+    const inboxList = el("div"); inbox.appendChild(inboxSummary); inbox.appendChild(inboxList); panel.appendChild(inbox);
+    const paintInbox = () => {
+      if (!panel.isConnected) return;
+      inboxList.innerHTML = "";
+      const rows = this._helpData.requests.slice().reverse();
+      const unread = rows.filter(r => r.reply && this._helpData.read[r.reply.id] !== r.reply.published_at).length;
+      inboxSummary.textContent = "Your questions and replies" + (unread ? " · " + unread + " new" : "");
+      if (!rows.length) inboxList.appendChild(el("p", { class: "ppq-help-empty" }, "No questions sent from this browser yet."));
+      rows.forEach(row => {
+        const entry = el("div", { class: "ppq-help-inbox-item" });
+        entry.appendChild(el("strong", null, esc(row.source_label || row.item_id)));
+        entry.appendChild(el("p", null, esc(row.question)));
+        if (row.reply) {
+          const read = el("button", { type: "button", class: "ppq-btn-mini ppq-help-read" }, "Read reply" + (this._helpData.read[row.reply.id] !== row.reply.published_at ? " · new" : ""));
+          read.addEventListener("click", () => {
+            const existing = entry.querySelector(".ppq-help-reply");
+            if (!existing) entry.appendChild(this._helpReplyCard(row.reply));
+            this._helpData.read[row.reply.id] = row.reply.published_at; this._helpSave(); this._helpBadge();
+            read.textContent = "Reply shown"; read.disabled = true;
+          });
+          entry.appendChild(read);
+        } else entry.appendChild(el("small", null, row.status === "unknown" ? "Receipt not confirmed — reopen this question to retry." : "Waiting for a teacher reply."));
+        inboxList.appendChild(entry);
+      });
+    };
+    this._helpPaintInbox = paintInbox;
+    const history = el("section", { class: "ppq-help-history", ariaLabel: "Previous teacher replies for this question" });
+    history.appendChild(el("h3", null, "Previous teacher replies"));
+    const historyRows = el("div", { class: "ppq-help-history-rows" }, "Loading replies…"); history.appendChild(historyRows); panel.appendChild(history);
+    const form = el("form", { class: "ppq-help-form" });
+    const field = el("label", { class: "ppq-help-field" }, "What would you like clarified?");
+    let draft = this._helpData.drafts[itemId] || { message: "" };
+    this._helpData.drafts[itemId] = draft;
+    const message = el("textarea", { class: "ppq-help-message", ariaLabel: "What would you like clarified?", rows: 4, required: true, maxLength: 4000, value: draft.message });
+    field.appendChild(message); form.appendChild(field);
+    const status = el("p", { class: "ppq-help-status" }); status.setAttribute("role", "status"); form.appendChild(status);
+    const actions = el("div", { class: "ppq-help-actions" });
+    const send = el("button", { class: "ppq-btn ppq-primary ppq-help-send", type: "submit" }, draft.request_id ? "Retry sending" : "Send question");
+    const close = el("button", { class: "ppq-btn", type: "button" }, "Close"); close.addEventListener("click", () => this.closeModal());
+    actions.appendChild(send); actions.appendChild(close); form.appendChild(actions); panel.appendChild(form);
+    let shownRequestId = draft.request_id || "";
+    const paintForm = () => {
+      if (!panel.isConnected) return;
+      const savedDraft = this._helpData.drafts[itemId];
+      shownRequestId = (savedDraft && savedDraft.request_id) || shownRequestId;
+      const request = this._helpData.requests.find(r => r.request_id === shownRequestId);
+      const pending = this._helpSending.has(shownRequestId);
+      const confirmed = request && request.status !== "unknown";
+      message.readOnly = !!shownRequestId;
+      send.disabled = pending || !!confirmed;
+      send.textContent = pending ? "Sending…" : confirmed ? "Question sent" : shownRequestId ? "Retry sending" : "Send question";
+      status.textContent = pending ? "Sending your question…" : confirmed ? cfg.receivedText :
+        shownRequestId ? "Receipt could not be confirmed. Your question is saved here; retrying will use the same receipt and will not send a duplicate." : "";
+      status.classList.toggle("ppq-help-error", !!shownRequestId && !pending && !confirmed);
+    };
+    this._helpPaintForm = paintForm;
+    message.addEventListener("input", () => {
+      draft = this._helpData.drafts[itemId] || draft;
+      if (draft.request_id) return;
+      draft.message = message.value; this._helpData.drafts[itemId] = draft; this._helpSave();
+    });
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      this._helpLoad(); draft = this._helpData.drafts[itemId] || draft;
+      const prior = this._helpData.requests.find(r => r.request_id === (draft.request_id || shownRequestId));
+      if ((prior && prior.status !== "unknown") || this._helpSending.has(draft.request_id || shownRequestId)) { paintForm(); return; }
+      const text = message.value.trim();
+      if (!text || text.length > 4000) { status.textContent = "Please write your question (up to 4000 characters)."; message.focus(); return; }
+      if (!sourceUrl) { status.textContent = "A public question link is needed before this preview can send a question."; return; }
+      let request = draft.request_id && this._helpData.requests.find(r => r.request_id === draft.request_id);
+      if (!request) {
+        if (!window.crypto || !window.crypto.getRandomValues) { status.textContent = "This browser cannot create a receipt. Please use an up-to-date browser."; return; }
+        const bytes = new Uint8Array(16); window.crypto.getRandomValues(bytes); bytes[6] = (bytes[6] & 15) | 64; bytes[8] = (bytes[8] & 63) | 128;
+        const hex = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+        const requestId = hex.slice(0, 8) + "-" + hex.slice(8, 12) + "-" + hex.slice(12, 16) + "-" + hex.slice(16, 20) + "-" + hex.slice(20);
+        request = { request_id: requestId, item_id: itemId, question: text, source_label: source, source_url: sourceUrl, source_context: context, status: "unknown", created_at: new Date().toISOString() };
+        this._helpData.requests.push(request); draft.request_id = requestId; draft.message = text;
+      }
+      this._helpData.drafts[itemId] = draft; shownRequestId = request.request_id;
+      if (!this._helpSave()) { status.textContent = "Allow this site to save browser data before sending, so your reply can find you."; return; }
+      this._helpSending.add(request.request_id); paintForm();
+      try {
+        const payload = { action: "ppq_help_request", project: cfg.project, request_id: request.request_id, item_id: request.item_id,
+          question: request.question, source_label: request.source_label, source_url: request.source_url, source_context: request.source_context };
+        try { await window.fetch(cfg.endpoint, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) }); } catch (_) { /* Still check an uncertain dispatch for an actual receipt. */ }
+        let confirmed = false;
+        for (let attempt = 0; attempt < 4 && !confirmed; attempt++) {
+          if (attempt) await new Promise(resolve => setTimeout(resolve, 1000));
+          const result = await this._helpGet("ppq_help_status", { request_ids: request.request_id });
+          this._helpApplyStatus(result);
+          const savedRequest = this._helpData.requests.find(r => r.request_id === request.request_id);
+          confirmed = !!savedRequest && savedRequest.status !== "unknown";
+        }
+        if (!confirmed) throw new Error("Receipt unconfirmed");
+        if (this._helpData.drafts[itemId] && this._helpData.drafts[itemId].request_id === request.request_id) delete this._helpData.drafts[itemId];
+        this._helpSave(); this._helpBadge();
+        if (this._helpPaintInbox) this._helpPaintInbox();
+      } catch (_) {
+        // Keep the exact saved UUID and text for a safe retry after uncertainty.
+      } finally { this._helpSending.delete(request.request_id); if (this._helpPaintForm) this._helpPaintForm(); }
+    });
+    body.innerHTML = ""; body.appendChild(panel); paintInbox(); paintForm();
+    this.q(".ppq-modal-reminder").textContent = "Questions and teacher replies";
+    this.q(".ppq-modal-min").style.display = "none";
+    const badge = this.q(".ppq-modal-feedback-status"); if (badge) badge.style.display = "none";
+    modal.classList.remove("minimized", "ppq-modal-analysis"); this.root.classList.remove("ppq-analysis-open");
+    modal.classList.add("show", "ppq-modal-progress");
+    this._helpGet("ppq_help_list", { item_id: itemId }).then(result => {
+      if (!historyRows.isConnected) return;
+      historyRows.innerHTML = "";
+      const replies = (result.replies || []).filter(r => r.project === cfg.project && r.item_id === itemId && typeof r.question === "string" && typeof r.answer === "string");
+      replies.forEach(reply => {
+        historyRows.appendChild(this._helpReplyCard(reply));
+        if (this._helpData.requests.some(r => r.request_id === reply.request_id)) this._helpData.read[reply.id] = reply.published_at;
+      });
+      if (!replies.length) historyRows.appendChild(el("p", { class: "ppq-help-empty" }, "No teacher replies for this question yet."));
+      this._helpSave(); this._helpBadge();
+    }).catch(() => { if (historyRows.isConnected) historyRows.textContent = "Previous replies could not be loaded. Close and reopen to try again."; });
+    this._helpPoll(); close.focus(); return true;
+  };
+
+  Viewer.prototype._openProblemReport = function () {
+    const cfg = this.cfg.problemReport;
+    if (!cfg || this._iqOpen || this._reviewingAttempt) return false;
+    const body = this.q(".ppq-modal-body"), modal = this.q(".ppq-modal");
+    if (!body || !modal) return false;
+    const q = this.cur;
+    const itemId = q ? String(this.cfg.idOf(q)) : "";
+    if (!this._problemDrafts) this._problemDrafts = Object.create(null);
+    let draft = this._problemDrafts[itemId];
+    if (!draft) {
+      let context = {}, source = "No question is open";
+      if (q) {
+        try { source = String(cfg.sourceLabelOf(q) || itemId); } catch (_) { source = itemId; }
+        if (cfg.contextOf) {
+          try {
+            const supplied = cfg.contextOf(q);
+            if (supplied && typeof supplied === "object" && !Array.isArray(supplied)) context = JSON.parse(JSON.stringify(supplied));
+          } catch (_) { /* A broken optional source hook must not block reporting. */ }
+        }
+      }
+      context.item_id = itemId;
+      context.source_label = source;
+      draft = this._problemDrafts[itemId] = { message: "", type: "Bad crop or missing content", source, context, url: window.location.href, state: "draft" };
+    }
+    const page = el("form", { class: "ppq-progress ppq-problem-form" });
+    page.appendChild(el("h2", { class: "ppq-progress-title" }, "Report a display problem"));
+    page.appendChild(el("p", { class: "ppq-problem-source" }, esc(draft.source)));
+    page.appendChild(el("p", { class: "ppq-problem-note" }, "The question details and this page are included. Your answers and progress are not included."));
+    const typeLabel = el("label", { class: "ppq-problem-field" }, "What is wrong? ");
+    const type = el("select", { class: "ppq-problem-type", ariaLabel: "Problem type" });
+    const types = ["Bad crop or missing content", "Question image", "Markscheme image", "Answer or marks", "Other"];
+    types.forEach((label) => type.appendChild(el("option", { value: label }, esc(label))));
+    type.value = draft.type;
+    typeLabel.appendChild(type); page.appendChild(typeLabel);
+    const messageLabel = el("label", { class: "ppq-problem-field" }, "Anything to add? (optional) ");
+    const message = el("textarea", { class: "ppq-problem-message", ariaLabel: "Anything to add? (optional)", rows: 5, maxLength: 5000, value: draft.message });
+    messageLabel.appendChild(message); page.appendChild(messageLabel);
+    const status = el("p", { class: "ppq-problem-status" });
+    status.setAttribute("role", "status"); status.setAttribute("aria-live", "polite"); page.appendChild(status);
+    const actions = el("div", { class: "ppq-problem-actions" });
+    const close = el("button", { class: "ppq-btn ppq-problem-close", type: "button" }, "Close");
+    const send = el("button", { class: "ppq-btn ppq-primary ppq-problem-send", type: "submit" }, "Send report");
+    actions.appendChild(close); actions.appendChild(send); page.appendChild(actions);
+    const paint = () => {
+      const pending = draft.state === "sending";
+      type.disabled = pending; message.disabled = pending; send.disabled = pending || draft.state === "dispatched";
+      send.textContent = pending ? "Sending…" : "Send report";
+      status.textContent = draft.state === "error" ? "The report could not be sent. Your text is still here; please try again." :
+        draft.state === "dispatched" ? "Thanks for reporting." :
+        pending ? "Sending your report…" : "";
+      status.classList.toggle("ppq-problem-error", draft.state === "error");
+    };
+    draft.paint = paint;
+    const remember = () => { draft.message = message.value; draft.type = type.value; if (draft.state !== "sending") { draft.state = "draft"; paint(); } };
+    message.addEventListener("input", remember); type.addEventListener("change", remember);
+    close.addEventListener("click", () => this.closeModal());
+    page.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (draft.state === "sending" || draft.state === "dispatched") return;
+      remember();
+      if (draft.message.length > message.maxLength) { status.textContent = "Please keep the optional note to 5000 characters or fewer."; message.focus(); return; }
+      if (!types.includes(draft.type)) { status.textContent = "Please choose a problem type."; type.focus(); return; }
+      const payload = {
+        project: cfg.project, message: draft.type + ": " + (draft.message.trim() || "Please check this question: " + draft.source + "."), name: "", email: "",
+        url: draft.url, ts: new Date().toISOString(), context: Object.assign({}, draft.context, { issue_type: draft.type })
+      };
+      draft.state = "sending"; paint();
+      try {
+        if (typeof window.fetch !== "function") throw new Error("Feedback unavailable");
+        // Estate feedback protocol: text/plain avoids the Apps Script preflight.
+        // An opaque no-cors response only confirms dispatch, not Sheet receipt.
+        const response = await window.fetch(cfg.endpoint, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+        if (response && response.type !== "opaque" && response.ok === false) throw new Error("Feedback rejected");
+        draft.state = "dispatched";
+      } catch (_) { draft.state = "error"; }
+      draft.paint(); // Also update a form reopened while its request was pending.
+    });
+    body.innerHTML = ""; body.appendChild(page);
+    const reminder = this.q(".ppq-modal-reminder"); if (reminder) reminder.textContent = "Report a display problem";
+    const min = this.q(".ppq-modal-min"); if (min) min.style.display = "none";
+    const badge = this.q(".ppq-modal-feedback-status"); if (badge) badge.style.display = "none";
+    modal.classList.remove("minimized", "ppq-modal-analysis"); this.root.classList.remove("ppq-analysis-open");
+    modal.classList.add("show", "ppq-modal-progress");
+    paint(); (send.disabled ? close : send).focus();
     return true;
   };
 
@@ -3901,7 +4821,7 @@ window.PPQViewer = (function () {
     if (meanings.length) {
       rate.appendChild(el("div", { class: "ppq-scale-legend" }, meanings.map(function (mm, i) { return '<span class="ppq-scale-legend-item"><b>' + (i + 1) + "</b> " + esc(mm) + "</span>"; }).join("")));
     }
-    const prior = this.store.scores[cfg.idOf(this.cur)];
+    const prior = this._reviewingAttempt ? this._reviewingAttempt.self_report : this.store.scores[cfg.idOf(this.cur)];
     if (prior) { const sb = scale.querySelector('.ppq-iq-scale-btn[data-val="' + prior + '"]'); if (sb) sb.classList.add("sel"); }
     const iqNext = el("button", { class: "ppq-btn ppq-primary ppq-iq-next", type: "button", style: "display:none;" }, "Next question →");
     iqNext.addEventListener("click", () => { self.closeModal(); self.next(); });
@@ -3912,7 +4832,7 @@ window.PPQViewer = (function () {
       scale.querySelectorAll(".ppq-iq-scale-btn").forEach((x) => x.classList.remove("sel"));
       b.classList.add("sel");
       if (self.cur) {
-        self.store.scores[self.cfg.idOf(self.cur)] = val; self._saveStore();
+        self._saveRating(val);
         self._fireReport({ status: "rated", qtype: "self_report", extra_json: JSON.stringify({ rating: val }) });
       }
       iqNext.style.display = "inline-block"; iqNext.focus();
@@ -5193,16 +6113,24 @@ window.PPQViewer = (function () {
     const partMarks = (p) => (typeof cfg.partMarksOf === "function" ? cfg.partMarksOf(p) : null);
     // mode toggle + chips
     const nav = el("div", { class: "ppq-wq-nav" });
-    nav.appendChild(el("span", { class: "ppq-wq-jump" }, "Question " + esc(block) + ", jump to part:"));
+    const questionLabel = cfg.structuredQuestionLabelOf && cfg.structuredQuestionLabelOf(q);
+    nav.appendChild(el("span", { class: "ppq-wq-jump" }, cfg.compactQuestionHeader ? "Practise:" : (questionLabel ? esc(questionLabel) : "Question " + esc(block)) + ", jump to part:"));
     parts.forEach((p) => {
       const cur = cfg.idOf(p) === cfg.idOf(q);
       const m = partMarks(p);
       const chip = el("button", { class: "ppq-part-chip" + (cur ? " current" : ""), "data-id": cfg.idOf(p) },
         esc(partLabel(p)) + (m ? ' <span class="ppq-part-chip-marks">' + esc(String(m)) + "</span>" : ""));
       if (m) chip.setAttribute("title", partLabel(p) + ", " + m + " mark" + (m === 1 ? "" : "s"));
-      chip.addEventListener("click", () => self.goToId(chip.dataset.id));
+      if (cur) chip.setAttribute("aria-current", "step");
+      chip.addEventListener("click", () => {
+        if (cfg.structuredNavigationOnly && !self.view.some((item) => cfg.idOf(item) === cfg.idOf(p))) self.render(p);
+        else self.goToId(chip.dataset.id);
+      });
       nav.appendChild(chip);
     });
+    // A consumer already showing its context can keep just the useful part
+    // navigator, without an additional whole-question stack or mode switch.
+    if (cfg.structuredNavigationOnly) { container.appendChild(nav); return; }
     const modeWrap = el("span", { class: "ppq-mode-toggle" });
     ["whole", "part"].forEach((m) => {
       const b = el("button", { class: "ppq-mode-btn" + (this._structMode === m ? " on" : ""), "data-mode": m }, m === "whole" ? "Whole question" : "Part by part");
@@ -5308,17 +6236,22 @@ window.PPQViewer = (function () {
        question in the group, sharing the progress page's performance scores.
        d011: a group entirely outside the learned scope greys out. */
     const qscores = this._questionScores();
-    this.questions.forEach((q) => { const k = cfg.groupKey(q); if (!groups[k]) groups[k] = { label: cfg.groupLabel(q), total: 0, marks: [], ratings: this._zeroRatings(), qids: [], qscores: qscores, inScope: 0 }; groups[k].total++; groups[k].qids.push(String(cfg.idOf(q))); if (this._questionInLearnedScope(q)) groups[k].inScope++; });
+    this.questions.forEach((q) => this._groupKeys(q).forEach((k) => {
+      if (!groups[k]) groups[k] = { label: cfg.groupLabelOf(k, q), total: 0, marks: [], ratings: this._zeroRatings(), qids: [], qscores: qscores, inScope: 0 };
+      groups[k].total++;
+      groups[k].qids.push(String(cfg.idOf(q)));
+      if (this._questionInLearnedScope(q)) groups[k].inScope++;
+    }));
     if (this._learnedScopeBiting()) Object.keys(groups).forEach((k) => { groups[k].unlearned = groups[k].inScope === 0; });
-    this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q) return; const g = groups[cfg.groupKey(q)]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); });
-    Object.keys(this.store.scores).forEach((id) => { const q = this.byId[id]; if (!q) return; const g = groups[cfg.groupKey(q)]; if (g && g.ratings[this.store.scores[id]] != null) g.ratings[this.store.scores[id]]++; });
+    this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q) return; this._groupKeys(q).forEach((key) => { const g = groups[key]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); }); });
+    Object.keys(this.store.scores).forEach((id) => { const q = this.byId[id]; if (!q) return; this._groupKeys(q).forEach((key) => { const g = groups[key]; if (g && g.ratings[this.store.scores[id]] != null) g.ratings[this.store.scores[id]]++; }); });
     const keys = Object.keys(groups).sort((a, b) => { const ua = cfg.isUntagged(a), ub = cfg.isUntagged(b); if (ua !== ub) return ua ? 1 : -1; return a.localeCompare(b); });
     const content = this.q(".ppq-dash-content");
     const panel = content ? content.parentNode : null;
     const title = panel && panel.querySelector("h3");
     const subtitle = panel && panel.querySelector(".ppq-dash-sub");
     if (title) title.textContent = cfg.dashboardTitle;
-    if (subtitle) subtitle.textContent = "One box per question — grey until tried, then green to red by recent performance. Ticks/crosses and rating spread beneath. Click a group to filter.";
+    if (subtitle) subtitle.textContent = "One box per " + this._itemNoun(false) + " — grey until tried, then green to red by recent performance. Ticks/crosses and rating spread beneath. Click a group to filter.";
     content.className = "ppq-dash-content";
     content.innerHTML = keys.map((k) => this._catHtml(k, groups[k], "ribbonHeat")).join("");
     this._wireCats();
@@ -5387,22 +6320,34 @@ window.PPQViewer = (function () {
       representative = this.questions.find((q) =>
         this._filterValues(q, facet.parent).indexOf(String(facet.parentValue)) >= 0) || null;
     }
-    const parentLabel = representative
-      ? cfg.groupLabel(representative)
-      : ((facet.parent.friendlyLabels && facet.parent.friendlyLabels[facet.parentValue]) || facet.parentValue);
+    const parentLabel = (facet.parent.friendlyLabels && facet.parent.friendlyLabels[facet.parentValue]) ||
+      (representative ? cfg.groupLabelOf(facet.parentValue, representative) : facet.parentValue);
     const facetNoun = filter.facetNoun || "subtopics";
     if (title) title.textContent = parentLabel + " " + facetNoun;
-    if (subtitle) subtitle.textContent = filter.facetSubtitle ||
+    if (subtitle) subtitle.textContent = (typeof filter.facetSubtitleOf === "function" ? filter.facetSubtitleOf(facet.parentValue) : null) || filter.facetSubtitle ||
       ("Click a " + facetNoun.replace(/s$/, "") + " to practise it; click it again to show the whole topic.");
 
     const active = childSel.value || "ALL";
     let html = '<div class="ppq-dash-path"><button class="ppq-dash-back" type="button">All topics</button>' +
       '<span aria-hidden="true">&rsaquo;</span><strong>' + esc(parentLabel) + "</strong></div>" +
-      '<div class="ppq-dash-overlap-note"><b>' + source.length + " questions.</b> " +
-      esc(filter.facetNote || "A question may appear in more than one subtopic, so the counts below can overlap.") +
+      '<div class="ppq-dash-overlap-note"><b>' + source.length + " " + esc(this._itemNoun(true)) + ".</b> " +
+      esc((typeof filter.facetNoteOf === "function" ? filter.facetNoteOf(facet.parentValue) : null) || filter.facetNote || ("A " + this._itemNoun(false) + " may appear in more than one subtopic, so the counts below can overlap.")) +
       "</div>";
     if (active !== "ALL") {
       html += '<button class="ppq-facet-clear" type="button">Show all ' + esc(parentLabel) + "</button>";
+      if (typeof filter.facetGuidanceOf === "function") {
+        const guidance = filter.facetGuidanceOf(active);
+        if (guidance && typeof guidance === "object") {
+          const summary = typeof guidance.summary === "string" ? guidance.summary : "";
+          const checks = Array.isArray(guidance.checks) ? guidance.checks.filter((check) => typeof check === "string" && check.trim()) : [];
+          if (summary || checks.length) {
+            html += '<details class="ppq-facet-guidance"><summary>Key tips</summary>' +
+              (summary ? summary.split(/\n\s*\n/).map((paragraph) => "<p>" + esc(paragraph) + "</p>").join("") : "") +
+              (checks.length ? "<ul>" + checks.map((check) => "<li>" + esc(check) + "</li>").join("") + "</ul>" : "") +
+              "</details>";
+          }
+        }
+      }
     }
     if (values.length) {
       html += values.map((value) =>
@@ -5502,6 +6447,28 @@ window.PPQViewer = (function () {
     const key = this._pendingDashboardPulse;
     if (!key) return;
     this._pendingDashboardPulse = null;
+    const facets = this.qa(".ppq-facet-cat");
+    if (facets.length) {
+      // Facet rows use data-value, not the broad topic's data-key. Match the
+      // current part through the same projection and scope as their counts.
+      // Highlight in place: the question's next step owns any automatic scroll.
+      const q = this.cur;
+      if (!q) return;
+      facets.forEach((row) => {
+        const index = Number(row.dataset.fidx), filter = this.cfg.filters[index];
+        if (!Number.isInteger(index) || !filter || !filter.dashboardFacet || row.disabled ||
+            !this._matchesQuestionFilters(q, [filter.field]) ||
+            !this._filterValues(q, filter).includes(String(row.dataset.value))) return;
+        clearTimeout(row._ppqPulseTimer);
+        row.classList.remove("ppq-cat-fired");
+        void row.offsetWidth;
+        row.classList.add("ppq-cat-fired");
+        row._ppqPulseTimer = setTimeout(function () {
+          if (row.isConnected) row.classList.remove("ppq-cat-fired");
+        }, 1400);
+      });
+      return;
+    }
     const row = this.qa(".ppq-cat").find((node) => node.dataset.key === String(key));
     if (!row) return;
     setTimeout(function () {
@@ -5520,7 +6487,9 @@ window.PPQViewer = (function () {
 
   Viewer.prototype.reset = function () {
     if (!window.confirm("Clear all your marks and self-ratings on this device? This cannot be undone.")) return;
-    this.store.attempts = []; this.store.scores = {}; this._saveStore(); if (this.cur) this.render();
+    this.store.attempts = []; this.store.scores = {}; this._saveStore();
+    if (this.cfg.practiceSelection.enabled) { this._sessionHistory = []; this.filterQuestions(); this.renderDashboard(); }
+    else if (this.cur) this.render();
   };
 
   // --------------------------------------------------------------- math (module)
@@ -5600,14 +6569,24 @@ window.PPQViewer = (function () {
       }
       this._firePendingDashboardPulse();
     }
+    this._syncSideRating();
   };
 
   // --------------------------------------------------------------- keyboard
   Viewer.prototype._bindGlobalKeys = function () {
     const self = this;
     this._keyHandler = function (e) {
-      if (!self.cur || !self._shouldHandleKey(e)) return;
+      if (!self._shouldHandleKey(e)) return;
       if (self.q(".ppq-modal").classList.contains("show") && e.key === "Escape") { self.closeModal(); return; }
+      if (!self.cur) return;
+      if (self.q(".ppq-modal").classList.contains("show") && !self._iqOpen) return;
+      if (e.repeat && /^[0-9]$/.test(e.key)) { e.preventDefault(); return; }
+      if (e.key === "Enter") {
+        const control = e.target && e.target.closest && e.target.closest("button, a, summary");
+        // Leave marks entry, preferences and disclosure controls to native activation.
+        if (control && !control.matches(".ppq-next, .ppq-reveal, .ppq-iq-next, .ppq-option")) return;
+        if (e.repeat) { e.preventDefault(); return; }
+      }
       /* QoderWork 2026-07-22: while the interrogation pop-up holds the 1-6, route
          Enter/number keys to the pop-up and close it before arrow-navigating. */
       if (self._iqOpen) {
@@ -5621,7 +6600,7 @@ window.PPQViewer = (function () {
             return;
           }
           const nb = self._iqBox && self._iqBox.querySelector(".ppq-iq-next");
-          if (nb && nb.style.display !== "none") nb.click();
+          if (nb && nb.style.display !== "none") { e.preventDefault(); nb.click(); }
           return;
         }
         if (e.key === "ArrowLeft" || e.key === "ArrowRight") { self.closeModal(); }
@@ -5636,7 +6615,11 @@ window.PPQViewer = (function () {
         return;
       }
       if (e.key === "r" || e.key === "R") { if (!self.answered && !self._marksPending && (self._curType === "flashcard" || self._curType === "imageSelfMark" || self._curType === "marksSelfAssess")) self.reveal(); return; }
-      if (e.key === "Enter") { if (self.answered) self.next(); else if (!self._marksPending && (self._curType === "flashcard" || self._curType === "marksSelfAssess")) self.reveal(); return; }
+      if (e.key === "Enter") {
+        if (self.answered) { e.preventDefault(); self.next(); }
+        else if (!self._marksPending && (self._curType === "flashcard" || self._curType === "marksSelfAssess")) { e.preventDefault(); self.reveal(); }
+        return;
+      }
       if (!self.answered) {
         const L = e.key.toUpperCase(), labels = self._answerLabels || [];
         if (labels.indexOf(L) >= 0) { self._pick(L); return; }
@@ -5651,6 +6634,7 @@ window.PPQViewer = (function () {
   };
   Viewer.prototype._pick = function (L) { if (this._curType === "mcq") this.selectMCQ(L); else this.selectOption(L); };
   Viewer.prototype._shouldHandleKey = function (e) {
+    if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return false;
     const t = e.target;
     /* QoderWork 2026-07-22 (analyst handoff): while the pupil is editing a field
        (e.g. typing a guess percentage that begins 1-8), do NOT let the global
@@ -5660,7 +6644,24 @@ window.PPQViewer = (function () {
     if (this.root.contains(t)) return true;
     return document.querySelectorAll(".ppq").length <= 1;
   };
-  Viewer.prototype.destroy = function () { if (this._keyHandler) document.removeEventListener("keydown", this._keyHandler); if (this._resizeHandler) window.removeEventListener("resize", this._resizeHandler); this._stopTimer(); this.root.innerHTML = ""; this.root.classList.remove("ppq"); };
+  Viewer.prototype.destroy = function () {
+    this._cancelQuestionImages();
+    this._helpDestroyed = true;
+    clearInterval(this._helpInterval);
+    if (this._helpWake) {
+      window.removeEventListener("focus", this._helpWake);
+      document.removeEventListener("visibilitychange", this._helpWake);
+    }
+    this._helpPaintInbox = null;
+    this._helpPaintForm = null;
+    if (this._keyHandler) document.removeEventListener("keydown", this._keyHandler);
+    if (this._resizeHandler) window.removeEventListener("resize", this._resizeHandler);
+    if (this._sideRatingMedia && this._sideRatingMediaHandler) {
+      if (this._sideRatingMedia.removeEventListener) this._sideRatingMedia.removeEventListener("change", this._sideRatingMediaHandler);
+      else if (this._sideRatingMedia.removeListener) this._sideRatingMedia.removeListener(this._sideRatingMediaHandler);
+    }
+    this._stopTimer(); this.root.innerHTML = ""; this.root.classList.remove("ppq", "ppq-side-rating-open");
+  };
 
   // --------------------------------------------------------------- drawing overlay
   Viewer.prototype._initDrawState = function () {

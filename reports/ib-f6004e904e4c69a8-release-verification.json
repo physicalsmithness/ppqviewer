@@ -1,0 +1,36 @@
+{
+  "build_id": "f6004e904e4c69a8",
+  "commit": "b9c5624bb848fed5b6b61778644a30161c4151b8",
+  "release_directory": "dist/ibphysics-release/f6004e904e4c69a8-1789254459736",
+  "result": "PASS",
+  "full_release_suite": {
+    "session_id": 99433,
+    "exit_code": 0,
+    "checks": 32,
+    "mcqs": 200,
+    "fresh_keyboard_journeys": 1600,
+    "reused_keyboard_journeys": 0,
+    "includes": ["source and test exclusions", "original question and crop ownership", "public metadata boundaries", "exact topic/type filters", "all MCQ letter and number choices", "marks and confidence linkage"]
+  },
+  "focused_checks": {
+    "reporting": 12,
+    "filters": 7,
+    "d2_recovery_release_presentation_merge": 31,
+    "a5_geometry": 13,
+    "isolated_staging": 18
+  },
+  "parts": 454,
+  "public_images": 1108,
+  "prepublication_fingerprints_rechecked": 2887,
+  "live_verification": {
+    "path": "dist/physics-audit/ib-a5-live-verification.json",
+    "checked_at": "2026-09-12T23:26:36.317Z",
+    "files": 18,
+    "github_pages_exact_commit_built": true,
+    "public_topic_chooser_visually_checked": true
+  },
+  "reporting_receipt": "dist/physics-audit/ibphysics-reporting-sheet-readback.json",
+  "browser_test_record": "reports/ib-release-browser-check.json",
+  "no_historical_attempts_uploaded": true,
+  "identity_helper_version": 1
+}

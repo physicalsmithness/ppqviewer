@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "review_complete": true,
+  "source_files": [{
+    "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/reports/categorisation_audit_2026-09-13/e1_mixed_viewer_acceptance.md",
+    "sha256": "cffccff1b81eb3245dc6ffa5351a32e2eb5bf0453a055323ab60e55da965e99b"
+  }],
+  "notes": {
+    "ibchem_part_1fe90fa73558e9e6": {"E.1": "E1 focus: nuclear notation and proton/nucleon numbers. This question also uses radioactive-decay physics."},
+    "ibchem_part_736cf82aead7d8c7": {"E.1": "Selected for its E1 nuclear-notation component within a supplied nuclear reaction."},
+    "ibchem_part_73e025be72dc5775": {"E.1": "E1 focus: nuclear notation and proton/nucleon numbers in the supplied nuclear reaction."},
+    "ibchem_part_8038ee395e8b43da": {"E.1": "Mixed-topic question: selected for E1 nuclear notation. The full decay equation also tests ideas beyond E1."},
+    "ibchem_part_a876d4e961e9fe62": {"E.1": "Mixed-topic question: selected for E1 nuclear notation. The full decay equation also tests ideas beyond E1."},
+    "ibchem_part_e617003993a6b5e3": {"E.1": "E1 focus: nuclear notation and proton/nucleon numbers in the supplied nuclear reaction."},
+    "ibchem_part_ff262901428276a2": {"E.1": "E1 focus: nuclear notation and proton/nucleon numbers. The supplied reaction also links to fission (E4)."}
+  }
+}

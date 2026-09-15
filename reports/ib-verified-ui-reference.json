@@ -1,0 +1,20 @@
+{
+  "build_id": "f6004e904e4c69a8",
+  "release_directory": "dist/ibphysics-release/f6004e904e4c69a8-1789254459736",
+  "test_command": "node test/test_ibphysics_release.js dist/ibphysics-release/f6004e904e4c69a8-1789254459736",
+  "completed_session": 99433,
+  "result": "PASS",
+  "checks": 32,
+  "mcqs": 200,
+  "keyboard_journeys": 1600,
+  "files": {
+    "data/physics_catalogue.js": "5096dc718c648a96846a19411be73d71478b127e0aa3a24f45549359e8ff220e",
+    "engine/ppqviewer.js": "e049c013871e8b942574dd63cd17c2dac50fbda31c3c4d2aa6992ba8b5a96303",
+    "engine/ppqviewer.css": "483a9c83852f306169d4de3efa442f4d2d12ff8ad0cb0105e2f71077239d3090",
+    "physics-config.js": "b96c38180ffab1e042434453aa30ee0a20065c9a57e42e25e1968b914a9a7e3f",
+    "index.html": "0a8598b95428b2d32ffb6aa98941ed240baab6b842383b6686c8dda48b4d38e6",
+    "physics-identity.js": "496715372640f87596b993500872dbc2d4c9197e137ed2911a307829f2d44f11",
+    "physics-login.js": "c5fd0b72ca079ca239d44566a0e7b48d0a4c1a15d8d64c30d858198b1efb9508",
+    "physics-reporting.js": "973fc2755c6cf32afea5c64df86ee527f37c20c04695d6de95d7b43b8ddad5bf"
+  }
+}

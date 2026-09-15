@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-09-12",
+  "corpus_sha256": "6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c",
+  "source_part_ids": [
+    "ibchem_part_71630df3bdf6ab2f",
+    "ibchem_part_c07207339d141b80",
+    "ibchem_part_b4f1ea19c213d540",
+    "ibchem_part_d256ed3a042c38e7",
+    "ibchem_part_09757e90113a1643",
+    "ibchem_part_09808fa974903d8b",
+    "ibchem_part_0c94bb4f33bc2e30",
+    "ibchem_part_0d714f8117d42748",
+    "ibchem_part_0df6ba83413952b2",
+    "ibchem_part_236ef34596674c02",
+    "ibchem_part_28fa9af32c083edc",
+    "ibchem_part_2ff67ee2bd9a7494",
+    "ibchem_part_3772dae94e723cfc",
+    "ibchem_part_3c8a6c6ab01fa053",
+    "ibchem_part_41a043eb42cf8151",
+    "ibchem_part_47129ef80bcb9be4",
+    "ibchem_part_5453261ba5cdb469",
+    "ibchem_part_599ef7929e79956d",
+    "ibchem_part_67353f6191de87eb",
+    "ibchem_part_680a8b3de2b5508b",
+    "ibchem_part_7556f87b875a537a",
+    "ibchem_part_759d770d9459e88a",
+    "ibchem_part_7b18174f8e8f4a25",
+    "ibchem_part_7e9801b218dcf0c4",
+    "ibchem_part_8243a9ae365cf87a",
+    "ibchem_part_86b359e504351c33",
+    "ibchem_part_8a3326098a6cbf21",
+    "ibchem_part_9145265e7657f9d8",
+    "ibchem_part_94dc462c0a329326",
+    "ibchem_part_a14b92e0fe5a7e86",
+    "ibchem_part_a4e4d46b6c06b1c5",
+    "ibchem_part_a7b2f71824719f41",
+    "ibchem_part_a89b298d69121a1d",
+    "ibchem_part_ae182a9db3fd4aec",
+    "ibchem_part_b19e9763ad21c87c",
+    "ibchem_part_b51233e25f930467",
+    "ibchem_part_ba673909e28e6266",
+    "ibchem_part_bbfb2bd2a0c1a8cd",
+    "ibchem_part_bc42fb48e055d68d",
+    "ibchem_part_bf45df5bd3bd36d4",
+    "ibchem_part_c497dc8f1ec7ed0c",
+    "ibchem_part_f64257c7a882226e",
+    "ibchem_part_fe611470a02172cf"
+  ],
+  "suppressed_image_sha256s": [
+    "4526c4cfc2de080f1c5846744afe1767118772394d1aaa2cd40259580952055e"
+  ],
+  "reviewed_evidence": [
+    {
+      "parent_id": "04N.P3.SL.TZ0.QG2",
+      "source_part_id": "ibchem_part_71630df3bdf6ab2f",
+      "review_status": "withhold_question",
+      "review_date": "2026-09-12",
+      "review_report": {"path": "reports/ib-a5-shared-parent-crop-review.json", "sha256": "4e4631abe443d6d68c309aa3c06e939cd2a08b450280eab6bf4a5341c2297ee0"},
+      "review_note": "Direct visual review of G2(d)(iii) found a c(ii) time=1.26ns answer and an Option H heading assigned alongside the correct length-contraction answer. Different c(ii)/d(iii) filenames contain identical PNG bytes. Withhold the entire parent and the HL counterpart until the source assignments are corrected; no new test-content match is claimed.",
+      "images": [
+        {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2004_nov_3_76f24f38/crops/mark_scheme_g2_d__iii_v014_p014_01_99518edb5d.png", "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43"},
+        {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2004_nov_3_76f24f38/crops/mark_scheme_g2_d__iii_v015_p015_03_a204b7f332.png", "sha256": "babfc90929a3b0e38c397aca473c70d002c9c780e76043788e1fee376485a41b"}
+      ]
+    },
+    {
+      "parent_id": "04N.P3.HL.TZ0.QG2",
+      "source_part_id": "ibchem_part_c07207339d141b80",
+      "review_status": "withhold_question",
+      "review_date": "2026-09-12",
+      "review_report": {"path": "reports/ib-a5-shared-parent-crop-review.json", "sha256": "4e4631abe443d6d68c309aa3c06e939cd2a08b450280eab6bf4a5341c2297ee0"},
+      "review_note": "Direct visual review of G2(d)(iii) found a blank focused-question strip and the c(ii) time=1.26ns answer assigned alongside the correct length-contraction answer. Whole-parent context contains the target, but does not make these focused assignments correct. Withhold the entire parent and the SL counterpart until corrected; no new test-content match is claimed.",
+      "images": [
+        {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2004_nov_3_c4d0287e/crops/question_g2_d__iii_v020_p020_01_810754a631.png", "sha256": "204835a2c638d9d47f50119cb1d529c6ca9f20e27bae712a096ea8798e586b59"},
+        {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2004_nov_3_c4d0287e/crops/mark_scheme_g2_d__iii_v013_p013_01_84e9ae0bb7.png", "sha256": "ac29f9157aa01cad9c9406925bdd0a14213930b522af78579d65ff2402248a43"}
+      ]
+    },
+    {
+      "parent_id": "05M.P3.SL.TZ1.QG2",
+      "source_part_id": "ibchem_part_b4f1ea19c213d540",
+      "review_status": "withhold_question",
+      "review_date": "2026-09-12",
+      "review_note": "QG2(a)(iv) asks for a muon explanation. Direct visual inspection found that its first markscheme crop instead shows the later accelerating-voltage answer and its second crop only an Option H heading. Withhold the entire parent and the HL counterpart.",
+      "images": [
+        {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2005_may_3_6d8c1866/crops/mark_scheme_g2_a__iv_v016_p016_01_da98a61d5e.png", "sha256": "38b5d6717fc6afddfa5119646c90495521f777c01e8d658223f56a2182e4d3e5"},
+        {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2005_may_3_6d8c1866/crops/mark_scheme_g2_a__iv_v017_p017_02_581c04c094.png", "sha256": "babfc90929a3b0e38c397aca473c70d002c9c780e76043788e1fee376485a41b"}
+      ]
+    },
+    {
+      "parent_id": "05M.P3.HL.TZ1.QG2",
+      "source_part_id": "ibchem_part_d256ed3a042c38e7",
+      "review_status": "withhold_question",
+      "review_date": "2026-09-12",
+      "review_note": "QG2(a)(iv) asks for a muon explanation. Direct visual inspection found that its markscheme crop instead shows the later accelerating-voltage answer. Withhold the entire parent and the SL counterpart.",
+      "images": [{"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2005_may_3_7e173998/crops/mark_scheme_g2_a__iv_v013_p013_01_301a5a5e1f.png", "sha256": "ea741a8cb608d1b7c82328d2a0093c87085fee057cff364a5bff740185d82e08"}]
+    },
+    {
+      "part_id": "04N.P1.HL.TZ0.Q11(whole)",
+      "parent_id": "04N.P1.HL.TZ0.Q11",
+      "source_part_id": "ibchem_part_67353f6191de87eb",
+      "source_group_id": "ibchem_part_67353f6191de87eb",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\c2e5ddfe8c67dcd2271bc48031426e5dad8ce0eb0a0dc4d07cc99a4f338215a5.png",
+      "image_sha256": "c2e5ddfe8c67dcd2271bc48031426e5dad8ce0eb0a0dc4d07cc99a4f338215a5",
+      "width": 1344,
+      "height": 609,
+      "bottom_dark_pixels": 53,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "04N.P1.SL.TZ0.Q4(whole)",
+      "parent_id": "04N.P1.SL.TZ0.Q4",
+      "source_part_id": "ibchem_part_bbfb2bd2a0c1a8cd",
+      "source_group_id": "ibchem_part_bbfb2bd2a0c1a8cd",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\862986a80090a9f7481ee296b49d7338b98915b6c7e502fc7228535d7f23a1f0.png",
+      "image_sha256": "862986a80090a9f7481ee296b49d7338b98915b6c7e502fc7228535d7f23a1f0",
+      "width": 1344,
+      "height": 1043,
+      "bottom_dark_pixels": 30,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "05M.P1.SL.TZ1.Q4(whole)",
+      "parent_id": "05M.P1.SL.TZ1.Q4",
+      "source_part_id": "ibchem_part_a14b92e0fe5a7e86",
+      "source_group_id": "ibchem_part_a14b92e0fe5a7e86",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\31f9c2ab0e614d11b64625bf3518cd73c8d1d2dbab9894a051974374d1f58c6f.png",
+      "image_sha256": "31f9c2ab0e614d11b64625bf3518cd73c8d1d2dbab9894a051974374d1f58c6f",
+      "width": 1344,
+      "height": 1059,
+      "bottom_dark_pixels": 9,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "08M.P1.HL.TZ2.Q3(whole)",
+      "parent_id": "08M.P1.HL.TZ2.Q3",
+      "source_part_id": "ibchem_part_09757e90113a1643",
+      "source_group_id": "ibchem_part_09757e90113a1643",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\de359e71d10f32488d2b650fac056c217194f6d28e904672e9546193eae3765d.png",
+      "image_sha256": "de359e71d10f32488d2b650fac056c217194f6d28e904672e9546193eae3765d",
+      "width": 1127,
+      "height": 734,
+      "bottom_dark_pixels": 10,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "08M.P1.SL.TZ2.Q3(whole)",
+      "parent_id": "08M.P1.SL.TZ2.Q3",
+      "source_part_id": "ibchem_part_94dc462c0a329326",
+      "source_group_id": "ibchem_part_94dc462c0a329326",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\886cfb7be47ef207f3feb5a51ebf1f1d6f259484f9370c996526078d11d11b5a.png",
+      "image_sha256": "886cfb7be47ef207f3feb5a51ebf1f1d6f259484f9370c996526078d11d11b5a",
+      "width": 1127,
+      "height": 734,
+      "bottom_dark_pixels": 10,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "11N.P1.HL.TZ0.Q13(whole)",
+      "parent_id": "11N.P1.HL.TZ0.Q13",
+      "source_part_id": "ibchem_part_599ef7929e79956d",
+      "source_group_id": "ibchem_xlvl_f4e382c21d2e6480",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\5251de304cfe2a9e162136d6b968a0e8e01013a8676a79bf29f75248b9c7a674.png",
+      "image_sha256": "5251de304cfe2a9e162136d6b968a0e8e01013a8676a79bf29f75248b9c7a674",
+      "width": 1344,
+      "height": 638,
+      "bottom_dark_pixels": 73,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "12N.P1.SL.TZ0.Q29(whole)",
+      "parent_id": "12N.P1.SL.TZ0.Q29",
+      "source_part_id": "ibchem_part_28fa9af32c083edc",
+      "source_group_id": "ibchem_xlvl_41fec90b33760f2e",
+      "topic_codes": [
+        "E.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\c60bbbe7efe168743556d65b292c4515c7739619a8565405505fe286f617b4f2.png",
+      "image_sha256": "c60bbbe7efe168743556d65b292c4515c7739619a8565405505fe286f617b4f2",
+      "width": 1344,
+      "height": 816,
+      "bottom_dark_pixels": 28,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "13N.P1.HL.TZ0.Q11(whole)",
+      "parent_id": "13N.P1.HL.TZ0.Q11",
+      "source_part_id": "ibchem_part_ba673909e28e6266",
+      "source_group_id": "ibchem_xlvl_ee329f9e2f6a0999",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\4d419d52ac69495d9b05560c85aee49550a6ab38b01500e192c432fd995261a3.png",
+      "image_sha256": "4d419d52ac69495d9b05560c85aee49550a6ab38b01500e192c432fd995261a3",
+      "width": 1292,
+      "height": 662,
+      "bottom_dark_pixels": 46,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "15M.P1.SL.TZ2.Q7(whole)",
+      "parent_id": "15M.P1.SL.TZ2.Q7",
+      "source_part_id": "ibchem_part_fe611470a02172cf",
+      "source_group_id": "ibchem_xlvl_9902c94992f26930",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\885bacc2982e4f1297a25d5843d09bb3615d5abca7d12e3b78bb3d990b92dc3b.png",
+      "image_sha256": "885bacc2982e4f1297a25d5843d09bb3615d5abca7d12e3b78bb3d990b92dc3b",
+      "width": 1260,
+      "height": 526,
+      "bottom_dark_pixels": 15,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "16N.P1.HL.TZ0.Q5(whole)",
+      "parent_id": "16N.P1.HL.TZ0.Q5",
+      "source_part_id": "ibchem_part_3772dae94e723cfc",
+      "source_group_id": "ibchem_xlvl_ad5fc4b4be25c56d",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\76ccf1e42b2407c4f9a41a065289b077457f2761b6f1faaf2e58dca38097ce52.png",
+      "image_sha256": "76ccf1e42b2407c4f9a41a065289b077457f2761b6f1faaf2e58dca38097ce52",
+      "width": 1338,
+      "height": 1108,
+      "bottom_dark_pixels": 22,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "18N.P1.HL.TZ0.Q15(whole)",
+      "parent_id": "18N.P1.HL.TZ0.Q15",
+      "source_part_id": "ibchem_part_c497dc8f1ec7ed0c",
+      "source_group_id": "ibchem_part_c497dc8f1ec7ed0c",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\1ed72476b7ba120bf8594694ffcbe77520acae3835d86356d52483067434a819.png",
+      "image_sha256": "1ed72476b7ba120bf8594694ffcbe77520acae3835d86356d52483067434a819",
+      "width": 1334,
+      "height": 780,
+      "bottom_dark_pixels": 14,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "21M.P1.HL.TZ1.Q11(whole)",
+      "parent_id": "21M.P1.HL.TZ1.Q11",
+      "source_part_id": "ibchem_part_759d770d9459e88a",
+      "source_group_id": "ibchem_xlvl_f01fc930d2e8c690",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\f90b4017656239fbc7b8b87e302239813b79df13deaf1c0c274b42eb3aa47f7b.png",
+      "image_sha256": "f90b4017656239fbc7b8b87e302239813b79df13deaf1c0c274b42eb3aa47f7b",
+      "width": 1273,
+      "height": 1598,
+      "bottom_dark_pixels": 64,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "21M.P1.HL.TZ1.Q40(whole)",
+      "parent_id": "21M.P1.HL.TZ1.Q40",
+      "source_part_id": "ibchem_part_fd7e1c1d380eb214",
+      "source_group_id": "ibchem_part_fd7e1c1d380eb214",
+      "topic_codes": [
+        "E.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\88c891054a66a4d5d172bf733a2c58e507822a6bbbe3dc30d705fff1ef08d8c3.png",
+      "image_sha256": "88c891054a66a4d5d172bf733a2c58e507822a6bbbe3dc30d705fff1ef08d8c3",
+      "width": 1031,
+      "height": 508,
+      "bottom_dark_pixels": 71,
+      "review_status": "retain_question",
+      "review_note": "Question and all four answers are complete; the flagged lower edge belongs to a references trailer."
+    },
+    {
+      "part_id": "21M.P1.SL.TZ1.Q13(whole)",
+      "parent_id": "21M.P1.SL.TZ1.Q13",
+      "source_part_id": "ibchem_part_2ff67ee2bd9a7494",
+      "source_group_id": "ibchem_xlvl_f01fc930d2e8c690",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\c7f2fd2999ecb913d4d7463f1f8d26f22a479ea83d8781e7a05be0dbbff36c3d.png",
+      "image_sha256": "c7f2fd2999ecb913d4d7463f1f8d26f22a479ea83d8781e7a05be0dbbff36c3d",
+      "width": 1273,
+      "height": 1598,
+      "bottom_dark_pixels": 64,
+      "review_status": "withhold_question",
+      "review_note": "Question diagrams or answer options are visibly cut off at the image boundary; withhold this source and declared level twins."
+    },
+    {
+      "part_id": "21M.P1.HL.TZ2.Q40(whole)",
+      "parent_id": "21M.P1.HL.TZ2.Q40",
+      "source_part_id": "ibchem_part_44bf635799d22801",
+      "source_group_id": "ibchem_part_44bf635799d22801",
+      "topic_codes": [
+        "E.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\62e5929c7d8110a523e7c08dec6719a89d69182a6dee9cc3a986bd9077aadc3c.png",
+      "image_sha256": "62e5929c7d8110a523e7c08dec6719a89d69182a6dee9cc3a986bd9077aadc3c",
+      "width": 1263,
+      "height": 1403,
+      "bottom_dark_pixels": 71,
+      "review_status": "retain_question",
+      "review_note": "Question and all four answers are complete; the flagged lower edge belongs to a references trailer after blank space."
+    },
+    {
+      "part_id": "23N.P1.HL.TZ1.Q3(whole)",
+      "parent_id": "23N.P1.HL.TZ1.Q3",
+      "source_part_id": "ibchem_part_69af9ae24c4ae461",
+      "source_group_id": "ibchem_part_69af9ae24c4ae461",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\fd9c8abb3cce7c66cb137a17755c27a78de0f06d164e931251cc61f4df4935a1.png",
+      "image_sha256": "fd9c8abb3cce7c66cb137a17755c27a78de0f06d164e931251cc61f4df4935a1",
+      "width": 1215,
+      "height": 396,
+      "bottom_dark_pixels": 14,
+      "review_status": "retain_question",
+      "review_note": "Projectile point and all four labelled force arrows are complete. Only irrelevant continuation of the trajectory crosses the lower boundary."
+    },
+    {
+      "part_id": "23N.P1.HL.TZ2.Q3(whole)",
+      "parent_id": "23N.P1.HL.TZ2.Q3",
+      "source_part_id": "ibchem_part_346cc85197337cfd",
+      "source_group_id": "ibchem_part_346cc85197337cfd",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\fd9c8abb3cce7c66cb137a17755c27a78de0f06d164e931251cc61f4df4935a1.png",
+      "image_sha256": "fd9c8abb3cce7c66cb137a17755c27a78de0f06d164e931251cc61f4df4935a1",
+      "width": 1215,
+      "height": 396,
+      "bottom_dark_pixels": 14,
+      "review_status": "retain_question",
+      "review_note": "Projectile point and all four labelled force arrows are complete. Only irrelevant continuation of the trajectory crosses the lower boundary."
+    },
+    {
+      "part_id": "24M.P1.SL.TZ2.Q30(whole)",
+      "parent_id": "24M.P1.SL.TZ2.Q30",
+      "source_part_id": "ibchem_part_d48616b19dc6f441",
+      "source_group_id": "ibchem_part_d48616b19dc6f441",
+      "topic_codes": [
+        "A.1"
+      ],
+      "image": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-preview\\0463c6ab37393ba2-1789064686939\\ib\\assets\\4526c4cfc2de080f1c5846744afe1767118772394d1aaa2cd40259580952055e.png",
+      "image_sha256": "4526c4cfc2de080f1c5846744afe1767118772394d1aaa2cd40259580952055e",
+      "width": 1313,
+      "height": 222,
+      "bottom_dark_pixels": 1194,
+      "review_status": "suppress_image_only",
+      "review_note": "This separate crop contains only disclaimer/references. The preceding image contains the complete question and all four answers; suppress this image only."
+    }
+  ],
+  "d2_reviewed_source_defects": {
+    "ibchem_part_a4e4d46b6c06b1c5": "November 2004 HL Paper 1 Q28 crop cuts off the lower parts of options C and D; confirmed by visual review on 2026-09-10.",
+    "ibchem_part_f64257c7a882226e": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_7e9801b218dcf0c4": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_bf45df5bd3bd36d4": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_8243a9ae365cf87a": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_680a8b3de2b5508b": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_7556f87b875a537a": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_9145265e7657f9d8": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_0c94bb4f33bc2e30": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_86b359e504351c33": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_7b18174f8e8f4a25": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_a89b298d69121a1d": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_09808fa974903d8b": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_41a043eb42cf8151": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10.",
+    "ibchem_part_b51233e25f930467": "Question diagram content is cut off at the lower crop boundary; flagged by an image-edge check and visually confirmed on 2026-09-10."
+  },
+  "d2_withheld_source_ids": [
+    "ibchem_part_09808fa974903d8b",
+    "ibchem_part_0c94bb4f33bc2e30",
+    "ibchem_part_0df6ba83413952b2",
+    "ibchem_part_236ef34596674c02",
+    "ibchem_part_3c8a6c6ab01fa053",
+    "ibchem_part_41a043eb42cf8151",
+    "ibchem_part_47129ef80bcb9be4",
+    "ibchem_part_680a8b3de2b5508b",
+    "ibchem_part_7556f87b875a537a",
+    "ibchem_part_7b18174f8e8f4a25",
+    "ibchem_part_7e9801b218dcf0c4",
+    "ibchem_part_8243a9ae365cf87a",
+    "ibchem_part_86b359e504351c33",
+    "ibchem_part_9145265e7657f9d8",
+    "ibchem_part_a4e4d46b6c06b1c5",
+    "ibchem_part_a7b2f71824719f41",
+    "ibchem_part_a89b298d69121a1d",
+    "ibchem_part_ae182a9db3fd4aec",
+    "ibchem_part_b51233e25f930467",
+    "ibchem_part_bf45df5bd3bd36d4",
+    "ibchem_part_f64257c7a882226e"
+  ],
+  "counts": {
+    "native_mcqs_checked": 369,
+    "native_images_checked": 378,
+    "native_edge_flags": 18,
+    "native_visually_incomplete_sources": 13,
+    "native_sources_and_declared_twins": 18,
+    "d2_reviewed_defect_sources": 15,
+    "all_withheld_sources_and_twins": 43,
+    "a5_mismatched_markscheme_sources": 4,
+    "complete_native_flags_retained": 4,
+    "extra_reference_images_suppressed": 1
+  },
+  "scope": "Source-image quality holds, separate from assessment reservations. Exact native visually incomplete sources are expanded to their declared cross-level twins; D2 reviewed quality holds are also included.",
+  "limitations": [
+    "An image-edge screen cannot detect every extraction defect. These are confirmed reviewed examples, not a complete quality certification.",
+    "The requested four retained flag cases have complete question information; their rejected-flag reasons are recorded individually."
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-09-10",
+  "complete_test_exclusion_certified": false,
+  "policy": "Additive whole-parent exclusions supported by targeted visual review of current assessment snapshots. Apply alongside the broad assessment matcher. Shared-context variants are explicitly marked conservative; unmatched pages are not certified clear.",
+  "assessment_root": "H:\\Shared drives\\0. Physics (Teachers)\\2 - AQA GCSE\\Assessments",
+  "source_database": "Trilogy Categorisation/aqa_extraction_plus_calc.db",
+  "parent_ids": [
+    "trilogy_2018_p1f::Q04",
+    "trilogy_2018_p2f::Q01",
+    "trilogy_2019_p2f::Q01",
+    "trilogy_2020_p2f::Q06",
+    "trilogy_2020_p2h::Q01",
+    "trilogy_2022_p2f::Q03",
+    "trilogy_2022_p2h::Q07"
+  ],
+  "part_ids": [],
+  "paper_ids": [],
+  "reviewed_evidence": [
+    {
+      "test": "2. Electricity/2023 electricity test.pdf",
+      "test_sha256": "372c319cb15eee02621e0cbc126ff45b02e83bd4cbc6c0428567e4aab700e819",
+      "test_pages": [4],
+      "test_question": "2(a)-(b)",
+      "source_parent_ids": ["trilogy_2018_p1f::Q04"],
+      "source_part_ids": ["trilogy_2018_p1f::04.4", "trilogy_2018_p1f::04.5"],
+      "source_question_pages": [11, 12],
+      "method": "visual_and_native_text",
+      "decision": "confirmed_adapted_source",
+      "reason": "The test reuses the copper-wire current/potential-difference graph and fuse lead-in and symbol question. Figure 7 becomes Figure 2; different resistance becomes higher resistance. Diagram geometry, labels and surrounding fuse wording agree. Figure/word edits defeat the original long-phrase threshold.",
+      "newly_excluded_from_reviewed_input": true
+    },
+    {
+      "test": "5. Forces and motion/2. Test before car safety etc/2024 Foundation test b4 car safety.pdf",
+      "test_sha256": "6cb48181ef49abd2578b9858a467dfc3d1a9b69495fcfdac72224da1839b5cd3",
+      "test_pages": [2],
+      "test_question": "Part 1 Q01",
+      "source_parent_ids": ["trilogy_2018_p2f::Q01"],
+      "source_part_ids": ["trilogy_2018_p2f::01.1"],
+      "source_question_pages": [2],
+      "method": "visual_transcription_and_source_text",
+      "decision": "confirmed_source_already_reserved",
+      "reason": "Image-only question asks which quantity is scalar, with displacement, distance, force and velocity in the same order. This parent was already reserved by the wider matcher; keep the explicit current-test evidence.",
+      "newly_excluded_from_reviewed_input": false
+    },
+    {
+      "test": "5. Forces and motion/2. Test before car safety etc/2024 Foundation test b4 car safety.pdf",
+      "test_sha256": "6cb48181ef49abd2578b9858a467dfc3d1a9b69495fcfdac72224da1839b5cd3",
+      "test_pages": [2],
+      "test_question": "Part 1 Q02",
+      "source_parent_ids": ["trilogy_2019_p2f::Q01"],
+      "source_part_ids": ["trilogy_2019_p2f::01.1"],
+      "source_question_pages": [2],
+      "method": "visual_and_source_text",
+      "decision": "confirmed_source",
+      "reason": "Image-only question repeats the magnetic-force lead-in and asks for two other non-contact forces. The five choices and order match: air resistance, electrostatic, friction, gravitational, tension. Source crop and assessment image were compared visually.",
+      "newly_excluded_from_reviewed_input": true
+    },
+    {
+      "test": "5. Forces and motion/2. Test before car safety etc/2025 test before momentum and car safety (forces 2).pdf",
+      "test_sha256": "7f7ab3de30b5412e6654c83297cd9f5d7c155214853b2b5c47aca7b673172933",
+      "test_pages": [4],
+      "test_question": "2(a)-(b)",
+      "source_parent_ids": ["trilogy_2020_p2f::Q06", "trilogy_2020_p2h::Q01"],
+      "source_part_ids": ["trilogy_2020_p2f::06.3", "trilogy_2020_p2f::06.4", "trilogy_2020_p2h::01.3", "trilogy_2020_p2h::01.4"],
+      "source_question_pages_by_parent": {"trilogy_2020_p2f::Q06": [18, 19], "trilogy_2020_p2h::Q01": [2, 3]},
+      "method": "visual_transcription_and_both_tier_source_crops",
+      "decision": "confirmed_adapted_source_and_exact_tier_variant",
+      "reason": "The image-only assessment reuses the bar magnet and hanging-paperclip diagram, the weight equation, and the maximum-force calculation for 20 paperclips of 1.0 g at 9.8 N/kg. Both tier calculations and values agree; the assessment changes the calculation from three marks to four. Both whole parents must be reserved.",
+      "newly_excluded_from_reviewed_input": true
+    },
+    {
+      "test": "5. Forces and motion/2. Test before car safety etc/2024 Foundation test b4 car safety.pdf",
+      "test_sha256": "6cb48181ef49abd2578b9858a467dfc3d1a9b69495fcfdac72224da1839b5cd3",
+      "test_pages": [6, 7],
+      "test_question": "Part 2 Q1(a)-(e)",
+      "source_parent_ids": ["trilogy_2022_p2f::Q03"],
+      "source_part_ids": ["trilogy_2022_p2f::03.1", "trilogy_2022_p2f::03.2", "trilogy_2022_p2f::03.3", "trilogy_2022_p2f::03.4", "trilogy_2022_p2f::03.5"],
+      "method": "visual_and_source_text",
+      "decision": "confirmed_source_already_reserved",
+      "reason": "The apple with X marking its centre of mass, mass 0.150 kg, stationary/resultant-force choices, and fall calculation from 0 to 4.9 m/s at 9.8 m/s2 all agree with the Foundation source. This parent was already reserved.",
+      "newly_excluded_from_reviewed_input": false
+    },
+    {
+      "test": "5. Forces and motion/2. Test before car safety etc/2024 Foundation test b4 car safety.pdf",
+      "test_sha256": "6cb48181ef49abd2578b9858a467dfc3d1a9b69495fcfdac72224da1839b5cd3",
+      "test_pages": [6, 7],
+      "test_question": "Part 2 Q1 shared apple context",
+      "source_parent_ids": ["trilogy_2022_p2h::Q07"],
+      "source_part_ids": ["trilogy_2022_p2h::07.1", "trilogy_2022_p2h::07.2", "trilogy_2022_p2h::07.3"],
+      "source_question_pages": [23, 24, 25],
+      "method": "conservative_visual_shared_context_variant",
+      "decision": "conservative_related_parent_exclusion",
+      "reason": "Higher tier reuses the same distinctive apple/branch/leaf/X diagram, adding a stem label; its fall scenario uses 0.50 s, equivalent to the Foundation answer. Higher tier asks for two arrows and distance rather than the Foundation single weight arrow and time. It is not claimed to be the identical set of parts: the entire related parent is reserved to avoid revealing the assessment's shared context and answer relationship.",
+      "newly_excluded_from_reviewed_input": true
+    }
+  ],
+  "unresolved": [
+    {
+      "test": "5. Forces and motion/1. Early test/Motion wk4 test 2025.pdf",
+      "test_sha256": "d39f5b8ad6befed80ad32c3f612c8af921fe1f85c15249919bccb24e340b3fb6",
+      "test_pages": [2, 3, 4],
+      "finding": "Substantial image-only question text was visually read. Page 2 is a cyclist velocity graph ending at 70 s with Y at 30 s/5.4 m/s and Z at 70 s, asking for distance Y-Z. Pages 3-4 are an aircraft distance graph to 12000 m at 50 s and deceleration from 250 to 68 m/s at 0.14 m/s2. Distinctive manually read phrases and values did not identify these in the available Trilogy/Synergy source corpus. The served 2020 P2F Q04 bicycle graph was visually rejected (distance to 250 m at 50 s, different question). Exact source remains unresolved; an older/separate-course source is possible, not verified."
+    },
+    {
+      "test": "5. Forces and motion/2. Test before car safety etc/2024 Foundation test b4 car safety.pdf",
+      "test_sha256": "6cb48181ef49abd2578b9858a467dfc3d1a9b69495fcfdac72224da1839b5cd3",
+      "test_pages": [3, 4, 5],
+      "finding": "Image-only athlete/starting-blocks Newton-third-law question, athlete distance graph labelled J/K/L, and aircraft-engine reaction-force question were visually read. Distinctive text was not found in the available Trilogy/Synergy source database. Exact source identity remains unresolved."
+    }
+  ],
+  "limitations": [
+    "This targeted review supplements, rather than replaces, the broader 201-document assessment scan.",
+    "Nine named current tests were snapshotted. Native text was ranked across every page/paragraph block; selected image-only pages and all embedded images of the 2025 resit and 2026 final forces DOCX were viewed. This is not a full visual certification of every test page.",
+    "No generic shared phrase alone establishes source identity; weak matches for speed-of-sound recall, standard equations, and common answer instructions were not treated as confirmed sources.",
+    "A 2026 assessment must still be checked. The source-paper cutoff at 2026 does not make questions copied into a 2026 test safe.",
+    "The builder must apply whole-parent exclusions and the source-paper year cutoff independently."
+  ]
+}

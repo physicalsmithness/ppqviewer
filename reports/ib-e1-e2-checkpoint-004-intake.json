@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "topics": [
+    "E.1",
+    "E.2"
+  ],
+  "review_kind": "bounded handoff intake; no learner integration",
+  "reviewed_at": "2026-09-13T15:19:05.199Z",
+  "disposition": "accepted source recorded; not imported or published",
+  "snapshot": "C:/CodexProjects/PaperDatabases/Physics Categorisation/returns/E1_E2_REVIEW_2026-09-13/checkpoint_004",
+  "manifest_sha256": "a8fc936a6c8998a4912020ec73da9068b8632d52fa96ea83543861877cea6739",
+  "manifest_files_verified": 96,
+  "source_counts": {
+    "part_type_assignments.csv": {
+      "rows": 1278,
+      "distinct_parts": 847,
+      "sha256": "7f6aa2abd8abcee1c951e47dffcfe9ff49888eefef52db158d012f6cd30fdb31"
+    },
+    "candidate_scope_outcomes.csv": {
+      "rows": 1238,
+      "distinct_parts": 1119,
+      "sha256": "6cc12a48850d0385d24f4621ffe8f5a56e5d2f50340135aff07f7003acaa56b9"
+    },
+    "reconciled_individual_demands.csv": {
+      "rows": 1581,
+      "distinct_parts": 970,
+      "sha256": "242251a77489b3df4f95b14456579fe5cf345c2d94ada1a11cc815fb1a8641c0"
+    }
+  },
+  "reported_teacher_current_associated_parts": {
+    "E.1": 380,
+    "E.2": 337
+  },
+  "counts_are_primary_or_release_totals": false,
+  "normalized_primary_scope_complete": false,
+  "consumer_holds": [
+    {
+      "part_id": "ibchem_part_f1f26e4d2b9b852a",
+      "understanding_code": "E.1.H.5",
+      "reason": "The one-mark definition of a non-radiating orbit does not establish this prerequisite. Retain the original reading as unresolved evidence, outside confirmed understanding coverage."
+    }
+  ],
+  "consumption_policy": "Attributed associations and producer-owned demand evidence only; no normalized primary-scope promotion. Preserve independent reviews. Historical and source-only evidence remain visible.",
+  "source_reports": [
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/reports/categorisation_audit_2026-09-13/e1_e2_integration.md",
+      "sha256": "44a9e2f71ffdb5afe580e15cc6415b9c90ae4c5b9b3d14fa61405f7bc21424e6"
+    },
+    {
+      "path": "C:/CodexProjects/PaperDatabases/Physics Categorisation/reports/categorisation_audit_2026-09-13/e1_e2_acceptance.md",
+      "sha256": "d85567c30f92fa9d94ec22f792f55b5b883fde4571abad35bb07c96baaba6ed1"
+    }
+  ],
+  "required_for_learner_integration": [
+    "Exact authored primary scope or separately reviewed learner topic eligibility; never infer from type prefix, mapped outcome, current status or assessed role",
+    "Preserve all attribution IDs, roles, routes, source-only and historical evidence; consume reconciled demands without unioning superseded rows",
+    "Existing current-assessment exclusions, whole-parent/context protection, 2026 exam hold and original-source/media checks remain mandatory"
+  ],
+  "published_baseline": {
+    "build_id": "f6004e904e4c69a8",
+    "parts": 454,
+    "topic_counts": {
+      "A.1": {
+        "parts": 150,
+        "typed_parts": 129
+      },
+      "A.5": {
+        "parts": 138,
+        "typed_parts": 138
+      },
+      "C.1": {
+        "parts": 25,
+        "typed_parts": 7
+      },
+      "D.2": {
+        "parts": 149,
+        "typed_parts": 149
+      }
+    }
+  },
+  "production_changes": false
+}
