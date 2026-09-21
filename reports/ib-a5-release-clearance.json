@@ -2,7 +2,7 @@
   "schema_version": 1,
   "topic": "A.5",
   "review_complete": true,
-  "reviewed_utc": "2026-09-13T16:27:58.857Z",
+  "reviewed_utc": "2026-09-18T22:05:53.398Z",
   "unresolved_relevant_items": [],
   "reviewed_source_part_ids": [
     "ibchem_part_02a209c12b973a10",
@@ -637,7 +637,7 @@
     },
     {
       "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\tools\\assemble_physics_preview.js",
-      "sha256": "be1f1d2ec1700f72730d163d70d10bce5224c168ef1c96032818d272d9c52e59"
+      "sha256": "387b30fe212fd34447c1b9cab51bdac7a40cbf5acf09bb01cabe640c83bf05d5"
     },
     {
       "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\tools\\audit_ib_review_notes.js",

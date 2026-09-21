@@ -1,0 +1,1148 @@
+{
+ "schema_version": 1,
+ "built_at": "2026-09-21T23:21:11.324170Z",
+ "release_build": "fee35feac3a10a92",
+ "geometry_dir": "/sessions/sweet-gallant-dijkstra/mnt/Physics Categorisation/returns/QUESTION_CROP_BAND_GEOMETRY_2026-09-21",
+ "geometry_files": {
+  "flagged_pairs_geometry.csv": "e45a4430886d527fb82eee17a5706aa2c1df2f9e159420cd89364742ef39cd25",
+  "equal_height_twins.csv": "6790bc71e31b034e3f2d0bfba654d29b2bd91752e3ed065f099df3876a8346a2"
+ },
+ "rule": "A notice applies only while the served question image still has the recorded sha256; a repaired crop drops it.",
+ "counts": {
+  "band:contained": 44,
+  "band:not_contained": 5,
+  "twin:different": 14,
+  "band:page_mismatch": 2
+ },
+ "notices": [
+  {
+   "served_id": "07N.P3.HL.TZ0.QG2(a_ii)",
+   "source_part_id": "ibchem_part_c50ca97b969fdf8a",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "528838889a43e027826510dab7e222cf6462f714c9717ea5f49ae1566f256747",
+   "crop_file": "question_g2_a__ii_v018_p018_01_d0d089e873.png",
+   "earlier_crop_file": "question_g2_a__i_v018_p018_01_833d352e5d.png",
+   "preview_dir": "ib_physics_2007_nov_3_41ebd965",
+   "growth_ratio": "1.74",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "07N.P3.SL.TZ0.QG2(a_ii)",
+   "source_part_id": "ibchem_part_40756e64530ff5c1",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "528838889a43e027826510dab7e222cf6462f714c9717ea5f49ae1566f256747",
+   "crop_file": "question_g2_a__ii_v018_p018_01_d0d089e873.png",
+   "earlier_crop_file": "question_g2_a__i_v018_p018_01_833d352e5d.png",
+   "preview_dir": "ib_physics_2007_nov_3_41ebd965",
+   "growth_ratio": "1.74",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "08M.P3.HL.TZ1.QE5(a_ii)",
+   "source_part_id": "ibchem_part_09db4f22c2d92d7f",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "27a9bcf6378e576d04184e854684556ac7eacb85fc9e11054ab5eb171d8dca97",
+   "crop_file": "question_e5_a__ii_v011_p011_01_e776e25a89.png",
+   "earlier_crop_file": "question_e5_a__i_v011_p011_01_0d7d3a1d2d.png",
+   "preview_dir": "ib_physics_2008_may_3_fce874db",
+   "growth_ratio": "1.28",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "08M.P3.SL.TZ1.QA1(a_ii)",
+   "source_part_id": "ibchem_part_7885b9e9771bf75d",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "01c66c5aaf7d39344f9ab930be71b2b86c962b4790b69c325029b7a954f68c24",
+   "crop_file": "question_a1_a__ii_v002_p002_01_f0b355262e.png",
+   "earlier_crop_file": "question_a1_a__i_v002_p002_01_cc36d06ea2.png",
+   "preview_dir": "ib_physics_2008_may_3_030c56b9",
+   "growth_ratio": "1.66",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "09M.P3.HL.TZ2.QH1(c_ii)",
+   "source_part_id": "ibchem_part_990f9f0da1680ad2",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "7c4c5f69850433b08d07172e217a7a1a901e6a4801fbf8eb5f12092dc7eeb656",
+   "crop_file": "question_d1_c__ii_v015_p015_01_f7b8a7f0f6.png",
+   "earlier_crop_file": "question_d1_c__i_v015_p015_01_662007b9ce.png",
+   "preview_dir": "ib_physics_2009_may_3_14be0e41",
+   "growth_ratio": "2.15",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "09M.P3.HL.TZ2.QH3(a_ii)",
+   "source_part_id": "ibchem_part_cac8328483a6be8a",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "617a49a1a0eba885f50e672f4750f7f760c99c709a495678fad567f3f72a2e36",
+   "crop_file": "question_h3_a__ii_v025_p025_01_df3d63b5a2.png",
+   "earlier_crop_file": "question_h3_a__i_v025_p025_01_9983a73814.png",
+   "preview_dir": "ib_physics_2009_may_3_84385e26",
+   "growth_ratio": "1.49",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "09M.P3.SL.TZ1.QD2(a_ii)",
+   "source_part_id": "ibchem_part_2a2df5907682f0e6",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "c62ac67ba99cc30141f4d6eaebd1c165458cc5cde30e3811e2370de71a27bf55",
+   "crop_file": "question_d2_a__ii_v017_p017_01_2d5aec93f0.png",
+   "earlier_crop_file": "question_d2_a__i_v017_p017_01_d4c51a174f.png",
+   "preview_dir": "ib_physics_2009_may_3_9b8c5060",
+   "growth_ratio": "1.82",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "09M.P3.SL.TZ1.QD2(a_iii)",
+   "source_part_id": "ibchem_part_35b3f3ab03536475",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(iii)",
+   "other_label": "(a)(ii)",
+   "crop_sha256": "bfb2f05446a051b46c23012fbfa8158bdeb609e2956277a2cdb2e82cfcdebcc7",
+   "crop_file": "question_d2_a__iii_v017_p017_01_347b2489eb.png",
+   "earlier_crop_file": "question_d2_a__ii_v017_p017_01_2d5aec93f0.png",
+   "preview_dir": "ib_physics_2009_may_3_9b8c5060",
+   "growth_ratio": "1.55",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "09M.P3.SL.TZ2.QD1(c_ii)",
+   "source_part_id": "ibchem_part_87dbdd4630201179",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "7c4c5f69850433b08d07172e217a7a1a901e6a4801fbf8eb5f12092dc7eeb656",
+   "crop_file": "question_d1_c__ii_v015_p015_01_f7b8a7f0f6.png",
+   "earlier_crop_file": "question_d1_c__i_v015_p015_01_662007b9ce.png",
+   "preview_dir": "ib_physics_2009_may_3_14be0e41",
+   "growth_ratio": "2.15",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "11M.P3.HL.TZ1.QH2(a_ii)",
+   "source_part_id": "ibchem_part_428d2dd936506382",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "2c0a765882dc13258851f8ebd8612c087d58a1f47f07c265a619f776c18bb57e",
+   "crop_file": "question_h2_a__ii_v028_p028_01_b34f5675cc.png",
+   "earlier_crop_file": "question_h2_a__i_v028_p028_01_bb88456d42.png",
+   "preview_dir": "ib_physics_2011_may_3_7aa932a7",
+   "growth_ratio": "2.28",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "11M.P3.HL.TZ2.QH1(a_ii)",
+   "source_part_id": "ibchem_part_0d8759c0e7943df9",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "f85ed6c31a06e07e39a8eba132e168ddcb4f7a5d84d260877e13f148c2cda5c9",
+   "crop_file": "question_h1_a__ii_v022_p022_01_5d54fca0a9.png",
+   "earlier_crop_file": "question_h1_a__i_v022_p022_01_ea291adea4.png",
+   "preview_dir": "ib_physics_2011_may_3_e492e839",
+   "growth_ratio": "1.65",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "11M.P3.SL.TZ2.QB1(b_ii)",
+   "source_part_id": "ibchem_part_c952f6c86c90ff05",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "568d37328d78f7f98a623707f0f982ee526660173d713607cb395a6bd553f9a0",
+   "crop_file": "question_b1_b__ii_v006_p006_01_179647fccc.png",
+   "earlier_crop_file": "question_b1_b__i_v006_p006_01_08d0fb84fa.png",
+   "preview_dir": "ib_physics_2011_may_3_d95726ec",
+   "growth_ratio": "1.66",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "11M.P3.SL.TZ2.QD1(a_ii)",
+   "source_part_id": "ibchem_part_f045a78b5fc86c00",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "519bf0159e7fcfb834ce32997355e5f1ffd0e25e308d07bbe8bc5fc7226c6142",
+   "crop_file": "question_d1_a__ii_v014_p014_01_54d7b2d375.png",
+   "earlier_crop_file": "question_d1_a__i_v014_p014_01_c779aa568d.png",
+   "preview_dir": "ib_physics_2011_may_3_d95726ec",
+   "growth_ratio": "1.65",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "12M.P3.HL.TZ1.QH1(c_ii)",
+   "source_part_id": "ibchem_part_7004172691a1ec52",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "57a34c6df24f023a8902fc61c371757e534bc7784f50ff5cd4481fef40b92f5a",
+   "crop_file": "question_h1_c__ii_v026_p026_01_e8634e45c3.png",
+   "earlier_crop_file": "question_h1_c__i_v026_p026_01_725a0bc6ae.png",
+   "preview_dir": "ib_physics_2012_may_3_a54e09b0",
+   "growth_ratio": "1.51",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "12M.P3.HL.TZ1.QH1(d_ii)",
+   "source_part_id": "ibchem_part_1574ba6f9e851c15",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(d)(ii)",
+   "other_label": "(d)(i)",
+   "crop_sha256": "53e234f649a89155826f249ede3e6b89532f07d8894a5faf002218aea8fda860",
+   "crop_file": "question_h1_d__ii_v027_p027_01_69656327d1.png",
+   "earlier_crop_file": "question_h1_d__i_v027_p027_01_ed5c5300de.png",
+   "preview_dir": "ib_physics_2012_may_3_a54e09b0",
+   "growth_ratio": "1.78",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "12M.P3.HL.TZ1.QJ1(b_ii)",
+   "source_part_id": "ibchem_part_305586c01e5a337d",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "da2c43be4028829b06080252d7bbe2985b3eb2fa18258266e377c610684537ca",
+   "crop_file": "question_j1_b__ii_v040_p040_01_6c147d876e.png",
+   "earlier_crop_file": "question_j1_b__i_v040_p040_01_a7980c4443.png",
+   "preview_dir": "ib_physics_2012_may_3_a54e09b0",
+   "growth_ratio": "1.3",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "12M.P3.HL.TZ2.QH1(b_ii)",
+   "source_part_id": "ibchem_part_557822036daacf8c",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "29a90728af65d624f01dfe18bdd36074fcc42fe254f52bc8a756f567655e727f",
+   "crop_file": "question_h1_b__ii_v023_p023_01_af64a58d75.png",
+   "earlier_crop_file": "question_h1_b__i_v023_p023_01_cc40dabd3e.png",
+   "preview_dir": "ib_physics_2012_may_3_b0d7c487",
+   "growth_ratio": "1.41",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "12M.P3.SL.TZ1.QD1(c_ii)",
+   "source_part_id": "ibchem_part_6e6c4abb84e2e759",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "86b17b7cdc4cb788a05c926860f306c86a769ebd4efb25523e1d2590797e7130",
+   "crop_file": "question_d1_c__ii_v018_p018_01_aeace18562.png",
+   "earlier_crop_file": "question_d1_c__i_v018_p018_01_9980aedb15.png",
+   "preview_dir": "ib_physics_2012_may_3_32100ffe",
+   "growth_ratio": "1.51",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "12M.P3.SL.TZ1.QD2(b_ii)",
+   "source_part_id": "ibchem_part_5bcca8329636b164",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "035e1ff40495e044b9b6b4ef11692df6ef8cb2cfb9d48a674b2136f106cca573",
+   "crop_file": "question_d2_b__ii_v020_p020_01_84b795c71d.png",
+   "earlier_crop_file": "question_d2_b__i_v020_p020_01_e81d78375f.png",
+   "preview_dir": "ib_physics_2012_may_3_32100ffe",
+   "growth_ratio": "1.3",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "12M.P3.SL.TZ2.QD1(b_ii)",
+   "source_part_id": "ibchem_part_94efe6655dedfd8c",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "2dd606f96691e97981a0870466284150146db7ab7b01d108ac03be52520bed54",
+   "crop_file": "question_d1_b__ii_v021_p021_01_faf94af682.png",
+   "earlier_crop_file": "question_d1_b__i_v021_p021_01_06c230a3fb.png",
+   "preview_dir": "ib_physics_2012_may_3_0fa2fded",
+   "growth_ratio": "1.41",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "13M.P3.HL.TZ2.QH2(b_ii)",
+   "source_part_id": "ibchem_part_144dce4b23aa9072",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "871914919e0b2f0508d49cf504d7b54ddc926aefc8d42f9e2d1e40247e083ad1",
+   "crop_file": "question_h2_b__ii_v030_p030_01_3b5bb0c521.png",
+   "earlier_crop_file": "question_h2_b__i_v030_p030_01_cf51f15cda.png",
+   "preview_dir": "ib_physics_2013_may_3_4dc62f74",
+   "growth_ratio": "2.01",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "15M.P3.HL.TZ2.Q23(b_iii)",
+   "source_part_id": "ibchem_part_3fbd56c7e26bb41b",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(iii)",
+   "other_label": "(b)(ii)",
+   "crop_sha256": "d5a0432a5665095e66c12d3b4f188ef9714dccc2f8faf289c05e218f7beffc5f",
+   "crop_file": "question_23_b__iii_v040_p040_01_9d968ee2ab.png",
+   "earlier_crop_file": "question_23_b__ii_v040_p040_01_a97d71d656.png",
+   "preview_dir": "ib_physics_2015_may_3_30b8ac03",
+   "growth_ratio": "1.21",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "16M.P3.SL.TZ0.Q6(b_ii)",
+   "source_part_id": "ibchem_part_8e59166bff7601b7",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "5b31ea3d57cea942db5c1576e5df6ff21527d0635dac6a2277014828f1910c67",
+   "crop_file": "question_6_b__ii_v011_p011_01_0b51a98757.png",
+   "earlier_crop_file": "question_6_b__i_v011_p011_01_4e3dc66ee4.png",
+   "preview_dir": "ib_physics_2016_may_3_e424ef51",
+   "growth_ratio": "2.32",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "17M.P2.HL.TZ2.Q7(a_ii)",
+   "source_part_id": "ibchem_part_d4fd1851673bebb1",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "6e2cb431e300d12d4e820199978bf0bc398e6b72d4a28ffca15725522cf8cc76",
+   "crop_file": "question_7_a__ii_v024_p024_01_d52dff79e3.png",
+   "earlier_crop_file": "question_7_a__i_v024_p024_01_1717d78cd0.png",
+   "preview_dir": "ib_physics_2017_may_2_9152ddd2",
+   "growth_ratio": "1.7",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "17M.P2.HL.TZ2.Q7(c_ii)",
+   "source_part_id": "ibchem_part_a7db6faaec008997",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "ac4261e53fb6280ae23a06bc56382c4f7d35ef5aa25a3a38ce293156e62f9271",
+   "crop_file": "question_7_c__ii_v025_p025_01_addfa24037.png",
+   "earlier_crop_file": "question_7_c__i_v025_p025_01_2fd3ef4f08.png",
+   "preview_dir": "ib_physics_2017_may_2_9152ddd2",
+   "growth_ratio": "1.47",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "17N.P2.HL.TZ0.Q1(e_ii)",
+   "source_part_id": "ibchem_part_6564435538caa726",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(e)(ii)",
+   "other_label": "(e)(i)",
+   "crop_sha256": "beb8bd39fac0665f63172ba2350b4ce2298eccde3352ec2732a5fd8e60ce383a",
+   "crop_file": "question_1_e__ii_v004_p004_01_dd15b76bc0.png",
+   "earlier_crop_file": "question_1_e__i_v004_p004_01_8291284043.png",
+   "preview_dir": "ib_physics_2017_nov_2_6ced0dfe",
+   "growth_ratio": "1.68",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "17N.P2.SL.TZ0.Q1(e_ii)",
+   "source_part_id": "ibchem_part_b30d0d5eb203d0c2",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(e)(ii)",
+   "other_label": "(e)(i)",
+   "crop_sha256": "6144eff5587ccd08ef88a997a58201d1cb442acd0015126480dc31a1faedb957",
+   "crop_file": "question_1_e__ii_v004_p004_01_0411d3717a.png",
+   "earlier_crop_file": "question_1_e__i_v004_p004_01_dade6e83fe.png",
+   "preview_dir": "ib_physics_2017_nov_2_30b39630",
+   "growth_ratio": "1.68",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "18M.P3.HL.TZ2.Q3(a_ii)",
+   "source_part_id": "ibchem_part_f0720660af413e67",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "5f6523f219462cae910c8adea74c827db305b055c0391e24a81de9c336f150f6",
+   "crop_file": "question_3_a__ii_v008_p008_01_55b8440aef.png",
+   "earlier_crop_file": "question_3_a__i_v008_p008_01_9a87e1aa74.png",
+   "preview_dir": "ib_physics_2018_may_3_3128ba47",
+   "growth_ratio": "2.13",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "18M.P3.SL.TZ2.Q3(a_ii)",
+   "source_part_id": "ibchem_part_f14b98cea63082bd",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "5f6523f219462cae910c8adea74c827db305b055c0391e24a81de9c336f150f6",
+   "crop_file": "question_3_a__ii_v008_p008_01_55b8440aef.png",
+   "earlier_crop_file": "question_3_a__i_v008_p008_01_9a87e1aa74.png",
+   "preview_dir": "ib_physics_2018_may_3_3128ba47",
+   "growth_ratio": "2.13",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "18N.P2.HL.TZ0.Q6(b_ii)",
+   "source_part_id": "ibchem_part_11e3ee79ef123a19",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "577c3e0bd4c2b619cb5ac4ba6c2ca7ee18e7f47396ff1246900cca685ee2812a",
+   "crop_file": "question_6_b__ii_v016_p016_01_50adb41872.png",
+   "earlier_crop_file": "question_6_b__i_v016_p016_01_dca94edf59.png",
+   "preview_dir": "ib_physics_2018_nov_2_71842670",
+   "growth_ratio": "2.51",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "19M.P2.HL.TZ2.Q6(b_ii)",
+   "source_part_id": "ibchem_part_e734fbc060344f0d",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "64bb9f5c6d58047ceffdf118b995e0ef6590462d6fc2e6cb19f35e67fe05ff6e",
+   "crop_file": "question_6_b__ii_v015_p015_01_10ff6e5eab.png",
+   "earlier_crop_file": "question_6_b__i_v015_p015_01_b22959daac.png",
+   "preview_dir": "ib_physics_2019_may_2_f3b97310",
+   "growth_ratio": "2.75",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "19M.P2.SL.TZ2.Q6(b_ii)",
+   "source_part_id": "ibchem_part_6411a1dee5aff7b5",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "6351d271b0b2d4327731d8bcbc94f1233645c558f157e83c1777a82d8efc5280",
+   "crop_file": "question_6_b__ii_v011_p011_01_32fa9e8ed6.png",
+   "earlier_crop_file": "question_6_b__i_v011_p011_01_b4bbf6224c.png",
+   "preview_dir": "ib_physics_2019_may_2_f7aeda4f",
+   "growth_ratio": "2.75",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "22M.P2.HL.TZ1.Q7(c_ii)",
+   "source_part_id": "ibchem_part_2f806483f6970a83",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "c76d272db479b67d23e875f563ea27a00cd1e5d90c202cbb35e0b308eb60e0d2",
+   "crop_file": "question_7_c__ii_v018_p018_01_95b4a929b6.png",
+   "earlier_crop_file": "question_7_c__i_v018_p018_01_1d06abb122.png",
+   "preview_dir": "ib_physics_2022_may_2_d91e1b58",
+   "growth_ratio": "2.2",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "23N.P2.HL.TZ1.Q5(c_ii)",
+   "source_part_id": "ibchem_part_4f90ffaf5cb9b106",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "6b8697f61c4126a6282c4e9aefb480afd18a67e4093c0785323e7004d488dbd4",
+   "crop_file": "question_5_c__ii_v016_p016_01_f5285aa37d.png",
+   "earlier_crop_file": "question_5_c__i_v016_p016_01_11bcfac385.png",
+   "preview_dir": "ib_physics_2023_nov_2_b365739d",
+   "growth_ratio": "2.17",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "24M.P2.HL.TZ1.Q2(a_ii)",
+   "source_part_id": "ibchem_part_f2272c2f64f59f93",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "90e042b6520117ea4d437ebef67a9e94c4d875d54bc8712ae4802a2396e03d6b",
+   "crop_file": "question_2_a__ii_v006_p006_01_17b2d6222a.png",
+   "earlier_crop_file": "question_2_a__i_v006_p006_01_897b9eae02.png",
+   "preview_dir": "ib_physics_2024_may_2_69abdcaf",
+   "growth_ratio": "1.8",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "24M.P2.HL.TZ2.Q1(b_ii)",
+   "source_part_id": "ibchem_part_37f6c0b4ca6d2e88",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "b2c48a3c04bb87df16871c2d9836773f730c51ac8b5d5b2c8b6293e8dd104e42",
+   "crop_file": "question_1_b__ii_v004_p004_01_e5b4101327.png",
+   "earlier_crop_file": "question_1_b__i_v004_p004_01_41b1e1e5a3.png",
+   "preview_dir": "ib_physics_2024_may_2_91cc2764",
+   "growth_ratio": "2.27",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "24M.P2.SL.TZ1.Q2(a_ii)",
+   "source_part_id": "ibchem_part_7ff5c70aabe3b9b7",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "77389e5d5df5e844f2430c9ebc4ab0ad00e5480b860c34e8f5a94b06503d1151",
+   "crop_file": "question_2_a__ii_v006_p006_01_8855e0cfb8.png",
+   "earlier_crop_file": "question_2_a__i_v006_p006_01_3bde90c78a.png",
+   "preview_dir": "ib_physics_2024_may_2_70b6f68a",
+   "growth_ratio": "1.8",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "24M.P2.SL.TZ2.Q1(b_ii)",
+   "source_part_id": "ibchem_part_30b0dfccc84862f1",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "b2c48a3c04bb87df16871c2d9836773f730c51ac8b5d5b2c8b6293e8dd104e42",
+   "crop_file": "question_1_b__ii_v004_p004_01_e5b4101327.png",
+   "earlier_crop_file": "question_1_b__i_v004_p004_01_41b1e1e5a3.png",
+   "preview_dir": "ib_physics_2024_may_2_91cc2764",
+   "growth_ratio": "2.27",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "24N.P2.HL.TZ0.Q2(b_ii)",
+   "source_part_id": "ibchem_part_de3ce233b79bee7e",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "c8d6baaf9dac24e17f638885f97294e77c985efb3834b0d23bd2837d22a94659",
+   "crop_file": "question_1_b__ii_v005_p005_01_66bb604f9c.png",
+   "earlier_crop_file": "question_1_b__i_v005_p005_01_ae023ad28b.png",
+   "preview_dir": "ib_physics_2024_nov_2_6d9c29e3",
+   "growth_ratio": "1.62",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "24N.P2.SL.TZ0.Q1(b_ii)",
+   "source_part_id": "ibchem_part_bcffe3a7eb3d26ce",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "c8d6baaf9dac24e17f638885f97294e77c985efb3834b0d23bd2837d22a94659",
+   "crop_file": "question_1_b__ii_v005_p005_01_66bb604f9c.png",
+   "earlier_crop_file": "question_1_b__i_v005_p005_01_ae023ad28b.png",
+   "preview_dir": "ib_physics_2024_nov_2_6d9c29e3",
+   "growth_ratio": "1.62",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "25N.P2.HL.TZ1.Q4(a_iii)",
+   "source_part_id": "ibchem_part_0b46ded92ab30478",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(iii)",
+   "other_label": "(a)(ii)",
+   "crop_sha256": "e1ebd13df28f172e27649fda67f4a2c536810ce82d9dc68aa9796ca10ace988a",
+   "crop_file": "question_4_a__iii_v009_p009_01_3c05592bd9.png",
+   "earlier_crop_file": "question_4_a__ii_v009_p009_01_8ea7ec814c.png",
+   "preview_dir": "ib_physics_2025_nov_2_ad40a7d0",
+   "growth_ratio": "1.69",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "25N.P2.HL.TZ1.Q6(b_ii)",
+   "source_part_id": "ibchem_part_3e326978db2908c9",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "b282821fe74185d812532bfaf34bcefb5bb94e8a41014162537aa9efd778faeb",
+   "crop_file": "question_6_b__ii_v013_p013_01_924f796a2e.png",
+   "earlier_crop_file": "question_6_b__i_v013_p013_01_b29c2d3b20.png",
+   "preview_dir": "ib_physics_2025_nov_2_ad40a7d0",
+   "growth_ratio": "1.68",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  },
+  {
+   "served_id": "25N.P2.HL.TZ1.Q8(d_iii)",
+   "source_part_id": "ibchem_part_cd6a102e8a89fc5c",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(d)(iii)",
+   "other_label": "(d)(ii)",
+   "crop_sha256": "74865c2d70cec4b4524a135047b8638e074a852af1320a5b8aeaec49ac9b504c",
+   "crop_file": "question_8_d__iii_v023_p023_01_1fdf3fadc6.png",
+   "earlier_crop_file": "question_8_d__ii_v023_p023_01_86bbe31a87.png",
+   "preview_dir": "ib_physics_2025_nov_2_ad40a7d0",
+   "growth_ratio": "1.25",
+   "same_width": false,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0,
+    "x_offset": 0
+   }
+  },
+  {
+   "served_id": "25N.P2.SL.TZ1.Q4(a_iii)",
+   "source_part_id": "ibchem_part_695ae706c7eb648b",
+   "kind": "band",
+   "verdict": "contained",
+   "this_label": "(a)(iii)",
+   "other_label": "(a)(ii)",
+   "crop_sha256": "ed42b7c5248af6d0f06749a8b29bf8389ddfc4ff260bdfaa7e2f18d89fb33ac3",
+   "crop_file": "question_4_a__iii_v009_p009_01_a90baa2cab.png",
+   "earlier_crop_file": "question_4_a__ii_v009_p009_01_78ec2e6f04.png",
+   "preview_dir": "ib_physics_2025_nov_2_6fa9fffb",
+   "growth_ratio": "1.69",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 0.0,
+    "max_diff": 0
+   }
+  }
+ ],
+ "no_notice": [
+  {
+   "served_id": "12N.P3.HL.TZ0.QH2(a_ii)",
+   "source_part_id": "ibchem_part_eb206a62e913d024",
+   "kind": "band",
+   "verdict": "not_contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "c37d4aef11a788ed79a3447aba05437597f9d698a9a46651a611d3e72da0b44e",
+   "crop_file": "question_h2_a__ii_v032_p032_01_3b6dd96deb.png",
+   "earlier_crop_file": "question_h2_a__i_v032_p032_01_1d192387c3.png",
+   "preview_dir": "ib_physics_2012_nov_3_fecc9a9c",
+   "growth_ratio": "1.13",
+   "same_width": false,
+   "measure": {
+    "mean_diff": 10.703,
+    "max_diff": 223,
+    "x_offset": 71
+   }
+  },
+  {
+   "served_id": "14N.P3.HL.TZ0.Q16(b)",
+   "source_part_id": "ibchem_part_560638b85f0c0a90",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(b)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "54c4362dcec84357b1d86ab9e472456a8d39d885c1ae8699dcb06293bffbd33a",
+   "crop_file": "question_17_b__ii_v030_p030_03_a2b00e6260.png",
+   "earlier_crop_file": "question_17_b__i_v029_p029_02_817e207a1b.png",
+   "preview_dir": "ib_physics_2014_nov_3_a290dada",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "14N.P3.HL.TZ0.Q17(b_ii)",
+   "source_part_id": "ibchem_part_dd988cd01464bc7e",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "54c4362dcec84357b1d86ab9e472456a8d39d885c1ae8699dcb06293bffbd33a",
+   "crop_file": "question_17_b__ii_v030_p030_03_a2b00e6260.png",
+   "earlier_crop_file": "question_17_b__i_v029_p029_02_817e207a1b.png",
+   "preview_dir": "ib_physics_2014_nov_3_a290dada",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "14N.P3.SL.TZ0.Q11(b)",
+   "source_part_id": "ibchem_part_fac57f42b5fa3429",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(b)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "c1ae41aa0faa205a4b8fe7a6b1e1e9b36c6b1a3377df02e59f8da1695f9a544b",
+   "crop_file": "question_12_b__ii_v026_p026_03_c04f423ffd.png",
+   "earlier_crop_file": "question_12_b__i_v025_p025_02_42cce8e667.png",
+   "preview_dir": "ib_physics_2014_nov_3_c903c22c",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "14N.P3.SL.TZ0.Q12(b_ii)",
+   "source_part_id": "ibchem_part_7009891d082bed06",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "c1ae41aa0faa205a4b8fe7a6b1e1e9b36c6b1a3377df02e59f8da1695f9a544b",
+   "crop_file": "question_12_b__ii_v026_p026_03_c04f423ffd.png",
+   "earlier_crop_file": "question_12_b__i_v025_p025_02_42cce8e667.png",
+   "preview_dir": "ib_physics_2014_nov_3_c903c22c",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "15M.P3.SL.TZ1.Q11(b_ii)",
+   "source_part_id": "ibchem_part_33c09f8b6143e337",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(iii)",
+   "crop_sha256": "5fdbcc2279479008b11bd3fbdc5a65100daf97cd43e7b2300e46c1a2377b3ce2",
+   "crop_file": "question_11_b__ii_v019_p019_02_2b2223a8e5.png",
+   "earlier_crop_file": "question_11_b__iii_v020_p020_03_6570ccde23.png",
+   "preview_dir": "ib_physics_2015_may_3_402d4969",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "15M.P3.SL.TZ1.Q11(b_iii)",
+   "source_part_id": "ibchem_part_75e21403adbaccc9",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(b)(iii)",
+   "other_label": "(b)(ii)",
+   "crop_sha256": "6c96930ac86dfbc84ac2dc8ef00b7247bdcbd48526eced1c37049db3ec7a3fd3",
+   "crop_file": "question_11_b__iii_v020_p020_03_6570ccde23.png",
+   "earlier_crop_file": "question_11_b__ii_v019_p019_02_2b2223a8e5.png",
+   "preview_dir": "ib_physics_2015_may_3_402d4969",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "16M.P3.HL.TZ0.Q5(b_iii)",
+   "source_part_id": "ibchem_part_51d8a1030575bcdd",
+   "kind": "band",
+   "verdict": "page_mismatch",
+   "this_label": "(b)(iii)",
+   "other_label": "(b)(ii)",
+   "crop_sha256": "143fc5b5560019ec2a73a77e15427ea0e227f38740357964bccb1ef74484d619",
+   "crop_file": "question_5_b__iii_v010_p010_01_22eb43bd18.png",
+   "earlier_crop_file": "question_5_b__ii_v011_p011_02_5ffba3c8b0.png",
+   "preview_dir": "ib_physics_2016_may_3_f26d69d8",
+   "growth_ratio": "1.32",
+   "same_width": false,
+   "measure": null
+  },
+  {
+   "served_id": "16M.P3.HL.TZ0.Q5(b_iv)",
+   "source_part_id": "ibchem_part_2594e0b372e008c8",
+   "kind": "band",
+   "verdict": "page_mismatch",
+   "this_label": "(b)(iv)",
+   "other_label": "(b)(ii)",
+   "crop_sha256": "143fc5b5560019ec2a73a77e15427ea0e227f38740357964bccb1ef74484d619",
+   "crop_file": "question_5_b__iii_v010_p010_01_22eb43bd18.png",
+   "earlier_crop_file": "question_5_b__ii_v011_p011_02_5ffba3c8b0.png",
+   "preview_dir": "ib_physics_2016_may_3_f26d69d8",
+   "growth_ratio": "1.32",
+   "same_width": false,
+   "measure": null
+  },
+  {
+   "served_id": "18N.P2.HL.TZ0.Q4(a_ii)",
+   "source_part_id": "ibchem_part_a173e50d000c73ef",
+   "kind": "band",
+   "verdict": "not_contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "e99ab9e5a886c57da896c165f588573e10e5eefc37addf8bba1bf6650fd49eba",
+   "crop_file": "question_4_a__ii_v010_p010_01_5961ea0ab9.png",
+   "earlier_crop_file": "question_4_a__i_v010_p010_01_7fb43dfafc.png",
+   "preview_dir": "ib_physics_2018_nov_2_71842670",
+   "growth_ratio": "3.01",
+   "same_width": false,
+   "measure": {
+    "mean_diff": 19.077,
+    "max_diff": 255,
+    "x_offset": 1
+   }
+  },
+  {
+   "served_id": "18N.P2.HL.TZ0.Q6(a_ii)",
+   "source_part_id": "ibchem_part_d1f7892619fbc71c",
+   "kind": "band",
+   "verdict": "not_contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "ff575384eb425f98c31d3595982bdd38e7a4b9b23fa954a63d8cfe994b25cf6a",
+   "crop_file": "question_6_a__ii_v016_p016_01_a99b5955a9.png",
+   "earlier_crop_file": "question_6_a__i_v016_p016_01_0f196db15a.png",
+   "preview_dir": "ib_physics_2018_nov_2_71842670",
+   "growth_ratio": "1.4",
+   "same_width": false,
+   "measure": {
+    "mean_diff": 12.825,
+    "max_diff": 255,
+    "x_offset": 1
+   }
+  },
+  {
+   "served_id": "19M.P2.HL.TZ1.Q8(a_ii)",
+   "source_part_id": "ibchem_part_13e77c8bb1f73198",
+   "kind": "band",
+   "verdict": "not_contained",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "1648d5bc09d2f4e220e5e47a72c528a3f0623448d17c6e028a92874297adbce3",
+   "crop_file": "question_8_a__ii_v022_p022_01_367237ecdc.png",
+   "earlier_crop_file": "question_8_a__i_v022_p022_01_b72224b2b0.png",
+   "preview_dir": "ib_physics_2019_may_2_4a6f1f77",
+   "growth_ratio": "1.33",
+   "same_width": false,
+   "measure": {
+    "mean_diff": 22.863,
+    "max_diff": 223,
+    "x_offset": 57
+   }
+  },
+  {
+   "served_id": "21M.P2.HL.TZ1.Q8(b_v)",
+   "source_part_id": "ibchem_part_54f3d99a0db6dbdf",
+   "kind": "band",
+   "verdict": "not_contained",
+   "this_label": "(b)(v)",
+   "other_label": "(b)(iv)",
+   "crop_sha256": "47eb6f26d21e3703718a0b68230011143195b3524f4010d371068ff380d0a436",
+   "crop_file": "question_8_b__v_v023_p023_02_f14bf4166d.png",
+   "earlier_crop_file": "question_8_b__iv_v023_p023_02_a4a6fee6e0.png",
+   "preview_dir": "ib_physics_2021_may_2_a537f4a7",
+   "growth_ratio": "1.01",
+   "same_width": true,
+   "measure": {
+    "mean_diff": 13.932,
+    "max_diff": 227
+   }
+  },
+  {
+   "served_id": "25M.P2.HL.TZ1.Q7(a_i)",
+   "source_part_id": "ibchem_part_48432dc71d2e4416",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(a)(i)",
+   "other_label": "(a)(ii)",
+   "crop_sha256": "df3723b6a6afdb6cf8df799e097bfcba1f99ea4b14e66ec90432802d8dde3a4c",
+   "crop_file": "question_7_a__i_v015_p015_01_814c35d6a3.png",
+   "earlier_crop_file": "question_7_a__ii_v015_p015_01_36de80b6aa.png",
+   "preview_dir": "ib_physics_2025_may_2_22756acd",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "25M.P2.HL.TZ1.Q7(a_ii)",
+   "source_part_id": "ibchem_part_400ccd640c974718",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(a)(ii)",
+   "other_label": "(a)(i)",
+   "crop_sha256": "3c30fe675924b74dee1fc60868f1e55f11a27751200e91fc5c80a6a26707f544",
+   "crop_file": "question_7_a__ii_v015_p015_01_36de80b6aa.png",
+   "earlier_crop_file": "question_7_a__i_v015_p015_01_814c35d6a3.png",
+   "preview_dir": "ib_physics_2025_may_2_22756acd",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "25M.P2.SL.TZ3.Q5(b_i)",
+   "source_part_id": "ibchem_part_569cd6fc35db56ab",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(b)(i)",
+   "other_label": "(b)(ii)",
+   "crop_sha256": "21088f13d0348ab6d1672ae992397b4c9742da7063bf3ce46c778ed6a735f105",
+   "crop_file": "question_5_b__i_v010_p010_01_da97c6e13a.png",
+   "earlier_crop_file": "question_5_b__ii_v010_p010_01_6ac75d561f.png",
+   "preview_dir": "ib_physics_2025_may_2_e1821998",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "25M.P2.SL.TZ3.Q5(b_ii)",
+   "source_part_id": "ibchem_part_7025b96f24325d25",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(b)(ii)",
+   "other_label": "(b)(i)",
+   "crop_sha256": "63a3f0c451908cca0df035f9c9e45f3d3d08b67942c92afb8e66060fb2d71d35",
+   "crop_file": "question_5_b__ii_v010_p010_01_6ac75d561f.png",
+   "earlier_crop_file": "question_5_b__i_v010_p010_01_da97c6e13a.png",
+   "preview_dir": "ib_physics_2025_may_2_e1821998",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "25N.P2.HL.TZ1.Q1(c_i)",
+   "source_part_id": "ibchem_part_a81d0d0d461e71d4",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(c)(i)",
+   "other_label": "(c)(ii)",
+   "crop_sha256": "f15c3e75794599b507e72a3ea17d64ad58321e3fc0b72d5264fc3e118ff265d4",
+   "crop_file": "question_1_c__i_v004_p004_01_e345674b0a.png",
+   "earlier_crop_file": "question_1_c__ii_v004_p004_01_37d3893551.png",
+   "preview_dir": "ib_physics_2025_nov_2_6fa9fffb",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "25N.P2.HL.TZ1.Q1(c_ii)",
+   "source_part_id": "ibchem_part_2f85e82c30b77d05",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "8325d4ebe8579a589a8b83bc6a6fe46277c2aecde20a846d55ba18b9eddddd81",
+   "crop_file": "question_1_c__ii_v004_p004_01_37d3893551.png",
+   "earlier_crop_file": "question_1_c__i_v004_p004_01_e345674b0a.png",
+   "preview_dir": "ib_physics_2025_nov_2_6fa9fffb",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "25N.P2.SL.TZ1.Q1(c_i)",
+   "source_part_id": "ibchem_part_45eda6823b6e50b4",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(c)(i)",
+   "other_label": "(c)(ii)",
+   "crop_sha256": "f15c3e75794599b507e72a3ea17d64ad58321e3fc0b72d5264fc3e118ff265d4",
+   "crop_file": "question_1_c__i_v004_p004_01_e345674b0a.png",
+   "earlier_crop_file": "question_1_c__ii_v004_p004_01_37d3893551.png",
+   "preview_dir": "ib_physics_2025_nov_2_6fa9fffb",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  },
+  {
+   "served_id": "25N.P2.SL.TZ1.Q1(c_ii)",
+   "source_part_id": "ibchem_part_0020e9fc14ace315",
+   "kind": "twin",
+   "verdict": "different",
+   "this_label": "(c)(ii)",
+   "other_label": "(c)(i)",
+   "crop_sha256": "8325d4ebe8579a589a8b83bc6a6fe46277c2aecde20a846d55ba18b9eddddd81",
+   "crop_file": "question_1_c__ii_v004_p004_01_37d3893551.png",
+   "earlier_crop_file": "question_1_c__i_v004_p004_01_e345674b0a.png",
+   "preview_dir": "ib_physics_2025_nov_2_6fa9fffb",
+   "growth_ratio": "1.00",
+   "same_width": true,
+   "measure": null
+  }
+ ]
+}

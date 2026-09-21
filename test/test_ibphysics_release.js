@@ -68,7 +68,28 @@ const expectedAll=eTopics?mergeERelease(beforeE,eTopics.questions):beforeE,expec
 const topicClearance=json(topicClearancePath);
 const fingerprints = new Map(clearance.fingerprints.map(f => [path.resolve(f.path), f.sha256]));
 let checked = 0;
-function check(label, run) { run(); checked++; console.log("ok " + label); }
+/* Smith, 2026-09-19: "can you get errors to be more red, please? both the last two I've
+   almost not given to you due to their general greenness." A wall of ok lines ending in
+   an uncoloured Node stack reads as success at a glance. A failure now stops with a red
+   banner naming the check, and the run ends in a red FAILED line rather than a stack. */
+const RED = "[97;41m", RED_TEXT = "[31;1m", OFF = "[0m";
+const red = (text, block) => process.stdout.isTTY ? (block ? RED : RED_TEXT) + text + OFF : text;
+function fail(label, error) {
+  console.error("\n" + red("  FAILED: " + label + "  ", true));
+  console.error(red((error && error.message ? error.message : String(error)).split("\n").slice(0, 12).join("\n")));
+  if (error && error.expected !== undefined) {
+    console.error(red("  expected: " + JSON.stringify(error.expected).slice(0, 300)));
+    console.error(red("  actual:   " + JSON.stringify(error.actual).slice(0, 300)));
+  }
+  console.error("\n" + red("  " + checked + " checks passed before this one. The release is NOT safe to publish.  ", true) + "\n");
+  process.exit(1);
+}
+function check(label, run) {
+  try { run(); } catch (error) { fail(label, error); }
+  checked++; console.log("ok " + label);
+}
+/* Assertions outside a named check would otherwise still end in a bare stack. */
+process.on("uncaughtException", (error) => fail("an assertion outside a named check", error));
 function rejects(label, mutate) { check(label, () => { const changed = clone(clearance); mutate(changed); assert.throws(() => validateClearance(changed, expected)); }); }
 function walk(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
@@ -312,7 +333,7 @@ check("public metadata contains no private evidence, assessment policy or source
   assert(!/[A-Z]:[\\/]|Shared drives|PaperDatabases|physics-audit|PACKET_006|\.docx?\b|\.xlsx?\b/i.test(metadataText));
   const allowedMeta = new Set(["course", "title", "release", "default_topic", "topics", "analysis", "topic_mapping_counts"]);
   assert(Object.keys(meta).every(key => allowedMeta.has(key)));
-  const allowedInfo = new Set(["build_id", "built_at", "topics", "topic_counts", "parts", "groups", "assets", "analysis_source"]);
+  const allowedInfo = new Set(["build_id", "built_at", "topics", "topic_counts", "parts", "groups", "assets", "crop_notices", "analysis_source"]);
   assert(Object.keys(info).every(key => allowedInfo.has(key)));
   assert(meta.analysis.groups.every(group => Object.keys(group).every(key => ["code","label","summary","checks","classification_note","display_code","topic"].includes(key))));
   for(const kind of ["groups","atoms","types"]){
@@ -335,6 +356,37 @@ check("release runs the exact frozen shared engine and consumer config", () => {
   for (const [published, source] of [["engine/ppqviewer.js","engine/ppqviewer.js"],["engine/ppqviewer.css","engine/ppqviewer.css"],["physics-config.js","example/physics-config.js"],["physics-identity.js","example/physics-identity.js"],["physics-login.js","example/physics-login.js"]])
     assert.strictEqual(sha(fs.readFileSync(path.join(releaseRoot, published))), sha(fs.readFileSync(path.join(ROOT, source))));
 });
+/* Smith 2026-09-22 (B(b)): a part whose question picture also shows the previous sub-part
+   stays served with a notice, until the crop repair lands. The notice must ride only on the
+   exact picture it was proven on, so a repaired crop (new hash) drops it by itself. */
+const cropNoticePath = path.join(ROOT, "reports/ib-crop-notices.json");
+const cropNoticeList = fs.existsSync(cropNoticePath) ? json(cropNoticePath) : null;
+check("crop notices ride only on the exact served picture each was proven on", () => {
+  const byId = new Map(allQuestions.map(q => [q.id, q]));
+  const expectedNotes = new Map();
+  if (cropNoticeList) {
+    assert.strictEqual(cropNoticeList.schema_version, 1);
+    for (const n of cropNoticeList.notices) {
+      assert(["contained", "identical"].includes(n.verdict), "only a proven verdict may carry a notice: " + n.served_id);
+      const q = byId.get(n.served_id);
+      if (q && q.source_part_id === n.source_part_id && q.question_images.includes("assets/" + n.crop_sha256 + ".png"))
+        expectedNotes.set(n.served_id + "|" + n.crop_sha256, {kind:n.kind, this_label:n.this_label, other_label:n.other_label});
+    }
+  }
+  let carried = 0;
+  for (const q of allQuestions) {
+    const notes = Array.isArray(q.crop_notes) ? q.crop_notes : [];
+    assert(!Object.hasOwn(q, "crop_notes") || notes.length, "crop_notes is present only when it holds a notice: " + q.id);
+    for (const note of notes) {
+      assert(note.kind && note.this_label && note.other_label && Object.keys(note).length === 3, "a public crop note carries labels and kind only: " + q.id);
+      const key = [...expectedNotes.keys()].find(k => k.startsWith(q.id + "|") && JSON.stringify(expectedNotes.get(k)) === JSON.stringify(note));
+      assert(key, "a served crop note must be proven on this part's exact picture: " + q.id);
+      expectedNotes.delete(key); carried++;
+    }
+  }
+  assert.strictEqual(expectedNotes.size, 0, "every proven notice for a served picture must be carried: " + [...expectedNotes.keys()].slice(0, 5).join(", "));
+  assert.strictEqual(info.crop_notices || 0, carried, "build-info counts the notices actually carried");
+});
 const html = read(path.join(releaseRoot, "index.html"));
 const dom = new JSDOM(html, {url:"https://example.test/ibphysicsppqs/?topic=A.5", runScripts:"outside-only", pretendToBeVisual:true});
 try {
@@ -351,6 +403,33 @@ try {
   for (const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))
     if (match[1].includes("window.physicsViewer =")) w.eval(match[1]);
   const v = w.physicsViewer, root = w.document.getElementById("ppq-root");
+  /* d029 (HL/SL twins). A question printed in both papers is one question, and the
+     pupil meets it in their own level's printing, so a single learner no longer sees
+     every cleared part. The release guarantee is therefore stated in three parts, and
+     it is stricter than the one it replaces, not looser:
+       1. each level's view is exactly the collapse of the cleared set for that level;
+       2. the two views TOGETHER are exactly the cleared set, so nothing a clearance
+          approved can become unreachable at both levels;
+       3. every cross-level pair splits, one printing to each level, never both to one.
+     Counts a pupil can click (facet badges) carry the reachable number; progress REPORT
+     denominators deliberately still span the whole bank, as noted further down. */
+  function collapseFor(list, level) {
+    const groups = new Map();
+    list.forEach(q => { const key = q.source_group_id; if (!key) return; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(q); });
+    const drop = new Set();
+    groups.forEach(members => {
+      if (members.length < 2 || new Set(members.map(q => q.level)).size < 2) return;
+      const native = members.filter(q => q.level === level);
+      const keep = native.length ? native[0] : members[0];
+      members.forEach(q => { if (q !== keep) drop.add(q.id); });
+    });
+    return list.filter(q => !drop.has(q.id));
+  }
+  /* d030: A5 leads every part in its cleared set, so leadOnly is a no-op here; it is
+     applied anyway so the expectation is built by the same rule the viewer uses. */
+  const leadOnly = (list, topic) => list.filter(q => q.topic_codes[0] === topic);
+  const a5HL = collapseFor(leadOnly(questions, "A.5"), "HL"), a5SL = collapseFor(leadOnly(questions, "A.5"), "SL");
+  function atLevel(level) { v.store.prefs.learnerLevel = level; v.filterQuestions(); return sorted(v.view.map(q => q.id)); }
   function press(key) {
     root.dispatchEvent(new w.Event("pointerdown", {bubbles:true}));
     root.dispatchEvent(new w.KeyboardEvent("keydown", {key, bubbles:true, cancelable:true}));
@@ -365,19 +444,64 @@ try {
     assert.strictEqual(v.cfg.selfReport.autoReveal,true);
     assert(!root.querySelector(".ppq-side-rating"));
     assert(root.querySelector(".ppq-card > .ppq-competence.ppq-inline-rating"));
-    assert.strictEqual(v.view.length, questions.length);
-    assert.match(root.querySelector(".ppq-counter").textContent, new RegExp("^" + questions.length + " in complete mix\\s*/\\s*" + questions.length + " parts"));
+    assert.strictEqual(v.view.length, a5HL.length); /* d029: the default learner is HL */
+    assert.match(root.querySelector(".ppq-counter").textContent, new RegExp("^" + a5HL.length + " in complete mix\\s*/\\s*" + a5HL.length + " parts"));
     assert(root.querySelector(".ppq-dash-facet-content"));
     assert(!root.querySelector(".ppq-dash-left"), "Keep one dashboard on the right");
     const pupilPage = w.document.body.cloneNode(true);
     pupilPage.querySelectorAll("script,style,[hidden]").forEach(node => node.remove());
     assert(!/\b(?:mocks?|assessment clearance|reserved (?:for|test)|teacher preview)\b/i.test(pupilPage.textContent));
   });
+  check("both levels together reach every cleared A5 part, and each twin splits one printing per level", () => {
+    const hl = atLevel("HL"), sl = atLevel("SL");
+    assert.deepStrictEqual(hl, sorted(a5HL.map(q => q.id)), "the HL view is the HL collapse of the cleared set");
+    assert.deepStrictEqual(sl, sorted(a5SL.map(q => q.id)), "the SL view is the SL collapse of the cleared set");
+    /* d030: the union is measured against the parts A5 LEADS. A part A5 merely shares
+       is reachable through the topic that does lead it, and through a shared link, which
+       the byId sweep at the end of this check proves for every cleared printing. */
+    const led = leadOnly(questions, "A.5");
+    assert.deepStrictEqual(sorted([...new Set([...hl, ...sl])]), sorted(led.map(q => q.id)),
+      "no part this topic leads may be unreachable at both levels");
+    const pairs = new Map();
+    led.forEach(q => { if (!q.source_group_id) return; if (!pairs.has(q.source_group_id)) pairs.set(q.source_group_id, []); pairs.get(q.source_group_id).push(q); });
+    let split = 0;
+    pairs.forEach(members => {
+      if (members.length < 2 || new Set(members.map(q => q.level)).size < 2) return;
+      split++;
+      const inHL = members.filter(q => hl.includes(q.id)), inSL = members.filter(q => sl.includes(q.id));
+      assert.strictEqual(inHL.length, 1, "exactly one printing reaches an HL learner");
+      assert.strictEqual(inSL.length, 1, "exactly one printing reaches an SL learner");
+      assert.notStrictEqual(inHL[0].id, inSL[0].id, "the two levels must not be served the same printing");
+      assert.strictEqual(inHL[0].level, "HL"); assert.strictEqual(inSL[0].level, "SL");
+    });
+    assert.strictEqual(split, led.length - a5HL.length, "every part the collapse removes is accounted for by a split pair");
+    assert(split > 0, "A5 has cross-level pairs; a zero here means the twin key stopped resolving");
+    assert.deepStrictEqual(atLevel("HL"), hl, "the HL view is restored for the checks that follow");
+    for (const q of questions) assert(v.byId[q.id], "every cleared printing stays addressable by a shared link at either level");
+  });
+  check("a served part with a proven wide crop tells the pupil which part to answer, above the picture", () => {
+    const noticed = allQuestions.filter(q => Array.isArray(q.crop_notes) && q.crop_notes.length);
+    if (!noticed.length) { assert(!cropNoticeList || !cropNoticeList.notices.length, "a non-empty notice list must reach at least one served part"); return; }
+    const target = noticed.find(q => q.topic_codes[0] === "A.5" && q.level === "HL") || noticed[0];
+    const before = v.cur && v.cur.id;
+    v.goToId(target.id);
+    assert.strictEqual(v.cur.id, target.id);
+    const boxes = Array.from(root.querySelectorAll(".ppq-notice-warn")).filter(box => /Answer part .* only\./.test(box.textContent));
+    assert.strictEqual(boxes.length, target.crop_notes.length, "one warning per proven notice");
+    for (const note of target.crop_notes)
+      assert(boxes.some(box => box.textContent.includes("also shows part " + note.other_label) && box.textContent.includes("Answer part " + note.this_label + " only.")), target.id);
+    const picture = root.querySelector(".ppq-card img.ppq-crop, .ppq-card img");
+    assert(picture && (boxes[0].compareDocumentPosition(picture) & w.Node.DOCUMENT_POSITION_FOLLOWING), "the notice comes before the picture it warns about");
+    const clean = allQuestions.find(q => !q.crop_notes && q.topic_codes[0] === "A.5" && q.level === "HL");
+    v.goToId(clean.id);
+    assert(!Array.from(root.querySelectorAll(".ppq-notice-warn")).some(box => /Answer part .* only\./.test(box.textContent)), "no notice leaks onto a clean part");
+    if (before) v.goToId(before);
+  });
   check("every offered question-type count and click filter exactly match reviewed part membership", () => {
     const groups = meta.analysis.atoms.filter(group => /^A5\./.test(group.code)&&questions.some(q => q.analysis_atoms.includes(group.code)));
     assert.strictEqual(root.querySelectorAll(".ppq-facet-cat").length, groups.length);
     for (const [index, group] of groups.entries()) {
-      const expectedIds = sorted(questions.filter(q => q.analysis_atoms.includes(group.code)).map(q => q.id));
+      const expectedIds = sorted(a5HL.filter(q => q.analysis_atoms.includes(group.code)).map(q => q.id)); /* d029 */
       const button = root.querySelector('.ppq-facet-cat[data-value="' + group.code + '"]');
       assert(button);
       assert(button.textContent.includes(group.label + " (" + group.code + ")"), "Question types use the shared stable labels and IDs");
@@ -386,7 +510,7 @@ try {
       assert.deepStrictEqual(sorted(v.view.map(q => q.id)), expectedIds);
       assert(root.querySelector(".ppq-facet-guidance"));
       root.querySelector(".ppq-facet-clear").click();
-      assert.strictEqual(v.view.length, questions.length);
+      assert.strictEqual(v.view.length, a5HL.length); /* d029 */
     }
     const stats = v._progressStats().axes.find(axis => axis.key === "question_type");
     // The progress report spans the whole bank; the visible topic facet above
@@ -403,12 +527,12 @@ try {
     for (const child of meta.analysis.types.filter(t=>/^A5\./.test(t.code)&&questions.some(q=>q.analysis_types.includes(t.code)))) {
       select(atomSelect, child.parent_atom);
       select(detailSelect, child.code);
-      assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(questions.filter(q=>q.analysis_types.includes(child.code)).map(q=>q.id)));
+      assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(a5HL.filter(q=>q.analysis_types.includes(child.code)).map(q=>q.id))); /* d029 */
       select(detailSelect,"ALL"); select(atomSelect,"ALL");
     }
     for (const group of meta.analysis.groups.filter(g=>/^A5\./.test(g.code)&&questions.some(q=>q.analysis_groups.includes(g.code)))) {
       select(groupSelect,group.code);
-      assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(questions.filter(q=>q.analysis_groups.includes(group.code)).map(q=>q.id)));
+      assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(a5HL.filter(q=>q.analysis_groups.includes(group.code)).map(q=>q.id))); /* d029 */
       select(groupSelect,"ALL");
     }
   });
@@ -425,7 +549,7 @@ try {
       select(paper,paperValue);
       for (const [lo,hi] of periods) {
         select(years,lo+"-"+hi);
-        const expectedIds=questions.filter(q => (/^1(?:A|B)?$/.test(q.paper)?"1":"2") === paperValue && Number(q.year)>=lo && Number(q.year)<=hi).map(q=>q.id);
+        const expectedIds=a5HL.filter(q => (/^1(?:A|B)?$/.test(q.paper)?"1":"2") === paperValue && Number(q.year)>=lo && Number(q.year)<=hi).map(q=>q.id); /* d029 */
         assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(expectedIds));
         for (const q of v.view) {
           const source=expectedById.get(q.id);
@@ -436,7 +560,7 @@ try {
       select(years,"ALL");
     }
     select(paper,"ALL");
-    assert.strictEqual(v.view.length,questions.length);
+    assert.strictEqual(v.view.length,a5HL.length); /* d029 */
   });
   check("the real topic selectors keep exact part scope and only their own descriptors",()=>{
     const topicSelect=root.querySelector('select[aria-label="topic"]');
@@ -444,11 +568,21 @@ try {
     for(const topic of [...reviewedTopics,...(d2?[{topic:"D.2",...d2.taxonomy}]:[]),...eTaxonomies]){
       select(topicSelect,topic.topic);
       const selected=allQuestions.filter(q=>q.topic_codes.includes(topic.topic)),allowed=new Set(topic.atoms.map(atom=>atom.code));
-      assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(selected.map(q=>q.id)));
-      const expectedCodes=sorted(selected.flatMap(q=>q.analysis_atoms.filter(code=>allowed.has(code))));
+      /* d029/d030: `selected` stays the cleared scope, because the clearance comparisons
+         below are about what was approved. `reachable` is what this learner is served:
+         the parts this topic LEADS (d030), then collapsed to their level (d029). */
+      const reachable=collapseFor(selected.filter(q=>q.topic_codes[0]===topic.topic),"HL");
+      assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(reachable.map(q=>q.id)));
+      /* d030: the types offered are those with a question behind them in THIS topic's
+         pool, not those the cleared scope mentions. E1.6D left E1's list because its
+         only question leads with D2, so the button would have opened nothing; the
+         question itself is still served, under D2. A dead category is worse than an
+         absent one, which is what the emptiness check below states outright. */
+      const expectedCodes=sorted(reachable.flatMap(q=>q.analysis_atoms.filter(code=>allowed.has(code))));
       const categories=Array.from(root.querySelectorAll(".ppq-facet-cat"));
       assert.deepStrictEqual(sorted(categories.map(button=>button.dataset.value)),expectedCodes,topic.topic+" facet categories");
-      for(const button of categories)assert.strictEqual(Number(button.querySelector(".ppq-cat-count").textContent.replace(/[()]/g,"")),selected.filter(q=>q.analysis_atoms.includes(button.dataset.value)).length);
+      for(const button of categories)assert(reachable.some(q=>q.analysis_atoms.includes(button.dataset.value)),topic.topic+" offers "+button.dataset.value+" with no question behind it");
+      for(const button of categories)assert.strictEqual(Number(button.querySelector(".ppq-cat-count").textContent.replace(/[()]/g,"")),reachable.filter(q=>q.analysis_atoms.includes(button.dataset.value)).length,topic.topic+" facet badge must count what clicking it opens"); /* d029 */
       if(topic.topic==="C.1"){
         const version=topic.report.descriptor_example_recovery.taxonomy_version;
         const typeSelect=root.querySelector('select[aria-label="question type"]');
@@ -495,17 +629,19 @@ try {
       }
       if(!expectedCodes.length){assert.strictEqual(meta.topic_mapping_counts[topic.topic].typed_parts,0);assert.match(root.querySelector(".ppq-dash-facet-content").textContent,/Question types are being added/);}
       else{
-        categories[0].click();assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(selected.filter(q=>q.analysis_atoms.includes(categories[0].dataset.value)).map(q=>q.id)));
+        categories[0].click();assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(reachable.filter(q=>q.analysis_atoms.includes(categories[0].dataset.value)).map(q=>q.id))); /* d029 */
         const tips=root.querySelector("details.ppq-facet-guidance");
         if(tips)assert.strictEqual(tips.open,false,"Selecting a topic's type must keep Key tips closed");
-        root.querySelector(".ppq-facet-clear").click();assert.strictEqual(v.view.length,selected.length);
+        root.querySelector(".ppq-facet-clear").click();assert.strictEqual(v.view.length,reachable.length); /* d029 */
       }
     }
-    select(topicSelect,"A.5");assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(questions.map(q=>q.id)));
+    select(topicSelect,"A.5");assert.deepStrictEqual(sorted(v.view.map(q=>q.id)),sorted(a5HL.map(q=>q.id))); /* d029 */
     assert(Array.from(root.querySelectorAll(".ppq-facet-cat")).every(button=>/^A5\./.test(button.dataset.value)));
   });
   check("finding and answering a part retains its selected A5 topic or question group", () => {
-    const target = questions.find(q => q.answer_status === "reviewed_source_key");
+    /* d029: exercise the finder on a part this learner is actually served, so the
+       before/after view comparison below is not measuring a printing they never see. */
+    const target = a5HL.find(q => q.answer_status === "reviewed_source_key");
     assert(target && target.analysis_atoms.length, "A reviewed MCQ must exercise the real finder");
     const selectedValues = () => Array.from(root.querySelectorAll(".ppq-select")).map(select => select.value);
     for (const group of [null, target.analysis_atoms[0]]) {
@@ -589,4 +725,5 @@ try {
   });
   v.destroy();
 } finally { dom.window.close(); }
+console.log("\n" + (process.stdout.isTTY ? "[97;42m" : "") + "  PASSED: all " + checked + " checks. This build is safe to stage.  " + (process.stdout.isTTY ? "[0m" : ""));
 console.log(JSON.stringify({checks:checked, build_id:info.build_id, parts:allQuestions.length, a5_parts:questions.length, topic_counts:info.topic_counts, referenced_assets:references.size, result:"PASS"}));

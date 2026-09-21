@@ -104,6 +104,24 @@
       var params = new URLSearchParams(window.location.search);
       var availableTopics = Array.from(new Set(window.PHYSICS_QUESTIONS.flatMap(function (q) { return q.topic_codes || []; })));
       function topicKey(value) { return String(value).replace(/[.\s]/g, "").toUpperCase(); }
+      // d029 (HL/SL twins): the chooser must count what practice will actually serve,
+      // or it promises 149 A1 parts and hands over 117. The engine collapses each
+      // cross-level pair to the learner's own printing; either way one of the two
+      // goes, so the count is the same at HL and at SL and needs no level here.
+      function countable(list) {
+        var groups = {}, dropped = 0;
+        list.forEach(function (q) {
+          var key = q.source_group_id;
+          if (!key) return;
+          (groups[key] || (groups[key] = [])).push(q);
+        });
+        Object.keys(groups).forEach(function (key) {
+          var members = groups[key], levels = {};
+          members.forEach(function (q) { levels[q.level] = true; });
+          if (members.length > 1 && Object.keys(levels).length > 1) dropped += members.length - 1;
+        });
+        return list.length - dropped;
+      }
       function showTopicChooser() {
         root.innerHTML = '<section class="physics-topic-home"><h1><a href="./"></a></h1>' +
           '<h2>Choose a topic</h2><div class="physics-topic-grid physics-topics-available"></div>' +
@@ -124,7 +142,8 @@
           prefix.textContent = code === "DATA" ? "" : code.replace(".", "");
           link.appendChild(prefix); link.appendChild(document.createTextNode(label)); heading.appendChild(link); article.appendChild(heading);
           var note = document.createElement("p");
-          note.textContent = available ? window.PHYSICS_QUESTIONS.filter(function (q) { return (q.topic_codes || []).indexOf(code) >= 0; }).length + " question parts" : "Not yet available";
+          // d030: count the parts this topic leads, matching what its practice serves.
+          note.textContent = available ? countable(window.PHYSICS_QUESTIONS.filter(function (q) { return (q.topic_codes || [])[0] === code; })) + " question parts" : "Not yet available";
           article.appendChild(note);
           var link_ = topicLinks ? topicLinks[code] : (topicKey(code) === "A5" ? {
             href: window.PHYSICS_META.release ? "/SpecialRelativityDriller/app/coverage.html" : "../SpecialRelativityDriller/app/coverage.html",
@@ -150,6 +169,24 @@
       var hasRequestedTopic = requestedTopics.some(function (requested) {
         return availableTopics.some(function (code) { return topicKey(code) === topicKey(requested) || (code === "DATA" && topicKey(requested) === "1B"); });
       });
+      // The account-bar coverage link belongs to the topic it covers. Until
+      // 2026-09-17 it mounted on every topic, so a pupil practising A1
+      // Kinematics carried a relativity Driller link in the header the whole
+      // way (Smith, looking at an A1 part: "don't need relativity driller
+      // there"). A deep ?id= link with no topic is out of scope too: there is
+      // no topic context to justify it. The A5 topic card keeps its own,
+      // longer link; this governs the header copy only. An explicit meta
+      // account_link still wins, so a consumer can override or suppress it,
+      // and account_link_topics widens the set if another topic gains a
+      // Driller of its own.
+      function accountCoverageLink() {
+        if (Object.hasOwn(window.PHYSICS_META, "account_link")) return window.PHYSICS_META.account_link;
+        var covered = Array.isArray(window.PHYSICS_META.account_link_topics) ? window.PHYSICS_META.account_link_topics : ["A.5"];
+        var inScope = requestedTopics.some(function (requested) {
+          return covered.some(function (code) { return topicKey(code) === topicKey(requested); });
+        });
+        return inScope ? undefined : null;
+      }
       if (useTopicChooser && !params.get("id") && !hasRequestedTopic) {
         showTopicChooser();
         return;
@@ -209,7 +246,7 @@
           appEl: root,
           trackingEnabled: reportingEnabled,
           classes: window.PHYSICS_META.classes,
-          coverage: Object.hasOwn(window.PHYSICS_META, "account_link") ? window.PHYSICS_META.account_link : undefined,
+          coverage: accountCoverageLink(),
           onEnter: start,
           onIdentityChange: function (identity) {
             var learnerId = identity.anonymous_id || "local", viewer = window.physicsViewer;

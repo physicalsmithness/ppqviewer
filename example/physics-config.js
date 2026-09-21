@@ -93,7 +93,14 @@
   }).filter(Boolean));
   var topicFilter = {
     field: "topic_codes", label: "topic", allLabel: "All topics", multi: !analysisGroups.length,
-    values: topicValues, friendlyLabels: topicLabels
+    values: topicValues, friendlyLabels: topicLabels,
+    // d030: a topic's practice is the parts that topic LEADS. topic_codes[0] is the
+    // main strand. Where a topic is only a second strand, the part stays reachable
+    // through its own main topic and through a shared link, but it stops turning up in
+    // another topic's drill. Smith, 2026-09-19, meeting a simultaneity question inside
+    // A1 Kinematics: "It shouldn't be an A1 practice at all. It's completely
+    // miscategorized. The postulate of relativity is not part of A1."
+    valueOf: function (q) { var codes = topicCodes(q); return codes.length ? [codes[0]] : []; }
   };
   if (launchTopics.length) topicFilter.default = topicFilter.multi ? launchTopics : launchTopics[0];
   var filters = [topicFilter];
@@ -214,6 +221,9 @@
 
   // Declared by the catalogue, defaulting to the IB behaviour that predates the field.
   var wantsSignIn = typeof meta.sign_in === "boolean" ? meta.sign_in : course === "ib";
+  // physics-identity.js beside this file is a verbatim copy of the canonical helper,
+  // Special Relativity Driller/app/physics-identity.js, version 2, sha256 0a7ddcc249a3…
+  // (SR d073, 2026-09-21): the copy this project used to call canonical lacked the repair path.
   var identityClient = wantsSignIn && window.PhysicsIdentity && typeof window.PhysicsIdentity.create === "function"
     ? (window.physicsIdentity || (window.physicsIdentity = window.PhysicsIdentity.create())) : null;
   // QoderWork 2026-09-14: "also studied" co-strand panel. topic_codes[0] is the
@@ -282,6 +292,20 @@
         var source = q.source_label || [q.year, q.paper ? "Paper " + q.paper : "", q.level].filter(Boolean).join(" · ");
         return [source, q.question_number ? "Question " + q.question_number + partLabel(q) : q.id].filter(Boolean).join(" · ");
       },
+      // d031 (Smith, 2026-09-19). "Kids don't know what they don't know, so they'll be
+      // more tentative. We need to invite them." The reasons therefore name the fault
+      // for the pupil instead of asking them to describe it, and the lead line sits to
+      // the left of the grid rather than above it, to spend width rather than height.
+      lead: "Please report to help this improve",
+      groupLabels: { question: "", app: "About the app" },
+      reasons: [
+        { code:"wrong_topic", group:"question", label:"Wrong topic?", hint:"This question doesn't seem to belong in this unit at all." },
+        { code:"wrong_type", group:"question", label:"Wrong question type?", hint:"I think this question might be in the wrong group on the right." },
+        { code:"qa_mismatch", group:"question", label:"Q&A don't match?", hint:"The answer shown belongs to a different question or part." },
+        { code:"bad_crop", group:"question", label:"Bad cropping?", hint:"Something's been cropped, or the question or answer is missing." },
+        { code:"broken", group:"app", label:"Something broken?", hint:"A button, an image or the page isn't working.", detail:"invite" },
+        { code:"improve", group:"app", label:"Could be better?", hint:"If you think you can see what would improve this, say here.", detail:"invite" }
+      ],
       contextOf: function (q) {
         return { course:course, source_part_id:q.source_part_id || "", parent_id:q.parent_id || "", year:q.year,
           paper:q.paper, source_level:q.level, question_number:q.question_number, part_label:q.label,
@@ -300,8 +324,24 @@
     attemptHistory: { enabled: course === "ib", defaultVisible: true },
     practiceSelection: { enabled: course === "ib", defaultMode: "mix" },
     learnerLevel: { enabled: course === "ib", defaultValue: "HL" },
-    questionBadgesOf: course === "ib" ? function (q) {
+    // d029 (HL/SL twins). source_group_id is the content seat's cross-level id, and
+    // its ibchem_xlvl_ prefix is what marks a pair printed in both papers. In the
+    // 2026-09-14 release, 160 of 543 served parts sit in one of 80 such pairs.
+    levelTwins: course === "ib" ? {
+      enabled: true,
+      keyOf: function (q) { return q.source_group_id || null; },
+      levelOf: function (q) { return q.level; }
+    } : null,
+    questionBadgesOf: course === "ib" ? function (q, context) {
       var badges = [];
+      // d029: when only the other level's printing exists, say so. Smith: "HLs need
+      // to know that the SL version is a slightly easier version."
+      var learner = context && context.learnerLevel;
+      if (learner && /^(HL|SL)$/.test(q.level || "") && q.level !== learner) {
+        badges.push(q.level === "SL"
+          ? { label: "SL printing", level: "SL", title: "This question was set in both papers and only the SL printing is here. The SL version is slightly easier than the HL one." }
+          : { label: "HL printing", level: "HL", title: "This question was set in both papers and only the HL printing is here. The SL version is slightly easier." });
+      }
       if (topicCodes(q).indexOf("A.5") >= 0) badges.push({ label:"Current: HL", level:"HL", title:"A5 is higher-level content in the current IB syllabus." });
       var currentLevels = unique(Object.keys(q.current_topic_levels || {}).filter(function (topic) { return topicCodes(q).indexOf(topic) >= 0; }).map(function (topic) { return q.current_topic_levels[topic]; }));
       if (topicCodes(q).indexOf("A.5") < 0 && currentLevels.length === 1) badges.push({label:"Current: " + (currentLevels[0] === "HLSL" ? "HL/SL" : currentLevels[0]),level:currentLevels[0],title:"Current syllabus level from the reviewed topic classification."});
@@ -380,9 +420,17 @@
       return html;
     },
     noticesOf: function (q) {
-      return (Array.isArray(q.practice_scope_notes) ? q.practice_scope_notes : [])
+      var notices = (Array.isArray(q.practice_scope_notes) ? q.practice_scope_notes : [])
         .filter(function (text) { return typeof text === "string" && text.trim(); })
         .map(function (text) { return { tone: "info", label: "Practice focus", text: text.trim() }; });
+      // Smith 2026-09-22: a question picture that also shows the previous sub-part stays
+      // served with a notice saying which part to answer, until the crop repair lands.
+      // The assembler attaches crop_notes only while the served picture is the proven one.
+      (Array.isArray(q.crop_notes) ? q.crop_notes : []).forEach(function (note) {
+        if (!note || !note.this_label || !note.other_label) return;
+        notices.push({ tone: "warn", label: "Picture", text: "This picture also shows part " + note.other_label + ". Answer part " + note.this_label + " only." });
+      });
+      return notices;
     },
     markschemeOf: function (q) {
       var crops = images(q, "markscheme_images"), html = "";

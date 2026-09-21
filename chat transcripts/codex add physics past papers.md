@@ -33,9 +33,9 @@ The viewer already has a shared engine, but none of the three physics courses is
 
 **Smith:**
 
-<send_user_message_question_reply>
-[{"questionItemId":"[\"request_user_input_async\",\"call_nlb8lpTCjKXOODnwIdHyBWAM\",0]","question":"For IB, does “1B” mean Paper 1B, or topic B1 (thermal energy transfers)?","answer":"Paper 1B"}]
-</send_user_message_question_reply>
+**Question:** For IB, does “1B” mean Paper 1B, or topic B1 (thermal energy transfers)?
+
+**Answer:** Paper 1B
 
 **Codex (working update):**
 
@@ -47,9 +47,9 @@ Paper 1B, understood. I found a ready IB catalogue with kinematics, relativity, 
 
 **Smith:**
 
-<send_user_message_question_reply>
-[{"questionItemId":"[\"request_user_input_async\",\"call_enbRq3SYatRNIWe8aqRUt3ZZ\",0]","question":"I found the IB test workbook and test-match records, plus the 2026 Trilogy exam plan. Are these the test sources to exclude, or is there another current test collection I should use?","answer":"There is another test collection"}]
-</send_user_message_question_reply>
+**Question:** I found the IB test workbook and test-match records, plus the 2026 Trilogy exam plan. Are these the test sources to exclude, or is there another current test collection I should use?
+
+**Answer:** There is another test collection
 
 **Codex (working update):**
 
@@ -157,9 +157,9 @@ All nine requested areas are connected in the preview. I’m running the final r
 
 **Smith:**
 
-<send_user_message_question_reply>
-[{"questionItemId":"[\"request_user_input_async\",\"call_guh8pLsEWFaNNbOfalPQdILD\",0]","question":"The Pre-IB folder has a Google Docs version of “PreIB forces and motion test 2024” that I cannot open through the shared-drive link or find through Drive search. Should I treat the PDF and Word versions as the current test, or can you paste the Google Docs link?","answer":"yes."}]
-</send_user_message_question_reply>
+**Question:** The Pre-IB folder has a Google Docs version of “PreIB forces and motion test 2024” that I cannot open through the shared-drive link or find through Drive search. Should I treat the PDF and Word versions as the current test, or can you paste the Google Docs link?
+
+**Answer:** yes.
 
 **Codex (working update):**
 
@@ -214,9 +214,9 @@ The Trilogy numbers count whole questions, but the Pre-IB collection really is o
 
 **Smith:**
 
-<send_user_message_question_reply>
-[{"questionItemId":"[\"request_user_input_async\",\"call_fCtAdbSgWA4qSvKfNprWvmZu\",0]","question":"Your last sentence cut off at “I hope you’re using…”—which source or database did you mean?","answer":"the paper databases...these have all been cut up and categorised already haven't they"}]
-</send_user_message_question_reply>
+**Question:** Your last sentence cut off at “I hope you’re using…”—which source or database did you mean?
+
+**Answer:** the paper databases...these have all been cut up and categorised already haven't they
 
 **Codex (working update):**
 
@@ -768,9 +768,9 @@ I’ll also check the existing teacher/response system for the clarification wor
 
 **Smith:**
 
-<send_user_message_question_reply>
-[{"questionItemId":"[\"request_user_input_async\",\"call_UPw7EOMXoeyXiN6dbNvwQ3hu\",0]","question":"Should previous teacher replies be private to the pupil who asked, or available to everyone practising that question?","answer":"Visible to everyone, without pupil names"}]
-</send_user_message_question_reply>
+**Question:** Should previous teacher replies be private to the pupil who asked, or available to everyone practising that question?
+
+**Answer:** Visible to everyone, without pupil names
 
 **Codex (working update):**
 
@@ -934,9 +934,9 @@ I’ll make the selected mark stay clearly highlighted and bring the next step i
 
 **Smith:**
 
-<send_user_message_question_reply>
-[{"questionItemId":"[\"request_user_input_async\",\"call_BKsqmUzOR1i33iaLarxubCZm\",0]","question":"I’m reading your scale as 2 “Only half understand”, 3 “Mostly understand”, 4 “Fully understand, but I might miss it tomorrow”, and 5 “Fully understand, comfortable with this”. Should I keep the existing wording for 1 and 6?","answer":"Yes, keep 1 and 6"}]
-</send_user_message_question_reply>
+**Question:** I’m reading your scale as 2 “Only half understand”, 3 “Mostly understand”, 4 “Fully understand, but I might miss it tomorrow”, and 5 “Fully understand, comfortable with this”. Should I keep the existing wording for 1 and 6?
+
+**Answer:** Yes, keep 1 and 6
 
 **Codex (working update):**
 
@@ -1904,6 +1904,14 @@ I’m using the save-chat-transcript skill to save this conversation, including 
 **Codex (working update):**
 
 I found the task’s exact title, **Add physics past papers**, and its matching conversation log. I’m checking the export for injected context and tool output before saving it.
+
+**Codex (working update):**
+
+The export contains 40 turns. I’m tidying the recorded clarification replies into readable question-and-answer text and checking that only visible conversation messages are included.
+
+**Codex (working update):**
+
+I’ll finish the export by writing a temporary cleaned copy of this task’s log and replacing the transcript in this project’s `chat transcripts` folder. This needs expanded file permission after Windows blocked the temporary write; it won’t change the original conversation log or viewer files.
 
 ---
 

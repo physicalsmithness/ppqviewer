@@ -165,7 +165,22 @@ window.PPQViewer = (function () {
       endpoint: problemIn.endpoint,
       project: String(problemIn.project || cfg.title),
       sourceLabelOf: typeof problemIn.sourceLabelOf === "function" ? problemIn.sourceLabelOf : function (q) { return cfg.metaLine(q); },
-      contextOf: typeof problemIn.contextOf === "function" ? problemIn.contextOf : null
+      contextOf: typeof problemIn.contextOf === "function" ? problemIn.contextOf : null,
+      /* d031: named reasons, shown as a grid the pupil picks from rather than one
+         button leading to a dropdown. A pupil does not know what they do not know, so
+         the reasons have to name the fault for them. Consumers that supply none keep
+         the single button and the dropdown exactly as before. `detail: "invite"` means
+         the report is worthless without words, so the panel asks for them; the default
+         means the choice already says it and Send alone is enough. */
+      lead: typeof problemIn.lead === "string" ? problemIn.lead : "",
+      groupLabels: problemIn.groupLabels && typeof problemIn.groupLabels === "object" ? problemIn.groupLabels : {},
+      reasons: (Array.isArray(problemIn.reasons) ? problemIn.reasons : []).filter((r) => r && r.code && r.label).map((r) => ({
+        code: String(r.code),
+        label: String(r.label),
+        hint: typeof r.hint === "string" ? r.hint : "",
+        group: String(r.group || "question"),
+        detail: r.detail === "invite" ? "invite" : "optional"
+      }))
     } : null;
     const teacherHelpIn = cfg.teacherHelp;
     cfg.teacherHelp = teacherHelpIn && teacherHelpIn.enabled !== false && typeof teacherHelpIn.endpoint === "string" && /^https:\/\//.test(teacherHelpIn.endpoint) ? {
@@ -364,6 +379,17 @@ window.PPQViewer = (function () {
     cfg.practiceSelection = { enabled: ps.enabled === true, defaultMode: ["unattempted", "mix", "errors"].includes(ps.defaultMode) ? ps.defaultMode : "unattempted" };
     const ll = cfg.learnerLevel || {};
     cfg.learnerLevel = { enabled: ll.enabled === true, defaultValue: ll.defaultValue === "SL" ? "SL" : "HL" };
+    /* d029 (HL/SL twins): a question printed in both papers is one question, and a
+       pupil meets it once, in the printing native to their own level. The consumer
+       supplies the grouping and the level, because only it knows which field carries
+       the content seat's cross-level id. Consumers that supply neither are untouched
+       and every printing keeps being served, which is the behaviour before this. */
+    const lt = cfg.levelTwins || {};
+    cfg.levelTwins = {
+      enabled: lt.enabled === true && typeof lt.keyOf === "function" && typeof lt.levelOf === "function",
+      keyOf: typeof lt.keyOf === "function" ? lt.keyOf : null,
+      levelOf: typeof lt.levelOf === "function" ? lt.levelOf : null
+    };
     cfg.questionBadgesOf = typeof cfg.questionBadgesOf === "function" ? cfg.questionBadgesOf : null;
     /* QoderWork 2026-09-14: an optional per-question "also studied" panel that
        names every topic a part belongs to, main strand first, so a pupil who
@@ -456,12 +482,57 @@ window.PPQViewer = (function () {
     const saved = (this.store.prefs || {}).learnerLevel;
     return saved === "HL" || saved === "SL" ? saved : this.cfg.learnerLevel.defaultValue;
   };
+  /* d029 (HL/SL twins). Collapses each cross-level group in a candidate list to the
+     single printing that matches the learner's saved level. A group is only collapsed
+     when it actually spans two levels: same-level members of one group are siblings,
+     not twins, and must all survive. The learner's level can change in Preferences,
+     and this runs inside filterQuestions, so the served set follows it. */
+  Viewer.prototype._collapseLevelTwins = function (list) {
+    const cfg = this.cfg, twins = cfg.levelTwins;
+    /* A consumer that never declared levelTwins, and any harness context built without
+       a normalised cfg, both land here and keep every printing. */
+    if (!twins || !twins.enabled) return list;
+    const want = this._learnerLevel(), groups = new Map();
+    list.forEach((q) => {
+      const key = twins.keyOf(q);
+      if (key == null || key === "") return;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(q);
+    });
+    const drop = new Set();
+    groups.forEach((members) => {
+      if (members.length < 2) return;
+      if (new Set(members.map((q) => twins.levelOf(q))).size < 2) return;
+      const native = members.filter((q) => twins.levelOf(q) === want);
+      const keep = native.length ? native[0] : members[0];
+      members.forEach((q) => { if (q !== keep) drop.add(cfg.idOf(q)); });
+    });
+    return drop.size ? list.filter((q) => !drop.has(cfg.idOf(q))) : list;
+  };
+  /* d029: the pool a learner can actually reach. Counts a pupil is invited to act on,
+     the facet badges and the group dashboards, must describe what clicking will give
+     them: a badge reading 8 that opens 5 questions is the fault this fixes. Progress
+     REPORT denominators deliberately stay on the whole bank (see _progressStats), and
+     byId lookups keep every printing, so a shared link to either twin still opens. */
+  Viewer.prototype._availableQuestions = function () {
+    const twins = this.cfg.levelTwins;
+    if (!twins || !twins.enabled) return this.questions;
+    const level = this._learnerLevel();
+    if (this._availablePoolLevel !== level || !this._availablePool) {
+      this._availablePoolLevel = level;
+      this._availablePool = this._collapseLevelTwins(this.questions);
+    }
+    return this._availablePool;
+  };
   Viewer.prototype._renderQuestionBadges = function () {
     const box = this.q(".ppq-question-badges");
     if (!box) return;
     box.innerHTML = "";
     let badges = null;
-    try { badges = this.cur && this.cfg.questionBadgesOf(this.cur); } catch (_) { badges = null; }
+    /* d029: badges receive the learner's level, so a consumer can say plainly when the
+       printing on screen is the other level's. Same context shape as timing.targetOf. */
+    const badgeContext = this.cfg.learnerLevel.enabled ? { learnerLevel: this._visitLearnerLevel || this._learnerLevel() } : {};
+    try { badges = this.cur && this.cfg.questionBadgesOf(this.cur, badgeContext); } catch (_) { badges = null; }
     (Array.isArray(badges) ? badges : []).forEach((badge) => {
       if (!badge || typeof badge.label !== "string" || !badge.label.trim()) return;
       const span = el("span", { class: "ppq-question-badge" }, esc(badge.label));
@@ -831,8 +902,24 @@ window.PPQViewer = (function () {
     this.root.appendChild(layout);
 
     const toolbar = el("div", { class: "ppq-toolbar" });
+    /* d031: the reason grid sits between Ask your teacher and Draw, in its own block, so
+       it does not read as two more buttons of the same kind. The lead line sits to its
+       LEFT rather than above it, because vertical space in this strip is the scarce
+       thing. Groups (the question / the app) are headed inside the block. */
+    const reasonGrid = cfg.problemReport && cfg.problemReport.reasons.length ? (function () {
+      const seen = [], byGroup = {};
+      cfg.problemReport.reasons.forEach((r) => { if (!byGroup[r.group]) { byGroup[r.group] = []; seen.push(r.group); } byGroup[r.group].push(r); });
+      return '<div class="ppq-report-block">' +
+        (cfg.problemReport.lead ? '<p class="ppq-report-lead">' + esc(cfg.problemReport.lead) + '</p>' : '') +
+        '<div class="ppq-report-groups">' + seen.map((group) => '<div class="ppq-report-group">' +
+          (cfg.problemReport.groupLabels[group] ? '<span class="ppq-report-group-name">' + esc(cfg.problemReport.groupLabels[group]) + '</span>' : '') +
+          '<div class="ppq-report-grid">' + byGroup[group].map((r) =>
+            '<button class="ppq-report-reason" type="button" data-reason="' + esc(r.code) + '"' +
+            (r.hint ? ' title="' + esc(r.hint) + '"' : '') + '>' + esc(r.label) + '</button>').join("") +
+          '</div></div>').join("") + '</div></div>';
+    })() : (cfg.problemReport ? '<button class="ppq-btn-mini ppq-problem-report" type="button">Report a display problem</button>' : '');
     toolbar.innerHTML = (cfg.teacherHelp ? '<button class="ppq-btn-mini ppq-teacher-help" type="button">' + esc(cfg.teacherHelp.label) + '</button>' : '') +
-      (cfg.problemReport ? '<button class="ppq-btn-mini ppq-problem-report" type="button">Report a display problem</button>' : '') +
+      reasonGrid +
       '<button class="ppq-btn-mini ppq-draw-toggle" type="button">Draw</button>' +
       (cfg.questionTools.resetInPreferences ? '' : '<button class="ppq-btn-mini ppq-reset" type="button">Reset progress</button>');
     if (cfg.questionTools.dock) {
@@ -1142,6 +1229,8 @@ window.PPQViewer = (function () {
     if (resetBtn) resetBtn.addEventListener("click", () => self.reset());
     const problemBtn = this.q(".ppq-problem-report");
     if (problemBtn) problemBtn.addEventListener("click", () => self._openProblemReport());
+    this.qa(".ppq-report-reason").forEach((button) => /* d031 */
+      button.addEventListener("click", () => self._openProblemReport(button.dataset.reason)));
     const helpBtn = self.q(".ppq-teacher-help");
     if (helpBtn) helpBtn.addEventListener("click", () => self._openTeacherHelp());
     if (this.cfg.headerButtons) this.qa(".ppq-headbtn").forEach((b) => b.addEventListener("click", () => {
@@ -2284,7 +2373,7 @@ window.PPQViewer = (function () {
     this._returnIdx = null;
     const order = this.q(".ppq-order").value || "order";
     const start = parseInt(this.q(".ppq-start").value, 10) || 1;
-    this.view = this.questions.filter((qq) => self._matchesQuestionFilters(qq));
+    this.view = this._collapseLevelTwins(this.questions.filter((qq) => self._matchesQuestionFilters(qq)));
     if (order === "shuffle" || order === "shuffle-parts") {
       if (order === "shuffle" && cfg.shuffleGroupKeyOf) {
         const cmp = cfg.sort || function (a, b) { return String(cfg.idOf(a)).localeCompare(String(cfg.idOf(b)), undefined, { numeric: true, sensitivity: "base" }); };
@@ -4403,15 +4492,35 @@ window.PPQViewer = (function () {
     this._helpPoll(); close.focus(); return true;
   };
 
-  Viewer.prototype._openProblemReport = function () {
+  /* d031: what the pupil was looking at, beyond which question. A "wrong question type"
+     report cannot be read without the filters that produced the grouping, and an app
+     report still needs to say which question was on screen. */
+  Viewer.prototype._reportViewContext = function () {
+    const cfg = this.cfg, parts = [], values = {};
+    (cfg.filters || []).forEach((f, i) => {
+      const node = this.q('.ppq-select[data-fidx="' + i + '"]');
+      const value = node && node.value ? String(node.value) : "ALL";
+      const name = f.label || f.field || String(i);
+      values[name] = value;
+      if (value !== "ALL") parts.push(name + ": " + ((f.friendlyLabels && f.friendlyLabels[value]) || value));
+    });
+    if (this.groupFilter) parts.push("question type: " + (this._groupFilterLabel || this.groupFilter));
+    return { filters: values, group_filter: this.groupFilter || "", shown: this.view.length,
+      summary: parts.length ? "Filters in use: " + parts.join(" · ") : "No filters are in use." };
+  };
+  Viewer.prototype._openProblemReport = function (reasonCode) {
     const cfg = this.cfg.problemReport;
     if (!cfg || this._iqOpen || this._reviewingAttempt) return false;
+    const reason = reasonCode ? cfg.reasons.find((r) => r.code === reasonCode) || null : null;
     const body = this.q(".ppq-modal-body"), modal = this.q(".ppq-modal");
     if (!body || !modal) return false;
     const q = this.cur;
     const itemId = q ? String(this.cfg.idOf(q)) : "";
     if (!this._problemDrafts) this._problemDrafts = Object.create(null);
-    let draft = this._problemDrafts[itemId];
+    /* d031: one draft per question AND reason, so a half-written crop report is not
+       overwritten by opening a different reason on the same question. */
+    const draftKey = itemId + "|" + (reason ? reason.code : "");
+    let draft = this._problemDrafts[draftKey];
     if (!draft) {
       let context = {}, source = "No question is open";
       if (q) {
@@ -4425,19 +4534,32 @@ window.PPQViewer = (function () {
       }
       context.item_id = itemId;
       context.source_label = source;
-      draft = this._problemDrafts[itemId] = { message: "", type: "Bad crop or missing content", source, context, url: window.location.href, state: "draft" };
+      context.view_context = this._reportViewContext(); /* d031 */
+      if (reason) context.reason_code = reason.code;
+      draft = this._problemDrafts[draftKey] = { message: "", type: reason ? reason.label : "Bad crop or missing content", source, context, url: window.location.href, state: "draft" };
     }
     const page = el("form", { class: "ppq-progress ppq-problem-form" });
-    page.appendChild(el("h2", { class: "ppq-progress-title" }, "Report a display problem"));
-    page.appendChild(el("p", { class: "ppq-problem-source" }, esc(draft.source)));
+    /* d031: the panel repeats what the pupil was on, because it covers the question.
+       That holds for an app report too: "currently viewing" is the useful half of it. */
+    page.appendChild(el("h2", { class: "ppq-progress-title" }, esc(reason ? reason.label.replace(/\?\s*$/, "") : "Report a display problem")));
+    page.appendChild(el("p", { class: "ppq-problem-thanks" }, "Thanks for taking the time to report."));
+    if (reason && reason.hint) page.appendChild(el("p", { class: "ppq-problem-hint" }, esc(reason.hint)));
+    page.appendChild(el("p", { class: "ppq-problem-source" }, esc(q ? "Currently viewing " + draft.source : draft.source)));
+    if (draft.context.view_context && draft.context.view_context.summary)
+      page.appendChild(el("p", { class: "ppq-problem-view" }, esc(draft.context.view_context.summary)));
     page.appendChild(el("p", { class: "ppq-problem-note" }, "The question details and this page are included. Your answers and progress are not included."));
-    const typeLabel = el("label", { class: "ppq-problem-field" }, "What is wrong? ");
-    const type = el("select", { class: "ppq-problem-type", ariaLabel: "Problem type" });
-    const types = ["Bad crop or missing content", "Question image", "Markscheme image", "Answer or marks", "Other"];
-    types.forEach((label) => type.appendChild(el("option", { value: label }, esc(label))));
-    type.value = draft.type;
-    typeLabel.appendChild(type); page.appendChild(typeLabel);
-    const messageLabel = el("label", { class: "ppq-problem-field" }, "Anything to add? (optional) ");
+    let type = null;
+    if (!reason) {
+      const typeLabel = el("label", { class: "ppq-problem-field" }, "What is wrong? ");
+      type = el("select", { class: "ppq-problem-type", ariaLabel: "Problem type" });
+      const types = ["Bad crop or missing content", "Question image", "Markscheme image", "Answer or marks", "Other"];
+      types.forEach((label) => type.appendChild(el("option", { value: label }, esc(label))));
+      type.value = draft.type;
+      typeLabel.appendChild(type); page.appendChild(typeLabel);
+    }
+    const messageLabel = el("label", { class: "ppq-problem-field" }, reason
+      ? (reason.detail === "invite" ? "Give details below." : "Just press Send, or add more details below.")
+      : "Anything to add? (optional) ");
     const message = el("textarea", { class: "ppq-problem-message", ariaLabel: "Anything to add? (optional)", rows: 5, maxLength: 5000, value: draft.message });
     messageLabel.appendChild(message); page.appendChild(messageLabel);
     const status = el("p", { class: "ppq-problem-status" });
@@ -4448,7 +4570,7 @@ window.PPQViewer = (function () {
     actions.appendChild(close); actions.appendChild(send); page.appendChild(actions);
     const paint = () => {
       const pending = draft.state === "sending";
-      type.disabled = pending; message.disabled = pending; send.disabled = pending || draft.state === "dispatched";
+      if (type) type.disabled = pending; message.disabled = pending; send.disabled = pending || draft.state === "dispatched";
       send.textContent = pending ? "Sending…" : "Send report";
       status.textContent = draft.state === "error" ? "The report could not be sent. Your text is still here; please try again." :
         draft.state === "dispatched" ? "Thanks for reporting." :
@@ -4456,8 +4578,8 @@ window.PPQViewer = (function () {
       status.classList.toggle("ppq-problem-error", draft.state === "error");
     };
     draft.paint = paint;
-    const remember = () => { draft.message = message.value; draft.type = type.value; if (draft.state !== "sending") { draft.state = "draft"; paint(); } };
-    message.addEventListener("input", remember); type.addEventListener("change", remember);
+    const remember = () => { draft.message = message.value; if (type) draft.type = type.value; if (draft.state !== "sending") { draft.state = "draft"; paint(); } };
+    message.addEventListener("input", remember); if (type) type.addEventListener("change", remember);
     close.addEventListener("click", () => this.closeModal());
     page.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -6236,7 +6358,7 @@ window.PPQViewer = (function () {
        question in the group, sharing the progress page's performance scores.
        d011: a group entirely outside the learned scope greys out. */
     const qscores = this._questionScores();
-    this.questions.forEach((q) => this._groupKeys(q).forEach((k) => {
+    this._availableQuestions().forEach((q) => this._groupKeys(q).forEach((k) => { /* d029: no filter scopes this board, so the whole reachable pool is the right one */
       if (!groups[k]) groups[k] = { label: cfg.groupLabelOf(k, q), total: 0, marks: [], ratings: this._zeroRatings(), qids: [], qscores: qscores, inScope: 0 };
       groups[k].total++;
       groups[k].qids.push(String(cfg.idOf(q)));
@@ -6274,7 +6396,12 @@ window.PPQViewer = (function () {
     /* Retain every other active filter, including the broad parent, but ignore the
        selected child while counting. This keeps the full family list visible when
        one family is active. */
-    const source = this.questions.filter((q) => this._matchesQuestionFilters(q, [filter.field]));
+    /* d029: collapse AFTER filtering, exactly as filterQuestions does. Collapsing the
+       whole bundle first and filtering afterwards is not the same operation: where a
+       pair's two printings carry different topic tags, the global collapse can drop the
+       one inside this topic and keep the one outside it, and the badge then undercounts
+       a view that still holds the part. Found by the d029 release check. */
+    const source = this._collapseLevelTwins(this.questions.filter((q) => this._matchesQuestionFilters(q, [filter.field])));
     const sourceIds = {};
     source.forEach((q) => { sourceIds[cfg.idOf(q)] = true; });
     const groups = {};
@@ -6374,7 +6501,7 @@ window.PPQViewer = (function () {
       if (!panel) return;
       const content = panel.querySelector(".ppq-dash-content");
       const groups = {};
-      this.questions.forEach((q) => { if (!col.includes(q)) return; const k = col.groupKey(q); if (!groups[k]) groups[k] = { label: col.groupLabel(q), total: 0, marks: [], ratings: this._zeroRatings(), seq: [] }; groups[k].total++; });
+      this._collapseLevelTwins(this.questions.filter((q) => col.includes(q))).forEach((q) => { const k = col.groupKey(q); if (!groups[k]) groups[k] = { label: col.groupLabel(q), total: 0, marks: [], ratings: this._zeroRatings(), seq: [] }; groups[k].total++; }); /* d029: collapse after the column's own scope */
       this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q || !col.includes(q)) return; const g = groups[col.groupKey(q)]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); });
       Object.keys(this.store.scores).forEach((id) => { const q = this.byId[id]; if (!q || !col.includes(q)) return; const g = groups[col.groupKey(q)]; if (g) { if (g.ratings[this.store.scores[id]] != null) g.ratings[this.store.scores[id]]++; g.seq.push(this.store.scores[id]); } });
       const keys = Object.keys(groups).sort();

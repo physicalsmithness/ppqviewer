@@ -1,6 +1,6 @@
-# architect 1.md
+# architect 5.md
 
-# Chat transcript: Architect 1
+# Chat transcript: Architect 5
 
 **Span:** 2026-08-04 to 2026-09-15. **Participants:** Smith, Claude (architect-maintainer, ppqviewer).
 **Format:** Smith's messages and Claude's replies are reproduced verbatim from the session log. Tool work between them is condensed into bracketed notes; the outputs themselves live in the project folder and are not duplicated here. Claude's internal reasoning is not included.

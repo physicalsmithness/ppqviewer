@@ -198,7 +198,7 @@ let renderedRecordedTimeHeaders = [];
  "_interrogationResponseCue", "_renderInterrogationFeedback", "_filterValue",
  "_filterValues", "_itemNoun", "_groupKeys", "_saveRating", "_renderAttemptHistory", "_syncSideRating", "_parentFilterValue", "_fillSingleFilterOptions", "_syncSingleFilterStyle",
  "_refreshDependentFilters", "_dashboardFacet", "_activeDashboardFacet",
- "_matchesQuestionFilters", "filterQuestions", "setGroupFilter",
+ "_matchesQuestionFilters", "filterQuestions", "setGroupFilter", "_collapseLevelTwins", "_learnerLevel", "_availableQuestions",
  "_setDashboardFacetValue", "_clearDashboardFacet", "_zeroRatings",
  "_renderDashboardFacet", "_catHtml",
  "_buildGuessPicker", "_renderInterrogation", "_isV2", "_guessLabel", "_guessPrompt",
@@ -1277,6 +1277,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _filterValue: V._filterValue,
     _filterValues: V._filterValues,
     _matchesQuestionFilters: V._matchesQuestionFilters,
+    _collapseLevelTwins: V._collapseLevelTwins, /* d029; inert without cfg.levelTwins */
     _itemNoun: V._itemNoun, _groupKeys: V._groupKeys,
     q(selector) {
       if (selector === ".ppq-order") return order;
@@ -1461,6 +1462,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     _syncSingleFilterStyle: V._syncSingleFilterStyle,
     _refreshDependentFilters: V._refreshDependentFilters,
     _matchesQuestionFilters: V._matchesQuestionFilters,
+    _collapseLevelTwins: V._collapseLevelTwins, /* d029; inert without cfg.levelTwins */
     filterQuestions: V.filterQuestions,
     _itemNoun: V._itemNoun, _groupKeys: V._groupKeys,
     _zeroRatings: V._zeroRatings,
@@ -2127,6 +2129,7 @@ function fixture(id, label) { console.log("\n=== " + label + " (" + id + ") ==="
     store: { attempts: [], scores: {} }, byId: {},
     _activeDashboardFacet: () => null, _questionScores: () => ({}),
     _learnedScopeBiting: () => false, _wireCats: () => {},
+    _availableQuestions: V._availableQuestions, /* d029; inert without cfg.levelTwins */
     _itemNoun: V._itemNoun, q: () => dashboardContent
   });
   check(legend.textContent.indexOf("One box per question — grey until tried") >= 0,

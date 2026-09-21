@@ -107,6 +107,30 @@ function assemble() {
     question_images:q.question_images.map(f=>assets.get(f).url),
     context_images:q.context_images.map(f=>assets.get(f).url),
     markscheme_images:q.markscheme_images.map(f=>assets.get(f).url)}));
+  // Smith 2026-09-22 (B(b)): a served part whose question picture also shows the previous
+  // sub-part stays served, with a notice naming which part to answer, until the crop seat's
+  // repair lands. The list (tools/build_ib_crop_notices.py) proves each case on the pixels
+  // and keys it to the faulty image's hash, so a repaired crop drops its notice by itself.
+  const cropNoticePath=path.join(ROOT,"reports/ib-crop-notices.json");
+  let cropNotices={applied:0,stale:0};
+  if(fs.existsSync(cropNoticePath)){
+    const record=JSON.parse(read(cropNoticePath));
+    ensure(record.schema_version===1&&Array.isArray(record.notices),"Crop notice list is not a schema-1 record");
+    const bySource=new Map();
+    for(const n of record.notices){
+      ensure(n.verdict==="contained"||n.verdict==="identical","A crop notice needs a proven verdict: "+n.served_id);
+      ensure(/^[a-f0-9]{64}$/.test(n.crop_sha256||"")&&n.this_label&&n.other_label,"A crop notice needs its image hash and both part labels: "+n.served_id);
+      if(!bySource.has(n.source_part_id))bySource.set(n.source_part_id,[]);
+      bySource.get(n.source_part_id).push(n);
+    }
+    for(const q of publicQuestions){
+      const candidates=bySource.get(q.source_part_id)||[];
+      const live=candidates.filter(n=>q.question_images.includes("assets/"+n.crop_sha256+".png"));
+      cropNotices.stale+=candidates.length-live.length;
+      if(live.length){q.crop_notes=live.map(n=>({kind:n.kind,this_label:n.this_label,other_label:n.other_label}));cropNotices.applied+=live.length;}
+    }
+    cropNotices.sha256=sha(read(cropNoticePath));
+  }
   const shared=["engine/ppqviewer.js","engine/ppqviewer.css","example/physics.html","example/physics-config.js","example/physics-identity.js","example/physics-login.js","tools/assemble_ibphysics_release.js","tools/ib-topic-release.js","tools/ib-reviewed-topics.js","tools/ib-topic-originals.js","tools/ib-topic-mcq.js"];
   shared.push("example/physics-reporting.js");
   if(d2)shared.push("tools/ib-d2-release.js","tools/build_ib_d2_recovery.js","tools/merge_ib_d2_release.js");
@@ -127,12 +151,14 @@ function assemble() {
   const info={build_id:buildId,built_at:new Date().toISOString(),topics:Object.keys(topicLabels),topic_counts:topicMappingCounts,parts:publicQuestions.length,
     groups:Object.fromEntries(meta.analysis.groups.map(g=>[g.code,publicQuestions.filter(q=>q.analysis_groups.includes(g.code)).length])),
     assets:new Set([...assets.values()].map(a=>a.url)).size,
+    crop_notices:cropNotices.applied,
     analysis_source:"Reviewed A1 taxonomy, Special Relativity taxonomy and SHM question types"+(d2?", with the authored D2 question types":"")+
       (eTopics?", and reviewed E1/E2 question types":"")+"; fine memberships are included only where mapped"};
   fs.writeFileSync(path.join(out,"build-info.json"),JSON.stringify(info,null,2)+"\n");
   const local={...info,root:out,clearance:{path:clearancePath,sha256:sha(read(clearancePath))},
     topic_clearance:{path:topicClearancePath,sha256:sha(read(topicClearancePath))},
-    additional_clearances:additionalClearances,source_report:{...input.report,...(d2?{d2_release:d2.report}:{}),...(eTopics?{e_topics_release:eTopics.report}:{})},shared_files:shared.map(f=>({path:f,sha256:sha(read(path.join(ROOT,f)))}))};
+    additional_clearances:additionalClearances,
+    crop_notice_list:cropNotices.sha256?{path:cropNoticePath,sha256:cropNotices.sha256,applied:cropNotices.applied,stale:cropNotices.stale}:null,source_report:{...input.report,...(d2?{d2_release:d2.report}:{}),...(eTopics?{e_topics_release:eTopics.report}:{})},shared_files:shared.map(f=>({path:f,sha256:sha(read(path.join(ROOT,f)))}))};
   fs.writeFileSync(path.join(ROOT,"dist/ibphysics-release/latest.json"),JSON.stringify(local,null,2)+"\n");
   console.log(JSON.stringify({root:out,...info},null,2));
   return local;
