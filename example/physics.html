@@ -143,7 +143,11 @@
           link.appendChild(prefix); link.appendChild(document.createTextNode(label)); heading.appendChild(link); article.appendChild(heading);
           var note = document.createElement("p");
           // d030: count the parts this topic leads, matching what its practice serves.
-          note.textContent = available ? countable(window.PHYSICS_QUESTIONS.filter(function (q) { return (q.topic_codes || [])[0] === code; })) + " question parts" : "Not yet available";
+          // The noun follows the consumer: IB records are parts, Trilogy records are whole
+          // questions, and the live Trilogy chooser was calling 32 questions "32 question parts".
+          var count = countable(window.PHYSICS_QUESTIONS.filter(function (q) { return (q.topic_codes || [])[0] === code; }));
+          var noun = window.PPQ_CONFIG.itemNoun === "part" ? " question part" : " question";
+          note.textContent = available ? count + noun + (count === 1 ? "" : "s") : "Not yet available";
           article.appendChild(note);
           var link_ = topicLinks ? topicLinks[code] : (topicKey(code) === "A5" ? {
             href: window.PHYSICS_META.release ? "/SpecialRelativityDriller/app/coverage.html" : "../SpecialRelativityDriller/app/coverage.html",
