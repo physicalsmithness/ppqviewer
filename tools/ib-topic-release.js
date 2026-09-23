@@ -21,7 +21,7 @@ const sharedCropReviewPath = path.join(ROOT, "reports/ib-a5-shared-parent-crop-r
 const imageFields = ["question_images", "context_images", "markscheme_images"];
 
 function reviewedInput() {
-  const input = ibInput({reviewedTopicPaths: analysisPaths, extraExclusionsPaths: [assessmentPath]});
+  const input = ibInput({release:true,reviewedTopicPaths: analysisPaths, extraExclusionsPaths: [assessmentPath]});
   const questions = input.questions.filter(q => q.topic_codes.some(topic => ["A.1", "A.5", "C.1"].includes(topic)));
   const mcq = buildTopicMcq(questions);
   for (const q of questions) {

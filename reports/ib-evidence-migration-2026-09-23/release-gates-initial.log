@@ -1,0 +1,569 @@
+ppqviewer IB Physics release run 
+Started 23/09/2026 17:33:02.39 
+===== node tools\assemble_ibphysics_release.js ===== 
+{
+  "root": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\ibphysics-release\\7df8c498b1ffb20b-1790181229167",
+  "build_id": "7df8c498b1ffb20b",
+  "built_at": "2026-09-23T16:33:49.660Z",
+  "topics": [
+    "A.1",
+    "A.5",
+    "C.1",
+    "D.2",
+    "E.1",
+    "E.2"
+  ],
+  "topic_counts": {
+    "A.1": {
+      "parts": 149,
+      "typed_parts": 128
+    },
+    "A.5": {
+      "parts": 138,
+      "typed_parts": 138
+    },
+    "C.1": {
+      "parts": 25,
+      "typed_parts": 7
+    },
+    "D.2": {
+      "parts": 146,
+      "typed_parts": 146
+    },
+    "E.1": {
+      "parts": 55,
+      "typed_parts": 55
+    },
+    "E.2": {
+      "parts": 39,
+      "typed_parts": 39
+    }
+  },
+  "parts": 543,
+  "groups": {
+    "A5.REF": 6,
+    "A5.GAL": 8,
+    "A5.POST": 16,
+    "A5.GAMMA": 0,
+    "A5.LORENTZ": 0,
+    "A5.VEL": 14,
+    "A5.INTERVAL": 2,
+    "A5.PROPER": 13,
+    "A5.TD": 17,
+    "A5.LC": 14,
+    "A5.SIM": 25,
+    "A5.WORLDLINE": 13,
+    "A5.SIGNAL": 1,
+    "A5.MUON": 9,
+    "A1.FAM-TRACE": 23,
+    "A1.FAM-RATE": 29,
+    "A1.FAM-CHANGE": 26,
+    "A1.FAM-FLIGHT": 20,
+    "A1.FAM-DIRECTION": 34,
+    "C1-1": 0,
+    "C1-2": 0,
+    "C1-3": 0,
+    "C1-4": 0,
+    "C1-5": 0,
+    "C1-6": 0,
+    "C1-7": 0,
+    "C1-8A": 0,
+    "C1-8B": 0,
+    "C1-8C": 0,
+    "C1-9": 0,
+    "C1-10A": 0,
+    "C1-10B": 0,
+    "C1-11": 0,
+    "C1-12": 0,
+    "C1-13": 0,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:1": 3,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:2": 1,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:3": 0,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:4": 1,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:5": 2,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:6": 0,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:7": 0,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:8": 0,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:9": 0,
+    "C1_007B_WORKBOOK_cc4e297f2763:family:10": 0,
+    "d2_sort_2026-09-09@867cbd71ae82::family:1": 30,
+    "d2_sort_2026-09-09@867cbd71ae82::family:2": 39,
+    "d2_sort_2026-09-09@867cbd71ae82::family:3": 22,
+    "d2_sort_2026-09-09@867cbd71ae82::family:4": 17,
+    "d2_sort_2026-09-09@867cbd71ae82::family:5": 5,
+    "d2_sort_2026-09-09@867cbd71ae82::family:6": 10,
+    "d2_sort_2026-09-09@867cbd71ae82::family:7": 23,
+    "d2_sort_2026-09-09@867cbd71ae82::family:8": 8,
+    "d2_sort_2026-09-09@867cbd71ae82::family:9": 5,
+    "d2_sort_2026-09-09@867cbd71ae82::family:10": 6,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.1:Nuclear identity and notation": 18,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.1:Rutherford–Geiger–Marsden scattering": 2,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.1:Atomic spectra as evidence": 5,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.1:Energy-level diagrams and transitions": 9,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.1:Classical and Bohr atomic models": 5,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.1:Nuclear radius, density and high-energy scattering": 6,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.2:Photon model and particle evidence": 0,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.2:Photoelectric mechanism and thresholds": 8,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.2:Photoelectric calculations": 11,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.2:Photoelectric apparatus and I–V behaviour": 5,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.2:Linear photoelectric graphs": 2,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.2:de Broglie matter waves": 12,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.2:Electron diffraction": 2,
+    "E1_E2_SUPPLIED_PACK_MAP_2026-09-12:family:E.2:Compton scattering": 1,
+    "E1_E2_REVIEW_2026-09-13:family:E.1:Putting a model or claim on trial": 1,
+    "E1_E2_REVIEW_2026-09-13:family:E.1:Turning trajectories into an invisible picture": 1,
+    "E1_E2_REVIEW_2026-09-13:family:E.1:Doing the nucleus's bookkeeping": 0,
+    "E1_E2_REVIEW_2026-09-13:family:E.1:Reading the atom's barcode": 9,
+    "E1_E2_REVIEW_2026-09-13:family:E.1:Making the orbit model pay its algebraic rent": 0,
+    "E1_E2_REVIEW_2026-09-13:family:E.2:Freeing an electron from a surface": 2,
+    "E1_E2_REVIEW_2026-09-13:family:E.2:Making a beam interfere with itself": 0,
+    "E1_E2_REVIEW_2026-09-13:family:E.2:Turning motion into wavelength": 0,
+    "E1_E2_REVIEW_2026-09-13:family:E.2:Balance the quantum ledger": 1,
+    "E1_E2_REVIEW_2026-09-13:family:E.2:Read the collector, not just the light": 0
+  },
+  "assets": 1316,
+  "crop_notices": 44,
+  "analysis_source": "Reviewed A1 taxonomy, Special Relativity taxonomy and SHM question types, with the authored D2 question types, and reviewed E1/E2 question types; fine memberships are included only where mapped"
+}
+===== node --check engine\ppqviewer.js ===== 
+===== node test\test_ibphysics_release.js ===== 
+ok the A5 subset permits only the exact original crop, reviewed note and geometry removals
+ok clearance binds the exact IDs,15 test questions and all current input bytes
+ok adding or dropping a reviewed part revokes clearance
+ok unresolved test coverage revokes clearance
+ok duplicate test numbers cannot stand in for all15 questions
+ok changed evidence bytes revoke clearance
+ok missing required taxonomy fingerprint revokes clearance
+ok missing served-image fingerprint revokes clearance
+ok repeated evidence cannot replace independent fingerprints
+ok the entire package contains exactly the additional cleared topic memberships
+ok the two whole-parent removals agree with the completed visual review and global crop holds
+ok missing reserved geometry needs exact visual evidence and cannot conceal invalid own crops
+  A1 reviewed old-preview parts: 181; full reviewed source parts: 756; final A1: 149; A5: exact reviewed baseline subset = 138
+ok public taxonomy and typed counts retain authored mappings, without inventing fine descriptors
+ok additional-topic clearance binds its exact scope, source evidence and every rendered asset
+ok E clearance matches freshly regenerated scope, source bytes, crop roles and existing-topic safety
+ok a dropped additional-topic source ID invalidates clearance
+ok unresolved additional-topic assessment items cannot be published
+ok changed additional-topic source evidence invalidates clearance
+ok missing additional-topic taxonomy provenance invalidates clearance
+ok missing native-catalogue provenance invalidates additional-topic clearance
+ok a missing additional-topic crop invalidates clearance
+ok repeated additional-topic fingerprints cannot replace required evidence
+ok an existing source ID cannot be relabelled as another native part
+ok public files contain only the page,viewer,bundle and referenced cropped images
+ok public metadata contains no private evidence, assessment policy or source paths
+ok release runs the exact frozen shared engine and consumer config
+ok crop notices ride only on the exact served picture each was proven on
+ok published page counts parts and opens its A5 family dashboard
+ok both levels together reach every cleared A5 part, and each twin splits one printing per level
+ok a served part with a proven wide crop tells the pupil which part to answer, above the picture
+ok every offered question-type count and click filter exactly match reviewed part membership
+ok finer type and legacy-group filters retain exact question identities
+ok IB paper and year-range filters select the exact source parts without rewriting provenance
+ok the real topic selectors keep exact part scope and only their own descriptors
+ok finding and answering a part retains its selected A5 topic or question group
+  252 real MCQs; 2016 fresh keyboard journeys; 0 reused journeys with identical question records and UI bytes
+ok every released reviewed MCQ marks A-D and 1-4 against its verified source key
+
+  PASSED: all 36 checks. This build is safe to stage.  
+{"checks":36,"build_id":"7df8c498b1ffb20b","parts":543,"a5_parts":138,"topic_counts":{"A.1":{"parts":149,"typed_parts":128},"A.5":{"parts":138,"typed_parts":138},"C.1":{"parts":25,"typed_parts":7},"D.2":{"parts":146,"typed_parts":146},"E.1":{"parts":55,"typed_parts":55},"E.2":{"parts":39,"typed_parts":39}},"referenced_assets":1316,"result":"PASS"}
+===== node test\test_ib_evidence_equivalence.js ===== 
+IDENTICAL substantive evidence: only declared provenance
+PASS full evidence equality rejects content, report, date, image-order, duplicate and unknown-fingerprint changes
+PASS historical removals require continued reservation and absence from the public bundle
+===== node test\test_ib_evidence_overlay.js ===== 
+PASS evidence overlay: staging, forbidden mutations, async rejection, restoration, and unchanged active bytes
+===== node test\test_ib_evidence_transaction.js ===== 
+ok verified candidates replace every original and leave a completion receipt
+ok changed target refuses before any active write
+ok changed candidate refuses before any active write
+ok changed backup refuses before any active write
+ok an existing journal is never replaced or removed
+ok rename failure at target 0 restores every original
+ok rename failure at target 1 restores every original
+ok partial temporary copy cannot corrupt any active target
+ok receipt rename failure rolls all promoted targets back
+ok failed rollback retains its journal and remaining new bytes
+ok a concurrent edit before a later swap is preserved and blocks completion
+ok a concurrent edit before rollback is never replaced by backup bytes
+ok a changed backup is never used for rollback
+ok journal cleanup failure retains the completed receipt and promoted bytes
+14 evidence transaction checks passed
+===== node test\test_ib_release_input_isolation.js ===== 
+PASS release input is identical with invalid DATA, different D2 and invalid Driller syllabus previews
+PASS D2 recovery retains identical questions, holds, memberships and provenance across preview changes
+PASS ordinary preview control rejects its invalid supplement; active inputs remain byte-for-byte unchanged
+===== node test\test_ib_d2_recovery.js ===== 
+PASS all authored memberships are versioned and DATA remains separate
+PASS type references do not become independently assessed part tags
+PASS both disputed keys and their three memberships are preserved but held
+PASS ordinary native IDs partition completely into candidates and explicit holds
+PASS current test closure and source-year embargo independently protect candidates
+PASS real parent and nested part identity derives from original source labels
+PASS source holds propagate through omitted sibling, twin and reverse duplicate
+PASS every offered image is a hash-bound crop, never a full-page fallback
+PASS provenance binds current corpus, original PDFs, preview metadata and helper
+PASS written input, when present, reproduces exactly from read-only sources
+10 D2 recovery checks passed; 184 candidate parts remain private.
+===== node test\test_ib_d2_release.js ===== 
+PASS release projection never widens the frozen candidate identities
+PASS assessment certification requires exact candidate scope and original file hash
+PASS same-parent wrong-part crops and ambiguous reuse are rejected
+PASS per-image rectangles reject missing, swapped-page and degenerate geometry
+PASS retired mass demands and disputed answer keys remain out of release
+PASS public taxonomy displays local labels and keeps understanding references private
+PASS current level follows authored operations and ignores original paper level
+PASS retained assets have exact role, part, rectangle and current byte witnesses
+PASS automatic MCQ keys are backed by unique original number-answer lines
+9 D2 release checks passed; 149 private parts; assessment complete: false.
+===== node test\test_ib_d2_presentation.js ===== 
+7 reviewed D2 presentation checks passed
+===== node test\test_ib_d2_merge.js ===== 
+PASS overlap enriches one stable question without mutating inputs or assets
+PASS new sources are appended exactly once
+PASS changed ownership, image context, marks and source metadata fail closed
+PASS exam years and direct descriptor scope are mandatory
+PASS existing source keys are retained and conflicts fail
+5 D2 merge checks passed
+===== node test\test_stage_ibphysics_release.js ===== 
+PASS explicit replacement changes only the checked staged package and stale tracked assets
+PASS dirty staging still requires the explicit replacement option
+PASS an unstaged edit cannot be overwritten by replacement
+PASS an index-only edit is rejected even when worktree bytes match the old build
+PASS untracked and ignored files stop replacement without removal
+PASS unrelated tracked additions cannot be staged or deleted
+PASS a removed staged asset makes the old package verification fail
+PASS additional D2 source fingerprints are verified before copying
+PASS a wrapped or incomplete additional clearance cannot pass staging
+PASS hidden index flags cannot conceal deployment changes
+PASS unknown or ambiguous old build identities do not authorize replacement
+PASS baseline drift and modified old generated assets fail before deployment writes
+warning: in the working copy of 'data/physics_catalogue.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'engine/ppqviewer.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'engine/ppqviewer.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'physics-config.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'physics-identity.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'physics-login.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'physics-reporting.js', LF will be replaced by CRLF the next time Git touches it
+PASS declared autocrlf normalization accepts the exact mixed-ending package and keeps binary assets raw
+warning: in the working copy of 'engine/ppqviewer.css', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'physics-config.js', CRLF will be replaced by LF the next time Git touches it
+PASS explicit Git text and eol attributes use the same canonical index check
+PASS normalization does not permit a genuine staged edit with restored generated worktree bytes
+PASS even a raw newline-only worktree edit is rejected when the normalized index still matches
+PASS without declared text conversion a normalized index cannot substitute for raw generated bytes
+PASS clean filters, encoding, ident and binary text conversion are refused before copying
+PASS an unfinished evidence promotion blocks staging without changing the checkout
+19 isolated release staging checks passed; no real deployment was touched.
+===== node test\test_ppqviewer.js ===== 
+  ok   engine exposes mount
+  ok   config loaded
+  ok   questions present
+  ok   furniture built (Option A)
+  ok   filters built from meta
+  ok   full view = all questions
+  ok   a question is shown
+  ok   options = current question labels
+  ok   attempt recorded
+  ok   attempt row engine-ready
+  ok   competence revealed
+  ok   self-rating stored
+  ok   dashboard groups rendered
+  ok   dashboard shows a tick/cross
+  ok   store persists (attempts)
+  ok   store persists (scores)
+  ok   subject filter narrows view
+  ok   d002: missing storageKey throws
+  ok   embed-safe: no getElementById() calls
+
+19 passed, 0 failed
+===== node test\test_chem.js ===== 
+  ok   config is chemistry v2
+  ok   questions present
+  ok   migrate: score seeded from v1
+  ok   migrate: mcq history seeded as attempt
+  ok   2 filters + order = 3 selects
+  ok   split dashboard (2 flanking panels)
+  ok   split has rating boxes + ribbon/heat
+  ok   MCQ: type mcq, option buttons with text
+  ok   MCQ: correct records a right attempt
+  ok   flashcard: type flashcard, no options
+  ok   flashcard: reveal shows markscheme
+  ok   flashcard: reveal records no graded attempt
+  ok   structured: part chips (>1)
+  ok   structured: whole-question assembly
+  ok   structured: mode toggle (whole + part)
+  ok   referenceBooklet: button injected
+  ok   header buttons present (2)
+  ok   paper filter narrows to 1A
+
+18 passed, 0 failed
+===== node test\test_content_safety.js ===== 
+
+=== damage heuristics on synthetic records ===
+
+=== record resolvability ===
+
+=== content-safety precedence ===
+
+=== readiness precedence (VSAFE-02) ===
+
+=== engine/wrapper/css wiring ===
+
+=== real analysis_v2 bundle ===
+  pin accounting: 0 heuristic-flagged, 0 ledger-withheld (repaired, awaiting release review), 6 semantic pins (human-review evidence)
+  ATTENTION: heuristics flag 1 record(s) beyond the known-damaged list (auto-withheld at runtime; report to the analysis owner):
+    esat_nsaa_2022_s1_Q36 -> unreplaced authoring placeholder near “c induction placeholder with”
+
+==================  101 passed, 0 failed  ==================
+===== node test\verify_analysis_presentation.js ===== 
+
+=== Q4 (esat_engaa_2016_s1_Q04) ===
+
+=== Q27 (esat_engaa_2016_s1_Q27) ===
+
+=== Q40 (esat_engaa_2019_s1_Q40) ===
+
+=== esat_engaa_2022_s1_Q27 === 3 methods, 6 options
+
+=== esat_engaa_2019_s1_Q01 === 3 methods, 7 options
+
+=== esat_engaa_2017_s1_Q46 === 3 methods, 8 options
+
+=== Q29 split prompts and maths (esat_engaa_2023_s1_Q29) ===
+
+=== audience split (esat_engaa_2022_s1_Q27) ===
+
+=== selected-answer diagnostics (esat_engaa_2022_s1_Q27) ===
+
+=== Things this question used (esat_engaa_2022_s1_Q27) ===
+
+=== freeform reflection (esat_engaa_2022_s1_Q27) ===
+
+=== authored method order (esat_engaa_2022_s1_Q27) ===
+
+=== pre-filled guess percentages and Enter ===
+
+=== guess percentages (esat_engaa_2022_s1_Q27) ===
+
+=== verdict waits for guess declaration ===
+
+=== feedback fallback without authored analysis ===
+
+=== visible response firing ===
+
+=== feedback readiness badge ===
+
+=== source advisory contract ===
+
+=== ESAT launch filters and question finder ===
+
+=== shown count versus filter scope ===
+
+=== dependent subtopic filter ===
+
+=== dashboard subtopic facet ===
+
+=== 2022 Q9 factor-pair route ===
+
+=== classification catalogue coverage ===
+
+=== method ask placement (Phase 1.5) ===
+
+=== analysis overhaul round 2 (VF-13) ===
+
+=== timing system (VF-04/d013) ===
+
+=== category axes and question clusters (VF-14r) ===
+
+=== legacy eliminations use the approved rail (VSAFE-03) ===
+
+=== persisted flag and flagged filter (VF-07) ===
+
+=== session history and review reopen (VF-03) ===
+
+=== pupil progress page (VF-02) ===
+
+=== learned so far (d011) ===
+
+-- d014/VF-15: publish + stem/categories/markscheme faults (2026-07-29 late) --
+
+=== d016: markable units, part navigator, markscheme page narrowing ===
+
+=== 2026-08-17: judged codes, and never a markscheme cover as the answer ===
+
+==================  661 passed, 0 failed  ==================
+===== node test\test_categorisation_integration.js ===== 
+
+=== all 738 canonical family and topic choices ===
+
+=== curated hierarchy, progress and search ===
+
+=== refreshed canonical analysis behavior ===
+
+=== integrated safety, advisories and presentation ===
+
+================== 1503 passed, 0 failed ==================
+===== node test\test_economics.js ===== 
+  ok   config is the economics consumer
+  ok   real catalogue: 1017 records, 3502 parts
+  ok   every part became one markable unit
+  ok   wrapper mounted its own page without throwing
+  ok   part ids are unique
+  ok   part ids keep the engine's block shape
+  ok   single-part questions keep their original record id
+  ok   part id is derived from record id + printed label
+  ok   crops resolve under <preview>/crops/
+  ok   pages resolve under <preview>/pages/
+  ok   question pages carry the question_ prefix, never mark_
+  ok   asset existence on disk (ECONOMICS_PREVIEWS_ROOT unset, skipped)
+  ok   no extraction token survives into pupil text
+  ok   the catalogue really does carry the token, 98 records (guard against a vacuous pass)
+  ok   every observed syllabus code has a human name (419 codes)
+  ok   names lead, codes follow
+  ok   bracket-wrapped code names are unwrapped
+  ok   units are named, not numbered
+  ok   each part is filed under its own unit, not the whole question's
+  ok   and that actually moves records (the whole-question unit would differ)
+  ok   every question type has a human label, no raw tokens
+  ok   every assessment objective has a human label
+  ok   every record has a syllabus status (0 defaulted by the wrapper)
+  ok   multiple choice: 76 parsed, 4 fell back
+  ok   18 parts have no usable printed marks, and none is offered a mark bar
+  ok   engine furniture built
+  ok   modules on: part navigator + post-question review
+  ok   syllabus filter is multi-select, defaulting to current + mixed
+  ok   off-syllabus questions exist but are not served by default
+  ok   defaulted-to-current records are in the default view
+  ok   out is reachable, not hidden
+  ok   MCQ: routed to the engine's mcq type with option buttons
+  ok   MCQ: option text is the option, not the whole question
+  ok   MCQ: the parsed stem no longer carries its own options
+  ok   MCQ: the right answer auto-marks as correct
+  ok   MCQ: a wrong answer auto-marks as wrong
+  ok   MCQ: items whose options could not be parsed never present as multiple choice (4 such)
+  ok   MCQ: and those items say why, rather than showing scrambled letters unexplained
+  ok   a part with no printed marks does not draw a fake 0-1 bar
+  ok   it still reveals the markscheme
+  ok   revealing it still draws no marks bar
+  ok   and records no graded attempt
+  ok   and says why there is no marks bar
+  ok   long-form parts route to marks-based self-assessment
+  ok   marks bar sizes to THIS part, not the whole question (0..15)
+  ok   marks bar names the part's maximum
+  ok   the reveal shows the level-band descriptors
+  ok   markscheme text is escaped before it reaches innerHTML
+  ok   the band text does not open by repeating the question back
+  ok   thin markschemes are named as thin, not passed off as the bands
+  ok   a thin markscheme opens what printed scheme exists (135 of 145)
+  ok   and where none was captured it says so rather than promising one (10)
+  ok   a full markscheme keeps its mark allocations
+  ok   marks entry records the award against the part
+  ok   a multi-part Paper 2 question exists to walk (05M.P2.SL.Q1, 5 parts)
+  ok   part chips: one per part
+  ok   part chips read the printed label, not a slug
+  ok   part chips carry each part's own marks
+  ok   whole-question assembly and mode toggle
+  ok   walking to the last part keeps the navigator and moves the marker
+  ok   the shared extract is shown on every part of the question
+  ok   the card's meta line names the part and its marks
+  ok   the meta line says multiple choice on the 2004 Paper 1, and claims no other paper structure
+  ok   a 1-mark part reads '1 mark', not '1 marks'
+  ok   the whole-question total is not claimed where a part's marks were lost (42)
+  ok   and it is claimed where they all survived
+  ok   examiner panel shows this part's own commentary
+  ok   the paper's subject report sits behind it, closed
+  ok   the panel is shown by default, not behind a control
+  ok   paper report is read through its section key, not off the top level
+  ok   a question with no examiner report does not inherit the last one's
+  ok   an old question warns that its markbands were the old ones
+  ok   a current-era question carries no such note
+  ok   every notice carries text the engine will actually render
+  ok   off-syllabus questions say so, and say why they are still here
+  ok   copyright-redacted questions admit the gap rather than showing a blank
+  ok   a part with no surviving text says so instead of rendering nothing
+  ok   progress axis present: unit
+  ok   progress axis present: paper
+  ok   progress axis present: level
+  ok   progress axis present: year
+  ok   progress axis present: qtype
+  ok   progress axis present: ao
+  ok   progress axis present: spec
+  ok   progress axes label their values rather than emitting codes
+  ok   filters rendered: 7 single-selects + order, and one multi-select
+  ok   the unit control offers names
+  ok   the syllabus-content control is hidden until a unit is chosen
+  ok   unit filter narrows the deck
+  ok   choosing a unit reveals its syllabus content, named (190 items)
+  ok   and filtering on one of them narrows the deck to it
+  ok   weak-area chips name the content, never a bare code
+
+92 passed, 0 failed
+===== node test\test_pulse.js ===== 
+
+=== the extra bundle survives the trip ===
+  ok   no client-built extra_json is sent (the script discards that key)
+  ok   the extras arrive as top-level scalars the script's sweep can see
+  ok   the fixed columns still arrive alongside them
+  ok   identity is merged in
+
+=== the three properties the estate asked us to keep ===
+  ok   an extra named like a fixed column cannot overwrite it
+  ok   and its innocent siblings still get through
+  ok   nested values are stringified under a _json name, never sent as objects
+  ok   arrays count as nested too
+  ok   scalars keep their own name
+  ok   no value handed to fetch is a live object
+  ok   a malformed extra bundle degrades to extra_raw rather than vanishing
+  ok   and the event itself still reports
+
+=== the engine still speaks extra_json, which is why the shim must stay ===
+  ok   the engine builds extra_json at many firing sites (26), so the flattening must live in the transport, not in the engine
+  ok   no consumer wrapper hand-builds its own POST body
+
+=== every pupil-facing consumer is gated and reports (d024) ===
+  ok   every pupil-facing consumer loads the estate login: esat-compare.html, ibmaths.html, economics.html
+  ok   and hands a report function to the engine mount, so events actually fire: esat-compare.html, ibmaths.html, economics.html
+  ok   each consumer has its own project tag (ppqviewer_esat, ppqviewer_ibmaths, ppqviewer_economics)
+  ok   each consumer scopes its class to its own key, so one subject's class cannot overwrite another's
+
+=== the shared gate behaves like the hand-rolled one ===
+  ok   the gate injects itself and hides the app until sign-in
+  ok   the class dropdown is never blank: placeholder plus every class
+  ok   it offers the same three fields the hand-rolled ESAT gate offers
+  ok   report() is safe to hand to the engine before anyone has signed in
+  ok   signing in reveals the app and hides the gate
+
+=== progress made before sign-in survives it ===
+  ok   the attempt store is byte-identical after signing in
+  ok   and so is the part-view preference beside it
+  ok   signing out clears only this page's class, never the pupil's work
+  ok   the login touches only the shared identity and the page cohort key (SHARED_IDENTITY_KEY, cohortKey, cohortKey)
+  ok   the engine keys its store on storageKey alone, so identity can never own a pupil's history
+
+==================  28 passed, 0 failed  ==================
+===== node test\test_vocabulary.js ===== 
+
+=== IB Maths ===
+  14 token comparisons checked against 2195 records
+  shipped but never referenced by the wrapper (20): calculator_source, examiner_source_type, extensions, has_figure_omitted, has_omitted_figures, label_v1, lead_in, mark_tokens, mark_tokens_quality, markpoint_routes, ms_page_span, origin, origin_evidence, origin_flag, part_id, phantom_kind, review_status, techniques, text_source, text_unusable
+    (informational: usually deliberate, occasionally a delivery nobody wired up)
+
+=== Economics ===
+  10 token comparisons checked against 1017 records
+  shipped but never referenced by the wrapper (9): codes, has_omitted_figures, lead_in, mark_group, marks_status, part_uid, self_mark, stem_crops, text_source
+    (informational: usually deliberate, occasionally a delivery nobody wired up)
+
+==================  4 passed, 0 failed  ==================
+===== node test\test_physics.js ===== 
+Physics fixture journeys
+Assembled physics build 84d7a62e20e85d66
+FAIL ib: actual topic filter precise
+  ib: 1280 parts in 760 whole questions; 3120 verified crops
+  trilogy: 517 parts in 93 whole questions; 516 verified crops
+  preib: 17 parts in 9 whole questions; 36 verified crops
+98 passed, 1 failed
+FAILED with exit code 1: node test\test_physics.js 
+Finished 23/09/2026 17:43:23.48 with exit code 1 

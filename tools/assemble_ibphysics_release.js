@@ -43,7 +43,8 @@ function validateClearance(clearance,questions) {
     JSON.stringify(clearance.test_questions.map(q=>Number(q.question)).sort((a,b)=>a-b))===JSON.stringify(Array.from({length:15},(_,i)=>i+1)),"All 15 current A5 test questions require distinct scoped review");
 }
 function assemble() {
-  const baseline=ibInput(),a5Questions=baseline.questions.filter(q=>q.topic_codes.includes("A.5"));
+  ensure(!fs.existsSync(path.join(ROOT,"reports/ib-evidence-promotion.pending.json")),"Evidence promotion was interrupted; recover the recorded transaction before assembling");
+  const baseline=ibInput({release:true}),a5Questions=baseline.questions.filter(q=>q.topic_codes.includes("A.5"));
   ensure(a5Questions.length && a5Questions.every(q=>/^\d{4}$/.test(q.year) && Number(q.year)<2026 && q.analysis_groups.length),"A5 release has missing groups or reserved years");
   const clearancePath=path.join(ROOT,"reports/ib-a5-release-clearance.json");
   const clearance=JSON.parse(read(clearancePath));

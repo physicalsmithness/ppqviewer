@@ -1,0 +1,128 @@
+Consumer continuation receipt: C:\Users\patri\AppData\Local\Temp\ppqviewer-consumer-continuation-1a6f0962852141a48a8306455b74e09d.log
+Started: 2026-09-23T17:45:16.1262001+01:00
+RUN test_physics
+Physics fixture journeys
+Assembled physics build 84d7a62e20e85d66
+  ib: 1280 parts in 760 whole questions; 3120 verified crops
+  trilogy: 517 parts in 93 whole questions; 516 verified crops
+  preib: 17 parts in 9 whole questions; 36 verified crops
+101 passed, 0 failed
+EXIT test_physics: 0
+RUN test_physics_topic_chooser
+ok IB home ignores the default topic and does not mount or reveal a question
+ok requested future topics are explicitly unavailable and cannot navigate to absent data
+ok unavailable or invalid routes stay on the chooser without silently selecting A5
+ok valid A5 routes open the approved topic and preserve stored work
+ok an exact shared question link opens that part without requiring a topic parameter
+ok home needs no sign-in; selecting a topic then signs in once before starting practice
+ok an unavailable exact question link keeps the existing honest notice and available collection
+ok the viewer title returns home and the account actions share one header
+ok an HL/SL twin collapses to the learner's own printing
+ok a printing from the other level says so, because the SL version is the easier one
+ok a part with a proven wide crop says which part to answer, before the picture
+ok the relativity coverage link stays with A5 and does not travel into other topics
+ok the expanded home offers A1, A5 and C1 exactly once without starting practice
+ok each new direct link opens only the parts its topic leads, including reviewed untyped parts
+ok a shared exact C1 part opens correctly when A5 remains the catalogue default
+ok partial type mapping is explained within the selected topic and never hides untyped questions
+ok a fully untyped C1 collection stays available with an honest topic-specific explanation
+ok a part carrying two topics' descriptors drills in the topic it leads, and leaks nothing into the other
+ok the report block offers named reasons, grouped, and unlike the two tools beside it
+ok opening a reason names it, repeats the question and states what is captured
+ok a half-written report is not overwritten by opening a different reason
+21 physics topic chooser journeys passed
+EXIT test_physics_topic_chooser: 0
+RUN test_physics_presentation
+ok pupil pages ignore old assessment and mock notices
+ok six-point scale has compact heading and the exact requested meanings
+ok timer is off by default while the timer control remains available
+ok context is visible once beside a clearly identified current part
+ok sibling navigation retains context and resets only the question column
+ok structured parts retain markscheme reveal and manual mark allocation
+ok A-D and1-4 automatically mark reviewed MCQs without a manual marks step
+ok uncertain MCQ keys cannot trigger automatic grading
+{"checks":8,"result":"PASS","limitation":"Viewport fit and independent scroll geometry require browser validation."}
+EXIT test_physics_presentation: 0
+RUN test_physics_filters
+ok four bounded year ranges include every endpoint without rewriting any source year
+ok Paper 1 covers 1A and 1B; Paper 2 includes former Paper 3 with original identities intact
+ok paper, year-range and level controls compose while showing the exact source paper
+ok A5 numbering follows authored nonempty groups without gaps or renumbering after a filter
+ok a course without declared year bands keeps its individual source paper and year controls
+ok declared year bands replace the individual year control, on any course
+ok explicit D2 ownership exposes versioned lowercase groups and types without leaking another topic
+ok real multi-topic release keeps A5 numbering and isolates each topic's group values without losing parts
+8 physics filter and source-identity journeys passed
+EXIT test_physics_filters: 0
+RUN test_physics_shuffle
+ok IB offers three order choices and defaults to shuffling whole questions
+ok previously attempted parts are included by default
+ok Shuffle moves whole questions and keeps their printed parts consecutive
+ok printed labels sort semantically, including nested Roman numerals
+ok Shuffle all parts scrambles siblings once, traverses stably and can return to In order
+ok explicit unattempted selection prunes either shuffle mode without skipping or reshuffling
+ok filtering never restores an excluded sibling, and reviewing preserves shuffled scope
+ok Enter after a C rating advances exactly one printed part in both navigation modes
+ok Enter on a pending mark button still records that native mark selection
+ok Enter on C, Preferences and context controls does not hijack their native action
+ok unknown grouping keys remain individual questions and legacy consumers retain flat Shuffle
+ok real released topics traverse their leading parts and each learner's whole-question runs
+12 question-order and navigation journeys passed
+EXIT test_physics_shuffle: 0
+RUN test_physics_usability
+ok reporting is opt-in and does not create requests on mount, open or close
+ok every named reason can send its source and reason without typing or changing progress
+ok consumers without named reasons retain a working report button and validated dropdown
+ok optional notes keep their length limit without silently truncating or sending
+ok opening and closing preserves an active answer, timing and unsent draft
+ok a visible running timer keeps the same interval and attempt when the report closes
+ok explicit Send uses the estate protocol, exact source snapshot and no learner performance
+ok failed dispatch retains the reason and description for an explicit retry
+ok a pending request cannot double-submit and updates a reopened form when settled
+ok drafts are isolated by source part and reason and never persisted into learner storage
+ok source labels remain plain text and broken optional metadata cannot block a report
+ok IB Draw and Report belong to the question column with Reset only in Preferences
+ok Reset in Preferences preserves cancellation and clears only this course's progress
+ok group clicks and selector changes offer closed Key tips with preserved escaped bullets
+14 Physics usability checks passed (all feedback requests stubbed)
+EXIT test_physics_usability: 0
+RUN test_physics_e_topics
+ok E1 and E2 become available topic cards with their exact part counts
+ok canonical and short E-topic links open only their own parts
+ok explicit topic ownership supports opaque source namespaces and preserves every existing topic
+ok shared E1/E2 parts drill only in their leading topic and untyped E2 parts remain accessible
+ok switching E-topic types keeps Key tips closed and preserves the authored guidance
+ok E-topic paper/year filters preserve historic source identity and shared links
+ok only reviewed practice-focus notes appear before the question, with private source notes suppressed
+ok co-strand panel names both topics of a shared part, main first, and stays hidden for one topic
+ok navigation does not create attempts, send requests, or mutate supplied taxonomy and source records
+9 E1/E2 consumer readiness journeys passed
+EXIT test_physics_e_topics: 0
+RUN test_physics_identity
+ok new browser asks once and preserves existing PPQ results
+ok shared physics identity opens automatically, keeps the shared class and coverage link on release
+ok Switch updates future attempt identity without remounting or changing historical results
+ok same-person focus preserves an open answer while the Switch form blocks viewer keyboard shortcuts
+ok cross-tab person and sign-out changes update the gate and mounted viewer without duplicate mounts
+ok a matching signed-in legacy Driller identity opens PPQs without another form
+ok an old Driller person cannot override a different shared person or a deliberate shared sign-out
+ok missing identity dependency explains the problem without losing the stored progress
+ok malformed shared identity does not clear or claim existing progress
+9 physics identity journeys passed
+EXIT test_physics_identity: 0
+RUN test_physics_reporting
+ok exact zero, partial and full marks keep scored status and the real denominator
+ok uncertain ranges and missing scores are never fabricated as wrong or full
+ok MCQ answers log one mark and preserve the selected option
+ok C and revised C link to one attempt without adding legacy attempt counts
+ok a reviewed attempt is selected before the current visit; unowned history is never reported
+ok pre-answer ratings are independent, and missing answer rows cannot be replayed
+ok sign-out, changed person and mismatched viewer identity suppress attribution
+ok payload identity/routing cannot be replaced by extras, and legacy receiver retains detail
+ok historical time removal reports the affected owned attempt, not the displayed question
+ok local previews and unrelated hosts cannot enable reporting
+ok real page wires an answer and C, with physics class and no old-history upload
+ok local real page records progress without network, and reporting failure never loses a mark
+12 physics reporting checks passed
+EXIT test_physics_reporting: 0
+PASS all 9 physics consumer suites; finished: 2026-09-23T17:46:15.5410942+01:00

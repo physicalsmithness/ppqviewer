@@ -8,7 +8,24 @@ const ROOT=path.resolve(__dirname,".."), DB="C:/CodexProjects/PaperDatabases";
 const SNAP=path.join(DB,"Physics Categorisation/reference/tests/3. Assessments");
 const abs=p=>path.resolve(ROOT,p), sha=p=>crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex"), digest=s=>crypto.createHash("sha256").update(s).digest("hex");
 const uniq=a=>[...new Set(a)].sort(), parent=r=>r.preview+"\0"+r.question;
-const inputPath=abs("dist/physics-inputs/ib-d2-recovered.json"), inputHash="04fec1db6555875d25b8585fabbb1fe8fbb28d578e32eac543df4dc3266a89ae";
+// 2026-09-23: fixed pin advanced only after complete recursive equivalence to
+// the original review input. The original bytes and proof are retained in
+// reports/ib-evidence-migration-2026-09-23/. No new semantic review is claimed.
+const inputPath=abs("dist/physics-inputs/ib-d2-recovered.json"), inputHash="dc81d4b8a7df4b024b1c2e12ac26cac075f61fd3e9ee7f519a53f8fb6087eecf";
+const originalInputHash="04fec1db6555875d25b8585fabbb1fe8fbb28d578e32eac543df4dc3266a89ae";
+function verifyOriginalReviewEquivalence(input){
+  const original=abs("reports/ib-evidence-migration-2026-09-23/before/dist/physics-inputs/ib-d2-recovered.json");
+  assert.equal(sha(original),originalInputHash,"Original reviewed recovery evidence changed");
+  const expected=JSON.parse(fs.readFileSync(original,"utf8"));
+  const baseline=expected.report.source_files.find(f=>path.resolve(f.path)===abs("dist/physics-inputs/ib-d2.json"));
+  assert(baseline && baseline.sha256.startsWith("450948180803eb95"),"Unexpected original D2 baseline");
+  baseline.path=abs("reports/ib-release-inputs/ib-d2-baseline.json");
+  baseline.sha256="d8a94d29e2207a573b08c2f542dfb67868950ceaf642c2439bf666b37c336ec0";
+  assert.equal(sha(baseline.path),baseline.sha256,"Pinned D2 baseline changed");
+  expected.report.builder.sha256=sha(abs("tools/build_ib_d2_recovery.js"));
+  expected.report.source_files.sort((a,b)=>a.path.localeCompare(b.path));
+  assert.deepEqual(input,expected,"Migration changed the original reviewed content or evidence beyond the approved provenance fields");
+}
 const corpusPath=path.join(DB,"outputs/exports/ib_physics_archive_flat_v5.csv"), corpusHash="6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c";
 const ledgerPath=path.join(DB,"Physics Categorisation/returns/PACKET_006D/source_results_v4.csv"), nativePath=path.join(DB,"Physics Categorisation/viewer/ibphysics_catalogue.js");
 const tests=[
@@ -47,7 +64,7 @@ const differentiated=[
 function build(){
   const files=new Map();function bind(p,expected){p=path.resolve(p);const hash=sha(p);assert(!expected||hash===expected,"Review source changed: "+p);files.set(p,{path:p,sha256:hash});return p;}
   const read=(p,expected)=>JSON.parse(fs.readFileSync(bind(p,expected),"utf8"));
-  const input=read(inputPath,inputHash);bind(corpusPath,corpusHash);const corpus=parseCsv(fs.readFileSync(corpusPath,"utf8")), byId=new Map(corpus.map(r=>[r.part_id,r]));
+  const input=read(inputPath,inputHash);verifyOriginalReviewEquivalence(input);bind(corpusPath,corpusHash);const corpus=parseCsv(fs.readFileSync(corpusPath,"utf8")), byId=new Map(corpus.map(r=>[r.part_id,r]));
   const candidates=uniq(input.report.candidate_source_ids);assert.equal(candidates.length,184);assert.equal(input.report.new_candidate_source_ids.length,82);assert(candidates.every(id=>byId.has(id)));
   const ledger=parseCsv(fs.readFileSync(bind(ledgerPath),"utf8"));const box={window:{}};vm.runInNewContext(fs.readFileSync(bind(nativePath),"utf8"),box);
   const current=abs("dist/physics-audit/current-ib-tests.json"), extras=[abs("reports/ib-a5-reviewed-test-exclusions.json"),abs("reports/ib-a1-c1-reviewed-test-exclusions.json")];

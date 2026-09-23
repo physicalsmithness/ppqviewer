@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-23T16:23:54.252Z",
+  "files": [
+    {
+      "path": "dist/physics-inputs/ib-a5-analysis.json",
+      "sha256": "f114eb98380d94b9443ef2fa8632af8b783023be13615e738124d8a4050abb03"
+    },
+    {
+      "path": "dist/physics-inputs/ib-d2-recovered.json",
+      "sha256": "04fec1db6555875d25b8585fabbb1fe8fbb28d578e32eac543df4dc3266a89ae"
+    },
+    {
+      "path": "reports/ib-d2-reviewed-test-exclusions.json",
+      "sha256": "8bdaa64da765930d8d2dc6f2a877c8b628e475fef40ddc49463f3f8138dc9a63"
+    },
+    {
+      "path": "reports/ib-d2-reviewed-scope-holds.json",
+      "sha256": "885d71ab39406bef8c3ca6820fab96241f1e4fa13c1b5b3203bc9e4be21c809e"
+    },
+    {
+      "path": "reports/ib-e1-learner-scope-review.json",
+      "sha256": "5ac1749730a128f2861dcd0e77574bed37dad901d4126640d3517b35ea860dba"
+    },
+    {
+      "path": "reports/ib-e2-learner-scope-review.json",
+      "sha256": "dbb4cc89b70ac592d0ccc38fe51f646e19618836dc5a813c0f2f67d902f2baaa"
+    },
+    {
+      "path": "reports/ib-a5-additional-geometry-review.json",
+      "sha256": "f4647d2986d9f8a71f5047f6f7be868c508db0d69574917cecab91f43386ece9"
+    },
+    {
+      "path": "reports/ib-a5-release-clearance.json",
+      "sha256": "c976de5d4ce879a3410f341d97d88c2e5b5723578e75f0471beaedab35c55484"
+    },
+    {
+      "path": "reports/ib-a1-c1-release-clearance.json",
+      "sha256": "160530563a39b44909d5817ac40d233bec93ee85e16a39039625ad0014649167"
+    },
+    {
+      "path": "reports/ib-d2-release-clearance.json",
+      "sha256": "5c604dde37b647d9663b10dd7b358b3f44239998b6750cf48d9306ec4712d3cf"
+    },
+    {
+      "path": "reports/ib-e1-e2-release-clearance.json",
+      "sha256": "2410aaca7143a0447672ff07fefdb6146d097e8999e057b64f8805caebc67116"
+    }
+  ]
+}

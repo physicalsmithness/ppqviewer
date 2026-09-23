@@ -4548,11 +4548,11 @@ window.PPQViewer = (function () {
     if (draft.context.view_context && draft.context.view_context.summary)
       page.appendChild(el("p", { class: "ppq-problem-view" }, esc(draft.context.view_context.summary)));
     page.appendChild(el("p", { class: "ppq-problem-note" }, "The question details and this page are included. Your answers and progress are not included."));
+    const types = ["Bad crop or missing content", "Question image", "Markscheme image", "Answer or marks", "Other"];
     let type = null;
     if (!reason) {
       const typeLabel = el("label", { class: "ppq-problem-field" }, "What is wrong? ");
       type = el("select", { class: "ppq-problem-type", ariaLabel: "Problem type" });
-      const types = ["Bad crop or missing content", "Question image", "Markscheme image", "Answer or marks", "Other"];
       types.forEach((label) => type.appendChild(el("option", { value: label }, esc(label))));
       type.value = draft.type;
       typeLabel.appendChild(type); page.appendChild(typeLabel);
@@ -4586,7 +4586,7 @@ window.PPQViewer = (function () {
       if (draft.state === "sending" || draft.state === "dispatched") return;
       remember();
       if (draft.message.length > message.maxLength) { status.textContent = "Please keep the optional note to 5000 characters or fewer."; message.focus(); return; }
-      if (!types.includes(draft.type)) { status.textContent = "Please choose a problem type."; type.focus(); return; }
+      if (type && !types.includes(draft.type)) { status.textContent = "Please choose a problem type."; type.focus(); return; }
       const payload = {
         project: cfg.project, message: draft.type + ": " + (draft.message.trim() || "Please check this question: " + draft.source + "."), name: "", email: "",
         url: draft.url, ts: new Date().toISOString(), context: Object.assign({}, draft.context, { issue_type: draft.type })

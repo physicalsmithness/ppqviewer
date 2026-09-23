@@ -27,6 +27,7 @@ function generatedBuild(buildRoot,source,expectedId){
 }
 function stage(options={}){
   const root=path.resolve(options.root||ROOT),repo=path.join(root,"deploy/ibphysicsppqs"),buildRoot=path.join(root,"dist/ibphysics-release");
+  ensure(!fs.existsSync(path.join(root,"reports/ib-evidence-promotion.pending.json")),"Evidence promotion is incomplete; recover the recorded transaction before staging");
   const expected=options.expected,replace=options.replaceStagedBuild;
   const git=(args,input)=>execFileSync("git",args,{cwd:repo,input,encoding:"utf8",maxBuffer:16*1024*1024}).trim();
   ensure(/^[a-f0-9]{40}$/.test(expected||""),"Pass the reviewed deployment baseline commit");

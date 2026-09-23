@@ -61,7 +61,7 @@ for(const r of a5NoteRemovals){assert.strictEqual(r.baseline_build_id,"18a6bc2d3
 for(const id of a5Geometry.heldParentIds)assert(baseline144.some(q=>q.parent_id===id),"A geometry hold must be inside the fixed A5 baseline");
 const a5NoteHeld=new Set(a5NoteRemovals.map(r=>r.source_part_id));
 const retainedBaselineA5=baseline144.filter(q=>!a5NoteHeld.has(q.source_part_id)&&!a5Geometry.heldParentIds.has(q.parent_id));
-const expected = ibInput().questions.filter(q => q.topic_codes.includes("A.5"));
+const expected = ibInput({release:true}).questions.filter(q => q.topic_codes.includes("A.5"));
 const reviewedTopics=loadReviewedTopics(analysisPaths),expandedInput=reviewedInput(),expandedAudit=auditCrops(expandedInput);
 const beforeE=d2?mergeD2Release(expandedAudit.questions,d2.questions):expandedAudit.questions;
 const expectedAll=eTopics?mergeERelease(beforeE,eTopics.questions):beforeE,expectedById = new Map(expectedAll.map(q => [q.id, q]));

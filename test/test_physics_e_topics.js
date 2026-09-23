@@ -28,13 +28,16 @@ function page(query=''){
  const p={w,dom,calls,root:w.document.getElementById('ppq-root'),v:w.physicsViewer};opened.push(p);return p;
 }
 const ids=p=>Array.from(p.v._practiceBaseView||p.v.view,q=>q.id).sort();
+// d030: secondary topic tags describe co-strands; only the leading topic supplies practice.
+const leads=topic=>records.filter(q=>q.topic_codes[0]===topic);
 function select(p,label,value){const node=p.root.querySelector('select[aria-label="'+label+'"]');assert(node,label);node.value=value;node.dispatchEvent(new p.w.Event('change',{bubbles:true}));return node;}
 const values=(p,label)=>Array.from(p.root.querySelector('select[aria-label="'+label+'"]').options,o=>o.value).filter(v=>v!=='ALL');
 try{
  check('E1 and E2 become available topic cards with their exact part counts',()=>{
   const p=page();assert(!p.v);const cards=Array.from(p.root.querySelectorAll('.physics-topics-available article'));
   assert.equal(cards.length,6);
-  for(const [topic,count]of [['E.1',2],['E.2',3]]){
+  for(const topic of ['E.1','E.2']){
+   const count=leads(topic).length;
    const card=cards.find(c=>c.querySelector('a[href="?topic='+encodeURIComponent(topic)+'"]'));
    assert(card);assert(card.textContent.includes(labels[topic]));assert.equal(card.querySelector('.physics-topic-code').textContent,topic.replace('.',''));assert.equal(card.querySelector('p').textContent,count+' question parts');
   }
@@ -42,22 +45,22 @@ try{
  });
  check('canonical and short E-topic links open only their own parts',()=>{
   for(const [query,topic]of [['E.1','E.1'],['E1','E.1'],['E.2','E.2'],['e2','E.2']]){
-   const p=page('?topic='+query);assert(p.v);assert.deepEqual(ids(p),records.filter(q=>q.topic_codes.includes(topic)).map(q=>q.id).sort());assert.equal(p.root.querySelector('select[aria-label="topic"]').selectedOptions[0].textContent,topic.replace('.','')+' '+labels[topic]);
+   const p=page('?topic='+query);assert(p.v);assert.deepEqual(ids(p),leads(topic).map(q=>q.id).sort());assert.equal(p.root.querySelector('select[aria-label="topic"]').selectedOptions[0].textContent,topic.replace('.','')+' '+labels[topic]);
   }
  });
  check('explicit topic ownership supports opaque source namespaces and preserves every existing topic',()=>{
   const p=page('?topic=E1');
   for(const topic of Object.keys(labels)){
-   select(p,'topic',topic);assert.deepEqual(ids(p),records.filter(q=>q.topic_codes.includes(topic)).map(q=>q.id).sort());
+   select(p,'topic',topic);assert.deepEqual(ids(p),leads(topic).map(q=>q.id).sort());
    assert.deepEqual(values(p,'question type'),[atom(topic).code]);assert.deepEqual(values(p,'question group'),[group(topic).code]);
    const categories=Array.from(p.root.querySelectorAll('.ppq-facet-cat'));assert.equal(categories.length,1);assert.equal(categories[0].dataset.value,atom(topic).code);
    if(topic.startsWith('E.')){assert.match(categories[0].textContent,new RegExp(topic.replace('.','')+'\\.1'));assert(!/review_2026/.test(categories[0].textContent));}
   }
  });
- check('shared E1/E2 parts remain one stable question and untyped E2 parts remain accessible',()=>{
+ check('shared E1/E2 parts drill only in their leading topic and untyped E2 parts remain accessible',()=>{
   const p=page('?topic=E2');assert.match(p.root.querySelector('.ppq-dash-facet-content').textContent,/Some questions still need a type/);
-  const category=p.root.querySelector('.ppq-facet-cat');assert.equal(Number(category.querySelector('.ppq-cat-count').textContent.replace(/[()]/g,'')),2);category.click();assert.deepEqual(ids(p),['quantum','shared']);
-  p.root.querySelector('.ppq-facet-clear').click();assert.deepEqual(ids(p),['quantum','quantum-untyped','shared']);
+  const category=p.root.querySelector('.ppq-facet-cat');assert.equal(Number(category.querySelector('.ppq-cat-count').textContent.replace(/[()]/g,'')),leads('E.2').filter(q=>q.analysis_atoms.length).length);category.click();assert.deepEqual(ids(p),['quantum']);
+  p.root.querySelector('.ppq-facet-clear').click();assert.deepEqual(ids(p),['quantum','quantum-untyped']);
   select(p,'topic','ALL');assert.equal(ids(p).length,records.length);assert.equal(ids(p).filter(id=>id==='shared').length,1);
   select(p,'topic','E.1');assert.deepEqual(ids(p),['atomic-old','shared']);
  });

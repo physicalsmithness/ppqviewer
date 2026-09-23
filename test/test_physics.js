@@ -18,6 +18,24 @@ function check(name, condition) {
   if (condition) passed++;
   else { failed++; console.error("FAIL " + name); }
 }
+function matchesLevelScope(actual, eligible, level) {
+  // d029: unpaired parts and same-level siblings survive; a cross-level group
+  // contributes one printing, native to the learner whenever it is available.
+  const actualIds = new Set(actual.map(q => q.id)), eligibleIds = new Set(eligible.map(q => q.id)), groups = new Map();
+  if (actualIds.size !== actual.length || actual.some(q => !eligibleIds.has(q.id))) return false;
+  for (const q of eligible) {
+    if (!q.source_group_id) { if (!actualIds.has(q.id)) return false; continue; }
+    if (!groups.has(q.source_group_id)) groups.set(q.source_group_id, []);
+    groups.get(q.source_group_id).push(q);
+  }
+  for (const members of groups.values()) {
+    const selected = members.filter(q => actualIds.has(q.id));
+    if (new Set(members.map(q => q.level)).size > 1) {
+      if (selected.length !== 1 || (members.some(q => q.level === level) && selected[0].level !== level)) return false;
+    } else if (selected.length !== members.length) return false;
+  }
+  return true;
+}
 function page(meta, records, opts = {}) {
   const html = opts.html || PAGE;
   const query = opts.query !== undefined ? opts.query : "?id=" + encodeURIComponent(records && records[0] ? records[0].id : "fixture");
@@ -165,10 +183,21 @@ try {
       check(label + "all crops exist, are PNGs and match content hashes (" + urls.size + ")", bad.length === 0);
       check(label + "no unreferenced crop files left in served assets", fs.readdirSync(path.join(dir, "assets")).every(file => urls.has("assets/" + file)));
       if (bad.length) console.error("Bad crops: " + bad.slice(0, 3).join(", "));
-      const topic = Object.keys(meta.topics).find(code => records.some(q => q.topic_codes.includes(code)));
+      const topic = Object.keys(meta.topics).find(code => records.some(q => course.course === "ib" ? q.topic_codes[0] === code : q.topic_codes.includes(code)));
       const actual = page(meta, records, { html, config, engine, query: "?topic=" + encodeURIComponent(topic) });
       check(label + "actual built page mounts", !!actual.v);
-      check(label + "actual topic filter precise", actual.v.view.length === records.filter(q => q.topic_codes.includes(topic)).length && actual.v.view.every(q => q.topic_codes.includes(topic)));
+      if (course.course === "ib") {
+        // d030 filters to the leading topic BEFORE collapsing its HL/SL twins.
+        const eligible = records.filter(q => q.topic_codes[0] === topic), reached = new Set();
+        for (const level of ["HL", "SL"]) {
+          actual.v.store.prefs.learnerLevel = level; actual.v.filterQuestions();
+          check(label + "actual topic filter preserves the leading scope and " + level + " printings", matchesLevelScope(actual.v.view, eligible, level));
+          actual.v.view.forEach(q => reached.add(q.id));
+        }
+        check(label + "both levels retain every printing this topic leads", reached.size === eligible.length && eligible.every(q => reached.has(q.id)));
+      } else {
+        check(label + "actual topic filter precise", actual.v.view.length === records.filter(q => q.topic_codes.includes(topic)).length && actual.v.view.every(q => q.topic_codes.includes(topic)));
+      }
       const selected = actual.v.cur;
       actual.root.querySelector(".ppq-reveal").click();
       check(label + "actual scheme crops revealed", actual.root.querySelectorAll(".ppq-answer-panel.show .ppq-ms-crop").length === selected.markscheme_images.length);

@@ -1,5 +1,33 @@
 # IB Physics release status
 
+## Local evidence repair, 23 September 2026
+
+Build `fac62770fb70f6df` is staged locally after the evidence-chain repair.
+All 1,325 public content/UI files are byte-identical to tested build
+`7df8c498b1ffb20b`; only build metadata changed after final assembler cleanup.
+Its complete public catalogue is identical to previously gated local
+build `03860fb2b708a642`: 543 parts, 1,316 assets and 44 crop notices. This entry
+does not claim publication; committing, pushing and live verification remain
+separate. All 27 applicable suites passed across the recorded full run and
+consumer continuation. See `reports/ib-release-repair-validation-2026-09-23.md`.
+
+Release assembly now uses pinned A5 syllabus, D2 baseline and historical DATA
+inputs in `reports/ib-release-inputs/`. Preview refreshes retain separate
+`dist/physics-inputs/` outputs. The eleven dependent evidence records were
+rebuilt and fully compared before transactional promotion; original reviews
+and their dates remain preserved. See
+`reports/ib-evidence-migration-2026-09-23/README.md` and its validation/promotion
+receipts for the exact evidence and the checked historical-impact difference.
+
+`RUN_IB_RELEASE.cmd` stops on every failed command and never borrows the SR
+project's working file. `STAGE_IB_RELEASE.cmd` requires a clean deployment
+checkout and never discards whitespace differences. An unfinished evidence
+promotion blocks both assembly and staging.
+
+The outdated consumer suites now exercise the adopted twin, lead-topic and named
+report-reason rules. Exercising actual report submission also exposed and fixed
+an out-of-scope variable in the engine; tests use mocked transports only.
+
 ## Published six-topic release
 
 Build `e56bf638d0332e3e`, assembled at `2026-09-14T20:37:56.950Z`, was published as

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "topic": "D.2",
+  "review_complete": true,
+  "corpus_sha256": "6034e8854097c03384922d542b244164603262b1d6b0189d7a5a0ec34c13c17c",
+  "blocked_source_ids": ["ibchem_part_e6c577a51fdc0700", "ibchem_part_5dab633bcc41eb4b"],
+  "source_files": [
+    {"path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/dist/physics-inputs/ib-d2-recovered.json", "sha256": "04fec1db6555875d25b8585fabbb1fe8fbb28d578e32eac543df4dc3266a89ae"},
+    {"path": "C:/Claude (not on Gdrive, nor OneDrive)/ppqviewer/dist/physics-inputs/ib-a5-analysis.json", "sha256": "f114eb98380d94b9443ef2fa8632af8b783023be13615e738124d8a4050abb03"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2007_may_3_eee4eea2/crops/question_g3_b_v023_p023_01_f5b06fd6f7.png", "sha256": "52c3a121a290fbb00b2fd84bd717e616b16aad3134d4f0dfb4719d9f8aa9f7eb"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2007_may_3_eee4eea2/crops/mark_scheme_g3_b_v012_p012_01_b8e89f604a.png", "sha256": "fe3f4014457e2fcb48c7ec5718c5c3952ccf660210720cee5eb5b793c58e36b1"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2007_may_3_e0ef3701/crops/question_g3_b_v029_p029_01_d54464338c.png", "sha256": "52c3a121a290fbb00b2fd84bd717e616b16aad3134d4f0dfb4719d9f8aa9f7eb"},
+    {"path": "C:/CodexProjects/PaperDatabases/outputs/previews/ib_physics_2007_may_3_e0ef3701/crops/mark_scheme_g3_b_v014_p014_01_b393a8446c.png", "sha256": "fe3f4014457e2fcb48c7ec5718c5c3952ccf660210720cee5eb5b793c58e36b1"}
+  ],
+  "evidence": [{
+    "source_part_ids": ["ibchem_part_e6c577a51fdc0700", "ibchem_part_5dab633bcc41eb4b"],
+    "parent_ids": ["07M.P3.HL.TZ1.QG3", "07M.P3.SL.TZ1.QG3"],
+    "authored_membership": "d2_sort_2026-09-09@867cbd71ae82::D2.H6a",
+    "source_analysis_pointers": ["/questions/548", "/questions/552"],
+    "current_A5_authored_row": "S021",
+    "question_evidence": "A muon is accelerated through 2.1×10^8 V; the final demand is its mass in the laboratory frame, given its rest mass of 105 MeV c^-2.",
+    "scheme_evidence": "The scheme requires mc^2 = Ve + m0c^2 and concludes m = 315 MeV c^-2 or 3m0.",
+    "finding": "The recovered D2 energy-transfer membership is attributable, but the indivisible demanded answer also requires retired relativistic mass. The authored A5 review independently excludes both appearances for relativistic_energy_mass_momentum. Hold these complete parents for D2 release; retain their original memberships in the private source ledger.",
+    "policy": "Apply full source parent, twin and duplicate closure for these D2-only release holds. This is not an assessment-match claim."
+  }]
+}

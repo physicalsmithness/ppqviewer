@@ -1,0 +1,420 @@
+{
+  "schema_version": 1,
+  "review_complete": false,
+  "cases": [
+    {
+      "preview": "ib_physics_2004_nov_3_76f24f38",
+      "selected_questions": [
+        "G1"
+      ],
+      "missing_question_refs": [
+        "E2"
+      ],
+      "source": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_04\\Markschemes\\Group 4\\English\\Physics SL Paper 3.pdf",
+        "sha256": "818ec983f3a752eaf36fabb84bf242108413cdedf1e42579cbc016787395c894"
+      },
+      "metadata": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_76f24f38\\mark_scheme_preview.json",
+        "sha256": "bcfb708d35c4efcc188fa1125a8fca6a23e93132a9bf0412a2ee919ee7f4a8fb"
+      },
+      "page_count": 16,
+      "literal_heading_pages": {
+        "G1": [
+          14
+        ],
+        "E2": [
+          11
+        ]
+      },
+      "rendered_pages": [
+        {
+          "page": 11,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_76f24f38-p011.png",
+          "sha256": "8d6efaff530d52c6857c58c9d12353d4447f55530fd57ea30c5647386d264b59",
+          "text": " – 11 – N04/4/PHYSI/SP3/ENG/TZ0/XX/M+ \nE2. (a) northern hemisphere since Sun always to the south / OWTTE;  [1] \n  Answers must have some appropr iate explanation to receive [1].  Do not accept \n“since the sun rises in the east and sets in the west” as appropriate. \n \n (b) path of Sun still peaks in the centre and shown to rise higher; \n  rise starts further east on th e Earth and sets further west; [2] \nElevation \nabove \nhorizontal \n \n \n \n \n \n                    south \n \n (c) For both part (i) and (ii)  [1] is available for a simple description of the \nappropriate model, and [1] is available for showing how the model explains the \nchange in observations over a year.  If ev erything including the explanations are \ncorrect but the models have been “swapped”, award [2 max].\n \n \n  (i) Sun is on a (crystal) sphere th at rotates around the Earth in one day; \n   the motion of the sphere also changes over the course of a year; [2] \n \n  (ii) apparent motion of the Sun is due to the rotation in one day; \n   Earth moves around the Sun in a year and the Earth’s axis of rotation is not \nthe same as the axis of its rotation around the Sun / OWTTE; [2] \n \n (d) (i) appropriate similarity; [1] \n   e.g. the stars and the planets maintain their relative positions over one night \nas the whole pattern rotates around the pole star. \n   appropriate difference; [1] \n   e.g. over several nights, the pl anets slowly change position (“wander”) \nrelative to the positions of the whole pattern of stars.  \n \n  (ii) from accurate observational data of the positions of the planets at different \ntimes (from Tycho Brahe); [1] \n  \nSun\npath of the Sun \neast west "
+        },
+        {
+          "page": 12,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_76f24f38-p012.png",
+          "sha256": "a3f5e9c04086f00a2867b659f7e44f39a498efd63f98eef6a0f7979f8769c006",
+          "text": " – 12 – N04/4/PHYSI/SP3/ENG/TZ0/XX/M+ \nOption F — Astrophysics \n \nF1. (a) apparent magnitude is a measure of (comparative) brightness as seen from Earth \n(with 1 being brightest and 6 being dimmest); \n  absolute magnitude is the apparent magnitude that the star would have if it were a \nfixed distance from the Earth of 10 parsecs;  [2] \n \n (b) yes plus reason;  [1] \n  Note: an explanation must be provided.  Award [0] for bald “yes” without an \nattempt at a reason.  e.g. since apparent magnitude low (less than one) therefore \none of the brightest stars. \n \n (c) (i) distance away \n17\n15\n3.39 10 35.8ly 11.0 pc9.46 10\n×== = × ; [1] \n \n  (ii) since this is less than 100 pc; \n   the star is close enough for stellar parallax; [2] \n   Award [1] for a bald answer.  Also allow ECF if conversion of units is \nmuddled. \n \n  (iii) Award [1] each relevant piece of experimental description up to [4 max].  \n   e.g. position of star compared with other star positions; \n   at different times of the year; \n   the maximum angular variation from the mean p is recorded; \n   the distance (in parsecs) can be calculated using geometry \n 1d p= if p is in \narcseconds;  \n   Note: watch for ECF.  If the response has suggested one of the other \ntechniques in (ii) then award  full marks for appropriate descriptions.   \n   example : \n   spectroscopic parallax: light from star analysed (relative amplitudes of the \nabsorption spectrum lines); \n   to give indication of stellar class; \n   HR diagram used to estimate the luminosity; \n   distance away calculated from apparent brightness;  \n   Cepheid variables: these stars’ brightness vary over time; \n   the time period of the variation is related to their luminosity; \n   thus measurements of the time period of one star can be used to calculate its \nluminosity; \n   its distance away is calculated  from maximum apparent brightness; [4 max] \n \n (d) spectral type / K / OWTTE; \n  thus at low end of temperat ure scale: OBAFGKM / Sun is G / OWTTE; [2] \n  "
+        },
+        {
+          "page": 14,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_76f24f38-p014.png",
+          "sha256": "7031a9497a8380475ae1d11dc2e9c8d75d02320881fe9756a7417a6b1246205a",
+          "text": " – 14 – N04/4/PHYSI/SP3/ENG/TZ0/XX/M+ \nOption G — Relativity \n \nG1. (a) speed of light in a vacuum  is the same for all inertial observers; \n  laws of physics are the same for all inertial  observers;  [2] \n  The words underlined are needed for the mark.  Award [1 max] if both are on the \nright lines but not precise.  Give benefit of the doubt if inertial is only mentioned \nonce. \n \n (b) constancy of the speed of light / OWTTE; \n  any sensible comment; [2] \n  e.g. Maxwell’s equations predicted a value for the speed of propagation of \nelectromagnetic radiation from constants associated with the medium that was \nindependent of the motion of the source or the observer. \n \n (c) idea or name of appropriate experiment;  \n  e.g. muon experiments \n  outline of evidence; \n  e.g. number of muons at a given hei ght in the atmosphere in a given time \ncompared with number arriving at the ground.  Number at ground seems high \ngiven the lifetime of a muon. \n  link to a prediction; [3 max] \n  e.g. numbers consistent with time dilation formula. \n \n \n \nG2. (a) rest mass energy is the energy that is needed to create the particle at rest / \nreference to \n2\n00E mc= ; \n  total energy is the addition of the rest energy and everything else (kinetic etc.) / \nreference to mass being greater when in motion / 2E mc= ; [2 max] \n \n (b) realization that betas are electrons; \n  s o  2\ne 0.511MeV cm −= ; \n  2.51 ; ( 4.91)0.511γ ==  [3] \n  Ignore any spurious calculation from Lore ntz factor equation here as the use of \nthis equation is rewarded below. \n \n (c) (i) correct substitution into Lorentz factor equation; \n   to give 810.979 2.94 10 msvc −== × ; [2] \n \n  (ii) correct substitution into speed distance\ntime= ; \n   to give time 1.26 ns= ; [2] \n \n (d) (i) the detector / the laboratory  / OWTTE; [1] \n \n  (ii) same answer as (c) (i) 812.94 10 ms −=× ; [1] \n \n  (iii) realization that length contraction applies;  \n   distance 37 7.5cmγ== ; [2]"
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2004_nov_3_c4d0287e",
+      "selected_questions": [
+        "G1"
+      ],
+      "missing_question_refs": [
+        "E2"
+      ],
+      "source": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_04\\Markschemes\\Group 4\\English\\Physics HL Paper 3.pdf",
+        "sha256": "051f7ff19887820ef47a4fe5e4fc5be93d2698c99cf9a4c1e7daada6b2d8ac9f"
+      },
+      "metadata": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2004_nov_3_c4d0287e\\mark_scheme_preview.json",
+        "sha256": "28955c47ae894a92da631f5a728223698b8228361f3ce8f588415badaf44e9a4"
+      },
+      "page_count": 17,
+      "literal_heading_pages": {
+        "G1": [
+          13
+        ],
+        "E2": [
+          8
+        ]
+      },
+      "rendered_pages": [
+        {
+          "page": 8,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_c4d0287e-p008.png",
+          "sha256": "f914caa57b524c0d875b53b9a83ef1309e2a150a240a5cea275f73970e86a700",
+          "text": " – 8 – N04/4/PHYSI/HP3/ENG/TZ0/XX/M+ \nE2. (a) northern hemisphere since Sun always to the south / OWTTE;  [1] \n  Answers must have some appropr iate explanation to receive [1].  Do not accept \n“since the sun rises in the east and sets in the west” as appropriate. \n \n (b) path of Sun still peaks in the centre and shown to rise higher; \n  rise starts further east on th e Earth and sets further west; [2] \nElevation \nabove \nhorizontal \n \n \n \n \n \n                    south \n \n (c) For both part (i) and (ii)  [1] is available for a simple description of the \nappropriate model, and [1] is available for showing how the model explains the \nchange in observations over a year.  If ev erything including the explanations are \ncorrect but the models have been “swapped”, award [2 max].\n \n \n  (i) Sun is on a (crystal) sphere th at rotates around the Earth in one day; \n   the motion of the sphere also changes over the course of a year; [2] \n \n  (ii) apparent motion of the Sun is due to the rotation in one day; \n   Earth moves around the Sun in a year and the Earth’s axis of rotation is not \nthe same as the axis of its rotation around the Sun / OWTTE; [2] \n \n (d) (i) appropriate similarity; [1] \n   e.g. the stars and the planets maintain their relative positions over one night \nas the whole pattern rotates around the pole star. \n   appropriate difference; [1] \n   e.g. over several nights, the pl anets slowly change position (“wander”) \nrelative to the positions of the whole pattern of stars.  \n \n  (ii) from accurate observational data of the positions of the planets at different \ntimes (from Tycho Brahe); [1] \n  \nSun\npath of the Sun \neast west "
+        },
+        {
+          "page": 13,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_c4d0287e-p013.png",
+          "sha256": "2cc0b7b071199b1fffac97e5ffefa256cbb95db87cf036663db7c3b7ffe300f5",
+          "text": " – 13 – N04/4/PHYSI/ HP3/ENG/TZ0/XX/M+ \nOption G — Relativity \n \nG1. (a) speed of light in a vacuum  is the same for all inertial observers; \n  laws of physics are the same for all inertial  observers;  [2] \n  The words underlined are needed for the mark.  Award [1 max] if both are on the \nright lines but not precise.  Give benefit of the doubt if inertial is only mentioned \nonce. \n \n (b) constancy of the speed of light / OWTTE; \n  any sensible comment; [2] \n  e.g. Maxwell’s equations predicted a value for the speed of propagation of \nelectromagnetic radiation from constants associated with the medium that was \nindependent of the motion of the source or the observer. \n \n (c) idea or name of appropriate experiment;  \n  e.g. muon experiments \n  outline of evidence; \n  e.g. number of muons at a given hei ght in the atmosphere in a given time \ncompared with number arriving at the ground.  Number at ground seems high \ngiven the lifetime of a muon. \n  link to a prediction; [3 max] \n  e.g. numbers consistent with time dilation formula. \n \n \n \nG2. (a) rest mass energy is the energy that is needed to create the particle at rest / \nreference to \n2\n00E mc= ; \n  total energy is the addition of the rest energy and everything else (kinetic etc.) / \nreference to mass being greater when in motion / 2E mc= ; [2 max] \n \n (b) realization that betas are electrons; \n  s o  2\ne 0.511MeV cm −= ; \n  2.51 ; ( 4.91)0.511γ ==  [3] \n  Ignore any spurious calculation from Lore ntz factor equation here as the use of \nthis equation is rewarded below. \n \n (c) (i) correct substitution into Lorentz factor equation; \n   to give 810.979 2.94 10 msvc −== × ; [2] \n \n  (ii) correct substitution into speed distance\ntime= ; \n   to give time 1.26 ns= ; [2] \n \n (d) (i) the detector / the laboratory  / OWTTE; [1] \n \n  (ii) same answer as (c) (i) 812.94 10 ms −=× ; [1] \n \n  (iii) realization that length contraction applies;  \n   distance 37 7.5cmγ== ; [2 max]"
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2005_may_3_6d8c1866",
+      "selected_questions": [
+        "G1"
+      ],
+      "missing_question_refs": [
+        "A1",
+        "F1",
+        "F2",
+        "G2"
+      ],
+      "source": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\may_05\\disk_2\\Markschemes\\Group 4\\English\\Physics SL paper 3 TZ1.pdf",
+        "sha256": "3f7617f3966adb8c7cfc8564ecc409b6aba6835cf5c07c9e8736e532ee0dd7f9"
+      },
+      "metadata": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_may_3_6d8c1866\\mark_scheme_preview.json",
+        "sha256": "8e74bab3d3fab2a08e09ea720a3166bef364fa4baf9f719ff188841c2b53f472"
+      },
+      "page_count": 19,
+      "literal_heading_pages": {
+        "G1": [
+          15
+        ],
+        "G2": [
+          16
+        ],
+        "A1": [
+          4
+        ],
+        "F2": [
+          14
+        ],
+        "F1": [
+          13
+        ]
+      },
+      "rendered_pages": [
+        {
+          "page": 4,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p004.png",
+          "sha256": "75c3ba7acd25bfb808d412ef7dc63a0ffa1d469b9996d2bf8fef9ccf4559a653",
+          "text": " – 4 – M05/4/PHYSI/SP3/ENG/TZ1/XX/M+ \nOption A — Mechanics Extension \n \nA1. (a) (i) x = vxt  \n   8 0 4 ; xv=×  \n   120m s ;xv −=  [2] \n   Warning that use of 2 2vg s=  with 210msg −=  and 80ms =  gives numerically \ncorrect result.  Award [1] for ECF if wrong value of time has been used. \n \n  (ii) vy = uy − gt \n   vy = 0 at 2.0st = ; \n   04 02 g= − ; \n   g = 20ms −2; [3] \n \n  (iii) y = uyt − 1\n2 gt2 \n   y = 40 × 2 − 1\n2 × 20 × 22; \n   40 my = ; [2] \n   Award [1] if plus sign is used to give .120 m  \n \n (b) tan ;\ny\nx\nv\nvθ =  \n  40arctan 63.4 63 ;20θ == ≈DD  [2] \n \n (c) parabolic path; \n  with half the range; \n  and half the maximum height; [3] \n \n \n "
+        },
+        {
+          "page": 13,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p013.png",
+          "sha256": "92b925394d87e460218e98529c4b2e60d547d881a049db4728dc69cacf0f22fb",
+          "text": " – 13 – M05/4/PHYSI/SP3/ENG/TZ1/XX/M+ \nB\n A\n \nline of sight \nfrom Earth \nline of sight \nfrom Earth  \n B\n A \nOption F — Astrophysics \n \nF1. (a) (i) the distance of both stars from the Earth are approximately the same (since they \nare part of the binary system); \n   and so apparent brightness is  proportional to just luminosity; [2] \n   Award [1] for use of b = L\n4πd2  and [1] for a statement that distance is the same. \n \n  (ii) b = L\n4πd2 , L = σAT4  \n \n   bB\nbA\n=\nLB\n4πd2\nLA\n4πd2\n= ABTB\n4\nAATA\n4 ; \n \n   2.0 ×10−14\n8.0 ×10−13 = TB\n4\n104 TA\n4 ; \n \n   TB\n4\nTA\n4 = 250; \n \n   \nTB\nTA\n= 2504 = 3.97 ≈ 4;  [4] \n \n (b) (i)  Diagram at 5 years \n \n \n Diagram at 10 years \n \n \n   stars shown eclipsing each other; \n   stars in correct positions; [2 max] \n \n  (ii) 10 years; \n[1] \n \n  (iii) the total\n mass of the binary; [1] \n   To receive the mark, it must be clear that the total mass is referred to. \n \n  "
+        },
+        {
+          "page": 14,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p014.png",
+          "sha256": "e1909ec0f1493e2cf62cd5647b151aaea05d0414526e4a6e54ce9d30fcc52475",
+          "text": " – 14 – M05/4/PHYSI/SP3/ENG/TZ1/XX/M+ \nF2. (a) critical density is that value of the (m ass / energy) density of the universe for which \nthe universe (the geometry of the universe) is flat (in the Big Bang model); [1] \n \n (b) it implies that the universe will expand forever; [1] \n \n (c) (i) matter that makes up for most of the mass in the universe; \n   but cannot easily be detected be cause it does not emit radiation / light; [2] \n \n  (ii)  two  of Neutrinos / WIMPS / MACHOS / black holes / exotic super symmetric \nparticles / grand unified predicted particles / magnetic monopoles etc.; [2] \n \n \n \nF3. (a) (isotropic) EM radiation (in the microwave region) that fills the universe / radiation \nleft over from the Big Bang; \n  (characteristic of a black body) at  a temperature of approximately 3 K; [2] \n \n (b) accept any curve with the same overall shape; \n  with the peak shifted to the right since temperature is lower; [2] \n \n \n \n  "
+        },
+        {
+          "page": 15,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p015.png",
+          "sha256": "1ce06492c8b1aeab3ba44e7885f3cfabf37d96883a2417cea0e0ed0333b45bf2",
+          "text": " – 15 – M05/4/PHYSI/SP3/ENG/TZ1/XX/M+ \nOption G — Relativity \n \nG1. (a) the speed of light in vacuum  is the same for all inertial observers; \n  the laws of Physics are the same in all inertial  frames of reference; [2] \n \n (b) (i) this faster than light speed is not the speed of any physical object / inertial observer \nand so is not in violation of the theory of SR; [1] \n \n  (ii) \n21\nuvu uv\nc\n−′ =\n−\n with  0.80vc= − and 0.80uc= so that  \n \n   \n2\n0.80 0.80\n0.80 0.801\nccu cc\nc\n+′ = ×+\n; \n \n   1.60\n1.64\ncu = ; \n \n   0.98uc= ; [3] \n \n \n  "
+        },
+        {
+          "page": 16,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p016.png",
+          "sha256": "71b00ac27d7a2eff2fd73ebb5cdd57c2934066228a5ee9b9bb19ab42a990418c",
+          "text": " – 16 – M05/4/PHYSI/SP3/ENG/TZ1/XX/M+ \nG2. (a) (i) γ = 1\n1− 0.982\n= 5.03; \n   65time proper time 5.03 2.2 10 1.1 10 sγ −−=× = × × = × ; [2] \n   Award [1] for a time of 74.4 10 s−×  which indicates correct calculation of the \ngamma factor.  Award [1] for incorrect gamma factor but calculation otherwise \ncorrect. \n \n  (ii) \nx = vt \n   850.98 3 10 1.1 10x −=× × × × ; \n   3200 mx = ; [2]  \n \n  (iii) x = vt \n   860.98 3 10 2.2 10x −=× × × × ; \n   650 mx ≈ ; [2] \n \n  (iv) 1. The observer at rest on the surface of the Earth: \n   distance travelled by muon is 3200 m > 3000 m; \n   hence a few muons arrive on Earth’s surface before decaying; [2]  \n   2. The observer at rest relative to the muon : \n   distance separating muon and Earth is length contracted to  \n   \n3.0km × 1− 0.982 ≈ 600m ; \n   distance travelled by Earth is 650 m > 600 m; \n   hence when Earth meets particles a few are still muons; [3] \n \n (b) qV = ∆E = (γ −1)moc2 ; \n  2(5.03 1) 106 MeV c 427 MeVqV −= − ×= ; \n  427 MV 430 MVV⇒ = ≈ ; [3] \n  \n \n "
+        },
+        {
+          "page": 17,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p017.png",
+          "sha256": "d788a5a9a1e86a62537507e03fa6c3bf684273d540f7983f606135b5c8d772d8",
+          "text": " – 17 – M05/4/PHYSI/SP3/ENG/TZ1/XX/M+ \nOption H — Optics \n \nH1. (a) light consists of oscillating magnetic and electric fields at right angles to each other; \nwhich transfer energy at speed c in vacuum (in a directi on at right angles to both \nfields);  [2] \n \n (b)  visible \n  light \n \n                            M         I                                G \n \n                                                                   increasing frequency \n \n  (i) correct labelling of infrared waves; [1] \n \n  (ii) correct labelling of microwaves; [1] \n \n  (iii) correct labelling of gamma rays; [1] \n   Award [1] if all positions are incorrect but order MIG is right. \n \n "
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2005_may_3_7e173998",
+      "selected_questions": [
+        "G1"
+      ],
+      "missing_question_refs": [
+        "F1",
+        "F2",
+        "G2"
+      ],
+      "source": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\may_05\\disk_2\\Markschemes\\Group 4\\English\\Physics HL paper 3 TZ1.pdf",
+        "sha256": "e2c3438d27f31520116b207a1ba04ab9943ec927d090a4378939a978a1e5f87c"
+      },
+      "metadata": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2005_may_3_7e173998\\mark_scheme_preview.json",
+        "sha256": "4abf614d5ec0c58892bca1dd4f67f894aa2459e71a9eec61fbb9280d1fc5bf83"
+      },
+      "page_count": 17,
+      "literal_heading_pages": {
+        "F2": [
+          11
+        ],
+        "G2": [
+          13
+        ],
+        "F1": [
+          10
+        ],
+        "G1": [
+          12
+        ]
+      },
+      "rendered_pages": [
+        {
+          "page": 10,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_7e173998-p010.png",
+          "sha256": "709b05ed6548b83565a7a1fdcb051facb6abb4b893a293e9a95915a2c34f3c15",
+          "text": " – 10 – M05 /4/PHYSI/HP3/ENG/TZ1/XX/M+ \n B\n A\n \nline of sight \nfrom Earth \nline of sight \nfrom Earth  \nB\n A \nOption F — Astrophysics \n \nF1. (a) (i) the distance of both stars from the Earth are approximately the same (since they \nare part of the binary system); \n   and so apparent brightness is proportional to just luminosity; [2] \n   Award [1] for use of b = L\n4πd2  and [1] for a statement that distance is the same. \n \n  (ii) b = L\n4πd2 , L = σAT4  \n \n   bB\nbA\n=\nLB\n4πd2\nLA\n4πd2\n= ABTB\n4\nAATA\n4 ; \n \n   2.0 ×10−14\n8.0 ×10−13 = TB\n4\n104 TA\n4 ; \n \n   TB\n4\nTA\n4 = 250; \n \n   \nTB\nTA\n= 2504 = 3.97 ≈ 4;  [4] \n \n (b) (i)  Diagram at 5 years \n \n \n Diagram at 10 years \n \n \n   stars shown eclipsing each other; \n   stars in correct positions; [2 max] \n \n  (ii) 10 years; \n[1] \n \n  (iii) the total\n mass of the binary; [1] \n   To receive the mark, it must be clear that the total mass is referred to. \n \n  "
+        },
+        {
+          "page": 11,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_7e173998-p011.png",
+          "sha256": "bf93ecb23aee98231d8333ad7c26d41fa488dc618d4cdd426545822d68501c5f",
+          "text": " – 11 – M05 /4/PHYSI/HP3/ENG/TZ1/XX/M+ \nF2. (a) critical density is that value of the (m ass / energy) density of the universe for which \nthe universe (the geometry of the universe) is flat (in the Big Bang model); [1] \n \n (b) it implies that the universe will expand forever;  [1] \n \n (c) (i) matter that makes up for most of the mass in the universe; \n   but cannot easily be detected be cause it does not emit radiation / light; [2] \n \n  (ii)  two  of Neutrinos / WIMPS / MACHOS / black holes / exotic super symmetric \nparticles / grand unified predicted particles / magnetic monopoles etc.; [2] \n \n \n \nF3. (a) (isotropic) EM radiation (in the microwave region) that fills the universe / radiation \nleft over from the Big Bang; \n  (characteristic of a black body) at  a temperature of approximately 3 K; [2] \n \n (b) accept any curve with the same overall shape; \n  with the peak shifted to the right since temperature is lower; [2] \n \n \n \nF4. (a) Award [1] for each correct answer. If the s uper red giant and supernova are in the \nwrong order award [2 max]. [3 max] \n \n \n \n \n \n \n (b) (i) if the mass is greater than this then electron degeneracy pressure; \n  can no longer prevent gravitational collapse; [2] \n \n  (ii) because a large amount of mass is  lost / ejected from the star during the \nplanetary nebula stage / leaving core with a mass less than 1.4 solar masses;  [1]  \n \n \n \nF5. (a) the expansion of the universe; [1] \n \n (b) the recessional speed of a galaxy is proportional to its distance from the Earth / galaxies \nmove away from each other with a speed proportional to their separation; [1] \n  Accept \nvH d=  if symbols are defined. \n \n (c) consider a galaxy that has moved a distance d from the Big Bang in time T then if the \nspeed of recession is constant dv T= ; \n  but vH d=  therefore substituting gives 1T H= ; [2] \nmain sequence \nstar \nmass > 8MSun \n \nsuper red giant\n \nsupernova \n \nblack hole \n/ neutron star "
+        },
+        {
+          "page": 12,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_7e173998-p012.png",
+          "sha256": "90d0235b78c7eb67ba35f80e42f14e6b45bdeaacd52377f80f7a429da5c841cf",
+          "text": " – 12 – M05 /4/PHYSI/HP3/ENG/TZ1/XX/M+ \nOption G — Relativity \n \nG1. (a) the speed of light in vacuum  is the same for all inertial observers; \n  the laws of Physics are the same in all inertial  frames of reference; [2] \n \n (b) (i) this faster than light speed is not the speed of any physical object / inertial observer \nand so is not in violation of the theory of SR; [1] \n \n  (ii) \n21\nuvu uv\nc\n−′ =\n−\n with  0.80vc= − and 0.80uc=  so that  \n \n   \n2\n0.80 0.80\n0.80 0.801\nccu cc\nc\n+′ = ×+\n; \n \n   1.60\n1.64\ncu = ; \n \n   0.98uc= ; [3] \n \n \n  "
+        },
+        {
+          "page": 13,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_7e173998-p013.png",
+          "sha256": "a1cb7ed4007aee7d28f495abab5a8e74fdd714338fec3f11bddad02fa4864487",
+          "text": " – 13 – M05 /4/PHYSI/HP3/ENG/TZ1/XX/M+ \nG2. (a) (i) γ = 1\n1− 0.982\n= 5.03; \n   65time proper time 5.03 2.2 10 1.1 10 sγ −−=× = × × = × ; [2] \n   Award [1] for a time of 74.4 10 s−×  which indicates correct calculation of the \ngamma factor.  Award [1] for incorrect gamma factor but calculation otherwise \ncorrect. \n \n  (ii) \nx = vt \n   850.98 3 10 1.1 10x −=× × × × ; \n   3200 mx = ; [2]  \n \n  (iii) x = vt \n   860.98 3 10 2.2 10x −=× × × × ; \n   650 mx ≈ ; [2] \n \n  (iv) 1. The observer at rest on the surface of the Earth: \n   distance travelled by muon is 3200 m > 3000 m; \n   hence a few muons arrive on Earth’s surface before decaying; [2]  \n   2. The observer at rest relative to the muon : \n   distance separating muon and Earth is length contracted to  \n   \n3.0km × 1− 0.982 ≈ 600m ; \n   distance travelled by Earth is 650 m > 600 m; \n   hence when Earth meets particles a few are still muons; [3] \n \n (b) qV = ∆E = (γ −1)moc2 ; \n  2(5.03 1) 106 MeV c 427 MeVqV −= − ×= ; \n  427 MV 430 MVV⇒ = ≈ ; [3] \n \n \n  "
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2007_may_3_1d1a90ef",
+      "selected_questions": [
+        "G3"
+      ],
+      "missing_question_refs": [
+        "A3"
+      ],
+      "source": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\may_07\\disk_2\\Markschemes\\Group 4\\English\\Physics SL paper 3 TZ2.pdf",
+        "sha256": "d580dc0ec360ffce000343b1e2b4aee7b0ea98bcb8f8a928dfea359011242a89"
+      },
+      "metadata": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2007_may_3_1d1a90ef\\mark_scheme_preview.json",
+        "sha256": "0560e890cc53b78d74d0c8f04314458fdfe033d4c34fecb43ea2d36e659316ad"
+      },
+      "page_count": 11,
+      "literal_heading_pages": {
+        "G3": [
+          10
+        ],
+        "A3": [
+          4
+        ]
+      },
+      "rendered_pages": [
+        {
+          "page": 4,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_may_3_1d1a90ef-p004.png",
+          "sha256": "e20bac878d8f5d1a9bbae52482dc5c554a4a2900476357922f62ff66e1797c9f",
+          "text": " – 4 – M07/4/PHYSI/SP3/ENG/TZ2/XX/M+ \nOption A — Mechanics Extension \n \nA1. (a) (i) horizontal:\n124 m s ;\n  [1] \n \n  (ii) vertical:\n114 ms\n ; [1] \n \n (b) appropriate use of kinematic equation; \n  correct substitution; \n  h\n7.1m\n ;  [3] \n \n \n \nA2. (a) translational: sum of external forces\n0\n ; \n  rotational: sum of moments\n0\n ; [2] \n \n (b) clockwise moment\n(5.0 7.0) (12 ) d\n ; \n  anticlockwise moment\n(22 9.0)\n ; \n  equate and solve to yield \n14md\n ; [3] \n \n \n \nA3. (a) change in potential energy per unit mass / work done per unit mass; \n  in moving small / point mass from infinity to the point; [2] \n  Do not allow “from a long distance away”. \n \n (b) (i) asymptotic at large r and in negative gravitational potential region; \n   line stops at surface line; [2] \n   Do not allow asymptotic to y-axis. \n \n  (ii) loss of gravitational potential\n11 Moon\nMoon\n6.67 10 m\nr\n ; \n   equates loss of gravitational potential to \n21\n2 v ; \n   \n12.4kmsv\n ; [3] \n \n  (iii) meteorite may have initial speed/velocity towards Moon / contribution of Earth’s \ngravity; [1] \n \n (c) (i) constant; [1] \n \n  (ii) decreasing; [1] \n "
+        },
+        {
+          "page": 5,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_may_3_1d1a90ef-p005.png",
+          "sha256": "8f72de763cce8b242739a439548a4029697f033da2c29d3cc78974520cfbab7f",
+          "text": " – 5 – M07/4/PHYSI/SP3/ENG/TZ2/XX/M+ \nOption B — Quantum Physics and Nuclear Physics \n \nB1. (a) \nhceV\n ;   \n  \n34 8\n19\n6.6 10 3 10\n(1.6 10 25000)\n ;  (condone power of ten error in this mark) \n  \n114.95 10 m\n ; [3] \n \n (b) shows twice\n25kV maximum frequency by eye; \n  characteristic spectrum position unchanged; [2] \n \n \n \nB2. (a) electron occupies one of a finite number of levels; \n  photon emitted when electron drops to lower  level / photon absorbed when electron \nrises to higher level; \n  spectral line corresponds to energy difference / reference to\nhc\n ; [3] \n \n (b) (i) \n1.88 6.56 ( 2.54eV)4.86 \n   or  explicit working from\nE hf\n ; [1] \n \n  (ii) arrow connects n\n 3 and n\n 2 and arrow connects n\n 4 and n\n 2; \n   both arrows from higher to lower level and lines correctly identified by \nwavelength; [2] \n \n \n \nB3. (a) (i) (electron) anti-neutrino; [1] \n \n  (ii) lepton; [1] \n \n (b) (i) \nln 2\n5700\n ; [1] \n \n  (ii) \n41.21 100.075 0.24 te\n ; \n   \n4\n240ln 75\n1.21 10t\n ; \n   \n39.7 10 year;t\n  [3] \n \n (c) measure activity of source; \n  determine number of molecules chemically; \n  activity\n,N\n hence half-life; [3] \n  Award [1 max] for method that measures activity and then waits before re-measuring. "
+        },
+        {
+          "page": 10,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_may_3_1d1a90ef-p010.png",
+          "sha256": "360c56ab3f164606c59d1daddd3d6ec2142e93dbd0e9623a0a9643304cab2562",
+          "text": " – 10 – M07/4/PHYSI/SP3/ENG/TZ2/XX/M+ \nOption G — Relativity \n \nG1. (a) (i) length measured by observer at rest with respect to object; [1] \n \n  (ii) time interval between two events measured in a reference frame where the events \noccur at the same place; [1] \n \n (b) (i) \n60.99 3.1 10c\n ; \n   \n0.92km\n ; [2] \n \n  (ii) \n2\n2\n1 7.1\n1 v\nc\n ; \n   time\n65( 3.1 10 7.1) 2.2 10 s\n ; \n   distance\n6.5km\n ; [3] \n \n (c) muon at rest in its reference frame measures the proper time for decay; \n  to observers, because muons are in frame moving with respect to them muons  take \nlonger, this is time dilation;  [2] \n  Allow [2 max] if answer is correctly stated in terms of length. \n \n \n \nG2. (a) initial mass at\n0v\nc\n non-zero; \n  mass rises to become asymptotic at\n1v\nc\n ; \n  line horizontal for\n0.5v\nc\n ; [3] \n \n (b) (i) \n22.5(MeV c )\n ; [1] \n \n  (ii) \n0\n5m\nm\n ; \n   \n2\n2\n15\n1 v\nc\n ; \n   \n0.98c\n ; [3] \n \n \n \nG3. speed of light independent of observer; \n as light is reaching B carriage moves forward; \n so B sees light from the left (person X) first; \n not simultaneous; [4] \n Award [0] if invalid or incorrect statements are given. "
+        },
+        {
+          "page": 11,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_may_3_1d1a90ef-p011.png",
+          "sha256": "b883701105773276e4757de5a58da3df40afeca7f36adc8d812b5509fb5807b5",
+          "text": " – 11 – M07/4/PHYSI/SP3/ENG/TZ2/XX/M+ \nOption H — Optics \n \nH1. (a) (i) ray drawn to surface with correct refraction; \n   second ray with correct refraction and image location; [2] \n \n  (ii) n\nreal depth\napparent depth\n ; \n   \n6.5m ; [2] \n \n (b) (i) ray drawn to surface with correct reflection by eye; \n   second ray with correct reflection by eye; \n   construction lines to show image formed above water; [3] \n \n  (ii) disturbed surface leads to many reflections in different directions / diffuse \nreflection; [1] \n \n \n \nH2. (a) one correct ray; \n  second correct ray; \n  image construction lines clear and image drawn in, labelled I; [3] \n \n (b) (i) point closer than which eye cannot focus;  [1] \n \n  (ii) image formed\n21cm from lens  \n1 1 1 ;u v f\n    \n(  ,   \n )\nreal is ve allow new\nCartesian solution\n  \n \n   so \n1 1 1\n8 21u\n ; \n   u\n5.8cm\n ; [3] \n   Award [2 max] if 25 cm used for v. \n \n (c) (i) chromatic: \n   different amounts of refraction for different colours/wavelengths; \n   colour fringing of image;  \n   spherical: \n   rays parallel to principal axis at edge of lens brought to different focus from \nthose near centre of lens / OWTTE; \n   image blurred / OWTTE; [4] \n \n  (ii) restrict aperture; [1] \n \n \n \n \n "
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2007_nov_3_820f94e5",
+      "selected_questions": [
+        "G1",
+        "G2"
+      ],
+      "missing_question_refs": [
+        "A2"
+      ],
+      "source": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_07\\Markschemes\\Group 4\\English\\Physics SL paper 3.pdf",
+        "sha256": "5cfeab68957dc3f18f17630ca071cf68e4dd4f04ae094f071c57f8e513e4b4a9"
+      },
+      "metadata": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2007_nov_3_820f94e5\\mark_scheme_preview.json",
+        "sha256": "0d239d303e49445a333df81605da61fac82c20f4433202cec9ad62333b3ddf04"
+      },
+      "page_count": 15,
+      "literal_heading_pages": {
+        "G1": [
+          12
+        ],
+        "G2": [
+          12
+        ],
+        "A2": [
+          5
+        ]
+      },
+      "rendered_pages": [
+        {
+          "page": 5,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_nov_3_820f94e5-p005.png",
+          "sha256": "9579bc35c909f7c28fbe0a668a46cf0f650f4fe5a0a75851ece7e7b3970b1210",
+          "text": " – 5 – N07/4/PHYSI/SP3/ENG/TZ0/XX/M+ \n \nA2. (a) the force exerted per unit mass; \n  on a small/test mass; [2] \n \n (b) \nh 2()\nGMg Rh\n ; [1] \n  These symbols must be used. \n \n (c) \nGMV Rh\n ; \n  therefore \nh ()V g R h\n ; \n  \n61.8 4.6 10\n ; \n  to give \n618.3 10 J kgV\n  [3] \n  Do not deduct marks if a minus sign is given. \n \n (d) recognize that for orbit \n2\n2( ) ( )\nv GM\nR h R h\n ; \n  so \n68.3 10()\nGMvV Rh\n ; \n  to give \n312.9 10 msv\n  [2] \n \n \nA3. (a) the sum of the (external) torques/moments acting on the body is zero / OWTTE; [1] \n \n (b) \nP  W parallel to AB acting through P and in the correct direction, \nRW  perpendicular \nto AB acting through P and in the correct direction; [1] \n \n (c) anticlockwise moment about\nX sin 25Wh\n ; \n  clockwise moment about\nX 1.2 cos25W\n ; \n  (equate clockwise and anticlockwise moments)\n1.2\ntanh\n ; \n  to give\n2.6mh\n ; [4] \n   Do not penalize if anticlockwise and clockwise are the wrong way round.  \nAccept answers that use a correct vector triangle with W vertical through X. "
+        },
+        {
+          "page": 12,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_nov_3_820f94e5-p012.png",
+          "sha256": "3579a4c674f6f791df3cc162771dd515db353ecb2be14957ae6f0e63bed2a724",
+          "text": " – 12 – N07/4/PHYSI/SP3/ENG/TZ0/XX/M+ \n \nOption G — Relativity \n \nG1. no; \n when the light from end B reaches Lucinda it will not have reached Simon / light from \nend A will reach Lucinda after it has reached Simon; \n Simon will see the bird land at B before he sees the one land at A; \n because the speed of light is independe nt of the speed of source / Simon and Lucinda \nboth measure the same value of c/speed of light; [4] \n Award [0] for incorrect reasoning or no reasoning. \n \n \nG2. (a) (i) time interval for Earth observer\n16\n8\n5.0 10\n0.60 3.0 10\nd\nv\n ; \n   \n82.8 10 s\n ; [2] \n \n  (ii) \n1.25\n ; \n   time\n8\n82.8 10 2.2 10 s1.25\n ; \n \n   or  \n   distance in astronaut frame\n164.0 10 m\n ; \n   time\n16\n84.0 10 2.2 10 s0.60c\n ; [2 max] \n \n (b) astronaut; \n  the events of leaving the Earth and arriving at  the star occur at the same point \naccording to astronaut; [2] \n  Award [0] if no explanation or the wrong explanation is given. \n \n (c) the (biological) age of the astronaut is less than the Earth observer; \n  because of time dilation; \n  the situation is not symmetric; \n  the astronaut experiences forces / accelerations during trip; [3 max] \n \n \n "
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2010_nov_3_1b08d840",
+      "selected_questions": [
+        "D1"
+      ],
+      "missing_question_refs": [
+        "B1",
+        "G2"
+      ],
+      "source": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\nov_10\\Markschemes\\Group 4\\English\\Physics SL paper 3.pdf",
+        "sha256": "1b0fbecc9cfe2a683e773d452beba25439b5d0a432e9094607e1e5fbec1e60e4"
+      },
+      "metadata": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2010_nov_3_1b08d840\\mark_scheme_preview.json",
+        "sha256": "87223a6975e4fe0950458103a64368b43495c76c783761998bd3708b8c23dc6c"
+      },
+      "page_count": 15,
+      "literal_heading_pages": {
+        "B1": [
+          6
+        ],
+        "D1": [
+          9
+        ],
+        "G2": [
+          14
+        ]
+      },
+      "rendered_pages": [
+        {
+          "page": 6,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2010_nov_3_1b08d840-p006.png",
+          "sha256": "514f5768f6e6cc5ce2e523c055f556acd8552d5bf79a8690790ae63ab8713f99",
+          "text": " – 8 – N10/4/PHYSI/SP3/ENG/TZ0/XX/M \n \nOption B — Quantum physics and nuclear physics \n \nB1. (a) (i) light consis ts of photons/quanta; \n   a certain minimum amount of energy (the work function) is required to \nremove an electron from the metal; \n   if the photon energy is below this energy/work function no electrons will be \nemitted; \n   the energy of the photons is proportional to the frequency / Eh f (with  \nterms defined); [4] \n   If work function is mentioned it must be defined to award [4]. \n \n  (ii) different metals need a different amount of minimum energy for electrons to \nbe removed; [1] \n   Accept answers in terms of work function if defined either here or in (a)(i). \n \n (b) (i) maxKE hf  ; \n   34 15 196.6 10 1.0 10 3.2 10    ; \n   193.4 10 J  [2] \n \n  (ii) use of \n2\n2\npE m  and hp     or   use of 2Ev m  and hpm v   ; \n   to give \n2\nh\nmE\n  ; \n   108.4 10 m  ; [3] \n \n \n \nB2. (a) light from incandescent/hot/glowing hydrogen/hydrogen discharge tube is passed \nthrough a slit; \n  then through a pris m/diffraction grating; \n  and brought to focus on a screen / observed with a telescope/eye; [3] \n  Allow [3] for a correctly drawn and labelled diagram. \n \n (b) 193.03 10 JhcE \n \n; \n  1.90eV ; [2 \n \n \n \nB3. (a) X: positron   or    ;  \n \n  A: 189  and  Z: 78;  (both responses needed) [2] \n \n (b) (i) 0.0784 min\n–1; [1] \n \n  (ii) recognize to use 0\ntAA e  ; \n   A  48.4 Bq; [2] \n  "
+        },
+        {
+          "page": 9,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2010_nov_3_1b08d840-p009.png",
+          "sha256": "b56640e802830109ba9bc69451dc18f17ee9bc676c0eaffc009ec74deb8dfc19",
+          "text": " – 11 – N10/4/PHYSI/SP3/ENG/TZ0/XX/M \n \nOption D — Relativity and particle physics \n \nD1. (a) any diagonal line as shown; [1]  \n \n \nM1 \n \n \n \n \n \n \nM\n2 \n \n (b) (i) vt ; [1] \n \n  (ii) speed of pulse \n1\n222cv  ; \n   distance  \n1\n222cv t  ; [2] \n \n (c) ct ; [1] \n \n (d) dc t  ; \n  from Pythagoras 22 22 2 2 2dc t c t v t   ; \n  \n2\n21\ntt\nv\nc\n\n\n; [3] \n \n (e) recognize that \n2\n2\n12.3\n1 v\nc\n\n\n; \n  some evidence of rearranging e.g. \n\n2\n2\n2.3 1\n2.3\nv  ; \n   0.90c  [2] \n \n "
+        },
+        {
+          "page": 14,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2010_nov_3_1b08d840-p014.png",
+          "sha256": "7d9257333968348f3580615fc5f925d380ce389a6098761b53dc3b17828614e4",
+          "text": " – 16 – N10/4/PHYSI/SP3/ENG/TZ0/XX/M \n \nOption G — Electromagnetic waves \n \nG1. (a) (i) (the waves) all have the same frequency/wavelength; [1] \n   Do not accept “one colour”. \n \n  (ii) (the waves) are all in phase with  each other / the phase difference between \nthe waves is constant; [1] \n \n (b) (i) there are more electrons in the me tastable state than in the ground state; [1] \n \n  (ii) from excited state to metastable state; [1] \n \n  (iii) from metastable  state to ground state; [1] \n \n  (iv) \n34 8\n7\n19\n6.6 10 3.0 10 6.9 10 m1.8 1.6 10\nhc\neV\n\n\n\n    \n; \n    690 nm [1] \n \n \n \nG2. (a)  objective lens eyepiece lens\nlight from\ndistant star FEFE\nFO\nX\nY\nFinal image at infinity   \n  (i) same distance to left of eyepiece as F E is to the right;  (judge by eye) [1] \n \n  (ii) coincident with F E as labelled in (a)(i); [1] \n \n  (iii) three rays meeting at focal plane of the two lenses; \n   construction line XY; \n   rays refracted at eyepiece;  \n   extrapolation to indicate final image at infinity with label; \n[3 max] \n \n (b) e\n1 2.5cm40f \nand o\n1 125cm0.80f \n; \n  o\ne\n125 502.5\nfM f\n   \n; [2] \n \n (c) objective lens: to eliminate/minimize chromatic aberration; \n  eyepiece lens: to eliminate/minimize spherical aberration; [2] "
+        }
+      ]
+    },
+    {
+      "preview": "ib_physics_2011_may_3_7aa932a7",
+      "selected_questions": [
+        "H2"
+      ],
+      "missing_question_refs": [
+        "E2"
+      ],
+      "source": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\IB Papers and MS\\exam_papers\\may_11\\disk_2\\Markschemes\\Group 4\\English\\Physics HL paper 3 TZ1.pdf",
+        "sha256": "70475722aecb59e7f24a61bed706732f056c21b4332114711e5592099598dc15"
+      },
+      "metadata": {
+        "path": "C:\\CodexProjects\\PaperDatabases\\outputs\\previews\\ib_physics_2011_may_3_7aa932a7\\mark_scheme_preview.json",
+        "sha256": "5fc8611a5fda747ab2243f5f6992b33f1255f95c5131cea706793b5bb6b603a4"
+      },
+      "page_count": 20,
+      "literal_heading_pages": {
+        "H2": [
+          15
+        ],
+        "E2": [
+          5
+        ]
+      },
+      "rendered_pages": [
+        {
+          "page": 5,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2011_may_3_7aa932a7-p005.png",
+          "sha256": "685965f25cd261f6039a6f00e1dc0a85fa461ebbc3c546cd6cad406b9247b16b",
+          "text": " – 5 – M11/4/PHYSI/HP3/ENG/TZ1/XX/M \n \nE2. (a) \n \n \n \n \n  (i) circle labelled R as shown above; [1] \n   Accept answers that include the star B within the circle. \n \n  (ii)  circle labelled W as shown above;   [1] \n \n  (iii)  any line (not necessarily straight) going from top left to bottom right, \nthrough or near all or most of stars; [1] \n \n (b) star B has lower temperature; \n  star B has (slightly) larger luminosity / stars have approximately same luminosity;  \n  surface area calculated from L =σAT 4, so star B has larger surface area/diameter / \nto give the same/similar luminosity at lower temperature, star B must have bigger \ndiameter/surface area; [3] \n \n (c) 5\nAS(from HR diagram) 10 ;LL =  \n  2  used;4\nLb d= π  \n  \n3\n5A AS\n9\nS SA\n1.4 10to give 10 ;4.9 10\nd Lb\nd Lb −\n×= ×= × ×  \n  8\nAhence 1.7 10 AU;d = ×  \n   = 800pc  [4] \n  Do not award a mark for the conversion from AU to pc. \n \n (d) the parallax angle is too small to be measured accurately  / the distance is  greater \nthan the limit for stellar parallax, which is 100 pc; [1] \nluminosity L / Ls \nW \n1.0×105 \n1.0×103 \n1.0×101 \n1.0×10–1 \n1.0×10–3 \n3.0×104 1.2×104 3.0×103 \nA B \nsurface temperature T / K \nR "
+        },
+        {
+          "page": 6,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2011_may_3_7aa932a7-p006.png",
+          "sha256": "e35639e77f06330a34dddd53af56b5579e736f98ba89b508e3a89f03bb004b66",
+          "text": " – 6 – M11/4/PHYSI/HP3/ENG/TZ1/XX/M \n \nAccept any value from 100–800 pc for limit.  Do not accept “it’s too far away”. "
+        },
+        {
+          "page": 15,
+          "path": "C:\\Claude (not on Gdrive, nor OneDrive)\\ppqviewer\\dist\\physics-audit\\a5-additional-geometry\\ib_physics_2011_may_3_7aa932a7-p015.png",
+          "sha256": "15dc7bd89be853012e5e4b96d04fd150aa41ca841e3a181f8767e24d423e13d8",
+          "text": " – 15 – M11/4/PHYSI/HP3/ENG/TZ1/XX/M \n \nH2. (a) (i)   ux\n′ = ux + v = 0.60c + 0.80c = 1.40c;  [1] \n \n  (ii) \n22\n0.60 0.80 ;0.60 0.8011\nx\nx\nx\nuv c cu uv c c\ncc\n\n ++′ = = × ++\n \n   1.40 0.951.48\nc c= =\n; [2] \n   Award [1] for answers that use v = – 0.80 c to get an answer of – 0.38 c. \n \n (b) the answer to (a)(i) exceeds c / the answer to (a)(ii) does not exceed c; \nhence the Galilean  transformation is not valid / the relativistic transformation \nmust be used / OWTTE; [2] \n \n (c) \n  \nγ = 1\n1− v2\nc2\n= 1\n1− 0.802 c2\nc2\n= 1.7 ; \n    EK = γ − 1 \n m\n0c2 = 1.667 − 1\n \n × 1.0 × 10\n3 × 3.0 × 108 \n\n2\n; \n  196.0 10 J;= ×  [3] \n  Award [0] for answers that use 21\n2kE mv=  to get an answer of 2.9×1019 J. \n \n \n \n \nH3. (a) light from two beams causes an interference pattern at the detector/telescope; \n  due to the path difference/difference in speed of light relative to aether between \ntwo beams; \n  if the apparatus were rotated (by 90 degrees) the inter ference pattern would \nchange/shift (if the aether existed); \n  the amount of shift/change would allow the speed of the Earth (relative to the \naether) to be determined; [4] \n \n \n (b) the orientation of the apparatus had no effect on the interference pattern; \n  hence the speed of light does not de pend on the speed of the source/ speed of \nobserver / there is no absolute reference frame / aether does not exist; [2] \n "
+        }
+      ]
+    }
+  ]
+}

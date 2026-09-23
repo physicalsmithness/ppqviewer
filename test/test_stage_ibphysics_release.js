@@ -122,4 +122,7 @@ test("clean filters, encoding, ident and binary text conversion are refused befo
     f.reject(()=>f.write(path.join(f.repo,".git/info/attributes"),rule+"\n"),pattern);
   }
 });
+test("an unfinished evidence promotion blocks staging without changing the checkout",f=>{
+  f.reject(()=>f.write(path.join(f.root,"reports/ib-evidence-promotion.pending.json"),"{}\n"),/Evidence promotion is incomplete/);
+});
 console.log(`${checks} isolated release staging checks passed; no real deployment was touched.`);

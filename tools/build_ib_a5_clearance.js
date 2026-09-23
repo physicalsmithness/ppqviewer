@@ -39,7 +39,7 @@ for(const file of currentAdditions.fingerprints)ensure(sha(bytes(file.path))===f
 const geometry=loadA5AdditionalGeometry();
 for(const file of geometry.fingerprints)ensure(sha(bytes(file.path))===file.sha256,"Additional A5 geometry review changed during clearance");
 const closure=buildIbExclusions({paperdbRoot:DB,questions:native,extraExclusionsPaths:[currentPath,supplementPath,...currentAdditions.paths]});
-const input=ibInput(),served=input.questions.filter(q=>q.topic_codes.includes("A.5"));
+const input=ibInput({release:true}),served=input.questions.filter(q=>q.topic_codes.includes("A.5"));
 const badCrop=new Set(cropReview.source_part_ids),parentMap=new Map(native.map(q=>[q.id,q]));
 const partMap=new Map(corpus.map(r=>[r.part_id,r]));
 const parent=r=>`${r.year.slice(-2)}${r.session[0].toUpperCase()}.P${r.paper}.${r.level}.${r.time_zone||"TZ0"}.Q${r.question}`;

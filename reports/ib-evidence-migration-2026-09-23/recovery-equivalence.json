@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "original_recovery_sha256": "04fec1db6555875d25b8585fabbb1fe8fbb28d578e32eac543df4dc3266a89ae",
+  "candidate_recovery_sha256": "dc81d4b8a7df4b024b1c2e12ac26cac075f61fd3e9ee7f519a53f8fb6087eecf",
+  "allowed_changes": [
+    "Pinned D2 baseline path and its fingerprint",
+    "Recovery builder fingerprint"
+  ],
+  "complete_recursive_comparison": "passed",
+  "a5_complete_recursive_comparison": "passed"
+}

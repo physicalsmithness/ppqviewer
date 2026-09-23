@@ -1,0 +1,22 @@
+ppqviewer IB Physics staging 
+Started 23/09/2026 17:47:03.55 
+===== checkout state ===== 
+===== stage_ibphysics_release ===== 
+C:\Claude (not on Gdrive, nor OneDrive)\ppqviewer\tools\stage_ibphysics_release.js:8
+const ensure=(ok,message)=>{if(!ok)throw Error(message);};
+                                   ^
+
+Error: Shared viewer source changed after assembly: tools/assemble_ibphysics_release.js
+    at ensure (C:\Claude (not on Gdrive, nor OneDrive)\ppqviewer\tools\stage_ibphysics_release.js:8:42)
+    at stage (C:\Claude (not on Gdrive, nor OneDrive)\ppqviewer\tools\stage_ibphysics_release.js:53:5)
+    at Object.<anonymous> (C:\Claude (not on Gdrive, nor OneDrive)\ppqviewer\tools\stage_ibphysics_release.js:143:53)
+    at Module._compile (node:internal/modules/cjs/loader:1830:14)
+    at Object..js (node:internal/modules/cjs/loader:1961:10)
+    at Module.load (node:internal/modules/cjs/loader:1553:32)
+    at Module._load (node:internal/modules/cjs/loader:1355:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v24.15.0
+STAGING FAILED 

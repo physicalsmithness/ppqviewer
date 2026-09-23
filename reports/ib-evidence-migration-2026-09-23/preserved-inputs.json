@@ -1,0 +1,444 @@
+{
+  "files": [
+    {
+      "path": "dist\\ibphysics-release\\18a6bc2d3b649210-1789252118734\\build-info.json",
+      "sha256": "353a8939a4ee84daf48e5cf9b76a73b994811cf234b797a2540f1f2424f600d5",
+      "previous_expected_sha256": "353a8939a4ee84daf48e5cf9b76a73b994811cf234b797a2540f1f2424f600d5"
+    },
+    {
+      "path": "dist\\ibphysics-release\\18a6bc2d3b649210-1789252118734\\data\\physics_catalogue.js",
+      "sha256": "e3ca4b20a2e8c2bad65c4d94b33bbc77c0b403986e95bc01b49dc75d11c440d8",
+      "previous_expected_sha256": "e3ca4b20a2e8c2bad65c4d94b33bbc77c0b403986e95bc01b49dc75d11c440d8"
+    },
+    {
+      "path": "dist\\ibphysics-release\\ab0aa88396caf624-1789233551012\\data\\physics_catalogue.js",
+      "sha256": "f32aef8b1941bce59cfb49c0c7fce93ef5109064c34af000c289108b4c9fd1ca",
+      "previous_expected_sha256": "f32aef8b1941bce59cfb49c0c7fce93ef5109064c34af000c289108b4c9fd1ca"
+    },
+    {
+      "path": "dist\\ibphysics-release\\f6004e904e4c69a8-1789254459736\\data\\physics_catalogue.js",
+      "sha256": "5096dc718c648a96846a19411be73d71478b127e0aa3a24f45549359e8ff220e",
+      "previous_expected_sha256": "5096dc718c648a96846a19411be73d71478b127e0aa3a24f45549359e8ff220e"
+    },
+    {
+      "path": "dist\\physics-audit\\a1-c1-assessments\\candidate-parts.json",
+      "sha256": "8236911b63f7e72e34ea70c5cb8476759593762a1c497fcc32b079d58d5e76b4",
+      "previous_expected_sha256": "8236911b63f7e72e34ea70c5cb8476759593762a1c497fcc32b079d58d5e76b4"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_76f24f38-p011.png",
+      "sha256": "8d6efaff530d52c6857c58c9d12353d4447f55530fd57ea30c5647386d264b59",
+      "previous_expected_sha256": "8d6efaff530d52c6857c58c9d12353d4447f55530fd57ea30c5647386d264b59"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_76f24f38-p012.png",
+      "sha256": "a3f5e9c04086f00a2867b659f7e44f39a498efd63f98eef6a0f7979f8769c006",
+      "previous_expected_sha256": "a3f5e9c04086f00a2867b659f7e44f39a498efd63f98eef6a0f7979f8769c006"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_76f24f38-p014.png",
+      "sha256": "7031a9497a8380475ae1d11dc2e9c8d75d02320881fe9756a7417a6b1246205a",
+      "previous_expected_sha256": "7031a9497a8380475ae1d11dc2e9c8d75d02320881fe9756a7417a6b1246205a"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_c4d0287e-p008.png",
+      "sha256": "f914caa57b524c0d875b53b9a83ef1309e2a150a240a5cea275f73970e86a700",
+      "previous_expected_sha256": "f914caa57b524c0d875b53b9a83ef1309e2a150a240a5cea275f73970e86a700"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2004_nov_3_c4d0287e-p013.png",
+      "sha256": "2cc0b7b071199b1fffac97e5ffefa256cbb95db87cf036663db7c3b7ffe300f5",
+      "previous_expected_sha256": "2cc0b7b071199b1fffac97e5ffefa256cbb95db87cf036663db7c3b7ffe300f5"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p004.png",
+      "sha256": "75c3ba7acd25bfb808d412ef7dc63a0ffa1d469b9996d2bf8fef9ccf4559a653",
+      "previous_expected_sha256": "75c3ba7acd25bfb808d412ef7dc63a0ffa1d469b9996d2bf8fef9ccf4559a653"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p013.png",
+      "sha256": "92b925394d87e460218e98529c4b2e60d547d881a049db4728dc69cacf0f22fb",
+      "previous_expected_sha256": "92b925394d87e460218e98529c4b2e60d547d881a049db4728dc69cacf0f22fb"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p014.png",
+      "sha256": "e1909ec0f1493e2cf62cd5647b151aaea05d0414526e4a6e54ce9d30fcc52475",
+      "previous_expected_sha256": "e1909ec0f1493e2cf62cd5647b151aaea05d0414526e4a6e54ce9d30fcc52475"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p015.png",
+      "sha256": "1ce06492c8b1aeab3ba44e7885f3cfabf37d96883a2417cea0e0ed0333b45bf2",
+      "previous_expected_sha256": "1ce06492c8b1aeab3ba44e7885f3cfabf37d96883a2417cea0e0ed0333b45bf2"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p016.png",
+      "sha256": "71b00ac27d7a2eff2fd73ebb5cdd57c2934066228a5ee9b9bb19ab42a990418c",
+      "previous_expected_sha256": "71b00ac27d7a2eff2fd73ebb5cdd57c2934066228a5ee9b9bb19ab42a990418c"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_6d8c1866-p017.png",
+      "sha256": "d788a5a9a1e86a62537507e03fa6c3bf684273d540f7983f606135b5c8d772d8",
+      "previous_expected_sha256": "d788a5a9a1e86a62537507e03fa6c3bf684273d540f7983f606135b5c8d772d8"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_7e173998-p010.png",
+      "sha256": "709b05ed6548b83565a7a1fdcb051facb6abb4b893a293e9a95915a2c34f3c15",
+      "previous_expected_sha256": "709b05ed6548b83565a7a1fdcb051facb6abb4b893a293e9a95915a2c34f3c15"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_7e173998-p011.png",
+      "sha256": "bf93ecb23aee98231d8333ad7c26d41fa488dc618d4cdd426545822d68501c5f",
+      "previous_expected_sha256": "bf93ecb23aee98231d8333ad7c26d41fa488dc618d4cdd426545822d68501c5f"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_7e173998-p012.png",
+      "sha256": "90d0235b78c7eb67ba35f80e42f14e6b45bdeaacd52377f80f7a429da5c841cf",
+      "previous_expected_sha256": "90d0235b78c7eb67ba35f80e42f14e6b45bdeaacd52377f80f7a429da5c841cf"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2005_may_3_7e173998-p013.png",
+      "sha256": "a1cb7ed4007aee7d28f495abab5a8e74fdd714338fec3f11bddad02fa4864487",
+      "previous_expected_sha256": "a1cb7ed4007aee7d28f495abab5a8e74fdd714338fec3f11bddad02fa4864487"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_may_3_1d1a90ef-p004.png",
+      "sha256": "e20bac878d8f5d1a9bbae52482dc5c554a4a2900476357922f62ff66e1797c9f",
+      "previous_expected_sha256": "e20bac878d8f5d1a9bbae52482dc5c554a4a2900476357922f62ff66e1797c9f"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_may_3_1d1a90ef-p005.png",
+      "sha256": "8f72de763cce8b242739a439548a4029697f033da2c29d3cc78974520cfbab7f",
+      "previous_expected_sha256": "8f72de763cce8b242739a439548a4029697f033da2c29d3cc78974520cfbab7f"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_may_3_1d1a90ef-p010.png",
+      "sha256": "360c56ab3f164606c59d1daddd3d6ec2142e93dbd0e9623a0a9643304cab2562",
+      "previous_expected_sha256": "360c56ab3f164606c59d1daddd3d6ec2142e93dbd0e9623a0a9643304cab2562"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_may_3_1d1a90ef-p011.png",
+      "sha256": "b883701105773276e4757de5a58da3df40afeca7f36adc8d812b5509fb5807b5",
+      "previous_expected_sha256": "b883701105773276e4757de5a58da3df40afeca7f36adc8d812b5509fb5807b5"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_nov_3_820f94e5-p005.png",
+      "sha256": "9579bc35c909f7c28fbe0a668a46cf0f650f4fe5a0a75851ece7e7b3970b1210",
+      "previous_expected_sha256": "9579bc35c909f7c28fbe0a668a46cf0f650f4fe5a0a75851ece7e7b3970b1210"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2007_nov_3_820f94e5-p012.png",
+      "sha256": "3579a4c674f6f791df3cc162771dd515db353ecb2be14957ae6f0e63bed2a724",
+      "previous_expected_sha256": "3579a4c674f6f791df3cc162771dd515db353ecb2be14957ae6f0e63bed2a724"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2010_nov_3_1b08d840-p006.png",
+      "sha256": "514f5768f6e6cc5ce2e523c055f556acd8552d5bf79a8690790ae63ab8713f99",
+      "previous_expected_sha256": "514f5768f6e6cc5ce2e523c055f556acd8552d5bf79a8690790ae63ab8713f99"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2010_nov_3_1b08d840-p009.png",
+      "sha256": "b56640e802830109ba9bc69451dc18f17ee9bc676c0eaffc009ec74deb8dfc19",
+      "previous_expected_sha256": "b56640e802830109ba9bc69451dc18f17ee9bc676c0eaffc009ec74deb8dfc19"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2010_nov_3_1b08d840-p014.png",
+      "sha256": "7d9257333968348f3580615fc5f925d380ce389a6098761b53dc3b17828614e4",
+      "previous_expected_sha256": "7d9257333968348f3580615fc5f925d380ce389a6098761b53dc3b17828614e4"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2011_may_3_7aa932a7-p005.png",
+      "sha256": "685965f25cd261f6039a6f00e1dc0a85fa461ebbc3c546cd6cad406b9247b16b",
+      "previous_expected_sha256": "685965f25cd261f6039a6f00e1dc0a85fa461ebbc3c546cd6cad406b9247b16b"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2011_may_3_7aa932a7-p006.png",
+      "sha256": "e35639e77f06330a34dddd53af56b5579e736f98ba89b508e3a89f03bb004b66",
+      "previous_expected_sha256": "e35639e77f06330a34dddd53af56b5579e736f98ba89b508e3a89f03bb004b66"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\ib_physics_2011_may_3_7aa932a7-p015.png",
+      "sha256": "15dc7bd89be853012e5e4b96d04fd150aa41ca841e3a181f8767e24d423e13d8",
+      "previous_expected_sha256": "15dc7bd89be853012e5e4b96d04fd150aa41ca841e3a181f8767e24d423e13d8"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-additional-geometry\\source-pages.json",
+      "sha256": "f94f3ca9136e88862656ded2675b4fd37b66b8b8974cb0f016aeb5b610539c1a",
+      "previous_expected_sha256": "f94f3ca9136e88862656ded2675b4fd37b66b8b8974cb0f016aeb5b610539c1a"
+    },
+    {
+      "path": "dist\\physics-audit\\a5-current-assessment-freshness.json",
+      "sha256": "948e8e121556f298059a899988779a162b867a8713ae1b1e717c2efb31e1548c",
+      "previous_expected_sha256": "948e8e121556f298059a899988779a162b867a8713ae1b1e717c2efb31e1548c"
+    },
+    {
+      "path": "dist\\physics-audit\\current-ib-tests.json",
+      "sha256": "bd7da777a2b2dee6d1446d2edd9615bfe935132e8dab92a2c1e16472873f345f",
+      "previous_expected_sha256": "bd7da777a2b2dee6d1446d2edd9615bfe935132e8dab92a2c1e16472873f345f"
+    },
+    {
+      "path": "dist\\physics-audit\\e1-e2-preflight.json",
+      "sha256": "f621165d487d3926a74e5b1496db1fb8629ccd52d51bb46fcdd606d65699fe7b",
+      "previous_expected_sha256": "f621165d487d3926a74e5b1496db1fb8629ccd52d51bb46fcdd606d65699fe7b"
+    },
+    {
+      "path": "dist\\physics-inputs\\ib-physics-mcq.json",
+      "sha256": "a16f67480a81863a13cec150ad88d1e2db136a60f91f4a2513010cfec0769083",
+      "previous_expected_sha256": "a16f67480a81863a13cec150ad88d1e2db136a60f91f4a2513010cfec0769083"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-01.png",
+      "sha256": "8dcfeaa02a302cb15aae298def324c71bb19863e2e759cbba1bea82dceedb5e6",
+      "previous_expected_sha256": "8dcfeaa02a302cb15aae298def324c71bb19863e2e759cbba1bea82dceedb5e6"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-02.png",
+      "sha256": "b5d0d3796fad8ba54b43cd47c61a2c9335574301c3e4cc20155beab0b07bb8a2",
+      "previous_expected_sha256": "b5d0d3796fad8ba54b43cd47c61a2c9335574301c3e4cc20155beab0b07bb8a2"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-03.png",
+      "sha256": "3671fdf73481c0a40344596ac933670b3e87afeff35e2540a695b86ba088fa65",
+      "previous_expected_sha256": "3671fdf73481c0a40344596ac933670b3e87afeff35e2540a695b86ba088fa65"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-04.png",
+      "sha256": "4ec1417e79642121dce752f149963198226a34199b1aa4d7c753912618f9daa0",
+      "previous_expected_sha256": "4ec1417e79642121dce752f149963198226a34199b1aa4d7c753912618f9daa0"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-05.png",
+      "sha256": "246fae2ead54d8212caf18ab41769ec85e986f446924854d989e584c34ea2762",
+      "previous_expected_sha256": "246fae2ead54d8212caf18ab41769ec85e986f446924854d989e584c34ea2762"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-06.png",
+      "sha256": "eb6de895cc945385de2a80e13971c84d7d45fbdf7c22c1f1fc92aaa7600b7686",
+      "previous_expected_sha256": "eb6de895cc945385de2a80e13971c84d7d45fbdf7c22c1f1fc92aaa7600b7686"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-07.png",
+      "sha256": "14dbfbf8fe1f94abd8248c27900797f01964e0f896fea54e3c5a2185053f1001",
+      "previous_expected_sha256": "14dbfbf8fe1f94abd8248c27900797f01964e0f896fea54e3c5a2185053f1001"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-08.png",
+      "sha256": "0fe70d8c1518268737f0d89dec24c7a28e034cc455141a6430bbd41f1f7e67bf",
+      "previous_expected_sha256": "0fe70d8c1518268737f0d89dec24c7a28e034cc455141a6430bbd41f1f7e67bf"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-09.png",
+      "sha256": "34647cc5c39422a462ffdf2f65b7a4edee64fb539a314470573815ef630e6243",
+      "previous_expected_sha256": "34647cc5c39422a462ffdf2f65b7a4edee64fb539a314470573815ef630e6243"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-10.png",
+      "sha256": "368bd31361560cde5b69333177a2fda9c92f2cd3b0d3cd783bc6947a477badd5",
+      "previous_expected_sha256": "368bd31361560cde5b69333177a2fda9c92f2cd3b0d3cd783bc6947a477badd5"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-11.png",
+      "sha256": "22c6f4d4cb637e102a77de9bb2ab1c5e10955e6d60fa4bb39c162cb7de8e63fc",
+      "previous_expected_sha256": "22c6f4d4cb637e102a77de9bb2ab1c5e10955e6d60fa4bb39c162cb7de8e63fc"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-12.png",
+      "sha256": "ccad70cc8fc8887e5dd739385f5cdfd0bfa5bead22f24564c2aface0e01c5933",
+      "previous_expected_sha256": "ccad70cc8fc8887e5dd739385f5cdfd0bfa5bead22f24564c2aface0e01c5933"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-13.png",
+      "sha256": "ca24419043a2dfed50444f91613f650c3ed24e687854372ce5e14f876ae388f4",
+      "previous_expected_sha256": "ca24419043a2dfed50444f91613f650c3ed24e687854372ce5e14f876ae388f4"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-14.png",
+      "sha256": "4a23c071351c30d4751a7e027883883f34bd5e6ce2f12d3fd93ec2c3e72c89a4",
+      "previous_expected_sha256": "4a23c071351c30d4751a7e027883883f34bd5e6ce2f12d3fd93ec2c3e72c89a4"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-hl-15.png",
+      "sha256": "65d558d7fdaad178dfb51f878d5276310e4bb1dafa9b86f0341615d731e2d6a3",
+      "previous_expected_sha256": "65d558d7fdaad178dfb51f878d5276310e4bb1dafa9b86f0341615d731e2d6a3"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-01.png",
+      "sha256": "df119c87a54cfca6c34b0e60ba980e7ded4fa522cca4d176939cfe8ecfc1aa76",
+      "previous_expected_sha256": "df119c87a54cfca6c34b0e60ba980e7ded4fa522cca4d176939cfe8ecfc1aa76"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-02.png",
+      "sha256": "497eeeb65440d1f71562885f4ee4111078aaf086b31ce05321d6ab8b3e158a7b",
+      "previous_expected_sha256": "497eeeb65440d1f71562885f4ee4111078aaf086b31ce05321d6ab8b3e158a7b"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-03.png",
+      "sha256": "2fc81a660132d61e4b6572591c75a597c80711cff5a10c701947d3c2dde061e0",
+      "previous_expected_sha256": "2fc81a660132d61e4b6572591c75a597c80711cff5a10c701947d3c2dde061e0"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-04.png",
+      "sha256": "ea6d608c17cedef888796dd3288d67a4156097feaf0f416ca779d38cea9c0259",
+      "previous_expected_sha256": "ea6d608c17cedef888796dd3288d67a4156097feaf0f416ca779d38cea9c0259"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-05.png",
+      "sha256": "a60851f0a0f7eae4006953ef43ac96b1a1d7be7d97615c94bed7f14979e920da",
+      "previous_expected_sha256": "a60851f0a0f7eae4006953ef43ac96b1a1d7be7d97615c94bed7f14979e920da"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-06.png",
+      "sha256": "898591efb7cd43577c74bcfc35130c5d555add393fddafc1f2d611e456ec2e59",
+      "previous_expected_sha256": "898591efb7cd43577c74bcfc35130c5d555add393fddafc1f2d611e456ec2e59"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-07.png",
+      "sha256": "562604c0a16967ed5973419c798c4d4e3a20448edb5803402e6ebc8b3f71ea99",
+      "previous_expected_sha256": "562604c0a16967ed5973419c798c4d4e3a20448edb5803402e6ebc8b3f71ea99"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-08.png",
+      "sha256": "514a51c28555ab9628a5b6382e106a8438d94bce47d4d400af43e27e0b770ab1",
+      "previous_expected_sha256": "514a51c28555ab9628a5b6382e106a8438d94bce47d4d400af43e27e0b770ab1"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-09.png",
+      "sha256": "3cf16f698805c60dd659187b269ffa8d3d0dea7187e9c39fb81a84f9af077847",
+      "previous_expected_sha256": "3cf16f698805c60dd659187b269ffa8d3d0dea7187e9c39fb81a84f9af077847"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\d2-sl-10.png",
+      "sha256": "0290066552488c49e70ac8f9df995ffcffec048b30afc63ec370c92e7d443688",
+      "previous_expected_sha256": "0290066552488c49e70ac8f9df995ffcffec048b30afc63ec370c92e7d443688"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\mixed-02.png",
+      "sha256": "d5a3152f313ed1fc2181bcd2a8c8ac58d9dc67e281140ce5349302b2b416d410",
+      "previous_expected_sha256": "d5a3152f313ed1fc2181bcd2a8c8ac58d9dc67e281140ce5349302b2b416d410"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\mixed-03.png",
+      "sha256": "c933a598da5606d1c6610711134035f7b6bcc23da07efb59ed3d0aa3d333007d",
+      "previous_expected_sha256": "c933a598da5606d1c6610711134035f7b6bcc23da07efb59ed3d0aa3d333007d"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\mixed-04.png",
+      "sha256": "ada5a279c837896fc61e830a7bbde87b99e676776b0f4037b3316fc50c34f7c1",
+      "previous_expected_sha256": "ada5a279c837896fc61e830a7bbde87b99e676776b0f4037b3316fc50c34f7c1"
+    },
+    {
+      "path": "tmp\\pdfs\\d2-assessment-review\\mixed-05.png",
+      "sha256": "96fbfa34850080ab0c1982e1f7f8e38cc2260acc77e18f2d4678b18aa616f027",
+      "previous_expected_sha256": "96fbfa34850080ab0c1982e1f7f8e38cc2260acc77e18f2d4678b18aa616f027"
+    },
+    {
+      "path": "tmp\\pdfs\\e2-assessment-review\\mini-p1.png",
+      "sha256": "8d2abc0f9ffd6ff4e885bab52cbb2f55b5b4551dc22f563f375ac2e39c9e5f4a",
+      "previous_expected_sha256": "8d2abc0f9ffd6ff4e885bab52cbb2f55b5b4551dc22f563f375ac2e39c9e5f4a"
+    },
+    {
+      "path": "tmp\\pdfs\\e2-assessment-review\\mini-p2.png",
+      "sha256": "4bc82443d183602dc8caad3929f4064827d1b9704c6434001304c45d19554ce2",
+      "previous_expected_sha256": "4bc82443d183602dc8caad3929f4064827d1b9704c6434001304c45d19554ce2"
+    },
+    {
+      "path": "tmp\\pdfs\\e2-assessment-review\\mini-p3.png",
+      "sha256": "fa2805011f574fee035a3b600b89fae3d97be1a01b37495684964ffa73602991",
+      "previous_expected_sha256": "fa2805011f574fee035a3b600b89fae3d97be1a01b37495684964ffa73602991"
+    },
+    {
+      "path": "tmp\\pdfs\\ib-e1-e2-current-test-text.json",
+      "sha256": "19f4fe6ad0df7b50caaff920aef1b3bbe8f7e8c7a8d682c999a6b88acfe9d747",
+      "previous_expected_sha256": "19f4fe6ad0df7b50caaff920aef1b3bbe8f7e8c7a8d682c999a6b88acfe9d747"
+    },
+    {
+      "path": "tmp\\pdfs\\ib-e1-e2-other-test-text.json",
+      "sha256": "6d79c13d029f08ecc19f555a7119e251fce9bfdb4dcef122a59110cbf86c643b",
+      "previous_expected_sha256": "6d79c13d029f08ecc19f555a7119e251fce9bfdb4dcef122a59110cbf86c643b"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2024-19.png",
+      "sha256": "8f9a3d12052fa72dcbf1ef0a6bf9e79487ceb02b2efda07dd166440b3ffa5a74",
+      "previous_expected_sha256": "8f9a3d12052fa72dcbf1ef0a6bf9e79487ceb02b2efda07dd166440b3ffa5a74"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2024-20.png",
+      "sha256": "0e6472e03bc5e73b314eb5290dac21c975498e9a45515f0015375a4d515d6f2d",
+      "previous_expected_sha256": "0e6472e03bc5e73b314eb5290dac21c975498e9a45515f0015375a4d515d6f2d"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2024-21.png",
+      "sha256": "690698f2cb30fb860248638ecf14f404c6773df9ba060b9eae94a81a4b7c7aaa",
+      "previous_expected_sha256": "690698f2cb30fb860248638ecf14f404c6773df9ba060b9eae94a81a4b7c7aaa"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2024-22.png",
+      "sha256": "711c26b12eda31601dcc07a09145cbed23efbc85d2a826f1c6f87ec7bcc4e9db",
+      "previous_expected_sha256": "711c26b12eda31601dcc07a09145cbed23efbc85d2a826f1c6f87ec7bcc4e9db"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2025-19.png",
+      "sha256": "3da4c9ac0f3ce498700a3b9db9acda1c2008544382ec163574b4952f98744342",
+      "previous_expected_sha256": "3da4c9ac0f3ce498700a3b9db9acda1c2008544382ec163574b4952f98744342"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2025-20.png",
+      "sha256": "15f23a34910c12319e0a0c06f5b66d65505e5ab38d2275b6e4f2013af415ffcd",
+      "previous_expected_sha256": "15f23a34910c12319e0a0c06f5b66d65505e5ab38d2275b6e4f2013af415ffcd"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2025-21.png",
+      "sha256": "c48102d8a50f2eac1f5593329d45aed6c3445e8a18ba2a15342e13845bfb29cb",
+      "previous_expected_sha256": "c48102d8a50f2eac1f5593329d45aed6c3445e8a18ba2a15342e13845bfb29cb"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2026-19.png",
+      "sha256": "9f183c870850da55cde72cf3c98743924d8e70fb9cdc16b1ec6f4c4a6f638e4a",
+      "previous_expected_sha256": "9f183c870850da55cde72cf3c98743924d8e70fb9cdc16b1ec6f4c4a6f638e4a"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2026-20.png",
+      "sha256": "bacf92c86093b8e758ada3ea01fbef84c059c995c9bcdff06c303297f3c433d8",
+      "previous_expected_sha256": "bacf92c86093b8e758ada3ea01fbef84c059c995c9bcdff06c303297f3c433d8"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\a1-2026-21.png",
+      "sha256": "10982df7624c84e2e774426fd4e4ee2ffff943f6fd1f997c8c403b272731b9a3",
+      "previous_expected_sha256": "10982df7624c84e2e774426fd4e4ee2ffff943f6fd1f997c8c403b272731b9a3"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\c1-2026-01.png",
+      "sha256": "9b41b0fcd1d5b9e708a98d6ed558c866a4f799271538e1593d12d9603d3892dc",
+      "previous_expected_sha256": "9b41b0fcd1d5b9e708a98d6ed558c866a4f799271538e1593d12d9603d3892dc"
+    },
+    {
+      "path": "tmp\\pdfs\\named-assessment-review\\c1-old-01.png",
+      "sha256": "81b65c2ef1cd43382c9a990d3ef8b7e3a80826220637cf5578c5907a32665c7c",
+      "previous_expected_sha256": "81b65c2ef1cd43382c9a990d3ef8b7e3a80826220637cf5578c5907a32665c7c"
+    },
+    {
+      "path": "dist\\physics-audit\\a1-c1-assessments\\freshness.json",
+      "sha256": "2fc94465f1b17fe69e7864f8105b79cec9b1c99a29ffcac5612782a54260f380",
+      "previous_expected_sha256": "2fc94465f1b17fe69e7864f8105b79cec9b1c99a29ffcac5612782a54260f380"
+    },
+    {
+      "path": "dist\\physics-audit\\a1-c1-assessments\\native-review.json",
+      "sha256": "b1dffbc00fe7bf3cd491c26f9a8ad9968da307629690e331bd3d1e83a0aca448",
+      "previous_expected_sha256": "b1dffbc00fe7bf3cd491c26f9a8ad9968da307629690e331bd3d1e83a0aca448"
+    },
+    {
+      "path": "dist\\physics-inputs\\ib-a1-analysis.json",
+      "sha256": "a77ede4509e0a8ae8a4fb06c5d04a18dfcb131abd76733801c32a8f642691d02",
+      "previous_expected_sha256": "a77ede4509e0a8ae8a4fb06c5d04a18dfcb131abd76733801c32a8f642691d02"
+    },
+    {
+      "path": "dist\\physics-inputs\\ib-c1-analysis.json",
+      "sha256": "e575226974034ff0743435fe1a4db6ec7c794d1158694949b79db78f5056044e",
+      "previous_expected_sha256": "e575226974034ff0743435fe1a4db6ec7c794d1158694949b79db78f5056044e"
+    },
+    {
+      "path": "dist\\physics-inputs\\ib-d2.json",
+      "sha256": "d8a94d29e2207a573b08c2f542dfb67868950ceaf642c2439bf666b37c336ec0",
+      "previous_expected_sha256": "450948180803eb9545601cc800bf254b862e8aa04a2aa75658f0fcf1272d782f"
+    }
+  ]
+}

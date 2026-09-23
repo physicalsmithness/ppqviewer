@@ -46,6 +46,25 @@ function assertParentRuns(rows) {
     }
   }
 }
+function assertLevelScope(rows, pool, level) {
+  // d029: every unpaired part survives; each cross-level group contributes exactly
+  // one native printing. Assert the rule against catalogue groups, not a snapshot count.
+  const actual = new Set(rows.map(q=>q.id)), eligible = new Set(pool.map(q=>q.id)), groups = new Map();
+  assert.strictEqual(actual.size,rows.length,"A printing must not appear twice");
+  for (const q of rows) assert(eligible.has(q.id),"A topic must not restore a part outside its leading scope: "+q.id);
+  for (const q of pool) {
+    if (!q.source_group_id) { assert(actual.has(q.id),"Ungrouped part must remain reachable: "+q.id); continue; }
+    if (!groups.has(q.source_group_id)) groups.set(q.source_group_id,[]);
+    groups.get(q.source_group_id).push(q);
+  }
+  for (const [key,members] of groups) {
+    const selected=members.filter(q=>actual.has(q.id));
+    if (new Set(members.map(q=>q.level)).size>1) {
+      assert.strictEqual(selected.length,1,"A cross-level group contributes one printing: "+key);
+      if (members.some(q=>q.level===level)) assert.strictEqual(selected[0].level,level,"The learner gets their native printing: "+key);
+    } else assert.strictEqual(selected.length,members.length,"Same-level siblings must all survive: "+key);
+  }
+}
 function nativeEnter(p, target) {
   // jsdom does not implement native keyboard activation. Model its default
   // button click only when the engine has not consumed the Enter keydown.
@@ -190,7 +209,7 @@ try {
     assert.throws(()=>assertParentRuns(legacy.v.view),/Parent must not reappear/,"Flat Shuffle remains the legacy behavior without the hook");
   });
   const latestPath = path.join(ROOT,"dist/ibphysics-release/latest.json");
-  if (fs.existsSync(latestPath)) check("real released topics traverse their own whole-question runs and All topics restores the full bank", () => {
+  if (fs.existsSync(latestPath)) check("real released topics traverse their leading parts and each learner's whole-question runs", () => {
     const latest = JSON.parse(fs.readFileSync(latestPath,"utf8")), sandbox = {window:{}};
     vm.runInNewContext(fs.readFileSync(path.join(latest.root,"data/physics_catalogue.js"),"utf8"),sandbox);
     const released = JSON.parse(JSON.stringify(sandbox.window.PHYSICS_QUESTIONS));
@@ -200,32 +219,32 @@ try {
     const topicSelect=p.root.querySelector('.ppq-select[data-fidx="'+topicIndex+'"]');
     function chooseTopic(topic){topicSelect.value=topic;topicSelect.dispatchEvent(new p.w.Event("change",{bubbles:true}));}
     chooseTopic("A.5");
-    const rows=base(p),a5=released.filter(q=>q.topic_codes.includes("A.5"));
-    assert.strictEqual(rows.length,a5.length);
-    assert.deepStrictEqual(Array.from(rows,q=>q.source_part_id).sort(),a5.map(q=>q.source_part_id).sort());
+    const rows=base(p),a5=released.filter(q=>q.topic_codes[0]==="A.5");
+    assertLevelScope(rows,a5,"HL");
     assertParentRuns(rows);
-    assert.strictEqual(rows.filter(q=>p.v.cfg.questionType(q)==="mcq").length,4);
+    assert(rows.some(q=>p.v.cfg.questionType(q)==="mcq"),"The released A5 journey includes multiple-choice questions");
     assert(rows.slice(0,4).some(q=>p.v.cfg.questionType(q)!=="mcq"),"This fixed seed must exercise written work at the start too");
     const visited=[];
     for(let i=0;i<rows.length;i++){visited.push(p.v.cur.id);p.v.next();}
     assert.strictEqual(visited.join("|"),ids(rows));
     const currentRoman = Array.from(rows.filter(q=>q.parent_id==="16M.P3.HL.TZ0.Q5"),q=>q.label);
     assert.deepStrictEqual(currentRoman,["(b)(i)","(b)(iii)","(b)(iv)"]);
-    for(const topic of p.v.cfg.filters[topicIndex].values){
-      chooseTopic(topic);
-      const scoped=base(p),expected=released.filter(q=>q.topic_codes.includes(topic));
-      assert(expected.length>0,"Each offered topic must have practice parts");
-      if(p.v.cfg.filters[topicIndex].values.length>1)assert(scoped.length<released.length,"A single topic must be a proper subset of this released bank");
-      assert.deepStrictEqual(Array.from(scoped,q=>q.source_part_id).sort(),expected.map(q=>q.source_part_id).sort());
-      assertParentRuns(scoped);
-      const stable=ids(scoped),journey=[];
-      for(let i=0;i<scoped.length;i++){journey.push(p.v.cur.id);p.v.next();assert.strictEqual(ids(base(p)),stable);}
-      assert.strictEqual(journey.join("|"),stable);
+    for(const topic of [...p.v.cfg.filters[topicIndex].values,"ALL"]){
+      // d030 filtering precedes d029 collapse, including when twins have different topics.
+      const eligible=topic==="ALL"?released:released.filter(q=>q.topic_codes[0]===topic),reached=new Set();
+      assert(eligible.length>0,"Each offered topic must have practice parts");
+      for(const level of ["HL","SL"]){
+        p.v.store.prefs.learnerLevel=level;chooseTopic(topic);
+        const scoped=base(p);
+        assertLevelScope(scoped,eligible,level);
+        assertParentRuns(scoped);
+        const stable=ids(scoped),journey=[];
+        for(let i=0;i<scoped.length;i++){journey.push(p.v.cur.id);reached.add(p.v.cur.id);p.v.next();assert.strictEqual(ids(base(p)),stable);}
+        assert.strictEqual(journey.join("|"),stable);
+      }
+      assert.deepStrictEqual([...reached].sort(),eligible.map(q=>q.id).sort(),"Both levels together retain every eligible printing in "+topic);
     }
-    chooseTopic("ALL");
-    assert.strictEqual(base(p).length,latest.parts);
-    assert.deepStrictEqual(Array.from(base(p),q=>q.source_part_id).sort(),released.map(q=>q.source_part_id).sort());
-    assertParentRuns(base(p));
+    for(const q of released) assert(p.v.byId[q.id],"Every released printing stays addressable by a shared link");
   });
   console.log(checks + " question-order and navigation journeys passed");
 } finally {

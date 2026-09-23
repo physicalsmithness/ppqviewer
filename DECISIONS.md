@@ -438,3 +438,31 @@ The failure this fixes: a build described a second physics topic as "Other cours
 - **Reporting.** The breakdown shows both scales per row as percentages, *50% got it then, 90% get it now*, mark-weighted, on the last attempt per question by default with a switch to include every attempt. The model is Special Relativity's coverage page, which already carries the latest/all switch and reads this viewer's store directly, so get-it-now becomes a second percentage column there once the attempt row carries the field. All of it reaches the teacher view.
 
 **Open.** The six-level C rating: Smith's "maybe we just sort of highlight 4, 5, 6 … one last thing to say about it" is read as keeping the rating after the scales as a shakiness gloss (levels 4 to 6 only) and is unconfirmed. Where the panel sits (the right-hand column is the candidate). The exact option lists per kind, which arrive with the sweep. Nothing of this is built; the request that unblocks it is out.
+
+## d034 — release evidence is separate from disposable preview output
+
+**Repair authorised by Smith, 2026-09-23.** A preview refresh overwrote the D2
+baseline fingerprinted by the release, while an unrelated SR syllabus edit
+invalidated A5 provenance. Restoring downstream records did not restore their
+upstream evidence. The temporary source-borrowing workaround is retired.
+
+Pinned release inputs live in `reports/ib-release-inputs/`; preview builders
+continue to write `dist/physics-inputs/`. Complete comparisons of A5 and D2
+rebuilds proved identical reviewed content. The D2 assessment retains a fixed
+input checksum and now also verifies full equivalence against the hash-pinned
+original review input. Its 12 September semantic review date is unchanged.
+
+All dependent active review records and four topic clearances were rebuilt in
+an isolated candidate filesystem, compared in full, and promoted together with
+verified before/after copies and a journal. Provenance differences are explicit;
+whole report blocks and asset associations are never discarded from comparison.
+Three historical public-impact entries disappeared only after confirming that
+their questions remain reserved and are already absent from the current bundle.
+
+The release runner fails on any failed command. The staging wrapper refuses
+dirty checkouts instead of treating `git diff -w` as proof of harmless changes.
+An interrupted evidence promotion blocks assembly and staging until recovered.
+The old stepwise promotion helpers are diagnostic only. Migration records and
+the preserved ignored evidence are under
+`reports/ib-evidence-migration-2026-09-23/`; their existence does not imply that
+new files have already been committed or externally backed up.

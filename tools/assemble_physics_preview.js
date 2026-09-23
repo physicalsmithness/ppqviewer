@@ -110,11 +110,11 @@ function ibInput(options = {}) {
   let raw = box.window.IBPHYS_QUESTIONS;
   const sourceMeta = box.window.IBPHYS_META;
   ensure(Array.isArray(raw) && raw.length, "IB catalogue missing");
-  const dataPath = path.join(ROOT,"dist/physics-inputs/ib-data-analysis.json");
+  const dataPath = path.join(ROOT,options.release ? "reports/ib-release-inputs/ib-data-analysis.json" : "dist/physics-inputs/ib-data-analysis.json");
   ensure(fs.existsSync(dataPath), "Build historical data analysis first: tools/build_ib_data_analysis.py");
   const dataSupplement = JSON.parse(read(dataPath));
   validateIbDataSupplement(raw,dataSupplement);
-  const d2Path = path.join(ROOT,"dist/physics-inputs/ib-d2.json");
+  const d2Path = path.join(ROOT,options.release ? "reports/ib-release-inputs/ib-d2-baseline.json" : "dist/physics-inputs/ib-d2.json");
   const supplement = fs.existsSync(d2Path) ? JSON.parse(read(d2Path)) : null;
   if (supplement) {
     ensure(Array.isArray(supplement.questions) && supplement.questions.length, "D2 supplement has no native questions");

@@ -1,0 +1,280 @@
+# Syllabus metadata for A.5: point names and their atoms.
+# Architecture-owned, single-writer (d029 pattern). Compiled like any other data file
+# to window.SRD_SYLLABUS_META.
+#
+# `code`  the dotted syllabus understanding (A.5.H.n), the coverage rail's top level.
+# `atoms` the sub-skills within it. Atom ids are the EXISTING pack-taxonomy codes that
+#         items already carry as their secondary tag (d016), so nothing needs re-tagging.
+#         Names are taken verbatim from the "New categories" sheet of
+#         relativity_pack_question_categorisation.xlsx (d011/d017), except A5.H9.
+#
+# ATOMS ARE NOT A PARTITION. An item carries every atom it exercises, and an atom's
+# coverage is the union of the items that exercise it. An item is expected to appear
+# under several atoms and under several points; that is correct, not double counting.
+# A learner who computes gamma inside a muon-decay question has demonstrated gamma.
+#
+# Sheet note: the 2025 sheet splits ONE IB understanding across H.6 to H.9 (the guide has
+# 15 understandings, the sheet reaches 18). H.6's statement ends mid-sentence on "as given
+# by" and H.7, H.8 and H.9 complete it. Render H.7 to H.9 as children of H.6 if the rail
+# nests; do not merge them, items are tagged against all four codes.
+#
+# A5.H9 is MINTED here, not from the workbook. The packs have no gamma leaf because the
+# exams never examine gamma standalone, but that is a fact about the papers, not about the
+# skill: the driller does examine it alone, and it is a sub-skill inside roughly 77 items
+# across seven topics. It must be creditable wherever it is exercised.
+
+# This file has TWO sections.
+#   points:  the syllabus tree (A.5.H.n and its atoms), for the coverage rail.
+#   topics:  the teaching order for the drill panel's "By topic" list.
+#
+# The two orders are DIFFERENT ON PURPOSE and neither should be harmonised to the
+# other. `points` is the IB's own numbering, which is what pupils are examined
+# against, so the coverage rail stays in syllabus order. `topics` is a teaching
+# path, which is not the same thing: the engine currently sorts the topic list
+# alphabetically, which is no order at all.
+
+# `exam` (d057) is EMPIRICAL frequency from Smith's part-level analysis of every available
+# examination year (409 parts, 753 marks, Nov 2004 to Nov 2025), filed in inbox/. Three numbers,
+# and they must be shown as three:
+#   direct_pct          how often examiners ask for the thing itself, all years
+#   direct_pct_2025     the same for 2025 only, the one year sat under this syllabus. n=17, so
+#                       ONE part moves this by 5.9%. The caveat must travel with the number.
+#   direct_or_used_pct  how often it is needed to answer something, all years
+# Gamma is why the three are kept apart: 1.2% direct, 23.7% used, and 80% structural by the
+# `requires` graph below. A single blended figure would destroy that.
+# Frequencies are recorded at POINT level, not atom level: the source analysis codes to concepts
+# that map cleanly onto A.5.H.n but not onto the 45 pack sub-letters.
+
+points:
+  - code: A.5.H.1
+    name: "Reference frames"
+    exam: { direct_pct: 9.0, direct_pct_2025: 0.0, direct_or_used_pct: 13.4 }
+    atoms:
+      - { id: A5.H1, name: "Frames, inertial frames, events and spacetime: define the term or recognise what is being described" }
+
+  - code: A.5.H.2
+    name: "Galilean relativity"
+    exam: { direct_pct: 6.1, direct_pct_2025: 0.0, direct_or_used_pct: 6.8 }
+    atoms:
+      - { id: A5.H2, name: "Classical-relativity breakdown: explain why a Galilean answer fails at relativistic speeds or for light" }
+
+  - code: A.5.H.3
+    name: "Galilean transformation"
+    exam: { direct_pct: 6.1, direct_pct_2025: 0.0, direct_or_used_pct: 6.8 }
+    atoms:
+      - { id: A5.H3, name: "Galilean event transforms: use x' = x − vt and t' = t (or equivalent classical geometry) for event coordinates" }
+
+  - code: A.5.H.4
+    name: "Galilean velocity addition"
+    exam: { direct_pct: 6.1, direct_pct_2025: 0.0, direct_or_used_pct: 6.8 }
+    atoms:
+      - { id: A5.H4, name: "Galilean velocity addition: use u' = u − v, including classical predictions for light speed" }
+
+  - code: A.5.H.5
+    name: "The two postulates"
+    exam: { direct_pct: 5.4, direct_pct_2025: 0.0, direct_or_used_pct: 18.1 }
+    atoms:
+      - { id: A5.H5, name: "Postulates of special relativity: state them and use them qualitatively to reject a classical answer" }
+
+  - code: A.5.H.6
+    name: "Lorentz transformations"
+    exam: { direct_pct: 5.1, direct_pct_2025: 5.9, direct_or_used_pct: 7.1 }
+    atoms:
+      - { id: A5.H6a, name: "Set-up: choose whether the problem calls for time dilation, length contraction, velocity addition or a full Lorentz transformation" }
+      - { id: A5.H6b, name: "Event-separation disguised as length: resist simple length contraction and transform the events instead" }
+
+  - code: A.5.H.7
+    name: "Lorentz transformation: space"
+    exam: { direct_pct: 5.1, direct_pct_2025: 5.9, direct_or_used_pct: 7.1 }
+    atoms:
+      - { id: A5.H7, name: "Lorentz transformation - transform a single event's coordinates, with x' usually the leading handle" }
+
+  - code: A.5.H.8
+    name: "Lorentz transformation: time"
+    exam: { direct_pct: 5.1, direct_pct_2025: 5.9, direct_or_used_pct: 7.1 }
+    atoms:
+      - { id: A5.H8a, name: "Lorentz transformation - transform an event separation (Δx, Δt), especially where Δt′ matters" }
+      - { id: A5.H8b, name: "Quantitative simultaneity with Lorentz: use transformed times to show non-simultaneity or determine order" }
+
+  - code: A.5.H.9
+    name: "The Lorentz factor"
+    exam: { direct_pct: 1.2, direct_pct_2025: 0.0, direct_or_used_pct: 23.7 }
+    atoms:
+      - { id: A5.H9, name: "Lorentz factor: compute γ from v, or v from γ, and know γ ≥ 1" }
+
+  - code: A.5.H.10
+    name: "Relativistic velocity addition"
+    exam: { direct_pct: 9.0, direct_pct_2025: 5.9, direct_or_used_pct: 9.5 }
+    atoms:
+      - { id: A5.H10a, name: "Relativistic velocity addition - same direction: launched probe / chase / one object overtaking another" }
+      - { id: A5.H10b, name: "Relativistic velocity addition - opposite directions: two objects approaching or receding from one another" }
+      - { id: A5.H10ci, name: "Compare Galilean, relativistic and separation-rate answers; explain why an apparent > c does or does not matter" }
+      - { id: A5.H10cii, name: "Wrong-stock-formula / superluminal trap: explain why the tempting answer is not the physically correct one" }
+      - { id: A5.H10d, name: "Composite moving-object problems: journey plus launched probe or second moving object" }
+
+  - code: A.5.H.11
+    name: "The invariant spacetime interval"
+    exam: { direct_pct: 2.7, direct_pct_2025: 17.6, direct_or_used_pct: 3.9 }
+    atoms:
+      - { id: A5.H11ai, name: "Invariant interval - calculate (Δs)² = (cΔt)² − (Δx)² for a pair of events" }
+      - { id: A5.H11aii, name: "Invariant interval - show that the interval has the same value in different frames" }
+      - { id: A5.H11bi, name: "Invariant interval as a solution tool - find an unknown time without a full Lorentz transform" }
+      - { id: A5.H11bii, name: "Invariant interval as a solution tool - find an unknown distance without a full Lorentz transform" }
+      - { id: A5.H11biii, name: "Invariant interval as a shortcut: use it in place of a full transform and explain why that is legitimate" }
+      - { id: A5.H11c, name: "Invariant interval / causal reach: decide whether one event could have caused another, or whether the order can vary" }
+
+  - code: A.5.H.12
+    name: "Proper time and proper length"
+    exam: { direct_pct: 9.5, direct_pct_2025: 0.0, direct_or_used_pct: 36.9 }
+    atoms:
+      - { id: A5.H12a, name: "Proper quantities: define proper length/proper time, or recognise which measurement is proper in context" }
+      - { id: A5.H12b, name: "Set-up: identify the rest frame and the proper quantity before calculating" }
+      - { id: A5.H12c, name: "Set-up trap: decide whether the data describe one object's length or the separation between two events" }
+
+  - code: A.5.H.13
+    name: "Time dilation"
+    exam: { direct_pct: 13.7, direct_pct_2025: 17.6, direct_or_used_pct: 17.4 }
+    atoms:
+      - { id: A5.H13a, name: "Direct time dilation: calculate moving-clock readings, lifetimes or elapsed times with Δt = γΔt₀" }
+      - { id: A5.H13b, name: "Embedded time dilation: use time dilation inside a longer travel, return, or signal problem" }
+      - { id: A5.H13c, name: "Multi-frame journeys: one-leg or two-leg journey times and distances in different frames" }
+      - { id: A5.H13d, name: "Messages and radio/light signals in flight: when does the signal arrive in each frame?" }
+
+  - code: A.5.H.14
+    name: "Length contraction"
+    exam: { direct_pct: 11.2, direct_pct_2025: 5.9, direct_or_used_pct: 13.0 }
+    atoms:
+      - { id: A5.H14a, name: "Direct length contraction: calculate the contracted length of a moving object or the contracted travel distance in another frame" }
+      - { id: A5.H14b, name: "Fit / clearance numerics: moving object versus bridge, tunnel, station or airlock" }
+
+  - code: A.5.H.15
+    name: "Relativity of simultaneity"
+    exam: { direct_pct: 12.0, direct_pct_2025: 11.8, direct_or_used_pct: 13.2 }
+    atoms:
+      - { id: A5.H15ai, name: "Simultaneity across frames: events simultaneous in one frame but not another; determine which happened first" }
+      - { id: A5.H15aii, name: "Midpoint / lightning / beacon arguments: use symmetry and light-speed invariance to reason about simultaneity" }
+      - { id: A5.H15b, name: "Happened first versus seen first: distinguish event order from order of light reception" }
+      - { id: A5.H15ci, name: "Simultaneity-driven tunnel/train or lamp contradictions: explain why the two frames disagree without contradiction" }
+      - { id: A5.H15cii, name: "Paradox resolution by frame choice and simultaneity: explain why there is no contradiction" }
+
+  - code: A.5.H.16
+    name: "Spacetime diagrams"
+    exam: { direct_pct: 10.0, direct_pct_2025: 41.2, direct_or_used_pct: 15.6 }
+    atoms:
+      - { id: A5.H16ai, name: "Spacetime-diagram reading - coordinates, order and simultaneity in S or S'" }
+      - { id: A5.H16aii, name: "Spacetime-diagram reading - light reception, same-position lines and clock readings" }
+      - { id: A5.H16bi, name: "Spacetime-diagram construction - plot or annotate events, worldlines and light rays" }
+      - { id: A5.H16bii, name: "Spacetime-diagram construction - draw x' or ct' axes for the moving frame" }
+      - { id: A5.H16biii, name: "Spacetime-diagram construction used to obtain transformed coordinates or event relations" }
+
+  - code: A.5.H.17
+    name: "World lines and tan θ = v/c"
+    exam: { direct_pct: 10.0, direct_pct_2025: 41.2, direct_or_used_pct: 15.6 }
+    atoms:
+      - { id: A5.H17, name: "Spacetime-diagram reading - speed/angle/worldline geometry" }
+
+  - code: A.5.H.18
+    name: "Muon decay as evidence"
+    exam: { direct_pct: 5.1, direct_pct_2025: 0.0, direct_or_used_pct: 5.1 }
+    atoms:
+      - { id: A5.H18a, name: "Muon/decay evidence - non-relativistic prediction versus what is actually observed" }
+      - { id: A5.H18b, name: "Muon/decay evidence - Earth-frame time-dilation calculation of lifetime or survival fraction" }
+      - { id: A5.H18c, name: "Muon/decay evidence - muon-frame length-contraction explanation and two-frame synthesis" }
+
+# Teaching order for the drill panel, plus the DEPENDENCY GRAPH. The engine sorts
+# the "By topic" list on `order` and falls back to alphabetical for anything not
+# listed here.
+#
+# `requires` is the load-bearing field. It declares which ideas an idea rests on,
+# and from it the engine derives, for any idea, the share of the bank that depends
+# on it: the transitive set of topics whose prerequisites include it, weighted by
+# item count. That number is the point. Lorentz factor underpins 80% of the bank;
+# spacetime diagrams underpins none of it. A learner weak on gamma is weak beneath
+# four fifths of everything, which is a completely different signal from being weak
+# on a leaf, and the interface should say so.
+#
+# Two distinct measures, do not conflate them:
+#   DECLARED  - the share of the bank that structurally depends on the idea (this graph)
+#   MEASURED  - the share of items that actually exercise it (from the tags, per d043)
+# For gamma these read 80% and 35%. The gap is informative: most items that need
+# gamma are handed it in the stem instead of making the learner produce it, which is
+# the same finding as the 51 gamma-blind items in d044.
+#
+# `order` must remain a valid topological sort of `requires`. It currently is; a
+# lint should keep it so. Note the order is NOT uniquely determined by the graph:
+# the graph constrains, a teacher chooses. Muon decay sits fifth because its
+# prerequisites are satisfied by fourth, and that is where Smith teaches it.
+#
+# Departure from the syllabus numbering, and it is deliberate: gamma is second,
+# well ahead of its H.9 position. It sits at H.9 only because the sheet splits one
+# understanding across H.6 to H.9 (d042), not because it is taught ninth. You need
+# gamma before you can use anything that contains it.
+#
+# The approach chooser (`method_select`, d034) is deliberately absent: it is a
+# question type, not a topic, and its items carry the topic of the family they
+# drill. Its home is atom A5.H6a, "choose whether the problem calls for time
+# dilation, length contraction, velocity addition or a full Lorentz transformation".
+# It also cannot be taught until there are at least two tools to choose between.
+
+topics:
+  - id: galilean_relativity    
+    order: 1 
+    name: "Galilean relativity"
+    points: H.1-H.5
+    why: Frames, the classical transform and velocity addition, then the postulates that break them.
+    requires: []
+  - id: lorentz_factor         
+    order: 2 
+    name: "Lorentz factor"
+    points: H.9
+    why: The one tool everything downstream uses, and the cheapest to learn. Deliberately ahead of the transforms.
+    requires: [galilean_relativity]
+  - id: time_dilation          
+    order: 3
+    name: "Time dilation"
+    points: H.12-H.13
+    why: The light-clock result; proper time is introduced here.
+    requires: [lorentz_factor]
+  - id: length_contraction     
+    order: 4
+    name: "Length contraction"
+    points: H.12-H.14
+    why: Follows from dilation; proper length is its partner.
+    requires: [lorentz_factor, time_dilation]
+  - id: velocity_addition      
+    order: 6
+    name: "Velocity addition"
+    points: H.10
+    why: Needs gamma; contrasts directly with the Galilean form met in topic 1.
+    requires: [galilean_relativity, lorentz_factor]
+  - id: lorentz_transformations
+    order: 7
+    name: "Lorentz transformations"
+    points: H.6-H.8
+    why: The general machinery, once the special cases are familiar.
+    requires: [lorentz_factor]
+  - id: spacetime_interval     
+    order: 8
+    name: "Spacetime interval"
+    points: H.11
+    why: The invariant behind the transforms.
+    requires: [lorentz_transformations]
+  - id: simultaneity           
+    order: 9
+    name: "Simultaneity"
+    points: H.15
+    why: Conceptually early, but its quantitative half needs the t' transform (d027).
+    requires: [lorentz_transformations]
+  - id: muon_decay             
+    order: 5
+    name: "Muon decay"
+    points: H.18
+    why: The synthesis capstone (d021); needs dilation and contraction together.
+    requires: [time_dilation, length_contraction]
+
+  - id: spacetime_diagrams
+    order: 10
+    name: "Spacetime diagrams"
+    points: H.16-H.17
+    why: Geometry that re-expresses everything above. NOTE (d065b) - this node is RULED to split into reading (early; A5.H16ai, A5.H16aii, A5.H17) and construction (late; A5.H16bi, A5.H16bii, A5.H16biii). The ruling stands. The split is HELD until Housing can group a teaching node by its atom set, because a node id that is not a live topic tag makes every item in that topic fall through the rail - which is exactly what the spec assertion caught.
+    requires: [simultaneity, spacetime_interval]

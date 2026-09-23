@@ -110,7 +110,8 @@ function build(options = {}) {
     ensure(focus(corpus.get(assignment.part_id)) === assignment.assessment_focus, "D2 ordinary/DATA location rule differs");
   }
   for (const link of links) ensure(typeIndex.has(link.versioned_type_id), "Unknown D2 type-level understanding reference");
-  const oldInputFile = path.join(ROOT, "dist/physics-inputs/ib-d2.json"), old = json(oldInputFile);
+  // Historical membership/defect baseline; preview refreshes must never replace it.
+  const oldInputFile = path.join(ROOT, "reports/ib-release-inputs/ib-d2-baseline.json"), old = json(oldInputFile);
   const oldIds = new Set(old.questions.flatMap(q => q.parts.map(p => p.source_part_id)));
   const nativeFile = path.join(estate, "Physics Categorisation/viewer/ibphysics_catalogue.js"), nativeBox = {window:{}};
   vm.runInNewContext(bytes(nativeFile).toString("utf8"), nativeBox, {timeout:20000});

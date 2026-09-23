@@ -25,6 +25,8 @@ ADAPTER = PAPERDB / "Physics Categorisation/viewer/a5_type_adapter.py"
 sys.path.insert(0, str(ADAPTER.parent))
 from a5_type_adapter import load_registry, part_projection, public_vocabulary
 GUIDANCE = SR / "inbox/2026-09-09_from-codex_A5_common_slips"
+# Reviewed release input: a neighbouring project's working tree is not a pin.
+SYLLABUS = ROOT / "reports/ib-release-inputs/a5-syllabus-meta.yaml"
 
 # The reviewed corpus supplies the concept-to-understanding bridge in its
 # summary.metrics[].syllabus. Contextual H16 links stay secondary guidance;
@@ -168,7 +170,7 @@ def native_catalogue(path):
 def build():
     source_files = [ANALYSIS / "analysis_all_years.json", ANALYSIS / "confirmed_duplicate_map.json",
                     ANALYSIS / "confirmed_duplicate_map_2025.json", GUIDANCE / "A5_atom_guidance.json",
-                    GUIDANCE / "A5_evidence_ledger.json", SR / "data/syllabus_meta.yaml",
+                    GUIDANCE / "A5_evidence_ledger.json", SYLLABUS,
                     PAPERDB / "Physics Categorisation/viewer/ibphysics_catalogue.js"]
     analysis = read_json(source_files[0])
     registry = load_registry(REGISTRY)
