@@ -4,6 +4,13 @@
 supply configuration and question data; shared behaviour belongs here rather
 than in subject forks.
 
+Chemistry's shared viewer was published and publicly verified on 27 September
+2026: all 2,465 parts have originals, and its left data-analysis mastery view,
+right syllabus overview and existing ratings are preserved. The old `ppq.html`
+link still works. See [CHEMISTRY_RELEASE.md](CHEMISTRY_RELEASE.md),
+[CHEMISTRY_MIGRATION.md](CHEMISTRY_MIGRATION.md) and the
+[feature comparison](CHEMISTRY_FEATURE_GAPS.md).
+
 **Current maintainer: Claude (from 2026-07-28).**
 
 Physics onboarding (September 2026, Smith's request): A1, A5 and C1 now have

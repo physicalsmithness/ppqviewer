@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chemistry past papers</title>
+  <link rel="stylesheet" href="ppqviewer.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <style>
+    body { margin:0; background:#faf6ed; color:#26261f; font:16px/1.5 system-ui,sans-serif; }
+    [hidden] { display:none !important; }
+    .chem-bar { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; padding:.6rem 1rem; border-bottom:1px solid #ddd5c7; }
+    .chem-bar a { color:#225f89; }
+    .chem-bar button { margin-left:auto; }
+    #chem-status { padding:.6rem 1rem; background:#fff0cf; margin:0; }
+    #chem-signin { max-width:24rem; margin:8vh auto; padding:1.5rem; }
+    #chem-signin label { display:block; margin:1rem 0; }
+    #chem-signin input, #chem-signin select { display:block; width:100%; box-sizing:border-box; padding:.7rem; font:inherit; }
+    button { font:inherit; cursor:pointer; padding:.45rem .8rem; }
+    .ppq { --ppq-crop-width:90%; }
+    .chemistry-stem, .chemistry-lead-in, .chemistry-part-text, .chemistry-markscheme-text { overflow-wrap:anywhere; }
+    .chemistry-stem, .chemistry-lead-in { margin-bottom:1.25rem; }
+    .chemistry-context img { max-width:100%; }
+  </style>
+</head>
+<body>
+  <header class="chem-bar">
+    <a id="chem-home" href="../index.html">Chemistry Driller</a>
+    <strong>Chemistry past papers</strong>
+    <span id="chem-person"></span>
+    <button id="chem-signout" type="button" hidden>Not you?</button>
+  </header>
+  <p id="chem-status" role="status">Loading the question collection…</p>
+  <form id="chem-signin" hidden>
+    <h1>Start practising</h1>
+    <label>Your name<input id="chem-name" autocomplete="name" required></label>
+    <label>Your class<select id="chem-class" required>
+      <option value="">Choose your class</option><option>SL</option><option>HL</option><option>Test</option>
+    </select></label>
+    <button type="submit">Start</button>
+    <p id="chem-signin-note">Your progress stays in this browser.</p>
+  </form>
+  <main id="ppq-root" hidden></main>
+  <script src="chemistry-catalogue.js"></script>
+  <script>
+    // Retain the existing Chemistry site's measurement on its live route only.
+    (function () {
+      if (!window.CHEMISTRY_META || window.CHEMISTRY_META.release !== true ||
+          location.protocol !== "https:" || location.hostname !== "physicalsmithness.github.io" ||
+          !/^\/chemistrydriller\/ppqviewer(?:\/|$)/.test(location.pathname) ||
+          new URLSearchParams(location.search).has("preview")) return;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date()); window.gtag("config", "G-WKYGJYERSR");
+      var ga = document.createElement("script"); ga.async = true;
+      ga.src = "https://www.googletagmanager.com/gtag/js?id=G-WKYGJYERSR";
+      document.head.appendChild(ga);
+      document.addEventListener("click", function (event) {
+        var target = event.target.closest('a, button, [role="button"]');
+        if (!target) return;
+        var payload = {el_id:target.id || "", el_role:target.getAttribute("role") || "",
+          el_classes:String(target.className || ""), el_label:(target.getAttribute("aria-label") || target.textContent || "").trim().slice(0, 80),
+          el_tag:target.tagName.toLowerCase()};
+        if (target.tagName === "A") { payload.link_url = target.href; payload.outbound = target.hostname !== location.hostname; }
+        window.gtag("event", "site_click", payload);
+      }, true);
+      (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xdr2tsc688");
+    })();
+  </script>
+  <script src="subject-identity.js"></script>
+  <script src="ppq-reporting.js"></script>
+  <script src="ppqviewer.js"></script>
+  <script src="chemistry-config.js"></script>
+  <script src="chemistry-page.js"></script>
+</body>
+</html>

@@ -30,6 +30,17 @@ try{
   const off=mount(simple,{prefetchAhead:-3});assert.strictEqual(off.v.cfg.prefetchAhead,0);assert(!off.requests.includes("q2.png"));
  });
  const parts=[{id:"paper.Q7(a)",label:"(a)",group:"first",marks:2,crops:["a.png"],context:["whole.png"],ms:["a-ms.png"]},{id:"paper.Q7(b)",label:"(b)",group:"second",marks:3,crops:["b.png"],context:["whole.png"],ms:["b-ms.png"]}];
+ check("next three part images precede large context and markscheme sets within the cache limit",()=>{
+  const questions=[1,2,3,4,5].map(i=>({id:"priority"+i,crops:["part"+i+".png"],context:Array.from({length:90},(_,j)=>"context"+i+"-"+j+".png"),ms:["answer"+i+".png"]}));
+  const p=mount(questions,{prefetchAhead:3});
+  assert.deepStrictEqual(p.requests.slice(0,4),["part1.png","part2.png","part3.png","part4.png"]);
+  assert.strictEqual(p.requests.length,80);assert.strictEqual(p.v._preloaded.size,80);
+  for(const url of p.requests.slice(0,4))assert(p.v._preloaded.has(url));
+  assert(!p.requests.includes("part5.png"));
+  p.v.next();assert(p.v._preloaded.has("part5.png"));
+  assert.strictEqual(p.requests.filter(url=>url==="part2.png").length,1);
+  assert(!p.root.querySelector(".ppq-markscheme img"));assert.strictEqual(p.v.store.attempts.length,0);
+ });
  const structured={prefetchAhead:0,modules:{structuredPaper:true},blockKeyOf:()=>"paper.Q7",partLabelOf:q=>q.label,partMarksOf:q=>q.marks,stemUrlOf:()=>null,structuredNavigationOnly:true,structuredNavBeforeStem:true,structuredQuestionLabelOf:()=>"Question 7",targetPartHeadingOf:q=>"Answer part "+q.label,questionTextOf:()=>'<details class="test-context" open><summary>Context</summary><img src="whole.png"></details>'};
  check("structured siblings preload their answer crops with shared context deduplicated",()=>{
   const p=mount(parts,structured);assert(p.requests.includes("b-ms.png"));assert.strictEqual(p.requests.filter(x=>x==="whole.png").length,1);

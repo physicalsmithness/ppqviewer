@@ -1,0 +1,109 @@
+{
+  "date": "2026-09-27",
+  "build_id": "2026-09-27T14-37-31-894Z_358af1",
+  "release": false,
+  "catalogue_sha256": "a3eb1236bc4dacfd4c91d8380df39d31e683594db90a8c909a541b97090691c0",
+  "parts": 2465,
+  "legacy_ids_retained": 2465,
+  "originals": 2465,
+  "text_only": 0,
+  "unique_assets": 6565,
+  "issues": {
+    "missing": 0,
+    "remote": 0,
+    "unsafe": 0
+  },
+  "by_paper": {
+    "2": {
+      "parts": 1934,
+      "with_original": 1934,
+      "text_only": 0,
+      "with_markscheme_images": 1878
+    },
+    "1A": {
+      "parts": 226,
+      "with_original": 226,
+      "text_only": 0,
+      "with_markscheme_images": 226
+    },
+    "1B": {
+      "parts": 305,
+      "with_original": 305,
+      "text_only": 0,
+      "with_markscheme_images": 305
+    }
+  },
+  "source_fingerprints": [
+    {
+      "source": "example/chemistry.html",
+      "sha256": "6460d4c9ec49ba65cfd3f40f9524e5b4b2c0da3e5edb42fbf36c0dde1fd4bc2b",
+      "assembled_sha256": "6460d4c9ec49ba65cfd3f40f9524e5b4b2c0da3e5edb42fbf36c0dde1fd4bc2b"
+    },
+    {
+      "source": "example/chemistry-page.js",
+      "sha256": "525e24de1994cd2b450282d387f7100fc7e010339af4dd1721d4d774e64ad244",
+      "assembled_sha256": "525e24de1994cd2b450282d387f7100fc7e010339af4dd1721d4d774e64ad244"
+    },
+    {
+      "source": "example/chemistry-config.js",
+      "sha256": "42a1140f66107ee61283a91182962408c7e7f9018592433a358820eb93be6222",
+      "assembled_sha256": "42a1140f66107ee61283a91182962408c7e7f9018592433a358820eb93be6222"
+    },
+    {
+      "source": "example/subject-identity.js",
+      "sha256": "0a9ba8b8e5e0b310ac4ec2ad45e794eef573e449f37b3961ae743451a7c55609",
+      "assembled_sha256": "0a9ba8b8e5e0b310ac4ec2ad45e794eef573e449f37b3961ae743451a7c55609"
+    },
+    {
+      "source": "example/physics-reporting.js",
+      "sha256": "be8534a0423308a7ac4bcfb737deff253acd8bf903ceff62f523bc4e263816d6",
+      "assembled_sha256": "be8534a0423308a7ac4bcfb737deff253acd8bf903ceff62f523bc4e263816d6"
+    },
+    {
+      "source": "engine/ppqviewer.js",
+      "sha256": "d01a055ca1848c8d31aefd6d0054341a6d5c582ee59ae6895d92a5a89c316eca",
+      "assembled_sha256": "d01a055ca1848c8d31aefd6d0054341a6d5c582ee59ae6895d92a5a89c316eca"
+    },
+    {
+      "source": "engine/ppqviewer.css",
+      "sha256": "271da0f685615a24733d13c40ad911c37031e4dc30d5c8b84c4844358de48f6f",
+      "assembled_sha256": "271da0f685615a24733d13c40ad911c37031e4dc30d5c8b84c4844358de48f6f"
+    }
+  ],
+  "automated_checks": {
+    "chemistry_config": 86,
+    "chemistry_page": 8,
+    "chemistry_reporting": 5,
+    "chemistry_preview": 22,
+    "physics_reporting": 12,
+    "standing_viewer_suites": 8,
+    "chemistry_loading": 54,
+    "question_loading": 10,
+    "physics_engine_behaviour": 21,
+    "chemistry_release": 12
+  },
+  "browser_checks": [
+    "Phenolphthalein diagram and both original images loaded",
+    "Answers hidden before reveal; structured reveal has markscheme and 0..2 marks",
+    "Mechanism transcription preserves separate stem/part blocks and line breaks",
+    "Legacy whole-question link resolves",
+    "Real Paper 1A MCQ shows four choices and reveals after answer",
+    "No horizontal overflow at 320 px or 1280 px",
+    "Question comes before mastery at narrow widths; desktop retains three columns",
+    "No browser error logs during checked journeys",
+    "Current part image ready with context/transcript collapsed on reload and next-part navigation; answers still gated"
+  ],
+  "production_changed": true,
+  "production_reporting_tested": false,
+  "mastery_parity": {
+    "parts": 305,
+    "original_groups": 72,
+    "all_legacy_categories_retained": true
+  },
+  "scope": "Verified local preview; publication has its own live receipt.",
+  "published_release": {
+    "build_id": "2026-09-27T14-38-55-510Z_ad41d9e4",
+    "git_commit": "f44c70119fd34518b79d33cfae377223f9761261",
+    "receipt": "CHEMISTRY_LIVE_VERIFICATION.json"
+  }
+}

@@ -1,4 +1,4 @@
-/* IB Physics adapter for the estate's existing append-only attempt logger.
+/* Shared adapter for the estate's existing append-only attempt logger.
  * Reads only the event's exact attempt; never replays or rewrites local history. */
 (function () {
   "use strict";
@@ -10,6 +10,10 @@
       /^\/ibphysicsppqs(?:\/|$)/.test(location.pathname));
   }
   function create(opts) {
+    // Consumers own their live-site enablement and subject identity. Preserve
+    // physics defaults for existing pages that use the original adapter name.
+    var projectTag = opts.projectTag || "ppqviewer_ibphysics";
+    var reportingVersion = opts.reportingVersion || "ibphysics-1";
     function report(event) {
       if (!opts.enabled || !event || !["answered", "rated", "timing_prefs"].includes(event.status)) return;
       var person = opts.identity.current() || {};
@@ -57,7 +61,7 @@
       if (q) ["source_part_id", "parent_id", "question_number", "label", "topic_codes", "analysis_groups", "analysis_atoms", "analysis_types", "year", "paper", "level", "current_topic_levels"].forEach(function (k) {
         if (owns(q, k)) p[k] = q[k];
       });
-      p.project = "ppqviewer_ibphysics";
+      p.project = projectTag;
       p.anonymous_id = person.anonymous_id; p.display_name = person.display_name; p.cohort = person.cohort;
       p.google_email = "";
       p.row_type = p.status === "answered" ? "attempt" : p.status === "rated" ? "rating" : "event";
@@ -69,7 +73,7 @@
       if (p.row_type === "attempt") p.status = p.outcome;
       p.timestamp = p.timestamp || new Date().toISOString();
       p.mode = "ppq_viewer";
-      p.reporting_version = "ibphysics-1";
+      p.reporting_version = reportingVersion;
       // The older deployed receiver discards client extra_json. Send details
       // at the top level, matching ESAT/Maths; nested values retain their shape.
       Object.keys(p).forEach(function (k) {
@@ -86,5 +90,5 @@
     }
     return { report: report };
   }
-  window.PhysicsReporting = { create: create, isLive: isLive, REPORT_URL: REPORT_URL };
+  window.PPQReporting = window.PhysicsReporting = { create: create, isLive: isLive, REPORT_URL: REPORT_URL };
 })();

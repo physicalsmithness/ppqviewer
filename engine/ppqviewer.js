@@ -243,7 +243,10 @@ window.PPQViewer = (function () {
     cfg.contextCropsOf = typeof cfg.contextCropsOf === "function" ? cfg.contextCropsOf : null;
     cfg.targetPartHeadingOf = typeof cfg.targetPartHeadingOf === "function" ? cfg.targetPartHeadingOf : null;
     cfg.compactQuestionHeader = cfg.compactQuestionHeader === true;
-    cfg.questionLoading = { enabled: !!(cfg.questionLoading && cfg.questionLoading.enabled === true) };
+    cfg.questionLoading = {
+      enabled: !!(cfg.questionLoading && cfg.questionLoading.enabled === true),
+      transcriptFallback: !!(cfg.questionLoading && cfg.questionLoading.transcriptFallback === true)
+    };
     cfg.structuredNavBeforeStem = !!cfg.structuredNavBeforeStem;
     cfg.structuredNavigationOnly = !!cfg.structuredNavigationOnly;
     cfg.structuredQuestionLabelOf = typeof cfg.structuredQuestionLabelOf === "function" ? cfg.structuredQuestionLabelOf : null;
@@ -2663,9 +2666,18 @@ window.PPQViewer = (function () {
     this._preloaded.set(url, img);
     while (this._preloaded.size > 80) this._preloaded.delete(this._preloaded.keys().next().value);
   };
-  Viewer.prototype._prefetch = function (q, batch) {
+  Viewer.prototype._prefetch = function (q, batch, primaryOnly) {
     if (!q) return;
     batch = batch || new Set();
+    if (primaryOnly) {
+      const crops = this.cfg.cropsOf(q) || [];
+      crops.forEach(s => this._preload(s, batch));
+      if (!crops.length) {
+        if (typeof this.cfg.stemPagesOf === "function") (this.cfg.stemPagesOf(q) || []).forEach(s => this._preload(s, batch));
+        this._preload(this.cfg.stemUrlOf(q), batch);
+      }
+      return;
+    }
     const warm = (p) => {
       const cfg = this.cfg;
       [cfg.cropsOf, cfg.contextCropsOf, cfg.msCropsOf, cfg.stemPagesOf].forEach((hook) => {
@@ -3116,8 +3128,12 @@ window.PPQViewer = (function () {
     if (cfg.questionScrollContainer) this._scrollQuestionToTop();
 
     const preloadBatch = new Set();
-    this._prefetch(this.cur, preloadBatch);
-    for (let k = 1; k <= Math.min(cfg.prefetchAhead, this.view.length - 1); k++) { const a = this.view[(this.idx + k) % this.view.length]; if (a && a !== this.cur) this._prefetch(a, preloadBatch); }
+    const upcoming = [this.cur];
+    for (let k = 1; k <= Math.min(cfg.prefetchAhead, this.view.length - 1); k++) { const a = this.view[(this.idx + k) % this.view.length]; if (a && a !== this.cur) upcoming.push(a); }
+    // Reserve cache space for the next visible parts before warming potentially
+    // large sets of sibling parts, context pages and markschemes.
+    upcoming.forEach(q => this._prefetch(q, preloadBatch, true));
+    upcoming.forEach(q => this._prefetch(q, preloadBatch));
   };
 
   Viewer.prototype._resetAnswerUi = function () {
@@ -3237,7 +3253,7 @@ window.PPQViewer = (function () {
         : ("This question" + (marks ? ", " + marks + " mark" + (marks === 1 ? "" : "s") : ""));
       if (!compactHeading) html += '<div class="ppq-stem-partlead">' + lead + "</div>";
       else if (text || stemPages.length) html += '<div class="ppq-stem-partlead ppq-current-part-label">Current part</div>';
-      crops.forEach((s) => { html += '<img src="' + esc(s) + '" loading="lazy" class="ppq-crop" alt="question clipping">'; });
+      crops.forEach((s) => { html += '<img src="' + esc(s) + '" loading="lazy" class="ppq-crop ppq-question-crop" alt="question clipping">'; });
     }
     if (text && pagesFirst) {
       html += '<details class="ppq-transcript"><summary>The words, transcribed (the printed pages above are the authority)</summary>' +
@@ -3266,6 +3282,7 @@ window.PPQViewer = (function () {
       item.image.removeEventListener("load", item.loaded);
       item.image.removeEventListener("error", item.failed);
     });
+    if (batch && batch.transcriptSummary) batch.transcriptSummary.removeEventListener("click", batch.transcriptChoice);
     const stem = this.q(".ppq-stem"), status = this.q(".ppq-question-loading");
     if (stem) stem.removeAttribute("aria-busy");
     if (status) { status.hidden = true; status.textContent = ""; status.classList.remove("ppq-question-loading-error"); }
@@ -3275,13 +3292,28 @@ window.PPQViewer = (function () {
     const stem = this.q(".ppq-stem"), status = this.q(".ppq-question-loading");
     if (!stem || !status) return;
     const images = Array.from(stem.querySelectorAll("img[src]")).filter(im => im.getAttribute("src"));
-    const batch = { items: [] };
+    const transcript = this.cfg.questionLoading.transcriptFallback && stem.querySelector("details[data-ppq-loading-transcript], details.ppq-transcript");
+    const primaryImages = images.filter(im => im.classList.contains("ppq-question-crop"));
+    const batch = { items: [], transcriptManual: false };
     this._questionImageBatch = batch;
+    if (transcript) {
+      batch.transcriptSummary = transcript.querySelector("summary");
+      // Native summary clicks include keyboard activation. Once the pupil has
+      // chosen a state, loading must not close what they are still reading.
+      batch.transcriptChoice = () => { batch.transcriptManual = true; };
+      if (batch.transcriptSummary) batch.transcriptSummary.addEventListener("click", batch.transcriptChoice);
+    }
     const active = () => this._questionImageBatch === batch;
     const paint = () => {
       if (!active()) return;
       const pending = batch.items.filter(item => item.state === "pending").length;
       const failed = batch.items.filter(item => item.state === "failed").length;
+      if (transcript && !batch.transcriptManual) {
+        const current = primaryImages.length ? batch.items.filter(item => primaryImages.includes(item.image)) : batch.items;
+        // Slow collapsed context must not hold the current part's transcript
+        // open; failed current images retain readable text through retries.
+        transcript.open = current.some(item => item.state !== "loaded");
+      }
       stem.setAttribute("aria-busy", pending ? "true" : "false");
       status.hidden = !pending && !failed;
       status.classList.toggle("ppq-question-loading-error", !pending && !!failed);
@@ -6578,14 +6610,31 @@ window.PPQViewer = (function () {
     if (facets.length) {
       // Facet rows use data-value, not the broad topic's data-key. Match the
       // current part through the same projection and scope as their counts.
-      // Highlight in place: the question's next step owns any automatic scroll.
       const q = this.cur;
       if (!q) return;
-      facets.forEach((row) => {
+      const matching = facets.filter((row) => {
         const index = Number(row.dataset.fidx), filter = this.cfg.filters[index];
-        if (!Number.isInteger(index) || !filter || !filter.dashboardFacet || row.disabled ||
-            !this._matchesQuestionFilters(q, [filter.field]) ||
-            !this._filterValues(q, filter).includes(String(row.dataset.value))) return;
+        return Number.isInteger(index) && filter && filter.dashboardFacet && !row.disabled &&
+          this._matchesQuestionFilters(q, [filter.field]) &&
+          this._filterValues(q, filter).includes(String(row.dataset.value));
+      });
+      // Jump only when the saved mark/rating fires. Move the dashboard alone,
+      // synchronously with its flash, so neither the question nor inline C is
+      // pulled away. Multiple memberships flash together with one scroll target.
+      const target = matching.find((row) => row.classList.contains("active")) || matching[0];
+      const pane = target && target.closest(".ppq-dash");
+      if (pane && pane.clientHeight > 0 && pane.scrollHeight > pane.clientHeight) {
+        const frame = pane.getBoundingClientRect(), box = target.getBoundingClientRect();
+        const start = frame.top + pane.clientTop, end = start + pane.clientHeight;
+        if (box.top < start + 12 || box.bottom > end - 12) {
+          const space = Math.max(12, (pane.clientHeight - box.height) / 2);
+          const top = Math.max(0, Math.min(pane.scrollHeight - pane.clientHeight,
+            pane.scrollTop + box.top - start - space));
+          if (typeof pane.scrollTo === "function") pane.scrollTo({top:top, behavior:"instant"});
+          else pane.scrollTop = top;
+        }
+      }
+      matching.forEach((row) => {
         clearTimeout(row._ppqPulseTimer);
         row.classList.remove("ppq-cat-fired");
         void row.offsetWidth;

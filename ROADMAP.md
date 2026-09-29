@@ -133,6 +133,21 @@ their own learning record.
 ## Phase 3 — reflection model
 
 - [ ] Add optional before/after self-assessment.
+  _(Now specified as d033 (got it then, get it now) with d025 (I used AI on
+  this one): the marks row gains one non-mark answer, "Not applicable: AI or
+  someone else's intelligence helped me", excluded from every performance
+  figure; a second row, "how many marks do you understand now", which an
+  assisted attempt still answers and which earns it a coverage mark. Neither
+  scale needs the Physics Categorisation sweep; only the what-went-wrong
+  panel waits on that seat's ask 2 (error-option sidecar, not started as of
+  2026-09-22). Engine opt-in, physics first. Recorded here 2026-09-23 because
+  the direction had lived only in DECISIONS and was being lost.)_
+  **Built and tested 2026-09-29, not yet landed:** marks questions only (MCQs
+  open), IB on, 11 new journeys plus the affected suites green in the sandbox.
+  Held as anchor-checked patches in `tmp\d033\` (`patch_d033.py`,
+  `apply_d033_others.py`, `test_understanding_scales.js`) until the
+  uncommitted chemistry and mastery-jump work is committed, so the two stay
+  separate commits; then it rides the one train of Smith's 2a ruling.
 - [ ] Add the configurable generic error-taxonomy layer with free-text escape.
   _(d012 (marks self-assessment) built this for marks questions, maths-first;
   what remains open is ESAT/MCQ adoption, and Smith's recorded d012 direction
@@ -189,7 +204,13 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
 - [ ] Assistance module with pupil/class/all visibility.
 - [ ] Real identity/class membership backend.
 - [ ] Cross-consumer teacher analytics.
-- [ ] Chemistry shared-engine migration.
+- [x] Chemistry shared-engine migration. **Published and publicly verified,
+  2026-09-27:** 2,465 parts with originals, unchanged IDs and preserved ratings;
+  SL/HL/Test identity; original 72 left data-analysis mastery groups retained.
+  Old `ppq.html` links redirect to `chemistrydriller/ppqviewer/`. Build
+  `2026-09-27T14-38-55-510Z_ad41d9e4`; 59 public files matched the release.
+  Authority and same-bank scope: `CHEMISTRY_RELEASE.md`. Further feature
+  comparison: `CHEMISTRY_FEATURE_GAPS.md`; preserve the split dashboards.
 - [ ] Special Relativity embed.
 - [ ] IB Physics, Trilogy Physics and pre-IB Physics adapters. IB Physics published
   2026-09-13. **Trilogy Physics staged for publication 2026-09-15** (build

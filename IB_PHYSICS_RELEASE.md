@@ -1,5 +1,19 @@
 # IB Physics release status
 
+## Mastery jump fix staged, 28 September 2026
+
+Build `c75a30d7c3a1172f` is staged in `deploy/ibphysicsppqs` against clean
+baseline `67fac6817cb2e4f39aa458ddf7e517cff56ed515`. The mastery sidebar brings
+the relevant type into view at the same event that fires its saved marks or
+confidence indicator. Question navigation and markscheme reveal do not jump it.
+
+All 27 release-gate suites and the focused regressions passed, including 36
+exact-package checks and 2,016 fresh keyboard journeys across 252 MCQs. Browser
+checks verified both answer/rating jumps and no early movement. All 543 parts
+and 1,316 assets are unchanged. Four generated files are staged, with no deleted
+assets. This is not a publication claim: commit, push and served-build verification
+remain outstanding. See `reports/ib-dashboard-jump-validation-2026-09-28.md`.
+
 ## Local evidence repair, 23 September 2026
 
 Build `fac62770fb70f6df` is staged locally after the evidence-chain repair.

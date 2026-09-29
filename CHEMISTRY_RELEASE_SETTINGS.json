@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "authorization": "authorized",
+  "authorization_date": "2026-09-27",
+  "authorization_quote": "let's get that uploaded to the site to make it functional.  then look at the other features other ppq viewers have that this one doesn't.",
+  "production_url": "https://physicalsmithness.github.io/chemistrydriller/ppqviewer/",
+  "repository": "https://github.com/physicalsmithness/chemistrydriller.git",
+  "catalogue_sha256": "a3eb1236bc4dacfd4c91d8380df39d31e683594db90a8c909a541b97090691c0",
+  "legacy_catalogue_sha256": "0e9a36b979f3cb32250327bcbf8d41c2aad3c18882dd06045fc29211fba92ccf",
+  "scope": "Repair the existing 2465 Chemistry Driller question IDs from 2016-2025. No expansion of the bank.",
+  "exclusion_record": "No named chemistry reservations found in project decisions, inbox, inter_chat or the categorisation delivery. This records that finding, not a completed comparison with undisclosed school tests.",
+  "classes": ["SL", "HL", "Test"],
+  "storage_key": "chemistrydriller_ppq_v2",
+  "reporting_project": "ppqviewer_chemistry",
+  "analytics": "Retain the existing Chemistry PPQ page's GA4 and Clarity on the production route; disabled in previews."
+}

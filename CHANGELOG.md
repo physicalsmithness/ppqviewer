@@ -1,3 +1,46 @@
+## 2026-09-28: Mastery dashboard follows saved marks and confidence
+
+Facet dashboards now bring the matching question-type row into view at the same
+event that flashes its updated mark or confidence indicator. The jump is instant
+and confined to the dashboard's own scroll pane. A visible row stays in place;
+multiple assessed types still flash together, with the selected type preferred
+as the single scroll target. Loading another question, revealing a markscheme,
+and entering the first bound of an uncertain mark range do not trigger the jump.
+
+Regression coverage exercises the actual mark and confidence actions, timing,
+visibility, overlapping memberships, focus, filters and independent panes.
+IB release build `c75a30d7c3a1172f` is prepared locally; publication is separate.
+
+## 2026-09-27: Chemistry shared viewer published and verified
+
+Chemistry's recovered catalogue now runs through the shared engine with portable
+originals for all 2,465 parts, separated multiline text, native SL/HL twin
+selection, preserved legacy IDs/ratings and SL/HL/Test subject-aware sign-in.
+Its production-only reporting reuses the physics adapter with a subject option;
+the existing physics defaults are unchanged. Local previews isolate progress
+and send no reporting. Chemistry's split dashboards and reference booklet remain.
+Smith's chosen default shows the current part with context and transcription
+collapsed; both can be expanded when needed. While the current part image loads,
+the transcript opens automatically, then closes when that image is ready; a
+pupil's manual choice takes precedence. An image failure keeps the transcript
+readable during retry. The next three part images preload before supplementary
+context and markschemes, and the local preview caches content-addressed images.
+
+The shared split-dashboard CSS now places the question before mastery panels
+when the layout stacks on narrow screens. Browser checks at 320 and 1280 pixels
+passed. Automated migration and existing reporting gates passed. Smith then
+authorized publication of the repaired existing bank. Commit
+`f44c70119fd34518b79d33cfae377223f9761261` deploys only `ppq.html` and
+`ppqviewer/`; the old entry preserves queries and fragments. All 59 public files
+checked matched build `2026-09-27T14-38-55-510Z_ad41d9e4`.
+
+The preservation audit caught and fixed fine-first skill grouping: all 305
+Paper 1B parts keep their original 72 left mastery rows, ten rating boxes,
+click filtering and rating highlights. Finer skills remain filterable. Source
+and donor categories are joined by unchanged IDs with explicit membership
+validation, never inferred from code prefixes. See `CHEMISTRY_RELEASE.md`,
+`CHEMISTRY_LIVE_VERIFICATION.json` and `CHEMISTRY_FEATURE_GAPS.md`.
+
 ## 2026-09-15: Trilogy adopted, and the flags that were hardcoded now derive
 
 The Trilogy Categorisation seat closed its exclusion review on 14 September and

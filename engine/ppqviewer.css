@@ -619,6 +619,9 @@ button.ppq-facet-cat:disabled:hover { background: transparent; }
 .ppq-dash-split-panel { align-self: start; }
 @media (max-width: 980px) {
   .ppq-layout-split { grid-template-columns: 1fr; }
+  /* Keep the question ahead of long mastery panels when columns stack. */
+  .ppq-layout-split > .ppq-question-column,
+  .ppq-layout-split > .ppq-centre { grid-row: 1; }
   .ppq-layout-split .ppq-dash-split-panel { position: static; max-height: none; }
 }
 

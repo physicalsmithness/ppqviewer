@@ -79,7 +79,7 @@ try{
     assert.strictEqual(dash.scrollTop,0);assert.strictEqual(p.w.document.activeElement,heading);assert.strictEqual(p.v.cur.id,"q1");
     assert.strictEqual(p.scrolls.length,0,"Desktop guidance selection must not scroll the document");
   });
-  check("guidance focus changes only the dashboard scroller and answer/rating updates leave it in place",()=>{
+  check("guidance focus changes only the dashboard scroller; updates without panel geometry do not scroll it",()=>{
     const p=mount();choose(p,"A5.REF");const dash=p.root.querySelector(".ppq-dash"),centre=p.root.querySelector(".ppq-centre"),layout=p.root.querySelector(".ppq-layout");
     dash.scrollTop=710;centre.scrollTop=420;layout.scrollTop=90;p.v._focusDashboardGuidance();
     assert.strictEqual(dash.scrollTop,0);assert.strictEqual(centre.scrollTop,420);assert.strictEqual(layout.scrollTop,90);
@@ -88,7 +88,7 @@ try{
     assert(!p.root.querySelector(".ppq-facet-guidance").open);assert.strictEqual(p.v.store.attempts[0].self_report,4);
     p.v.renderDashboard();assert.strictEqual(dash.scrollTop,530);assert.strictEqual(centre.scrollTop,420);
     // jsdom has no internal overflow geometry, so the answer may reveal inline
-    // C in document flow. It must never scroll dashboard guidance on this path.
+    // C in document flow. Dashboard pulse geometry is covered in test_dashboard_pulse.
     assert.strictEqual(p.scrolls.length,1);assert.strictEqual(p.scrolls[0].node,p.root.querySelector(".ppq-competence"));
   });
   check("legacy tools and group selections keep their existing location and scroll behaviour",()=>{

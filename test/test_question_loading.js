@@ -52,7 +52,7 @@ try {
   check("HL, SL and shared badges have distinct classes while their source labels stay explicit", () => {
     const p = mount();
     assert.strictEqual(p.root.querySelector(".ppq-question-badge-hl").textContent, "Current: HL");
-    assert.strictEqual(p.root.querySelector(".ppq-question-badge-sl").textContent, "Original paper: SL");
+    assert.deepStrictEqual(Array.from(p.root.querySelectorAll(".ppq-question-badge-sl"), badge => badge.textContent), ["SL printing", "Original paper: SL"]);
     p.v.render(p.v.questions[2]);
     assert.strictEqual(p.root.querySelector(".ppq-question-badge-shared").textContent, "Original paper: HL/SL");
     const unknown = mount({ questionBadgesOf: () => [{ label: "Other", level: "__proto__" }] });
