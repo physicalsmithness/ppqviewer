@@ -462,6 +462,10 @@
       "Fully understand, comfortable with this",
       "Trivial — never need to see this again"
     ] },
+    // d033 (got it then, get it now) with d025 (I used AI on this one): IB first.
+    // The six meanings above are about understanding, so the bands fit them as
+    // they stand: 1 to 3 while understanding is short, 4 to 6 once it is full.
+    understanding: { enabled: course === "ib" },
     modules: { structuredPaper: true, postQuestionReview: false }
   };
 })();

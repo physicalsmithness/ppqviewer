@@ -15,7 +15,7 @@
     var projectTag = opts.projectTag || "ppqviewer_ibphysics";
     var reportingVersion = opts.reportingVersion || "ibphysics-1";
     function report(event) {
-      if (!opts.enabled || !event || !["answered", "rated", "timing_prefs"].includes(event.status)) return;
+      if (!opts.enabled || !event || !["answered", "rated", "timing_prefs", "understood"].includes(event.status)) return;
       var person = opts.identity.current() || {};
       if (!person.signed_in || !person.anonymous_id || !person.display_name || !person.cohort) return;
       var v = opts.viewer(), p = {}, extra = {};
@@ -37,19 +37,25 @@
       // the current learner, including a C change made while reviewing it.
       if (row && (!attempts.includes(row) || row.learner_id !== person.anonymous_id)) return;
       if (v && v.cfg.learnerId !== person.anonymous_id) return;
-      if (p.status === "answered" && !row) return;
+      if ((p.status === "answered" || p.status === "understood") && !row) return;
       if (row) {
         p.attempt_id = row.attempt_id;
         p.attempt_timestamp = row.ts;
-        ["correct", "time_ms", "time_discarded", "timing_mode", "learner_level", "app_version", "pre_guess_declaration"].forEach(function (k) {
+        ["correct", "time_ms", "time_discarded", "timing_mode", "learner_level", "app_version", "pre_guess_declaration", "assisted"].forEach(function (k) {
           if (owns(row, k)) p[k] = row[k];
         });
+        // d033: get it now travels with the attempt when prefilled, and as its
+        // own linked judgment when the pupil answers or changes it.
+        if (p.status === "answered" || p.status === "understood") {
+          ["get_it_now_marks", "marks_max"].forEach(function (k) { if (owns(row, k)) p[k] = row[k]; });
+        }
         // Keep ratings as linked judgments, not duplicate scored attempts.
         if (p.status === "answered") {
           ["marks_max", "marks_awarded", "marks_range", "sure"].forEach(function (k) { if (owns(row, k)) p[k] = row[k]; });
           if (!owns(p, "marks_max") && /^[ABCD]$/.test(row.chosen_option || "") && typeof row.correct === "boolean") { p.marks_max = 1; p.marks_awarded = row.correct ? 1 : 0; }
           var scored = Number.isFinite(p.marks_max) && p.marks_max > 0 && Number.isFinite(p.marks_awarded) && p.marks_awarded >= 0 && p.marks_awarded <= p.marks_max;
-          p.outcome = owns(p, "marks_range") || !scored ? "unknown" : p.marks_awarded === p.marks_max ? "correct" : p.marks_awarded === 0 ? "wrong" : "half";
+          // d025: help declared is its own outcome, never wrong and never right.
+          p.outcome = p.assisted ? "assisted" : owns(p, "marks_range") || !scored ? "unknown" : p.marks_awarded === p.marks_max ? "correct" : p.marks_awarded === 0 ? "wrong" : "half";
         }
       } else {
         // A C judgment before an answer is independent, with no invented attempt.
@@ -64,7 +70,7 @@
       p.project = projectTag;
       p.anonymous_id = person.anonymous_id; p.display_name = person.display_name; p.cohort = person.cohort;
       p.google_email = "";
-      p.row_type = p.status === "answered" ? "attempt" : p.status === "rated" ? "rating" : "event";
+      p.row_type = p.status === "answered" ? "attempt" : p.status === "rated" ? "rating" : p.status === "understood" ? "understanding" : "event";
       p.event_status = event.status;
       p.question_id = itemId;
       // The deployed legacy teacher view counts item-bearing records. Only

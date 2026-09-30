@@ -24,7 +24,9 @@ function mount(questions = [q1,q2,mcq], stored = null, extra = {practiceSelectio
   w.eval(engine); w.eval(config);
   // These journeys assert specific Next/resume paths. Default random serving is
   // checked separately; deterministic order keeps the history assertions stable.
-  Object.assign(w.PPQ_CONFIG, {defaultOrder:"ordered"}, extra);
+  // d012 marks-then-C journeys: d033 (get it now before C) is proved separately in
+  // test_understanding_scales.js, so it is held off here unless a journey asks for it.
+  Object.assign(w.PPQ_CONFIG, {defaultOrder:"ordered", understanding:{enabled:false}}, extra);
   if (stored) w.localStorage.setItem(w.PPQ_CONFIG.storageKey, JSON.stringify(stored));
   const root = w.document.getElementById("root");
   const v = w.PPQViewer.mount(root, {config:w.PPQ_CONFIG,questions:w.PHYSICS_QUESTIONS,meta:w.PHYSICS_META});

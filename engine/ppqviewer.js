@@ -237,6 +237,25 @@ window.PPQViewer = (function () {
     cfg.isUntagged = cfg.isUntagged || function (k) { return String(k).indexOf("UT_") === 0; };
     const sr = cfg.selfReport || {};
     cfg.selfReport = { levels: sr.levels || 6, prompt: sr.prompt || "How did that feel? (1 = lost, 6 = easy)", labels: sr.labels || null, meanings: sr.meanings || DEFAULT_SCALE_MEANINGS, ramp: sr.ramp || DEFAULT_RAMP, autoReveal: sr.autoReveal === true };
+    /* d033 (got it then, get it now) with d025 (I used AI on this one). Opt-in.
+       The got-it-then row (d012's marks bar) gains one answer that is not a
+       mark; a second row asks how many marks the pupil understands now; the
+       C rating then offers only the band that second row implies (Smith,
+       2026-09-23: 1 to 3 when understanding is short, 4 to 6 when it is full). */
+    const us = cfg.understanding || {};
+    const bandOf = function (v, d) {
+      const list = Array.isArray(v) ? v.map(Number).filter(function (n) { return Number.isInteger(n) && n >= 1 && n <= cfg.selfReport.levels; }) : [];
+      return list.length ? list : d;
+    };
+    cfg.understanding = {
+      enabled: us.enabled === true,
+      assistedLabel: typeof us.assistedLabel === "string" && us.assistedLabel.trim() ? us.assistedLabel.trim() : "Not applicable: AI or someone else's intelligence helped me",
+      assistedSaved: typeof us.assistedSaved === "string" && us.assistedSaved.trim() ? us.assistedSaved.trim() : "Saved: AI or someone else helped",
+      nowPrompt: typeof us.nowPrompt === "string" && us.nowPrompt.trim() ? us.nowPrompt.trim() : "How many marks do you understand now, out of {max}?",
+      shortBand: bandOf(us.shortBand, [1, 2, 3]),
+      fullBand: bandOf(us.fullBand, [4, 5, 6]),
+      assistedWindow: Math.max(1, Math.min(10, parseInt(us.assistedWindow, 10) || 1))
+    };
     cfg.options = cfg.options || { mode: "labels" };
     // per-question hooks
     cfg.cropsOf = cfg.cropsOf || function (q) { return q.crops || (q.crop_url ? [q.crop_url] : []); };
@@ -448,7 +467,11 @@ window.PPQViewer = (function () {
   function completedAttempt(row) {
     return row && row.id != null && row.skipped !== true && !/^(skip|skipped)$/i.test(row.status || "");
   }
+  /* d025/d033: an attempt the pupil declared as helped by AI or someone else.
+     It is coverage, never performance: every right/wrong tally skips it. */
+  function assistedAttempt(row) { return !!(row && row.assisted); }
   function attemptOutcome(row) {
+    if (assistedAttempt(row)) return { text: "helped", strength: null, error: false, assisted: true };
     const number = (v) => v == null || v === "" || !Number.isFinite(Number(v)) ? null : Number(v);
     const max = number(row.marks_max), awarded = number(row.marks_awarded);
     if (max > 0) {
@@ -1889,6 +1912,7 @@ window.PPQViewer = (function () {
   Viewer.prototype._questionScores = function () {
     const values = {};
     (((this.store || {}).attempts) || []).forEach(function (att) {
+      if (assistedAttempt(att)) return; /* d025: coverage, not performance */
       let v;
       if (att.marks_max != null && att.marks_max > 0) {
         if (att.marks_awarded != null) v = att.marks_awarded / att.marks_max;
@@ -1902,6 +1926,28 @@ window.PPQViewer = (function () {
     const scores = {};
     for (const qid in values) scores[qid] = questionPerfScore(values[qid]);
     return scores;
+  };
+
+  /* d033 ruling 1a (Smith, 2026-09-29): where one of a question's latest
+     attempts (the window, default 1) was helped, its dot leaves the
+     red-to-green scale for the blue family, placed by that attempt's own
+     get-it-now. An unaided attempt afterwards supersedes it (d025). */
+  Viewer.prototype._assistedDots = function () {
+    const out = {}, byId = {};
+    const win = ((this.cfg || {}).understanding || {}).assistedWindow || 1;
+    (((this.store || {}).attempts) || []).forEach(function (att) {
+      if (completedAttempt(att)) (byId[String(att.id)] = byId[String(att.id)] || []).push(att);
+    });
+    for (const qid in byId) {
+      const recent = byId[qid].slice(-win);
+      let hit = null;
+      for (let i = recent.length - 1; i >= 0; i--) if (assistedAttempt(recent[i])) { hit = recent[i]; break; }
+      if (!hit) continue;
+      const max = Number(hit.marks_max), now = hit.get_it_now_marks;
+      const known = now !== null && now !== undefined && now !== "" && Number.isFinite(Number(now)) && max > 0;
+      out[qid] = { understood: known ? Math.max(0, Math.min(1, Number(now) / max)) : null, now: known ? Number(now) : null, max: max > 0 ? max : null };
+    }
+    return out;
   };
 
   /* VF-02 (Claude 2026-07-29): aggregate the pupil's own record — attempts,
@@ -1918,7 +1964,8 @@ window.PPQViewer = (function () {
     const topics = {};
     const days = {};
     const qids = {};
-    const totals = { attempts: attempts.length, correct: 0, timeMs: 0, guesses: 0, reflections: 0, responses: 0 };
+    const assistedN = attempts.filter(assistedAttempt).length;
+    const totals = { attempts: attempts.length - assistedN, assisted: assistedN, correct: 0, timeMs: 0, guesses: 0, reflections: 0, responses: 0 };
     const self = this;
     function topicInfo(qid) {
       const q = self._questionById(qid);
@@ -1927,10 +1974,11 @@ window.PPQViewer = (function () {
     }
     function topicFor(info) {
       return topics[info.key] = topics[info.key] ||
-        { key: info.key, label: info.label, attempts: 0, correct: 0, timeMs: 0, guesses: 0, flagged: 0, ratingSum: 0, ratingN: 0, qids: {} };
+        { key: info.key, label: info.label, attempts: 0, assisted: 0, correct: 0, timeMs: 0, guesses: 0, flagged: 0, ratingSum: 0, ratingN: 0, qids: {} };
     }
     attempts.forEach(function (row) {
       const t = topicFor(topicInfo(row.id));
+      if (assistedAttempt(row)) { t.assisted++; t.qids[String(row.id)] = 1; qids[String(row.id)] = 1; return; } /* d025 */
       t.attempts++;
       if (row.correct) { t.correct++; totals.correct++; }
       t.timeMs += row.time_ms || 0; totals.timeMs += row.time_ms || 0;
@@ -1964,12 +2012,13 @@ window.PPQViewer = (function () {
        category — one little box per available question, neutral until
        attempted, then coloured by the 4×-most-recent performance score. */
     const perQuestionScore = this._questionScores();
+    const perQuestionAssisted = this._assistedDots();
 
     const axes = (cfg.progressAxes || []).map(function (axis) {
       const rowsByValue = {};
       function rowFor(value) {
         return rowsByValue[value] = rowsByValue[value] ||
-          { value: value, questions: [], attempts: 0, correct: 0, timeMs: 0, timeN: 0, ratingSum: 0, ratingN: 0 };
+          { value: value, questions: [], attempts: 0, assisted: 0, correct: 0, timeMs: 0, timeN: 0, ratingSum: 0, ratingN: 0 };
       }
       /* one dot per AVAILABLE question, in catalogue order */
       (self.questions || []).forEach(function (q) {
@@ -1980,7 +2029,8 @@ window.PPQViewer = (function () {
           if (v == null || v === "") return;
           rowFor(String(v)).questions.push({
             id: qid,
-            score: perQuestionScore[qid] != null ? perQuestionScore[qid] : null
+            score: perQuestionScore[qid] != null ? perQuestionScore[qid] : null,
+            assisted: perQuestionAssisted[qid] || null
           });
         });
       });
@@ -1992,6 +2042,7 @@ window.PPQViewer = (function () {
         values.forEach(function (v) {
           if (v == null || v === "") return;
           const row = rowFor(String(v));
+          if (assistedAttempt(att)) { row.assisted++; return; } /* d025 */
           row.attempts++;
           if (att.correct) row.correct++;
           if (att.time_ms != null) { row.timeMs += att.time_ms; row.timeN++; }
@@ -2013,7 +2064,7 @@ window.PPQViewer = (function () {
       const rows = Object.keys(rowsByValue).map(function (k) { return rowsByValue[k]; });
       rows.forEach(function (r) {
         r.available = r.questions.length;
-        r.tried = r.questions.filter(function (d) { return d.score != null; }).length;
+        r.tried = r.questions.filter(function (d) { return d.score != null || d.assisted; }).length;
         r.pctCorrect = r.attempts ? Math.round(100 * r.correct / r.attempts) : null;
         r.avgRating = r.ratingN ? r.ratingSum / r.ratingN : null;
         r.avgTimeS = r.timeN ? r.timeMs / r.timeN / 1000 : null;
@@ -2027,6 +2078,7 @@ window.PPQViewer = (function () {
       totals: {
         attempts: totals.attempts,
         questions: Object.keys(qids).length,
+        assisted: totals.assisted,
         correct: totals.correct,
         pctCorrect: totals.attempts ? Math.round(100 * totals.correct / totals.attempts) : null,
         avgRating: ratingN ? ratingSum / ratingN : null,
@@ -2130,12 +2182,9 @@ window.PPQViewer = (function () {
         const wrap = el("span", { class: "ppq-qcluster" });
         const cap = 240;
         (questionDots || []).slice(0, cap).forEach(function (d) {
-          const attrs = {
-            class: "ppq-qdot" + (d.score == null ? " untried" : ""),
-            title: d.id + (d.score == null ? " — not tried yet" : " — " + Math.round(d.score * 100) + "%")
-          };
-          if (d.score != null) attrs.style = "background: " + perfColour(d.score) + ";";
-          wrap.appendChild(el("span", attrs));
+          const holder = document.createElement("span");
+          holder.innerHTML = questionDotHtml(d.id, d.score, d.assisted);
+          wrap.appendChild(holder.firstChild);
         });
         if ((questionDots || []).length > cap) {
           wrap.appendChild(el("span", { class: "ppq-qcluster-more" }, "+" + (questionDots.length - cap)));
@@ -2207,7 +2256,9 @@ window.PPQViewer = (function () {
           const q = self._questionById(row.id);
           const item = el("button", { class: "ppq-progress-attempt", type: "button", "data-qid": String(row.id) });
           const bits = [];
-          bits.push('<span class="ppq-progress-verdict ' + (row.correct ? "right" : "wrong") + '">' + (row.correct ? "✓" : "✗") + "</span>");
+          bits.push(assistedAttempt(row)
+            ? '<span class="ppq-progress-verdict assisted" title="Helped by AI or someone else">helped</span>'
+            : '<span class="ppq-progress-verdict ' + (row.correct ? "right" : "wrong") + '">' + (row.correct ? "✓" : "✗") + "</span>");
           bits.push("<b>" + esc(q ? cfg.metaLine(q) : String(row.id)) + "</b>");
           const rating = ((self.store || {}).scores || {})[row.id];
           if (rating) bits.push('<span class="ppq-progress-chip">rated ' + rating + "/6</span>");
@@ -2744,6 +2795,28 @@ window.PPQViewer = (function () {
     return "rgb(" + mix.join(",") + ")";
   }
 
+  /* d033 ruling 1a (Smith, 2026-09-29): a dot touched by help stays in the blue
+     family and says how much the pupil understands now: deep purple (none of
+     it) through blue to teal (all of it); plain blue when that was never
+     answered. The dot is also round, so the difference does not rest on
+     colour alone. Self-contained for test extraction. */
+  function assistColour(understood) {
+    if (understood == null) return "rgb(52,96,196)";
+    const stops = [[104, 46, 128], [52, 96, 196], [20, 134, 150]];
+    const s = Math.max(0, Math.min(1, Number(understood)));
+    const lower = s <= 0.5, a = lower ? stops[0] : stops[1], b = lower ? stops[1] : stops[2], t = lower ? s / 0.5 : (s - 0.5) / 0.5;
+    return "rgb(" + a.map(function (c, i) { return Math.round(c + (b[i] - c) * t); }).join(",") + ")";
+  }
+  function questionDotHtml(qid, score, assisted) {
+    if (assisted) {
+      const said = assisted.now != null ? ("understand " + assisted.now + "/" + assisted.max + " now") : "understanding now not recorded";
+      return '<span class="ppq-qdot assisted" style="background:' + assistColour(assisted.understood) + '" title="' + esc(qid) + " — helped by AI or someone else; " + said + '"></span>';
+    }
+    return score == null
+      ? '<span class="ppq-qdot untried" title="' + esc(qid) + ' — not tried yet"></span>'
+      : '<span class="ppq-qdot" style="background:' + perfColour(score) + '" title="' + esc(qid) + " — " + Math.round(score * 100) + '%"></span>';
+  }
+
   /* VF-02 (Claude 2026-07-29): two-tone cell shading, Smith's house style —
      white anchored at zero, one hue per quantity class, smooth (computed per
      value, never banded), darkness capped so black text stays readable.
@@ -3144,8 +3217,10 @@ window.PPQViewer = (function () {
     this.q(".ppq-examiner-body").innerHTML = "";
     const previousMarksBar = this.q(".ppq-marksbar");
     if (previousMarksBar) previousMarksBar.remove();
-    this.q(".ppq-competence").classList.remove("show");
+    this.q(".ppq-competence").classList.remove("show", "ppq-rating-awaiting");
     this.q(".ppq-competence").style.display = ""; /* QoderWork 2026-07-22: may have been hidden while the pop-up held the 1-6 */
+    this.qa(".ppq-competence .ppq-scale-btn, .ppq-competence .ppq-scale-legend-item").forEach((x) => { x.hidden = false; }); /* d033 bands */
+    this._nowPending = false;
     this.q(".ppq-next").style.display = "none";
     this.q(".ppq-skip").style.display = "inline-block";
     this.q(".ppq-prev").style.display = "inline-block";
@@ -3186,7 +3261,7 @@ window.PPQViewer = (function () {
     const label = panel.querySelector(".ppq-side-rating-current");
     label.textContent = this.cur ? ((this.cfg.targetPartHeadingOf && this.cfg.targetPartHeadingOf(this.cur)) || this.cfg.metaLine(this.cur) || "Current question") : "";
     const visible = !!(this.cur && this.answered && !this._answerRevealPending && !this._iqOpen &&
-      comp && comp.classList.contains("show") && comp.style.display !== "none" && this.q(".ppq-card").style.display !== "none");
+      comp && comp.classList.contains("show") && !comp.classList.contains("ppq-rating-awaiting") && comp.style.display !== "none" && this.q(".ppq-card").style.display !== "none");
     panel.hidden = !visible;
     this.root.classList.toggle("ppq-side-rating-open", visible);
   };
@@ -3453,6 +3528,11 @@ window.PPQViewer = (function () {
         : ("How many marks, out of " + max + "?");
     });
     bar.appendChild(unsureBtn);
+    if (this.cfg.understanding.enabled) {
+      const helped = el("button", { class: "ppq-marks-assisted", type: "button", "aria-pressed": "false" }, esc(this.cfg.understanding.assistedLabel));
+      helped.addEventListener("click", () => { self._commitMarks(q, { max: max, assisted: true, sure: true }); });
+      bar.appendChild(helped);
+    }
     const panel = this.q(".ppq-answer-panel");
     panel.appendChild(bar);
     this.q(".ppq-kb-hint").textContent = "Tap your marks (0–" + max + ") · number keys work too";
@@ -3465,22 +3545,32 @@ window.PPQViewer = (function () {
     if (this.answered) return;
     this.answered = true;
     this._marksPending = false;
-    const full = outcome.awarded != null
+    const assisted = outcome.assisted === true;
+    const full = !assisted && (outcome.awarded != null
       ? outcome.awarded === outcome.max
-      : (outcome.range && outcome.range[0] === outcome.max);
+      : (outcome.range && outcome.range[0] === outcome.max));
     this._marksOutcome = {
       max: outcome.max,
-      awarded: outcome.awarded != null ? outcome.awarded : null,
-      range: outcome.range || null,
+      awarded: !assisted && outcome.awarded != null ? outcome.awarded : null,
+      range: assisted ? null : (outcome.range || null),
       sure: outcome.sure !== false,
-      full: !!full
+      full: !!full,
+      assisted: assisted
     };
     this._chosenLabel = "";
     this._wasRight = !!full;
     this._answerRevealPending = false; /* the markscheme is already open */
     const extras = { marks_max: outcome.max, sure: outcome.sure !== false };
-    if (outcome.awarded != null) extras.marks_awarded = outcome.awarded;
-    if (outcome.range) extras.marks_range = outcome.range;
+    if (assisted) {
+      /* d025: not a wrong answer and not a right one. correct stays null so no
+         right/wrong reader can mistake it for either. */
+      extras.assisted = "ai_or_other"; extras.correct = null; extras.is_correct = "assisted";
+    } else {
+      if (outcome.awarded != null) extras.marks_awarded = outcome.awarded;
+      if (outcome.range) extras.marks_range = outcome.range;
+    }
+    /* d033: get-it-now is prefilled to full when got-it-then was full. */
+    if (this.cfg.understanding.enabled && full) extras.get_it_now_marks = outcome.max;
     this._recordAttempt("", !!full, extras);
     const bar = this.q(".ppq-marksbar");
     if (bar) {
@@ -3495,13 +3585,109 @@ window.PPQViewer = (function () {
       });
       const unsureButton = bar.querySelector(".ppq-marks-unsure");
       if (unsureButton) unsureButton.hidden = true;
+      const helpedButton = bar.querySelector(".ppq-marks-assisted");
+      if (helpedButton) {
+        helpedButton.disabled = true;
+        helpedButton.classList.toggle("selected", assisted);
+        helpedButton.setAttribute("aria-pressed", String(assisted));
+      }
       const saved = bar.querySelector(".ppq-marksbar-prompt");
       saved.classList.add("ppq-marks-saved");
       saved.setAttribute("role", "status");
-      saved.textContent = "Saved: " + (outcome.awarded != null ? outcome.awarded : outcome.range.join("–")) + "/" + outcome.max;
+      saved.textContent = assisted ? this.cfg.understanding.assistedSaved
+        : "Saved: " + (outcome.awarded != null ? outcome.awarded : outcome.range.join("–")) + "/" + outcome.max;
       bar.classList.add("done");
     }
+    if (this.cfg.understanding.enabled) this._renderNowRow(q, outcome.max, full ? outcome.max : null);
     this._afterAnswer();
+    if (this.cfg.understanding.enabled) this._applyRatingBand();
+  };
+
+  /* d033: the get-it-now row, beneath got-it-then in the same style. Prefilled
+     to full when got-it-then was full; lowering it is the invitation Smith
+     wanted, "actually I don't get it, even though I wrote it right". An
+     assisted attempt answers it too, and that is what earns its coverage. */
+  Viewer.prototype._renderNowRow = function (q, max, prefill) {
+    const self = this, bar = this.q(".ppq-marksbar");
+    if (!bar) return;
+    const old = bar.querySelector(".ppq-nowbar");
+    if (old) old.remove();
+    const wrap = el("div", { class: "ppq-nowbar" });
+    wrap.appendChild(el("div", { class: "ppq-marksbar-prompt ppq-nowbar-prompt" }, esc(this.cfg.understanding.nowPrompt.replace("{max}", String(max)))));
+    const row = el("div", { class: "ppq-marksbar-row ppq-nowbar-row" });
+    for (let v = 0; v <= max; v++) {
+      const b = el("button", { class: "ppq-now-btn" + (v === max ? " full" : ""), type: "button", "data-now": String(v), "aria-pressed": "false" }, esc(String(v)));
+      b.addEventListener("click", () => self._setGetItNow(v));
+      row.appendChild(b);
+    }
+    wrap.appendChild(row);
+    bar.appendChild(wrap);
+    this._nowPending = prefill == null;
+    this._markNowRow(prefill);
+  };
+  Viewer.prototype._markNowRow = function (value) {
+    this.qa(".ppq-now-btn").forEach((b) => {
+      const on = value != null && Number(b.dataset.now) === value;
+      b.classList.toggle("selected", on);
+      b.setAttribute("aria-pressed", String(on));
+    });
+  };
+  Viewer.prototype._currentAttemptRow = function () {
+    if (!this.cur || !this._attemptId) return null;
+    const id = String(this.cfg.idOf(this.cur));
+    return (this.store.attempts || []).find((a) => a.attempt_id === this._attemptId && String(a.id) === id) || null;
+  };
+  Viewer.prototype._setGetItNow = function (value) {
+    const row = this._currentAttemptRow();
+    if (!row) return;
+    row.get_it_now_marks = value;
+    this._nowPending = false;
+    this._markNowRow(value);
+    this._applyRatingBand();
+    this._pendingDashboardPulse = this.cfg.groupKey(this.cur);
+    this._saveStore();
+    this._renderAttemptHistory();
+    this._fireReport({ status: "understood", extra_json: JSON.stringify({ attempt_id: row.attempt_id, get_it_now_marks: value, marks_max: row.marks_max }) });
+    this._firePendingDashboardPulse();
+    this.q(".ppq-kb-hint").textContent = "Self-rate, then Enter for next.";
+    this._revealInlineRating();
+  };
+  /* Smith, 2026-09-23: "Only 4 to 6 are shown if you have got it, if your
+     understanding now is complete, i.e. full marks … and only 3-1 if it's
+     not." The rating waits for get-it-now, then offers one band. */
+  Viewer.prototype._applyRatingBand = function () {
+    const comp = this.q(".ppq-competence");
+    if (!comp) return;
+    const us = this.cfg.understanding;
+    const row = us.enabled && this.answered && this._marksOutcome ? this._currentAttemptRow() : null;
+    const buttons = comp.querySelectorAll(".ppq-scale-btn"), legend = comp.querySelectorAll(".ppq-scale-legend-item");
+    if (!row) {
+      comp.classList.remove("ppq-rating-awaiting");
+      buttons.forEach((b) => { b.hidden = false; });
+      legend.forEach((item) => { item.hidden = false; });
+      return;
+    }
+    const now = row.get_it_now_marks, max = Number(row.marks_max);
+    const known = now !== null && now !== undefined && now !== "" && Number.isFinite(Number(now)) && max > 0;
+    comp.classList.toggle("ppq-rating-awaiting", !known);
+    if (!known) {
+      this.q(".ppq-kb-hint").textContent = "How much do you understand now? Tap 0–" + max + " · number keys work too";
+      this._syncSideRating();
+      return;
+    }
+    const band = Number(now) === max ? us.fullBand : us.shortBand;
+    buttons.forEach((b) => { b.hidden = band.indexOf(Number(b.dataset.val)) < 0; });
+    legend.forEach((item, i) => { item.hidden = band.indexOf(i + 1) < 0; });
+    /* A rating from the other band no longer describes this attempt. */
+    if (row.self_report != null && band.indexOf(Number(row.self_report)) < 0) {
+      const id = String(row.id);
+      if (this.store.scores[id] === row.self_report) delete this.store.scores[id];
+      row.self_report = null;
+      const nb = this.q(".ppq-next");
+      if (nb) nb.style.display = "none";
+    }
+    buttons.forEach((b) => { if (b.hidden) b.classList.remove("sel"); });
+    this._syncSideRating();
   };
 
   Viewer.prototype._optionLabels = function (q) {
@@ -3704,7 +3890,7 @@ window.PPQViewer = (function () {
   Viewer.prototype._revealInlineRating = function () {
     if (!this.cfg.selfReport.autoReveal || this.cfg.sideRating.enabled || this._iqOpen || this._answerRevealPending) return;
     const comp = this.q(".ppq-competence.show");
-    if (!comp || comp.style.display === "none") return;
+    if (!comp || comp.style.display === "none" || comp.classList.contains("ppq-rating-awaiting")) return;
     const hook = this.cfg.questionScrollContainer;
     const pane = typeof hook === "function" ? hook(this.root, this) : (hook ? this.q(hook) : null);
     const behavior = this._reducedMotion() ? "auto" : "smooth";
@@ -3770,7 +3956,9 @@ window.PPQViewer = (function () {
        When the exam timer is on, _commitTimer has stored the time-pressure context
        (time_remaining_ms + time_pressure) so a fast answer can be told apart from a
        guess downstream — fast-with-clock-to-spare vs forced-by-an-expiring-timer. */
-    const extra = { correct: !!isRight, time_ms: row.time_ms, attempt_id: this._attemptId || "" };
+    const extra = { correct: row.correct, time_ms: row.time_ms, attempt_id: this._attemptId || "" };
+    if (row.assisted) extra.assisted = row.assisted; /* d025 */
+    if (row.get_it_now_marks != null) extra.get_it_now_marks = row.get_it_now_marks; /* d033 */
     if (row.learner_level) extra.learner_level = row.learner_level;
     if (this._preGuessDeclaration) extra.pre_guess_declaration = this._preGuessDeclaration;
     if (this._timerCtx) {
@@ -6389,15 +6577,15 @@ window.PPQViewer = (function () {
     /* VF-14r2 (Smith): the little question boxes live here too — one per
        question in the group, sharing the progress page's performance scores.
        d011: a group entirely outside the learned scope greys out. */
-    const qscores = this._questionScores();
+    const qscores = this._questionScores(), qassisted = this._assistedDots();
     this._availableQuestions().forEach((q) => this._groupKeys(q).forEach((k) => { /* d029: no filter scopes this board, so the whole reachable pool is the right one */
-      if (!groups[k]) groups[k] = { label: cfg.groupLabelOf(k, q), total: 0, marks: [], ratings: this._zeroRatings(), qids: [], qscores: qscores, inScope: 0 };
+      if (!groups[k]) groups[k] = { label: cfg.groupLabelOf(k, q), total: 0, marks: [], ratings: this._zeroRatings(), qids: [], qscores: qscores, qassisted: qassisted, inScope: 0 };
       groups[k].total++;
       groups[k].qids.push(String(cfg.idOf(q)));
       if (this._questionInLearnedScope(q)) groups[k].inScope++;
     }));
     if (this._learnedScopeBiting()) Object.keys(groups).forEach((k) => { groups[k].unlearned = groups[k].inScope === 0; });
-    this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q) return; this._groupKeys(q).forEach((key) => { const g = groups[key]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); }); });
+    this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q || assistedAttempt(a)) return; this._groupKeys(q).forEach((key) => { const g = groups[key]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); }); });
     Object.keys(this.store.scores).forEach((id) => { const q = this.byId[id]; if (!q) return; this._groupKeys(q).forEach((key) => { const g = groups[key]; if (g && g.ratings[this.store.scores[id]] != null) g.ratings[this.store.scores[id]]++; }); });
     const keys = Object.keys(groups).sort((a, b) => { const ua = cfg.isUntagged(a), ub = cfg.isUntagged(b); if (ua !== ub) return ua ? 1 : -1; return a.localeCompare(b); });
     const content = this.q(".ppq-dash-content");
@@ -6438,7 +6626,7 @@ window.PPQViewer = (function () {
     source.forEach((q) => { sourceIds[cfg.idOf(q)] = true; });
     const groups = {};
     /* VF-14r2: facet categories carry the little question boxes too. */
-    const facetScores = this._questionScores();
+    const facetScores = this._questionScores(), facetAssisted = this._assistedDots();
     values.forEach((value) => {
       groups[value] = {
         label: (filter.friendlyLabels && filter.friendlyLabels[value]) || value,
@@ -6446,7 +6634,8 @@ window.PPQViewer = (function () {
         marks: [],
         ratings: this._zeroRatings(),
         qids: [],
-        qscores: facetScores
+        qscores: facetScores,
+        qassisted: facetAssisted
       };
     });
     const memberships = (q) => {
@@ -6460,7 +6649,7 @@ window.PPQViewer = (function () {
     source.forEach((q) => memberships(q).forEach((value) => { groups[value].total++; groups[value].qids.push(String(cfg.idOf(q))); }));
     this.store.attempts.forEach((attempt) => {
       const q = this.byId[attempt.id];
-      if (!q || !sourceIds[cfg.idOf(q)]) return;
+      if (!q || !sourceIds[cfg.idOf(q)] || assistedAttempt(attempt)) return; /* d025: no last-10 mark */
       memberships(q).forEach((value) => {
         groups[value].marks.push(attempt.correct === true || attempt.is_correct === "right");
       });
@@ -6534,7 +6723,7 @@ window.PPQViewer = (function () {
       const content = panel.querySelector(".ppq-dash-content");
       const groups = {};
       this._collapseLevelTwins(this.questions.filter((q) => col.includes(q))).forEach((q) => { const k = col.groupKey(q); if (!groups[k]) groups[k] = { label: col.groupLabel(q), total: 0, marks: [], ratings: this._zeroRatings(), seq: [] }; groups[k].total++; }); /* d029: collapse after the column's own scope */
-      this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q || !col.includes(q)) return; const g = groups[col.groupKey(q)]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); });
+      this.store.attempts.forEach((a) => { const q = this.byId[a.id]; if (!q || !col.includes(q) || assistedAttempt(a)) return; const g = groups[col.groupKey(q)]; if (g) g.marks.push(a.correct === true || a.is_correct === "right"); });
       Object.keys(this.store.scores).forEach((id) => { const q = this.byId[id]; if (!q || !col.includes(q)) return; const g = groups[col.groupKey(q)]; if (g) { if (g.ratings[this.store.scores[id]] != null) g.ratings[this.store.scores[id]]++; g.seq.push(this.store.scores[id]); } });
       const keys = Object.keys(groups).sort();
       content.innerHTML = keys.map((k) => this._catHtml(k, groups[k], col.style)).join("");
@@ -6555,14 +6744,11 @@ window.PPQViewer = (function () {
          category, neutral until tried, then the continuous performance colour
          (4×-most-recent weighting, pale yellow at 0.2). */
       if (g.qids && g.qids.length) {
-        const qs = g.qscores || {};
+        const qs = g.qscores || {}, qa = g.qassisted || {};
         const cap = 240;
         let boxes = "";
         g.qids.slice(0, cap).forEach(function (qid) {
-          const s = qs[qid];
-          boxes += s == null
-            ? '<span class="ppq-qdot untried" title="' + esc(qid) + ' — not tried yet"></span>'
-            : '<span class="ppq-qdot" style="background:' + perfColour(s) + '" title="' + esc(qid) + ' — ' + Math.round(s * 100) + '%"></span>';
+          boxes += questionDotHtml(qid, qs[qid], qa[qid]);
         });
         if (g.qids.length > cap) boxes += '<span class="ppq-qcluster-more">+' + (g.qids.length - cap) + "</span>";
         inner += '<div class="ppq-qcluster ppq-dash-cluster">' + boxes + "</div>";
@@ -6790,6 +6976,12 @@ window.PPQViewer = (function () {
         if (btn && !btn.disabled) btn.click();
         return;
       }
+      /* d033: while get-it-now waits, number keys answer it. */
+      if (self._nowPending && self.answered && /^[0-9]$/.test(e.key)) {
+        const btn = self.q('.ppq-nowbar .ppq-now-btn[data-now="' + e.key + '"]');
+        if (btn) btn.click();
+        return;
+      }
       if (e.key === "r" || e.key === "R") { if (!self.answered && !self._marksPending && (self._curType === "flashcard" || self._curType === "imageSelfMark" || self._curType === "marksSelfAssess")) self.reveal(); return; }
       if (e.key === "Enter") {
         if (self.answered) { e.preventDefault(); self.next(); }
@@ -6803,7 +6995,7 @@ window.PPQViewer = (function () {
         if (numMap[e.key] && labels.indexOf(numMap[e.key]) >= 0) { self._pick(numMap[e.key]); return; }
       } else if (e.key >= "1" && e.key <= String(self.cfg.selfReport.levels)) {
         const scope = (self._iqOpen && self._iqBox) ? self._iqBox : self.root;
-        const b = scope.querySelector('.ppq-scale-btn[data-val="' + e.key + '"]'); if (b) b.click();
+        const b = scope.querySelector('.ppq-scale-btn[data-val="' + e.key + '"]'); if (b && !b.hidden) b.click();
       }
     };
     document.addEventListener("keydown", this._keyHandler);

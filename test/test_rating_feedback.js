@@ -12,7 +12,9 @@ function mount({marks=2,mobile=false,extra={},stored=null}={}){
  w.HTMLElement.prototype.scrollIntoView=function(options){intoView.push({node:this,options});};w.scrollTo=(...args)=>windowScroll.push(args);w.confirm=()=>true;
  w.PHYSICS_META={course:"ib",release:true,title:"IB Physics",default_topic:"A.5",topics:{"A.5":"Relativity"},analysis:{topic:"A.5",groups:[{code:"A5.TD",label:"Time dilation",summary:"Compare the two events.",checks:["Name their frame."]}]}};
  w.PHYSICS_QUESTIONS=[question("q7-ai","(a_i)",marks),question("q7-aii","(a_ii)",marks)];
- w.eval(engine);w.eval(config);Object.assign(w.PPQ_CONFIG,{defaultOrder:"ordered",practiceSelection:{enabled:false},teacherHelp:null,problemReport:null},extra);
+ // These journeys pin the d012 marks-then-C flow that every consumer without d033 keeps.
+ // IB's d033 flow (get it now before C, one band) is proved in test_understanding_scales.js.
+ w.eval(engine);w.eval(config);Object.assign(w.PPQ_CONFIG,{defaultOrder:"ordered",practiceSelection:{enabled:false},teacherHelp:null,problemReport:null,understanding:{enabled:false}},extra);
  if(stored)w.localStorage.setItem(w.PPQ_CONFIG.storageKey,JSON.stringify(stored));
  const root=w.document.getElementById("root"),v=w.PPQViewer.mount(root,{config:w.PPQ_CONFIG,questions:w.PHYSICS_QUESTIONS,meta:w.PHYSICS_META});
  const p={dom,w,root,v,intoView,windowScroll,q:s=>root.querySelector(s),qa:s=>Array.from(root.querySelectorAll(s))};opened.push(p);return p;

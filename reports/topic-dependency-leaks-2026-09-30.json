@@ -1,0 +1,690 @@
+{
+ "file": "topic-dependency-leaks-2026-09-30.json",
+ "written_by": "ppqviewer architect, 2026-09-30",
+ "served_build": "c75a30d7c3a1172f",
+ "why": "Smith, 2026-09-30, meeting 15M.P3.SL.TZ1.Q11(b)(iii) (relativity) under A1 Kinematics > A1.1a: 'we still need anything prior to be removed. if any dependency....' (sentence cut off).",
+ "mechanism": [
+  "Relativity parts: the teacher bank records them as A.1 + A.5, but they are in reports/ib-a1-c1-release-clearance.json and not in reports/ib-a5-release-clearance.json, so the served record carries A.1 alone (checked for 15M.P3.SL.TZ1.Q11(b)(ii) and (b)(iii)).",
+  "tools/assemble_ibphysics_release.js filters each part's topic_codes to the topics the site serves, so a part the teacher bank records as A.1 + A.3 is published as A.1 alone and its dependency disappears.",
+  "A1.1a and A1.5b are solution-route atoms (Physics Categorisation d083). Where a route atom is a part's only A.1 claim and its other topic is filtered out or excluded, the route step becomes the part's whole membership."
+ ],
+ "limits": "bank_also_names is topic MEMBERSHIP from bank_browser/data/physics_bank.sqlite (Physics Categorisation), not a ruled requirement role. Some memberships will be route or scenery, not knowledge the pupil needs. 'Later' uses syllabus order A.1 < A.2 < ... < E.5 as a stand-in for teaching order. The route-only contexts below are the architect's reading of the bank's question text, not rulings.",
+ "later_topic_memberships": [
+  {
+   "served_id": "06M.P1.HL.TZ2.Q12(whole)",
+   "source_part_id": "ibchem_part_3104322f47d9b16d",
+   "reference": "2006 May TZ2 HL P1 Q12",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "08M.P1.HL.TZ1.Q3(whole)",
+   "source_part_id": "ibchem_part_b63b7e388b9783cd",
+   "reference": "2008 May TZ1 HL P1 Q3",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "08M.P1.SL.TZ1.Q10(whole)",
+   "source_part_id": "ibchem_part_7e902d3876935cac",
+   "reference": "2008 May TZ1 SL P1 Q10",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "08M.P1.SL.TZ1.Q3(whole)",
+   "source_part_id": "ibchem_part_fa6c6fa8fb45e991",
+   "reference": "2008 May TZ1 SL P1 Q3",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "08M.P3.SL.TZ1.QA1(a_i)",
+   "source_part_id": "ibchem_part_7b21edd4363bf45b",
+   "reference": "2008 May TZ1 SL P3 QA1(a)(i)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5"
+   ]
+  },
+  {
+   "served_id": "08M.P3.SL.TZ1.QA1(a_ii)",
+   "source_part_id": "ibchem_part_7885b9e9771bf75d",
+   "reference": "2008 May TZ1 SL P3 QA1(a)(ii)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5"
+   ]
+  },
+  {
+   "served_id": "09M.P3.HL.TZ1.QI2(d_i)",
+   "source_part_id": "ibchem_part_0ebabf4ad5cdc39e",
+   "reference": "2009 May TZ1 HL P3 QI2(d)(i)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "C.2"
+   ]
+  },
+  {
+   "served_id": "09M.P3.SL.TZ1.QD2(a_i)",
+   "source_part_id": "ibchem_part_6864157f9cd2a465",
+   "reference": "2009 May TZ1 SL P3 QD2(a)(i)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5"
+   ]
+  },
+  {
+   "served_id": "10N.P3.HL.TZ0.QH1(b_i)",
+   "source_part_id": "ibchem_part_ff7f62f0845eaa45",
+   "reference": "2010 Nov HL P3 QH1(b)(i)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5"
+   ]
+  },
+  {
+   "served_id": "11M.P1.SL.TZ2.Q19(whole)",
+   "source_part_id": "ibchem_part_aee9c7dd08f6db0e",
+   "reference": "2011 May TZ2 SL P1 Q19",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "D.1"
+   ]
+  },
+  {
+   "served_id": "11N.P3.HL.TZ0.QF2(d)",
+   "source_part_id": "ibchem_part_1c8c0fa374314522",
+   "reference": "2011 Nov HL P3 QF2(d)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5"
+   ]
+  },
+  {
+   "served_id": "11N.P3.SL.TZ0.QF2(d)",
+   "source_part_id": "ibchem_part_6233a709dfd74d3d",
+   "reference": "2011 Nov SL P3 QF2(d)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5"
+   ]
+  },
+  {
+   "served_id": "12M.P1.SL.TZ2.Q4(whole)",
+   "source_part_id": "ibchem_part_5b2ffc0c00316494",
+   "reference": "2012 May TZ2 SL P1 Q4",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "14M.P1.SL.TZ1.Q6(whole)",
+   "source_part_id": "ibchem_part_bcf2df769b914050",
+   "reference": "2014 May TZ1 SL P1 Q6",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "15M.P1.HL.TZ1.Q24(whole)",
+   "source_part_id": "ibchem_part_ff25ce11e340a3f4",
+   "reference": "2015 May TZ1 HL P1 Q24",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "15M.P3.SL.TZ1.Q11(b_iii)",
+   "source_part_id": "ibchem_part_75e21403adbaccc9",
+   "reference": "2015 May TZ1 SL P3 Q11(b)(iii)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5"
+   ]
+  },
+  {
+   "served_id": "16M.P1.HL.TZ0.Q4(whole)",
+   "source_part_id": "ibchem_part_95a9f9cea313d2ef",
+   "reference": "2016 May HL P1 Q4",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2",
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "16M.P1.SL.TZ0.Q7(whole)",
+   "source_part_id": "ibchem_part_93aa3c546b185c68",
+   "reference": "2016 May SL P1 Q7",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2",
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "16M.P3.SL.TZ0.Q5(b)",
+   "source_part_id": "ibchem_part_07130555d5d506dd",
+   "reference": "2016 May SL P3 Q5(b)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5"
+   ]
+  },
+  {
+   "served_id": "17M.P1.SL.TZ1.Q8(whole)",
+   "source_part_id": "ibchem_part_34213f650d4f5927",
+   "reference": "2017 May TZ1 SL P1 Q8",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "18M.P2.HL.TZ1.Q1(a)",
+   "source_part_id": "ibchem_part_054c8c665f30b2b6",
+   "reference": "2018 May TZ1 HL P2 Q1(a)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "18M.P2.SL.TZ1.Q1(a)",
+   "source_part_id": "ibchem_part_d6e3c4852cc7bdd7",
+   "reference": "2018 May TZ1 SL P2 Q1(a)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "19M.P3.HL.TZ1.Q1(b_i)",
+   "source_part_id": "ibchem_part_1f581f0ff8059000",
+   "reference": "2019 May TZ1 HL P3 Q1(b)(i)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "20N.P1.SL.TZ0.Q10(whole)",
+   "source_part_id": "ibchem_part_8290a7bc511d83b1",
+   "reference": "2020 Nov SL P1 Q10",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "23M.P1.HL.TZ1.Q4(whole)",
+   "source_part_id": "ibchem_part_c7c365d32ffc89ac",
+   "reference": "2023 May TZ1 HL P1 Q4",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "23M.P3.HL.TZ1.Q13(b)",
+   "source_part_id": "ibchem_part_32b2fada3c495170",
+   "reference": "2023 May TZ1 HL P3 Q13(b)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.5",
+    "C.3"
+   ]
+  },
+  {
+   "served_id": "24M.P1.HL.TZ2.Q5(whole)",
+   "source_part_id": "ibchem_part_5a01edef9ea3feb4",
+   "reference": "2024 May TZ2 HL P1 Q5",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "24M.P1.SL.TZ2.Q5(whole)",
+   "source_part_id": "ibchem_part_fb343d7bdd29f93c",
+   "reference": "2024 May TZ2 SL P1 Q5",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "24M.P2.HL.TZ1.Q1(d)",
+   "source_part_id": "ibchem_part_ff3a68de6396aebd",
+   "reference": "2024 May TZ1 HL P2 Q1(d)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "24M.P2.HL.TZ1.Q2(a_ii)",
+   "source_part_id": "ibchem_part_f2272c2f64f59f93",
+   "reference": "2024 May TZ1 HL P2 Q2(a)(ii)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "24M.P2.HL.TZ2.Q1(a)",
+   "source_part_id": "ibchem_part_5fe6ac44665c0376",
+   "reference": "2024 May TZ2 HL P2 Q1(a)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "24M.P2.HL.TZ2.Q1(b_ii)",
+   "source_part_id": "ibchem_part_37f6c0b4ca6d2e88",
+   "reference": "2024 May TZ2 HL P2 Q1(b)(ii)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2",
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "24M.P2.HL.TZ2.Q1(d)",
+   "source_part_id": "ibchem_part_4f19306abe1c67fe",
+   "reference": "2024 May TZ2 HL P2 Q1(d)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "24M.P2.SL.TZ1.Q2(a_ii)",
+   "source_part_id": "ibchem_part_7ff5c70aabe3b9b7",
+   "reference": "2024 May TZ1 SL P2 Q2(a)(ii)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "24M.P2.SL.TZ2.Q1(a)",
+   "source_part_id": "ibchem_part_b087424e924b8239",
+   "reference": "2024 May TZ2 SL P2 Q1(a)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "24M.P2.SL.TZ2.Q1(b_ii)",
+   "source_part_id": "ibchem_part_30b0dfccc84862f1",
+   "reference": "2024 May TZ2 SL P2 Q1(b)(ii)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2",
+    "A.3"
+   ]
+  },
+  {
+   "served_id": "24M.P2.SL.TZ2.Q1(d)",
+   "source_part_id": "ibchem_part_9f822f9e463da69d",
+   "reference": "2024 May TZ2 SL P2 Q1(d)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "25M.P1A.HL.TZ3.Q4(whole)",
+   "source_part_id": "ibchem_part_8605e8532cd531b0",
+   "reference": "2025 May TZ3 HL P1A Q4",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "25M.P1A.SL.TZ3.Q4(whole)",
+   "source_part_id": "ibchem_part_7ed0627009fc0899",
+   "reference": "2025 May TZ3 SL P1A Q4",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "25N.P2.HL.TZ1.Q1(b)",
+   "source_part_id": "ibchem_part_e3843f96b737e36f",
+   "reference": "2025 Nov TZ1 HL P2 Q1(b)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "25N.P2.SL.TZ1.Q1(b)",
+   "source_part_id": "ibchem_part_a79f3ba7d342aa0f",
+   "reference": "2025 Nov TZ1 SL P2 Q1(b)",
+   "served_under": "A.1",
+   "bank_also_names": [
+    "A.2"
+   ]
+  },
+  {
+   "served_id": "07M.P1.HL.TZ1.Q21(whole)",
+   "source_part_id": "ibchem_part_7513e55c605fa736",
+   "reference": "2007 May TZ1 HL P1 Q21",
+   "served_under": "C.1",
+   "bank_also_names": [
+    "C.2"
+   ]
+  },
+  {
+   "served_id": "10M.P3.SL.TZ2.QA2(a)",
+   "source_part_id": "ibchem_part_af1f8bdc6a4d805a",
+   "reference": "2010 May TZ2 SL P3 QA2(a)",
+   "served_under": "C.1",
+   "bank_also_names": [
+    "C.4"
+   ]
+  },
+  {
+   "served_id": "18M.P3.HL.TZ1.Q11(b_i)",
+   "source_part_id": "ibchem_part_89a21ac429e3942f",
+   "reference": "2018 May TZ1 HL P3 Q11(b)(i)",
+   "served_under": "C.1",
+   "bank_also_names": [
+    "C.4"
+   ]
+  },
+  {
+   "served_id": "18N.P2.HL.TZ0.Q4(a_ii)",
+   "source_part_id": "ibchem_part_a173e50d000c73ef",
+   "reference": "2018 Nov HL P2 Q4(a)(ii)",
+   "served_under": "C.1",
+   "bank_also_names": [
+    "C.2",
+    "C.4"
+   ]
+  },
+  {
+   "served_id": "04N.P1.SL.TZ0.Q23(whole)",
+   "source_part_id": "ibchem_part_235c6ae3f9350374",
+   "reference": "2004 Nov SL P1 Q23",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.2"
+   ]
+  },
+  {
+   "served_id": "08M.P1.HL.TZ2.Q39(whole)",
+   "source_part_id": "ibchem_part_5f9f9e7d768c1c77",
+   "reference": "2008 May TZ2 HL P1 Q39",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.1"
+   ]
+  },
+  {
+   "served_id": "11M.P1.HL.TZ1.Q17(whole)",
+   "source_part_id": "ibchem_part_82453f58b3cab83b",
+   "reference": "2011 May TZ1 HL P1 Q17",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.2"
+   ]
+  },
+  {
+   "served_id": "11M.P1.SL.TZ1.Q17(whole)",
+   "source_part_id": "ibchem_part_cb0686ae107040f4",
+   "reference": "2011 May TZ1 SL P1 Q17",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.2"
+   ]
+  },
+  {
+   "served_id": "18M.P1.HL.TZ1.Q40(whole)",
+   "source_part_id": "ibchem_part_50f6977365e2b04c",
+   "reference": "2018 May TZ1 HL P1 Q40",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.1",
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "18N.P2.HL.TZ0.Q6(b_ii)",
+   "source_part_id": "ibchem_part_11e3ee79ef123a19",
+   "reference": "2018 Nov HL P2 Q6(b)(ii)",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.1"
+   ]
+  },
+  {
+   "served_id": "19M.P2.HL.TZ2.Q6(b_ii)",
+   "source_part_id": "ibchem_part_e734fbc060344f0d",
+   "reference": "2019 May TZ2 HL P2 Q6(b)(ii)",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "21M.P2.HL.TZ2.Q4(b)",
+   "source_part_id": "ibchem_part_615a975759c903ae",
+   "reference": "2021 May TZ2 HL P2 Q4(b)",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.1",
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "21M.P2.SL.TZ2.Q4(b)",
+   "source_part_id": "ibchem_part_4bd3e3ead239b35a",
+   "reference": "2021 May TZ2 SL P2 Q4(b)",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.1",
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "22N.P2.HL.TZ0.Q10(a_ii)",
+   "source_part_id": "ibchem_part_fb6e85c97b58ca72",
+   "reference": "2022 Nov HL P2 Q10(a)(ii)",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "E.1"
+   ]
+  },
+  {
+   "served_id": "25M.P1A.HL.TZ1.Q26(whole)",
+   "source_part_id": "ibchem_part_8231798b8e724b73",
+   "reference": "2025 May TZ1 HL P1A Q26",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "D.3"
+   ]
+  },
+  {
+   "served_id": "25M.P1A.SL.TZ1.Q18(whole)",
+   "source_part_id": "ibchem_part_4bc035a88f0d8896",
+   "reference": "2025 May TZ1 SL P1A Q18",
+   "served_under": "D.2",
+   "bank_also_names": [
+    "D.3"
+   ]
+  },
+  {
+   "served_id": "06M.P1.HL.TZ1.Q38(whole)",
+   "source_part_id": "ibchem_part_397259310d5270bc",
+   "reference": "2006 May TZ1 HL P1 Q38",
+   "served_under": "E.1",
+   "bank_also_names": [
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "06M.P1.SL.TZ1.Q29(whole)",
+   "source_part_id": "ibchem_part_efe977f3235729d0",
+   "reference": "2006 May TZ1 SL P1 Q29",
+   "served_under": "E.1",
+   "bank_also_names": [
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "08M.P3.HL.TZ1.QE5(a_ii)",
+   "source_part_id": "ibchem_part_09db4f22c2d92d7f",
+   "reference": "2008 May TZ1 HL P3 QE5(a)(ii)",
+   "served_under": "E.1",
+   "bank_also_names": [
+    "E.2"
+   ]
+  },
+  {
+   "served_id": "11M.P1.SL.TZ2.Q24(whole)",
+   "source_part_id": "ibchem_part_736cf82aead7d8c7",
+   "reference": "2011 May TZ2 SL P1 Q24",
+   "served_under": "E.1",
+   "bank_also_names": [
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "16M.P1.HL.TZ0.Q37(whole)",
+   "source_part_id": "ibchem_part_db562c65eea94010",
+   "reference": "2016 May HL P1 Q37",
+   "served_under": "E.1",
+   "bank_also_names": [
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "21M.P2.HL.TZ2.Q4(a_i)",
+   "source_part_id": "ibchem_part_a876d4e961e9fe62",
+   "reference": "2021 May TZ2 HL P2 Q4(a)(i)",
+   "served_under": "E.1",
+   "bank_also_names": [
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "21M.P2.SL.TZ2.Q4(a)",
+   "source_part_id": "ibchem_part_8038ee395e8b43da",
+   "reference": "2021 May TZ2 SL P2 Q4(a)",
+   "served_under": "E.1",
+   "bank_also_names": [
+    "E.3"
+   ]
+  },
+  {
+   "served_id": "25N.P1A.HL.TZ1.Q38(whole)",
+   "source_part_id": "ibchem_part_ca4bd8608dd6c151",
+   "reference": "2025 Nov TZ1 HL P1A Q38",
+   "served_under": "E.1",
+   "bank_also_names": [
+    "E.3"
+   ]
+  }
+ ],
+ "route_only_a1_parts": [
+  {
+   "served_id": "09M.P3.SL.TZ1.QD2(a_i)",
+   "source_part_id": "ibchem_part_6864157f9cd2a465",
+   "context_read_from_bank_text": "relativity (spacecraft at 0.80c)"
+  },
+  {
+   "served_id": "10N.P3.HL.TZ0.QH1(b_i)",
+   "source_part_id": "ibchem_part_ff7f62f0845eaa45",
+   "context_read_from_bank_text": "relativity (spaceship, Jill's frame)"
+  },
+  {
+   "served_id": "15M.P3.SL.TZ1.Q11(b_ii)",
+   "source_part_id": "ibchem_part_33c09f8b6143e337",
+   "context_read_from_bank_text": "relativity (spaceship at 0.85c)"
+  },
+  {
+   "served_id": "15M.P3.SL.TZ1.Q11(b_iii)",
+   "source_part_id": "ibchem_part_75e21403adbaccc9",
+   "context_read_from_bank_text": "relativity (spaceship at 0.85c); the part Smith met on 2026-09-30"
+  },
+  {
+   "served_id": "16M.P3.SL.TZ0.Q5(b)",
+   "source_part_id": "ibchem_part_07130555d5d506dd",
+   "context_read_from_bank_text": "relativity (electron at 0.975c)"
+  },
+  {
+   "served_id": "18M.P3.SL.TZ2.Q12(a)",
+   "source_part_id": "ibchem_part_736c5ec00bd8e0b9",
+   "context_read_from_bank_text": "astrophysics (age of the universe from galaxy data)"
+  },
+  {
+   "served_id": "18M.P3.HL.TZ2.Q17(a)",
+   "source_part_id": "ibchem_part_a5da8a99b7277a68",
+   "context_read_from_bank_text": "astrophysics (age of the universe from galaxy data)"
+  },
+  {
+   "served_id": "10N.P3.HL.TZ0.QF2(d_i)",
+   "source_part_id": "ibchem_part_347fc000b347bf66",
+   "context_read_from_bank_text": "communications (signal travel time)"
+  },
+  {
+   "served_id": "11N.P3.HL.TZ0.QF2(d)",
+   "source_part_id": "ibchem_part_1c8c0fa374314522",
+   "context_read_from_bank_text": "optic-fibre dispersion"
+  },
+  {
+   "served_id": "11N.P3.SL.TZ0.QF2(d)",
+   "source_part_id": "ibchem_part_6233a709dfd74d3d",
+   "context_read_from_bank_text": "optic-fibre dispersion"
+  },
+  {
+   "served_id": "23M.P3.HL.TZ1.Q13(b)",
+   "source_part_id": "ibchem_part_32b2fada3c495170",
+   "context_read_from_bank_text": "optic-fibre ray paths"
+  },
+  {
+   "served_id": "24N.P3.HL.TZ0.Q2(c)",
+   "source_part_id": "ibchem_part_39563657b2dc5d9b",
+   "context_read_from_bank_text": "data-analysis experiment (flash duration)"
+  },
+  {
+   "served_id": "24N.P3.SL.TZ0.Q2(c)",
+   "source_part_id": "ibchem_part_727345aee9540caa",
+   "context_read_from_bank_text": "data-analysis experiment (flash duration)"
+  },
+  {
+   "served_id": "17M.P1.SL.TZ1.Q8(whole)",
+   "source_part_id": "ibchem_part_34213f650d4f5927",
+   "context_read_from_bank_text": "car with engine thrust (bank also names A.3)"
+  },
+  {
+   "served_id": "11N.P1.HL.TZ0.Q2(whole)",
+   "source_part_id": "ibchem_part_a17cee62b97bdc48",
+   "context_read_from_bank_text": "ice-hockey puck, core"
+  },
+  {
+   "served_id": "17M.P2.SL.TZ2.Q3(b_ii)",
+   "source_part_id": "ibchem_part_4bc7ec2012dd2357",
+   "context_read_from_bank_text": "train speed, core"
+  }
+ ]
+}

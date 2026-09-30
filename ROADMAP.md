@@ -142,12 +142,11 @@ their own learning record.
   panel waits on that seat's ask 2 (error-option sidecar, not started as of
   2026-09-22). Engine opt-in, physics first. Recorded here 2026-09-23 because
   the direction had lived only in DECISIONS and was being lost.)_
-  **Built and tested 2026-09-29, not yet landed:** marks questions only (MCQs
-  open), IB on, 11 new journeys plus the affected suites green in the sandbox.
-  Held as anchor-checked patches in `tmp\d033\` (`patch_d033.py`,
-  `apply_d033_others.py`, `test_understanding_scales.js`) until the
-  uncommitted chemistry and mastery-jump work is committed, so the two stay
-  separate commits; then it rides the one train of Smith's 2a ruling.
+  **Built 2026-09-29, landed in source 2026-09-30** (after the chemistry and
+  mastery-jump work was committed as `343cfa9`): marks questions only (MCQs
+  open), IB on, `test/test_understanding_scales.js` (11 journeys) plus the
+  affected suites green. Not in any build yet; it rides the one train of
+  Smith's 2a ruling.
 - [ ] Add the configurable generic error-taxonomy layer with free-text escape.
   _(d012 (marks self-assessment) built this for marks questions, maths-first;
   what remains open is ESAT/MCQ adoption, and Smith's recorded d012 direction
@@ -212,6 +211,13 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
   Authority and same-bank scope: `CHEMISTRY_RELEASE.md`. Further feature
   comparison: `CHEMISTRY_FEATURE_GAPS.md`; preserve the split dashboards.
 - [ ] Special Relativity embed.
+- [ ] **Next IB train (Smith's 2a, 2026-09-29):** the twin key (Physics
+  Categorisation d085, 38 merges), the type list grouped under and led by its
+  code, the report strip spread, d033's scales, and d035 (nothing served that
+  needs a topic not yet met; Smith 2026-09-30). **Not yet on any train:** A.2 as
+  a seventh topic (1,372 servable parts delivered by instinctivelymechanical
+  2026-09-29; Smith ruled it opens on `ibphysicsppqs`), and the A1 v004 import
+  (accepted in the teacher bank by 13 September, never imported).
 - [ ] IB Physics, Trilogy Physics and pre-IB Physics adapters. IB Physics published
   2026-09-13. **Trilogy Physics staged for publication 2026-09-15** (build
   `a8e2add2b62997e0`, 526 files in the checkout, 18-check gate green): the exclusion

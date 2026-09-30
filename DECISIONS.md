@@ -474,3 +474,13 @@ The old stepwise promotion helpers are diagnostic only. Migration records and
 the preserved ignored evidence are under
 `reports/ib-evidence-migration-2026-09-23/`; their existence does not imply that
 new files have already been committed or externally backed up.
+
+## d035 (a topic serves nothing that needs a topic the pupil has not met): direction, rulings requested
+
+**Direction (Smith).** 2026-09-19, meeting a simultaneity question in A1 Kinematics: "The postulate of relativity is not part of A1." 2026-09-29, for A.2 (instinctivelymechanical d012): "we can't have D topic knowledge cluttering this. Mostly they won't have met that yet." 2026-09-30, meeting 15M.P3.SL.TZ1.Q11(b)(iii), a relativity part, under A1 Kinematics > A1.1a: "we still need anything prior to be removed. if any dependency...." (cut off). Read as one rule: a part is not served under a topic if answering it needs a topic the pupil will not have met.
+
+**Why d030 (a topic's practice is the parts it leads) did not catch it.** d030 keeps a second strand out of a topic's drill. This part had no second strand on the site: the teacher bank has it as A.1 + A.5, but it sits in the A.1/C.1 release clearance and not in the A.5 one, so the served record carries A.1 alone, and its only A.1 claim is the route atom A1.1a, which Physics Categorisation's own d083 says is never a membership. For topics the site does not serve at all (A.2, A.3, E.3 and others) there is a second route to the same result: the assembler filters each part's topics to the six the site serves, so the dependency disappears without a trace. Measured on build `c75a30d7c3a1172f`: 126 served parts lost a topic to that filter; 65 lost one later in the syllabus than the topic they are served under (A.1 41 of 141, D.2 12, E.1 8, C.1 4); 16 A.1-led parts are typed by route atoms alone, 13 of them in relativity, astrophysics, optics or data-analysis questions. Evidence in `reports/topic-dependency-leaks-2026-09-30.json`. The pupil report of 28 September, "we havent seen baryon or lepton", is the same fault in D.2.
+
+**What follows.** The assembler stops dropping unserved topics silently: each part's full topic list is carried into the release inputs, and serving applies this rule to it. The requirement roles come from the content seats (d028: never inferred here); rulings requested from Physics Categorisation on 2026-09-30. Instinctivelymechanical's `serve_under_a2` / `serve_withheld_by` is the shape asked for.
+
+**Open, Smith's.** The teaching order that defines "not met": syllabus order A.1 < A.2 < ... < E.5 is the stand-in, unconfirmed. How much to withhold before the seat rules. The rest of the cut-off sentence.

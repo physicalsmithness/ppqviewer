@@ -113,6 +113,8 @@ try {
     assert.strictEqual(p.v.store.attempts.length,1);
     assert.strictEqual(p.v.store.attempts[0].marks_awarded,1);
     assert.strictEqual(p.v.store.attempts[0].marks_max,2);
+    key(p,"2"); // d033: IB asks how many marks you understand now before C
+    assert.strictEqual(p.v.store.attempts[0].get_it_now_marks,2);
     key(p,"5");
     assert.strictEqual(p.v.store.attempts.length,1);
     assert.strictEqual(p.v.store.scores[b.id],5);
