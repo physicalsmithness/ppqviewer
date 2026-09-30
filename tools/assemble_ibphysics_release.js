@@ -10,7 +10,7 @@ const {mergeERelease}=require("./merge_ib_e_topics_release");
 const {loadCurrentReviewAdditions}=require("./ib-current-review-additions");
 const {loadA5AdditionalGeometry}=require("./ib-a5-additional-geometry");
 const {loadHolds,applyHolds,holdsPath}=require("./ib-dependency-holds");
-const {prepareRelease:prepareA2Release,clearancePath:a2ClearancePath}=require("./ib-a2-release");
+const {prepareRelease:prepareA2Release,clearancePath:a2ClearancePath,CLEARANCES:archiveClearances}=require("./ib-a2-release");
 const {mergeA2Release}=require("./merge_ib_a2_release");
 const ROOT=path.resolve(__dirname,".."),DB=path.resolve(process.env.PHYSICS_PAPERDB_ROOT || "C:/CodexProjects/PaperDatabases");
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
@@ -109,6 +109,20 @@ function assemble() {
     questions=mergeA2Release(questions,a2.questions);
     additionalClearances.push({path:a2ClearancePath,sha256:sha(read(a2ClearancePath))});
   }
+  // d037 (Smith, 2026-09-30): A.1 beyond its 12 September clearance, built and cleared the
+  // same way. The A1/C1 clearance above is validated unchanged; this only adds parts.
+  let a1x=null;
+  const a1xClearancePath=archiveClearances["A.1"];
+  if(fs.existsSync(a1xClearancePath)){
+    a1x=prepareA2Release("A.1");
+    const stored=JSON.parse(read(a1xClearancePath));
+    ensure(stored.review_complete===true&&JSON.stringify(stored.topics)===JSON.stringify(["A.1"]),"A.1 extension clearance is incomplete");
+    for(const field of ["reviewed_source_part_ids","reviewed_parent_ids","counts","assets","fingerprints"])
+      ensure(JSON.stringify(stored[field])===JSON.stringify(a1x.clearance[field]),"A.1 extension evidence changed: "+field);
+    const already=new Set(questions.filter(q=>q.topic_codes.includes("A.1")).map(q=>q.source_part_id));
+    questions=mergeA2Release(questions,a1x.questions.filter(q=>!already.has(q.source_part_id)),"A.1");
+    additionalClearances.push({path:a1xClearancePath,sha256:sha(read(a1xClearancePath))});
+  }
   // d035 (Smith, 2026-09-30): serve the cleared scope minus the parts that need a topic
   // the pupil has not met. The hold subtracts; every clearance above is checked unchanged.
   const holds=loadHolds(),holdResult=applyHolds(questions,holds);
@@ -166,7 +180,9 @@ function assemble() {
   if(holds)shared.push("tools/ib-dependency-holds.js","reports/ib-dependency-holds.json");
   if(d2)shared.push("tools/ib-d2-release.js","tools/build_ib_d2_recovery.js","tools/merge_ib_d2_release.js");
   if(eTopics)shared.push("tools/ib-e-topics-input.js","tools/ib-e-topics-release.js","tools/merge_ib_e_topics_release.js");
-  if(a2)shared.push("tools/ib-a2-input.js","tools/ib-a2-release.js","tools/merge_ib_a2_release.js","reports/ib-a2-release-scope.json");
+  if(a2||a1x)shared.push("tools/ib-a2-input.js","tools/ib-a2-release.js","tools/merge_ib_a2_release.js","tools/ib-archive-test-closure.js");
+  if(a2)shared.push("reports/ib-a2-release-scope.json");
+  if(a1x)shared.push("reports/ib-a1x-release-scope.json");
   const tracking=read(path.join(ROOT,"deploy/ibmathsppqs/index.html")).match(/<!-- GA4[\s\S]*?<\/script>\s*<!-- Microsoft Clarity[\s\S]*?<\/script>/);
   ensure(tracking && tracking[0].includes("G-WKYGJYERSR") && tracking[0].includes("xdr2tsc688"),"Estate analytics blocks are missing");
   const catalogue="window.PHYSICS_META="+JSON.stringify(meta)+";\nwindow.PHYSICS_QUESTIONS="+JSON.stringify(publicQuestions)+";\n";
@@ -185,7 +201,7 @@ function assemble() {
     assets:new Set([...assets.values()].map(a=>a.url)).size,
     crop_notices:cropNotices.applied,
     analysis_source:"Reviewed A1 taxonomy, Special Relativity taxonomy and SHM question types"+(d2?", with the authored D2 question types":"")+
-      (eTopics?", and reviewed E1/E2 question types":"")+(a2?", and instinctivelymechanical's A.2 types":"")+"; fine memberships are included only where mapped"};
+      (eTopics?", and reviewed E1/E2 question types":"")+(a2?", and instinctivelymechanical's A.2 types":"")+(a1x?"; A.1 extended beyond its first clearance":"")+"; fine memberships are included only where mapped"};
   fs.writeFileSync(path.join(out,"build-info.json"),JSON.stringify(info,null,2)+"\n");
   const local={...info,root:out,clearance:{path:clearancePath,sha256:sha(read(clearancePath))},
     topic_clearance:{path:topicClearancePath,sha256:sha(read(topicClearancePath))},

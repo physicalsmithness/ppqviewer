@@ -1,46 +1,51 @@
 "use strict";
-// A.2 source projection, on the E1/E2 pattern: native parents and parts are built
-// straight from the archive, so no other topic's inputs or clearances are touched.
-// Scope is instinctivelymechanical's delivery (pinned in reports/ib-release-inputs),
-// narrowed by d035 in reports/ib-a2-release-scope.json.
+// Archive-built topic projection, on the E1/E2 pattern: native parents and parts are
+// built straight from the archive, so no other topic's inputs or clearances change.
+// A.2 (d036): instinctivelymechanical's delivery, pinned, narrowed by d035.
+// A.1 (d037): the reviewed A.1 analysis beyond the parts its 12 September clearance
+// already serves, narrowed the same way (Smith, 2026-09-30: "that'll help the a1 as well").
 const fs=require("fs"),path=require("path"),crypto=require("crypto");
 const {parseCsv}=require("./physics-test-exclusions");
 const {identities}=require("./build_ib_d2_recovery");
 const {orderPartsByOriginal}=require("./ib-e-topics-input");
 const ROOT=path.resolve(__dirname,".."),DB=path.resolve(process.env.PHYSICS_PAPERDB_ROOT||"C:/CodexProjects/PaperDatabases");
-const scopePath=path.join(ROOT,"reports/ib-a2-release-scope.json");
-const TOPIC="A.2",sha=b=>crypto.createHash("sha256").update(b).digest("hex");
+const TOPICS={
+  "A.2":{scopePath:path.join(ROOT,"reports/ib-a2-release-scope.json"),served:r=>r.serve_under_a2===true,ownTaxonomy:true},
+  "A.1":{scopePath:path.join(ROOT,"reports/ib-a1x-release-scope.json"),served:()=>true,ownTaxonomy:false}
+};
+const TOPIC="A.2",scopePath=TOPICS[TOPIC].scopePath,sha=b=>crypto.createHash("sha256").update(b).digest("hex");
 const ensure=(ok,message)=>{if(!ok)throw Error(message);};
 const unique=a=>[...new Set(a.filter(Boolean))];
 
-function build(){
+function build(topic=TOPIC){
+  const conf=TOPICS[topic];ensure(conf,"Unsupported archive-built topic: "+topic);
   const files=new Map(),cache=new Map();
   function read(file,expected){
     file=path.resolve(file);const bytes=fs.readFileSync(file),hash=sha(bytes);
-    ensure(!expected||hash===expected,"A.2 source fingerprint changed: "+file);
-    ensure(!files.has(file)||files.get(file).sha256===hash,"A.2 source changed during projection: "+file);
+    ensure(!expected||hash===expected,topic+" source fingerprint changed: "+file);
+    ensure(!files.has(file)||files.get(file).sha256===hash,topic+" source changed during projection: "+file);
     files.set(file,{path:file,sha256:hash});return bytes;
   }
   const json=file=>JSON.parse(read(file).toString("utf8").replace(/^\uFEFF/,""));
-  const scope=json(scopePath);
-  ensure(scope.schema_version===1&&scope.topic===TOPIC&&Array.isArray(scope.eligible_source_ids)&&scope.eligible_source_ids.length,"A.2 release scope is missing");
+  const scope=json(conf.scopePath);
+  ensure(scope.schema_version===1&&scope.topic===topic&&Array.isArray(scope.eligible_source_ids)&&scope.eligible_source_ids.length,topic+" release scope is missing");
   const analysis=JSON.parse(read(path.join(ROOT,scope.analysis.path),scope.analysis.sha256));
-  ensure(analysis.schema_version===1&&analysis.topic===TOPIC&&analysis.parts&&analysis.atoms.length,"A.2 analysis is not the pinned delivery");
+  ensure(analysis.schema_version===1&&analysis.topic===topic&&analysis.parts&&analysis.atoms.length,topic+" analysis is not the pinned input");
   // The bank decided d035's later-topic holds. It moves as categorisation continues, so
   // a changed bank is reported for a scope rebuild rather than blocking a release.
   let bankState="absent";
   if(fs.existsSync(scope.bank.path))bankState=sha(fs.readFileSync(scope.bank.path))===scope.bank.sha256?"unchanged":"changed_since_scope";
   const rows=parseCsv(read(path.join(DB,"outputs/exports/ib_physics_archive_flat_v5.csv")).toString("utf8"));
   const corpus=new Map(rows.map(row=>[row.part_id,row]));
-  ensure(rows.length===18308&&corpus.size===rows.length,"A.2 archive identity changed");
+  ensure(rows.length===18308&&corpus.size===rows.length,topic+" archive identity changed");
   const parts={},selected=[],withheld=[];
   for(const sid of scope.eligible_source_ids){
     const record=analysis.parts[sid],row=corpus.get(sid);
-    ensure(record&&record.status==="included"&&record.serve_under_a2===true,"A.2 scope names a part the delivery does not serve: "+sid);
+    ensure(record&&record.status==="included"&&conf.served(record),topic+" scope names a part the analysis does not serve: "+sid);
     if(!row){withheld.push({source_part_id:sid,reason:"missing_archive_row"});continue;}
     if(!/^\d{4}$/.test(row.year)||Number(row.year)<2004||Number(row.year)>=2026){withheld.push({source_part_id:sid,reason:"source_year_hold"});continue;}
     const levels=record.current_levels||[];
-    ensure(levels.length&&levels.every(l=>["SL","HL"].includes(l)),"A.2 part lacks its current levels: "+sid);
+    ensure(levels.length&&levels.every(l=>["SL","HL"].includes(l)),topic+" part lacks its current levels: "+sid);
     parts[sid]={source_part_id:sid,record,current_level:levels.includes("SL")&&levels.includes("HL")?"HLSL":levels[0]};
     selected.push(row);
   }
@@ -51,7 +56,7 @@ function build(){
     if(!cache.has(file))cache.set(file,json(file));return cache.get(file);
   };
   const names=values=>unique((Array.isArray(values)?values:String(values||"").split(";")).filter(Boolean).map(value=>{
-    ensure(/^crops[\\/](question|mark)_.*\.png$/.test(value),"A.2 source crop path is not bounded");
+    ensure(/^crops[\\/](question|mark)_.*\.png$/.test(value),topic+" source crop path is not bounded");
     return path.basename(value);
   }));
   const questions=[];
@@ -77,19 +82,21 @@ function build(){
   const usedGroups=new Set([...Object.values(parts).flatMap(p=>p.record.group_codes||[]),...atoms.flatMap(a=>a.group_codes||[])]);
   const groups=analysis.groups.filter(g=>usedGroups.has(g.code));
   read(__filename);read(path.join(ROOT,"tools/physics-test-exclusions.js"));read(path.join(ROOT,"tools/build_ib_d2_recovery.js"));read(path.join(ROOT,"tools/ib-e-topics-input.js"));
-  return {schema_version:1,topic:TOPIC,label:analysis.label,parts,questions,atoms,groups,corpus:rows,
-    report:{scope:{path:scopePath,sha256:files.get(path.resolve(scopePath)).sha256},analysis:scope.analysis,bank_state:bankState,
+  return {schema_version:1,topic,label:analysis.label,ownTaxonomy:conf.ownTaxonomy,parts,questions,atoms,groups,corpus:rows,
+    report:{scope:{path:conf.scopePath,sha256:files.get(path.resolve(conf.scopePath)).sha256},analysis:scope.analysis,bank_state:bankState,
       candidate_source_ids:questions.flatMap(q=>q.parts.map(p=>p.source_part_id)).sort(),withheld,
       source_files:[...files.values()].sort((a,b)=>a.path.localeCompare(b.path))}};
 }
 function project(input){
+  const topic=input.topic;
   return input.questions.flatMap(parent=>parent.parts.map(part=>{
     const p=input.parts[part.source_part_id],r=p.record;
     const img=name=>path.join(DB,"outputs/previews",parent.preview,"crops",name);
     return {id:part.part_id,parent_id:parent.id,source_part_id:part.source_part_id,source_group_id:part.cross_level_group_id||"",
-      topic_codes:[TOPIC],analysis_groups:unique(r.group_codes||[]),analysis_atoms:unique(r.atom_codes||[]),analysis_types:[],
-      analysis_used_atoms:unique(r.used_atom_codes||[]),analysis_optional_atoms:unique(r.optional_atom_codes||[]),analysis_canonical_ids:[],
-      current_topic_levels:{[TOPIC]:p.current_level},
+      topic_codes:[topic],analysis_groups:unique(r.group_codes||[]),analysis_atoms:unique(r.atom_codes||[]),analysis_types:[],
+      analysis_used_atoms:unique(r.used_atom_codes||[]),analysis_optional_atoms:unique(r.optional_atom_codes||[]),
+      analysis_canonical_ids:input.ownTaxonomy?[]:unique((r.canonical_row_ids||[]).map(id=>topic+":"+id)),
+      current_topic_levels:{[topic]:p.current_level},
       year:String(parent.year),paper:parent.paper,level:parent.level,question_number:parent.question,
       label:part.label===parent.question?"":part.label,marks:part.marks,
       question_images:part.crops.map(img),context_images:/^1A?$/.test(parent.paper)?[]:parent.crops.map(img),
@@ -98,8 +105,11 @@ function project(input){
   }));
 }
 function publicTaxonomy(input){
-  return {groups:input.groups.map(({code,label,summary})=>({code,topic:TOPIC,label,...(summary?{summary}:{})})),
-    atoms:input.atoms.map(({code,label,summary,checks})=>({code,topic:TOPIC,display_code:code.replace(/^A2T\./,"A2."),label,
+  // A.1's types are already published from its reviewed analysis; never duplicate them.
+  if(!input.ownTaxonomy)return {groups:[],atoms:[],types:[]};
+  const topic=input.topic;
+  return {groups:input.groups.map(({code,label,summary})=>({code,topic,label,...(summary?{summary}:{})})),
+    atoms:input.atoms.map(({code,label,summary,checks})=>({code,topic,display_code:code.replace(/^A2T\./,"A2."),label,
       ...(summary?{summary}:{}),...(checks&&checks.length?{checks}:{})})),types:[]};
 }
-module.exports={build,project,publicTaxonomy,scopePath,ROOT,DB,TOPIC};
+module.exports={build,project,publicTaxonomy,scopePath,TOPICS,ROOT,DB,TOPIC};

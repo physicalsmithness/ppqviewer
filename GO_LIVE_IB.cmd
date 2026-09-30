@@ -18,7 +18,7 @@ if "%BASELINE%"=="" goto :preflight_failed
 echo Deploy baseline %BASELINE% >> "%LOG%"
 
 if not exist reports\ib-a2-release-scope.json goto :build
-echo [1/7] Scanning today's school tests for matches (a few minutes)...
+echo [1/8] Scanning today's school tests for matches (a few minutes)...
 echo ===== school-test scan ===== >> "%LOG%"
 if not exist "%PY%" set "PY=py"
 "%PY%" tools\scan-current-ib-tests.py --output dist\physics-audit\current-ib-tests-a2.json >> "%LOG%" 2>&1
@@ -31,13 +31,17 @@ echo SCAN FAILED; falling back to dist\physics-audit\current-ib-tests.json >> "%
 copy /y dist\physics-audit\current-ib-tests.json dist\physics-audit\current-ib-tests-a2.json >> "%LOG%" 2>&1
 
 :a2
-echo [2/7] Clearing A.2 (a minute)...
+echo [2/8] Clearing A.2 (a minute)...
 echo ===== A.2 clearance ===== >> "%LOG%"
 node tools\ib-a2-release.js --write >> "%LOG%" 2>&1
 if errorlevel 1 goto :a2_failed
+echo [3/8] Clearing the extra A.1 questions (a minute)...
+echo ===== A.1 extension clearance ===== >> "%LOG%"
+node tools\ib-a2-release.js --topic A.1 --write >> "%LOG%" 2>&1
+if errorlevel 1 goto :a2_failed
 
 :build
-echo [3/7] Building the site (a minute or two)...
+echo [4/8] Building the site (a minute or two)...
 echo ===== assemble ===== >> "%LOG%"
 node tools\assemble_ibphysics_release.js >> "%LOG%" 2>&1
 if errorlevel 1 goto :build_failed
@@ -46,25 +50,25 @@ for /f "usebackq delims=" %%B in (`node -p "require('./dist/ibphysics-release/la
 if "%BUILD%"=="" goto :build_failed
 echo       Built %BUILD%.
 
-echo [4/7] Staging it into the deploy folder...
+echo [5/8] Staging it into the deploy folder...
 echo ===== stage ===== >> "%LOG%"
 node tools\stage_ibphysics_release.js %BASELINE% >> "%LOG%" 2>&1
 if errorlevel 1 goto :stage_failed
 
-echo [5/7] Committing the deploy folder...
+echo [6/8] Committing the deploy folder...
 echo ===== deploy commit ===== >> "%LOG%"
-git -C "%DEPLOY%" commit -m "IB Physics build %BUILD%: A.2 Forces and momentum joins the site; dependency holds (d035) and automatic school-test holds applied" >> "%LOG%" 2>&1
+git -C "%DEPLOY%" commit -m "IB Physics build %BUILD%: more A.2 and A.1 questions (d036, d037): exact A.2 test list, no page rule, picture-overlap check" >> "%LOG%" 2>&1
 if errorlevel 1 goto :commit_failed
 
-echo [6/7] Pushing the site...
+echo [7/8] Pushing the site...
 echo ===== deploy push ===== >> "%LOG%"
 git -C "%DEPLOY%" push >> "%LOG%" 2>&1
 if errorlevel 1 goto :push_failed
 
-echo [7/7] Committing and pushing the source that built it...
+echo [8/8] Committing and pushing the source that built it...
 echo ===== source commit ===== >> "%LOG%"
-git add DECISIONS.md ROADMAP.md GO_LIVE_IB.cmd tools/assemble_ibphysics_release.js tools/ib-dependency-holds.js tools/ib-a2-input.js tools/ib-a2-release.js tools/merge_ib_a2_release.js reports/ib-a2-release-scope.json reports/ib-a2-release-clearance.json reports/ib-release-inputs/ib-a2-analysis.json >> "%LOG%" 2>&1
-git commit -m "A.2 on the E1/E2 pattern: pinned delivery, d035 scope, automatic school-test clearance, merge under the latest topic; build %BUILD% published" >> "%LOG%" 2>&1
+git add DECISIONS.md ROADMAP.md GO_LIVE_IB.cmd tools/assemble_ibphysics_release.js tools/ib-dependency-holds.js tools/ib-a2-input.js tools/ib-a2-release.js tools/merge_ib_a2_release.js tools/ib-archive-test-closure.js reports/ib-a2-release-scope.json reports/ib-a2-release-clearance.json reports/ib-a1x-release-scope.json reports/ib-a1x-release-clearance.json reports/ib-release-inputs/ib-a2-analysis.json reports/ib-release-inputs/ib-a1-analysis.json >> "%LOG%" 2>&1
+git commit -m "Archive-built A.2 and A.1 extension (d036, d037): exact A.2 test list replaces scan and ledger guesses, no page rule; build %BUILD% published" >> "%LOG%" 2>&1
 git push >> "%LOG%" 2>&1
 if errorlevel 1 goto :source_push_failed
 
@@ -81,7 +85,7 @@ exit /b 1
 
 :a2_failed
 echo.
-echo A.2 CLEARANCE FAILED. Nothing was built, committed or pushed. Tell Claude; the log says why.
+echo A.2 OR A.1 CLEARANCE FAILED. Nothing was built, committed or pushed. Tell Claude; the log says why.
 echo A.2 CLEARANCE FAILED >> "%LOG%"
 exit /b 1
 

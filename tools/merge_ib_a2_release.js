@@ -31,28 +31,28 @@ function compareParts(a,b){
   }
   return left.length-right.length||String(a.id).localeCompare(String(b.id),undefined,{numeric:true});
 }
-function mergeA2Release(existing,cleared){
+function mergeA2Release(existing,cleared,topic="A.2"){
   const result=structuredClone(existing),bySource=new Map(),byId=new Map(),seen=new Set();
   for(const q of result){
     assert(q.id&&q.source_part_id&&!bySource.has(q.source_part_id)&&!byId.has(q.id),"Duplicate existing source identity");
     bySource.set(q.source_part_id,q);byId.set(q.id,q);
   }
   for(const q of cleared){
-    assert(/^ibchem_part_[a-f0-9]+$/.test(q.source_part_id||"")&&q.id&&!seen.has(q.source_part_id),"Duplicate or missing A.2 source identity");
+    assert(/^ibchem_part_[a-f0-9]+$/.test(q.source_part_id||"")&&q.id&&!seen.has(q.source_part_id),"Duplicate or missing "+topic+" source identity");
     seen.add(q.source_part_id);
-    assert(q.topic_codes.length===1&&q.topic_codes[0]==="A.2","A.2 release scope crossed into another topic");
-    assert(/^\d{4}$/.test(String(q.year))&&Number(q.year)>=2004&&Number(q.year)<2026,"Reserved A.2 source year");
-    assert(["SL","HL","HLSL"].includes(q.current_topic_levels["A.2"]),"Invalid A.2 current level");
+    assert(q.topic_codes.length===1&&q.topic_codes[0]===topic,topic+" release scope crossed into another topic");
+    assert(/^\d{4}$/.test(String(q.year))&&Number(q.year)>=2004&&Number(q.year)<2026,"Reserved "+topic+" source year");
+    assert(["SL","HL","HLSL"].includes(q.current_topic_levels[topic]),"Invalid "+topic+" current level");
     const prior=bySource.get(q.source_part_id);
     if(!prior){
-      assert(!byId.has(q.id),"A.2 part aliases another source part");
+      assert(!byId.has(q.id),topic+" part aliases another source part");
       const added=structuredClone(q);result.push(added);bySource.set(q.source_part_id,added);byId.set(q.id,added);continue;
     }
-    for(const field of content)assert.deepEqual(q[field],prior[field],"A.2 source content differs from an existing topic: "+q.id+" "+field);
+    for(const field of content)assert.deepEqual(q[field],prior[field],topic+" source content differs from an existing topic: "+q.id+" "+field);
     if(q.correct_option&&prior.correct_option)assert.equal(q.correct_option,prior.correct_option,"Conflicting original answer keys");
-    prior.topic_codes=latestFirst([...new Set([...prior.topic_codes,"A.2"])]);
+    prior.topic_codes=latestFirst([...new Set([...prior.topic_codes,topic])]);
     for(const field of memberships)prior[field]=[...new Set([...(prior[field]||[]),...(q[field]||[])])];
-    prior.current_topic_levels={...(prior.current_topic_levels||{}),"A.2":q.current_topic_levels["A.2"]};
+    prior.current_topic_levels={...(prior.current_topic_levels||{}),[topic]:q.current_topic_levels[topic]};
     if(!prior.correct_option&&q.correct_option){prior.correct_option=q.correct_option;prior.answer_status=q.answer_status;}
   }
   for(const parent of new Set(cleared.map(q=>q.parent_id))){

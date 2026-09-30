@@ -221,6 +221,11 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
   supplies every picture): 1,372 served by the seat, 1,052 after d035, about 250
   after the automatic school-test holds (sandbox dry run). Ships through
   `GO_LIVE_IB.cmd`, which now scans the tests, clears A.2, builds, stages and pushes.
+  **Published 2026-09-30 19:49, build `6e34582bae8283d0`, verified served:** 709 parts,
+  A.2 250 (48 types), A.1 116 memberships. Fresh scan read all 125 test documents.
+  Of the A.2 parts the tests hold back, 404 are held only for sharing a printed page
+  with some test's question (89 are in a test, 21 share a question with one); the
+  page rule, not which A.1 test is current, is what limits A.1 and A.2.
   Follow-ups: teach `test/test_ibphysics_release.js` about A.2; put the strictness
   of the whole-parent/shared-page test closure to Smith.
 - [ ] A1 v004 import (accepted in the teacher bank by 13 September, never imported).
