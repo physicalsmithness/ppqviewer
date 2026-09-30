@@ -30,15 +30,36 @@ function loadHolds(file=holdsPath){
 
 // Returns the served subset, the held parts, holds that name no cleared part, and any
 // twin group left half-held. The assembler refuses the last two; the suite asserts them.
+// A later-topic hold lifts by itself once the site serves the part under every later
+// topic that caused it: d035 then has it where it belongs (A.1 + A.2 served under A.2).
+// A twin held only for its twin lifts with it. Route-atom holds never lift here.
+function liftedIds(questions,holds){
+  const bySource=new Map(questions.map(q=>[q.source_part_id,q])),lifted=new Set();
+  for(const h of holds.record.holds){
+    const q=bySource.get(h.source_part_id);if(!q)continue;
+    const later=h.reasons.filter(r=>r.kind==="later_topic"),other=h.reasons.filter(r=>!["later_topic","twin_of_held"].includes(r.kind));
+    if(!later.length||other.length)continue;
+    const named=later.flatMap(r=>r.topics||[]);
+    if(named.length&&named.every(t=>q.topic_codes.includes(t))&&named.includes(q.topic_codes[0]))lifted.add(h.source_part_id);
+  }
+  const byServedId=new Map(holds.record.holds.map(h=>[h.served_id,h.source_part_id]));
+  for(const h of holds.record.holds){
+    const twin=h.reasons.filter(r=>r.kind==="twin_of_held");
+    if(twin.length&&h.reasons.length===twin.length&&twin.every(r=>lifted.has(byServedId.get(r.twin_of))))lifted.add(h.source_part_id);
+  }
+  return lifted;
+}
+
 function applyHolds(questions,holds){
-  if(!holds)return {served:questions,held:[],missing:[],twinGaps:[]};
-  const cleared=new Set(questions.map(q=>q.source_part_id));
-  const served=questions.filter(q=>!holds.ids.has(q.source_part_id));
-  const held=questions.filter(q=>holds.ids.has(q.source_part_id));
+  if(!holds)return {served:questions,held:[],missing:[],twinGaps:[],lifted:[]};
+  const cleared=new Set(questions.map(q=>q.source_part_id)),lifted=liftedIds(questions,holds);
+  const active=id=>holds.ids.has(id)&&!lifted.has(id);
+  const served=questions.filter(q=>!active(q.source_part_id));
+  const held=questions.filter(q=>active(q.source_part_id));
   const missing=holds.record.holds.filter(h=>!cleared.has(h.source_part_id)).map(h=>h.served_id);
   const heldGroups=new Set(held.map(q=>q.source_group_id).filter(g=>TWIN.test(g||"")));
   const twinGaps=served.filter(q=>heldGroups.has(q.source_group_id)).map(q=>q.id);
-  return {served,held,missing,twinGaps};
+  return {served,held,missing,twinGaps,lifted:[...lifted].sort()};
 }
 
 module.exports={holdsPath,loadHolds,applyHolds};

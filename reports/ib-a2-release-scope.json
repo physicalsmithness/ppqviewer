@@ -1,0 +1,4361 @@
+{
+ "schema_version": 1,
+ "topic": "A.2",
+ "label": "Forces and momentum",
+ "decision": "d035 (a topic serves nothing that needs a topic the pupil has not met); Smith 2026-09-29 (A.2 opens on ibphysicsppqs, no D-topic knowledge) and 2026-09-30 ('just need those questions up there!', 'ok' to one A.2 build with the automatic school-test holds)",
+ "analysis": {
+  "path": "reports/ib-release-inputs/ib-a2-analysis.json",
+  "sha256": "b183b4289a2ab00ac27a7c07a372207a04c6a535e7d39658118756c851e330dc",
+  "delivered_from": "C:\\Claude (not on Gdrive, nor OneDrive)\\instinctivelymechanical\\outputs\\viewer\\ib-a2-analysis.json",
+  "delivered_by": "instinctivelymechanical, 2026-09-29"
+ },
+ "bank": {
+  "path": "C:\\CodexProjects\\PaperDatabases\\Physics Categorisation\\bank_browser\\data\\physics_bank.sqlite",
+  "sha256": "d2d1847eb9996c7189bdcc99cc8008f4fc4e0592eafe4b9933e4e37c1dc4827f",
+  "use": "topic_memberships: a part (with its whole HL/SL twin group) is withheld when any member is recorded in a topic later than A.2"
+ },
+ "rule": "eligible = included and serve_under_a2 (the seat's D-topic rule), minus twin groups naming a later topic in the bank, minus source_corpus_defect",
+ "counts": {
+  "seat_serve_under_a2": 1372,
+  "eligible": 1052,
+  "withheld": 320
+ },
+ "eligible_source_ids": [
+  "ibchem_part_00aaea256cf13524",
+  "ibchem_part_0112db14ec84dd11",
+  "ibchem_part_014b292825349cbd",
+  "ibchem_part_01ac01f70fc83f67",
+  "ibchem_part_0247390301524692",
+  "ibchem_part_025675215d1df398",
+  "ibchem_part_02946f9e680184d0",
+  "ibchem_part_02a29128642a4d0d",
+  "ibchem_part_02bd9e310a4afb3e",
+  "ibchem_part_02e342d2a18ead07",
+  "ibchem_part_033901906330ac9c",
+  "ibchem_part_03a47086c4e4ecc7",
+  "ibchem_part_03a52e930c785f31",
+  "ibchem_part_03c4350a95313cf5",
+  "ibchem_part_0488ff472ba8fa09",
+  "ibchem_part_0492bf0238269304",
+  "ibchem_part_0499932890a002dd",
+  "ibchem_part_05098a44760af7d4",
+  "ibchem_part_051e5f64a9e2f431",
+  "ibchem_part_053c6475474dc4e6",
+  "ibchem_part_054043dc42361237",
+  "ibchem_part_057731cd0bf46a6c",
+  "ibchem_part_05b18312a5b8f0e4",
+  "ibchem_part_05cf185f7bc9bc8f",
+  "ibchem_part_0655657e74a13feb",
+  "ibchem_part_0681e747a32d03c3",
+  "ibchem_part_069e2e942ce61f3d",
+  "ibchem_part_07e1d6a876bac1ce",
+  "ibchem_part_080ebba2adb94b41",
+  "ibchem_part_0836f41d166e7354",
+  "ibchem_part_08c1760ab223d000",
+  "ibchem_part_093925b8069e1e09",
+  "ibchem_part_0961e1f608b6a7fa",
+  "ibchem_part_09738af6d6c09047",
+  "ibchem_part_09c22c29766cbfc8",
+  "ibchem_part_09f7d8a8a7174164",
+  "ibchem_part_0a741168ea860c57",
+  "ibchem_part_0a80e1f759156666",
+  "ibchem_part_0b1efde67e3e2ac7",
+  "ibchem_part_0b43806f1af737a5",
+  "ibchem_part_0b50a7cdfcc46e21",
+  "ibchem_part_0b94852a04b4f032",
+  "ibchem_part_0b951984f82a0d54",
+  "ibchem_part_0bfbc5acc0b1c0b5",
+  "ibchem_part_0c6852c330cb7148",
+  "ibchem_part_0d54392318e32657",
+  "ibchem_part_0d543a4638f7cdbd",
+  "ibchem_part_0d62169c79dc1059",
+  "ibchem_part_0dd31e479e92a6c9",
+  "ibchem_part_0def057d83ee0643",
+  "ibchem_part_0e0e1aed6a04cf8f",
+  "ibchem_part_0e3c1a00b0f9236b",
+  "ibchem_part_0e86b64c0c3bf612",
+  "ibchem_part_0e9400f28f19d7a6",
+  "ibchem_part_0f19569749859bcd",
+  "ibchem_part_0f2162d0f69611d8",
+  "ibchem_part_0f23aa50f99c5a2e",
+  "ibchem_part_0f3a04a3b0bfc86f",
+  "ibchem_part_0f6644c17f97a91f",
+  "ibchem_part_1055cf487cb127ef",
+  "ibchem_part_10dc35aaebbcb1c2",
+  "ibchem_part_1103b22571d6102a",
+  "ibchem_part_11154dfbf1e59ce7",
+  "ibchem_part_11481c9370627e1c",
+  "ibchem_part_1157f76db21434ab",
+  "ibchem_part_117054089f3bda50",
+  "ibchem_part_11c80d9336c06aab",
+  "ibchem_part_11d379655e6c15e2",
+  "ibchem_part_11fa48906bef5e7f",
+  "ibchem_part_1208a4125f11a0a9",
+  "ibchem_part_121ae51ead2407e7",
+  "ibchem_part_1261e65dda692e23",
+  "ibchem_part_12760c9ceabe7da4",
+  "ibchem_part_129b7b60f474f5a6",
+  "ibchem_part_12da8f9437e4fafd",
+  "ibchem_part_12f68fd5892a143c",
+  "ibchem_part_133d6f7fab09e8e3",
+  "ibchem_part_13623c9b793a0af1",
+  "ibchem_part_13d705af33054bb1",
+  "ibchem_part_13dfea012b7e2f33",
+  "ibchem_part_149809f977fc6c94",
+  "ibchem_part_14b727dae000fc9e",
+  "ibchem_part_14eae2bb6e751e37",
+  "ibchem_part_14fb5f0a5f23b39b",
+  "ibchem_part_1518e7ab6b786b4f",
+  "ibchem_part_1545530c1b30af53",
+  "ibchem_part_155fb2391d9d2a72",
+  "ibchem_part_159959e19cc355fe",
+  "ibchem_part_15f928b680574605",
+  "ibchem_part_160f29e1b816f2c4",
+  "ibchem_part_16337038a621cb5a",
+  "ibchem_part_1673487d39f8669e",
+  "ibchem_part_16a4115159d923a9",
+  "ibchem_part_16e6eca402ca6e3a",
+  "ibchem_part_17e646a701858f75",
+  "ibchem_part_17ffbee86004a0da",
+  "ibchem_part_186cf53b286654bb",
+  "ibchem_part_189beca84c6deac6",
+  "ibchem_part_18ca0ec581ac89c7",
+  "ibchem_part_18f1176ade7911b9",
+  "ibchem_part_195158d154c58076",
+  "ibchem_part_1974187f70684616",
+  "ibchem_part_198879b574c4680d",
+  "ibchem_part_19d524fbd5f6c479",
+  "ibchem_part_19fdc40859083a1d",
+  "ibchem_part_1a4a6d9861462b3b",
+  "ibchem_part_1a98e5e722b4896f",
+  "ibchem_part_1af37f9f9fb07764",
+  "ibchem_part_1af495a6312f8a36",
+  "ibchem_part_1af6549c8e36736a",
+  "ibchem_part_1b0309d431baad32",
+  "ibchem_part_1b9033ffe8d86388",
+  "ibchem_part_1bb43a98e0956ba5",
+  "ibchem_part_1bdc1facaae9bfed",
+  "ibchem_part_1c3d99e430eb7637",
+  "ibchem_part_1c4fe0953175ad59",
+  "ibchem_part_1cbe7256e1ce7b1e",
+  "ibchem_part_1d10adc1372ce0c3",
+  "ibchem_part_1d3810143324158f",
+  "ibchem_part_1d6ed822e419278f",
+  "ibchem_part_1e0a1f0de53157a1",
+  "ibchem_part_1e5ae159ee0cbf32",
+  "ibchem_part_1e5f9fb1e7a3d705",
+  "ibchem_part_1ebc242b7c18a8f3",
+  "ibchem_part_1f581f0ff8059000",
+  "ibchem_part_1f5f685621fa950b",
+  "ibchem_part_1f81e3de3fcf6b36",
+  "ibchem_part_1ffdeee827028048",
+  "ibchem_part_200ae13bc5db45cb",
+  "ibchem_part_2019557ae917caa1",
+  "ibchem_part_202ef65bfdb283d1",
+  "ibchem_part_203229da622f6a16",
+  "ibchem_part_203a0a56e24c7982",
+  "ibchem_part_20c8b527d04d5027",
+  "ibchem_part_20fca9a2ff6f1fdf",
+  "ibchem_part_21256272da7fc0c2",
+  "ibchem_part_212dcd50fedf16ac",
+  "ibchem_part_2178035969cc153a",
+  "ibchem_part_21794b198e869f67",
+  "ibchem_part_218f10f9f5fe8aa8",
+  "ibchem_part_219c28aea0445767",
+  "ibchem_part_21a3c28e97d0b9f4",
+  "ibchem_part_21a71ae036a8b463",
+  "ibchem_part_21efa3883d0ce803",
+  "ibchem_part_22185068aa26004c",
+  "ibchem_part_229972fcfdee03e1",
+  "ibchem_part_22bcb8fc49d6a9a7",
+  "ibchem_part_22d1910f79f8215a",
+  "ibchem_part_23190a6d7d3f8be4",
+  "ibchem_part_23d8004735b7873c",
+  "ibchem_part_2427534845dabdc5",
+  "ibchem_part_2433f44fe5c0345b",
+  "ibchem_part_247985f7ff498da4",
+  "ibchem_part_247ffdd0f851d78e",
+  "ibchem_part_24b99d4519ff5cec",
+  "ibchem_part_25041a8f7720f268",
+  "ibchem_part_2574d200ad150253",
+  "ibchem_part_2575613e3b80bdaa",
+  "ibchem_part_260f62426606cef4",
+  "ibchem_part_2668527434a03ef3",
+  "ibchem_part_26c356d680a6f4c8",
+  "ibchem_part_2715c896024a9cdc",
+  "ibchem_part_276be37b891ee358",
+  "ibchem_part_2771a8e5e994937c",
+  "ibchem_part_2799225fcd4b0df8",
+  "ibchem_part_28a4e7bc841fe897",
+  "ibchem_part_2929eb181018db60",
+  "ibchem_part_2a9b4116da7a4b47",
+  "ibchem_part_2aa729fd4f7639b6",
+  "ibchem_part_2aba239613a0f445",
+  "ibchem_part_2ac923ab698f10c6",
+  "ibchem_part_2b2ab1b63f401c2f",
+  "ibchem_part_2b32886832677d31",
+  "ibchem_part_2b3c331e541e478f",
+  "ibchem_part_2bba19f50a1d342d",
+  "ibchem_part_2bbb9d47fd76a34c",
+  "ibchem_part_2bd1fea79f5b152a",
+  "ibchem_part_2bf6515c61c8c812",
+  "ibchem_part_2bf782c52e1104f1",
+  "ibchem_part_2c38224644238bfe",
+  "ibchem_part_2c3f509a81d0c10b",
+  "ibchem_part_2c614536818c01f1",
+  "ibchem_part_2c98eeb33d6b0b01",
+  "ibchem_part_2cb6efc6b37b7332",
+  "ibchem_part_2cc138a8c1f254dc",
+  "ibchem_part_2d0ca5040fe3c25e",
+  "ibchem_part_2d2b7cf09b0691a4",
+  "ibchem_part_2d4aa5e26627b1b8",
+  "ibchem_part_2d856cb003b9019a",
+  "ibchem_part_2d9d4a03f3c28297",
+  "ibchem_part_2dc56d7754d4d1c7",
+  "ibchem_part_2de968bcb405dd78",
+  "ibchem_part_2e00b7a4be3a74ec",
+  "ibchem_part_2e0a4de4beb1457b",
+  "ibchem_part_2e14a595f7a7a05d",
+  "ibchem_part_2e2120c8265115f9",
+  "ibchem_part_2e41d3c5527dc13f",
+  "ibchem_part_2e5916ef3fad4232",
+  "ibchem_part_2eb09b4fe0dbcb2e",
+  "ibchem_part_2ec22cf1215bc9b9",
+  "ibchem_part_2efc086e9f3b5591",
+  "ibchem_part_2f062b4f749a6656",
+  "ibchem_part_2f4db5d69b6b25f7",
+  "ibchem_part_2f8687fc66551e0b",
+  "ibchem_part_2fab43b7989e8a4a",
+  "ibchem_part_300b1ae6dacc95c6",
+  "ibchem_part_3064768af1317508",
+  "ibchem_part_310714bf4965ceb9",
+  "ibchem_part_31359d07d7b85d5a",
+  "ibchem_part_31947dbb02d6372b",
+  "ibchem_part_319baa9deb97e717",
+  "ibchem_part_31af8df7357b02df",
+  "ibchem_part_31d12b40140c0594",
+  "ibchem_part_31dbcefbf0c69b4f",
+  "ibchem_part_31f90116d45761ae",
+  "ibchem_part_325fc8c8be9055be",
+  "ibchem_part_32b4b0f9a85fbf6d",
+  "ibchem_part_331c2b3ceb032d5d",
+  "ibchem_part_33444be06128fe4a",
+  "ibchem_part_33469fa45032a26a",
+  "ibchem_part_339c02ce96104c93",
+  "ibchem_part_33b2e55189ae04d0",
+  "ibchem_part_33ba129c8285c15c",
+  "ibchem_part_33c1cc8475fc5d91",
+  "ibchem_part_33eb4ba3e2d75e2c",
+  "ibchem_part_33ebe908243dbfcf",
+  "ibchem_part_3416c735f5c1d5ba",
+  "ibchem_part_34401ca4e2f94216",
+  "ibchem_part_346cc85197337cfd",
+  "ibchem_part_353b3c1b9da29ba8",
+  "ibchem_part_35621cbfcb4e486e",
+  "ibchem_part_3577709ad6fb9f68",
+  "ibchem_part_358b15f7fc993630",
+  "ibchem_part_35f9eb674781657b",
+  "ibchem_part_3638aee931f9c562",
+  "ibchem_part_36ac6014f9795816",
+  "ibchem_part_3705a5cb8dd2a6b7",
+  "ibchem_part_37de972885e93904",
+  "ibchem_part_37e2d43dce14c4e2",
+  "ibchem_part_384fa6e5552b5c33",
+  "ibchem_part_386439f1a4af4e22",
+  "ibchem_part_3865a1ab509b7913",
+  "ibchem_part_388d11ab1562a89a",
+  "ibchem_part_38a1879d2a32ec1f",
+  "ibchem_part_38c5a9c012a4b4d4",
+  "ibchem_part_394f18e64e9d0f4d",
+  "ibchem_part_397e87911ea932bf",
+  "ibchem_part_3a6e5392f523c217",
+  "ibchem_part_3a792ce640c2e69c",
+  "ibchem_part_3a9ba56c9b511de7",
+  "ibchem_part_3ad791e875055b6c",
+  "ibchem_part_3bf66f5dc5d23efa",
+  "ibchem_part_3bfcd34b788e4288",
+  "ibchem_part_3c5980f359670745",
+  "ibchem_part_3cbfa60f84102247",
+  "ibchem_part_3cd3afd6491c8316",
+  "ibchem_part_3d07fbd72ca6cbe6",
+  "ibchem_part_3d1f504940517080",
+  "ibchem_part_3d3ad03b09579d03",
+  "ibchem_part_3dfe0e8ffa8702a0",
+  "ibchem_part_3e2e6692c83fe11c",
+  "ibchem_part_3e61639d5e133faa",
+  "ibchem_part_3eb6723176910908",
+  "ibchem_part_3ece67a4fbabd489",
+  "ibchem_part_3f6e247ff9bb2fa7",
+  "ibchem_part_3fd64fa1fa05d2bf",
+  "ibchem_part_40243eeda3733635",
+  "ibchem_part_4026ec0b47db4d6a",
+  "ibchem_part_40b6d9a31d13b65c",
+  "ibchem_part_40bca664dc1af982",
+  "ibchem_part_4178cdefaba5e57c",
+  "ibchem_part_41beb4e9fceefb71",
+  "ibchem_part_41d53aef202c6c91",
+  "ibchem_part_421ccd2311641793",
+  "ibchem_part_4225cf2dbb409536",
+  "ibchem_part_4241f8afbfcc03c3",
+  "ibchem_part_42617097bb519791",
+  "ibchem_part_427f369d17019865",
+  "ibchem_part_42ae936f16d21cfe",
+  "ibchem_part_42d969d5e2e1129b",
+  "ibchem_part_42e75eb936b622ab",
+  "ibchem_part_435c12dd11515556",
+  "ibchem_part_43c347f4a118ed60",
+  "ibchem_part_43d2462bcef3e1a4",
+  "ibchem_part_444f153c4e1dba2d",
+  "ibchem_part_4472187aa9ff4089",
+  "ibchem_part_44ad1d7bb6aae977",
+  "ibchem_part_44ae3545690b24fb",
+  "ibchem_part_44f3994161190804",
+  "ibchem_part_451e57e1a22bc70b",
+  "ibchem_part_45473773b38b673d",
+  "ibchem_part_45633c38302f4577",
+  "ibchem_part_45aff0041314f228",
+  "ibchem_part_45eda6823b6e50b4",
+  "ibchem_part_463381d962b8c97e",
+  "ibchem_part_4658852f9f795312",
+  "ibchem_part_469c77975bfac12f",
+  "ibchem_part_46f7111539374c73",
+  "ibchem_part_471eb0b0c3bfc7e5",
+  "ibchem_part_473cf84c80d714bf",
+  "ibchem_part_48577bdff838ed28",
+  "ibchem_part_488785d65e35852f",
+  "ibchem_part_48a411eca1eb014f",
+  "ibchem_part_48a47b799ce101fe",
+  "ibchem_part_48e962c76d452c2a",
+  "ibchem_part_4904c59f800f43bf",
+  "ibchem_part_492fbd59c48c2f13",
+  "ibchem_part_493bf41ef54f6090",
+  "ibchem_part_49432d60a115d913",
+  "ibchem_part_49c41a63615fc2a8",
+  "ibchem_part_4a153bff47ac0c2f",
+  "ibchem_part_4a167dbb30be64f9",
+  "ibchem_part_4a19a61d861a8157",
+  "ibchem_part_4a830085a9b9d0e3",
+  "ibchem_part_4a835e3cab5bc019",
+  "ibchem_part_4afa16938c481a4a",
+  "ibchem_part_4b7ad81880f0e2a4",
+  "ibchem_part_4ba07be4b53da5a7",
+  "ibchem_part_4bfeacaa2c7b8a71",
+  "ibchem_part_4c87390c4457cf62",
+  "ibchem_part_4cf076db394fe43b",
+  "ibchem_part_4d5eaaa5650d56ca",
+  "ibchem_part_4d9dd93d804929eb",
+  "ibchem_part_4dd686bbe9ae35f9",
+  "ibchem_part_4e47429b73abbe0a",
+  "ibchem_part_4f19306abe1c67fe",
+  "ibchem_part_4f1ee3ee9c576bfd",
+  "ibchem_part_4f84ffb85083ed44",
+  "ibchem_part_4fa90ebef38dd336",
+  "ibchem_part_4fccccbf74da211e",
+  "ibchem_part_50707cf40241c534",
+  "ibchem_part_50c20010d6784405",
+  "ibchem_part_50e199f9a3fe4d8c",
+  "ibchem_part_51191ebdfee83530",
+  "ibchem_part_512ece4df2c6a916",
+  "ibchem_part_51cd3884ccb5414b",
+  "ibchem_part_51fe915ca7b39b15",
+  "ibchem_part_52373897d796b024",
+  "ibchem_part_524d2d649f2f5e24",
+  "ibchem_part_52d66c4dca307b75",
+  "ibchem_part_52d9f214d30abefd",
+  "ibchem_part_534ab1163671ede8",
+  "ibchem_part_5357150547977838",
+  "ibchem_part_53ae3b86189148d6",
+  "ibchem_part_544cfbc93cf81fd8",
+  "ibchem_part_54717615b8ec7089",
+  "ibchem_part_549b61652325da5d",
+  "ibchem_part_54ed503482b8aece",
+  "ibchem_part_5514326b5f5ae126",
+  "ibchem_part_55174a701614f6e6",
+  "ibchem_part_556f7ea1c7e38a6f",
+  "ibchem_part_55ee883a0817c29b",
+  "ibchem_part_55fed1d0d6fce8a2",
+  "ibchem_part_5629ed4fe288bd65",
+  "ibchem_part_56a0c367db8bb2f2",
+  "ibchem_part_56d3daed28da8123",
+  "ibchem_part_56f1c7508a06aff9",
+  "ibchem_part_571fce3fd6951bde",
+  "ibchem_part_572a479e2643ebb1",
+  "ibchem_part_574271a25cdd3a9e",
+  "ibchem_part_57cd3f17c300b73e",
+  "ibchem_part_57cfe26f2d06d132",
+  "ibchem_part_5812d341859b0d84",
+  "ibchem_part_58303709a84a7de2",
+  "ibchem_part_583cb622f2925d07",
+  "ibchem_part_58994fabf2fcb8b2",
+  "ibchem_part_58c5b9900405bf0f",
+  "ibchem_part_5925f9ae1ff059cc",
+  "ibchem_part_59b0ea6a6ef0b287",
+  "ibchem_part_59db2bf0eee97964",
+  "ibchem_part_5a01edef9ea3feb4",
+  "ibchem_part_5a06390039316870",
+  "ibchem_part_5a8d3306ba4a3e7b",
+  "ibchem_part_5a9e6ec9023cfc65",
+  "ibchem_part_5ad2f56462e902f9",
+  "ibchem_part_5b2e3610eac9214c",
+  "ibchem_part_5b2ffc0c00316494",
+  "ibchem_part_5bad1fbe1b1ca6ab",
+  "ibchem_part_5be10bd518f39e62",
+  "ibchem_part_5c1d8c2612dedd83",
+  "ibchem_part_5c5fb5d0ce2bf97c",
+  "ibchem_part_5c858129fbc6716e",
+  "ibchem_part_5ca55d815bd3a98c",
+  "ibchem_part_5d0ec37e9a3d9bab",
+  "ibchem_part_5dbd982d620e984b",
+  "ibchem_part_5df7b50e351474e5",
+  "ibchem_part_5e0032d08d3ea13f",
+  "ibchem_part_5e4fbae6336e8bae",
+  "ibchem_part_5e967bc34c63909e",
+  "ibchem_part_5e9f4128a607c58a",
+  "ibchem_part_5ea2d719f0658042",
+  "ibchem_part_5ef58046c0e072ea",
+  "ibchem_part_5ef64e2e3f431577",
+  "ibchem_part_5f2b8d1dff81d3ab",
+  "ibchem_part_5f4acde29d95c1c8",
+  "ibchem_part_5f82615f028b645c",
+  "ibchem_part_5f857818e7030c71",
+  "ibchem_part_5fb862c424e1cbb4",
+  "ibchem_part_6002ac6de1d8186f",
+  "ibchem_part_603829a1d02a2c84",
+  "ibchem_part_606558a0ffd3bb15",
+  "ibchem_part_60d6f0365e412705",
+  "ibchem_part_61368bc5fef1034c",
+  "ibchem_part_61ab4bd1620be4d0",
+  "ibchem_part_61e6826b91daf2ea",
+  "ibchem_part_62675e2aa79755a3",
+  "ibchem_part_62f7592e9814d59f",
+  "ibchem_part_62fb3c64a6c7322a",
+  "ibchem_part_63039ca847691bd4",
+  "ibchem_part_63220634f6766c5f",
+  "ibchem_part_63eeeea4267b3f41",
+  "ibchem_part_63fe4d06d4495cd7",
+  "ibchem_part_64642aa7d564b10e",
+  "ibchem_part_647264b1f89e2b3a",
+  "ibchem_part_653066b592af3483",
+  "ibchem_part_6540c09566a857f5",
+  "ibchem_part_6636fd9320bfd72e",
+  "ibchem_part_663781f35a1ed156",
+  "ibchem_part_666bc148f8697870",
+  "ibchem_part_6721adbcec33494f",
+  "ibchem_part_6757c649d6c77184",
+  "ibchem_part_676975f98bd55ec8",
+  "ibchem_part_678fcd300d813ea7",
+  "ibchem_part_67e4fb70f2fe7442",
+  "ibchem_part_6890d2d560dffaab",
+  "ibchem_part_68a5e5602eb4ec38",
+  "ibchem_part_68cbc7d2e63d02f2",
+  "ibchem_part_68d763fe35995a6b",
+  "ibchem_part_691e4258a458fbe1",
+  "ibchem_part_692384dd1365818d",
+  "ibchem_part_69273c6619e3e3ac",
+  "ibchem_part_69af9ae24c4ae461",
+  "ibchem_part_69ee7e308bb6b6d1",
+  "ibchem_part_6a5479ec39234329",
+  "ibchem_part_6a5ce3edde977281",
+  "ibchem_part_6a70044401151e0c",
+  "ibchem_part_6a75774b56dad0ac",
+  "ibchem_part_6a7c83b3ad4ceae9",
+  "ibchem_part_6a7def0e013879d9",
+  "ibchem_part_6a7e4106ac4b63f0",
+  "ibchem_part_6ae4f4eb85b8ea89",
+  "ibchem_part_6b9a1bbf21ce1a55",
+  "ibchem_part_6bbc4b8a9fb5226a",
+  "ibchem_part_6bca53ae0741452d",
+  "ibchem_part_6c43b6d092f648b5",
+  "ibchem_part_6c90ceea2b2319a8",
+  "ibchem_part_6ca4c85de7138678",
+  "ibchem_part_6cb2110d41d08fb7",
+  "ibchem_part_6cc3a116c6cbc7e4",
+  "ibchem_part_6cd15e0afbda073f",
+  "ibchem_part_6ce56059cf4d891a",
+  "ibchem_part_6d470bc77126c53e",
+  "ibchem_part_6d4de8a1c8ba3205",
+  "ibchem_part_6d63ef71f1767db9",
+  "ibchem_part_6d80a001b10da3fe",
+  "ibchem_part_6d8aed949e41a5e5",
+  "ibchem_part_6d962d95034a7649",
+  "ibchem_part_6dd271ad004f34c7",
+  "ibchem_part_6e2afd3126298c2d",
+  "ibchem_part_6e2fdb0ca239d40a",
+  "ibchem_part_6e3b79e10daab170",
+  "ibchem_part_6e433905c357c39d",
+  "ibchem_part_6e539c5a118f8ab5",
+  "ibchem_part_6ee30cac7501347f",
+  "ibchem_part_6f2a196086c8cc66",
+  "ibchem_part_6f31acc8fb237a0f",
+  "ibchem_part_6f4457b56228ed1b",
+  "ibchem_part_6f478fce99c3e079",
+  "ibchem_part_6f8683e093455653",
+  "ibchem_part_6fbbfe7ee6c254b9",
+  "ibchem_part_700212036e9af848",
+  "ibchem_part_702a7cf5015cb58b",
+  "ibchem_part_704812fb36c1b6a3",
+  "ibchem_part_7059251af966f1c6",
+  "ibchem_part_70ccc6d567a8dfd7",
+  "ibchem_part_70d865e1f4280a4d",
+  "ibchem_part_70f23c812b431274",
+  "ibchem_part_7122dafa9fbe7e9e",
+  "ibchem_part_71daf63cdab69246",
+  "ibchem_part_71e54189f0d5b235",
+  "ibchem_part_71edb9ff5b27de9a",
+  "ibchem_part_71f98d44ddc0a21f",
+  "ibchem_part_7230ba64d5bf1f20",
+  "ibchem_part_72502a38b80d5beb",
+  "ibchem_part_72743908b94314e6",
+  "ibchem_part_729f5a7725ab22d7",
+  "ibchem_part_72ab0dc753796ea5",
+  "ibchem_part_72f5c1f16f8bd239",
+  "ibchem_part_736100ebb106a5ee",
+  "ibchem_part_73aef6be27ab860d",
+  "ibchem_part_73c8d2b384040d94",
+  "ibchem_part_73df32f95e7e205c",
+  "ibchem_part_73e6271a61913415",
+  "ibchem_part_7404a629589eb229",
+  "ibchem_part_746ab6d54a0f2891",
+  "ibchem_part_746d0d042dca479e",
+  "ibchem_part_748c8a3835bf3d78",
+  "ibchem_part_74d8b628abc61213",
+  "ibchem_part_750f5b6dc95c3646",
+  "ibchem_part_7577d573f40b47e0",
+  "ibchem_part_75a4cae84ff6090a",
+  "ibchem_part_75bd472366f13d4e",
+  "ibchem_part_761831878ceea2ad",
+  "ibchem_part_762cacd4d40464ee",
+  "ibchem_part_764a2436c952f847",
+  "ibchem_part_76a4f9a0409e5202",
+  "ibchem_part_76c71937c2a570db",
+  "ibchem_part_76dff8039688f97e",
+  "ibchem_part_7741a20d7221304b",
+  "ibchem_part_77bfcc36e665af97",
+  "ibchem_part_77d40f96c045abb1",
+  "ibchem_part_77d9f26c3fc8985a",
+  "ibchem_part_77fabbe534951bb6",
+  "ibchem_part_783950febcb205b7",
+  "ibchem_part_784ecb66f729e93a",
+  "ibchem_part_788336e8cb8d56b2",
+  "ibchem_part_7890d906388cf89b",
+  "ibchem_part_78ba1e9579cc6ad1",
+  "ibchem_part_78c3d811966f6709",
+  "ibchem_part_794cce53f5275427",
+  "ibchem_part_7a77957182016556",
+  "ibchem_part_7ae9a840326a70c4",
+  "ibchem_part_7b1961c4b1a07aa3",
+  "ibchem_part_7b9d3a0666aba2e5",
+  "ibchem_part_7bffe005ac1f301d",
+  "ibchem_part_7c41c226dbf4b7c7",
+  "ibchem_part_7c700153addfaefe",
+  "ibchem_part_7c7154c1e9b93f19",
+  "ibchem_part_7d693e99a6d472e7",
+  "ibchem_part_7da2935b818c0ade",
+  "ibchem_part_7db67e75d4a546f7",
+  "ibchem_part_7dc0284a23b12fc5",
+  "ibchem_part_7dc7a9d50162863b",
+  "ibchem_part_7e902d3876935cac",
+  "ibchem_part_7ed0627009fc0899",
+  "ibchem_part_7f223a779b58d34e",
+  "ibchem_part_7f75c31313ddd901",
+  "ibchem_part_7f7af95a3cef3e73",
+  "ibchem_part_7f84fd983308832b",
+  "ibchem_part_7f957a888fd7cecd",
+  "ibchem_part_80a4681271ff83c9",
+  "ibchem_part_80b7d59833789910",
+  "ibchem_part_810492ba261ca756",
+  "ibchem_part_812b33392235070d",
+  "ibchem_part_815d7903cff91d36",
+  "ibchem_part_81c812dfe536fcfc",
+  "ibchem_part_821986e662ae2ddb",
+  "ibchem_part_82276b668030fcaa",
+  "ibchem_part_8280ebeaeed489d2",
+  "ibchem_part_8290a7bc511d83b1",
+  "ibchem_part_82c2de53e160015e",
+  "ibchem_part_831244fd3d95baa4",
+  "ibchem_part_8333fa5f9d38be08",
+  "ibchem_part_8368ffe4af9e51dc",
+  "ibchem_part_83a68c1023fbf140",
+  "ibchem_part_83fcb1b37d460f24",
+  "ibchem_part_8469ebfb71e46ad8",
+  "ibchem_part_846b748ee02295fe",
+  "ibchem_part_8517e3ff2bd86f41",
+  "ibchem_part_852754f57e94e3ad",
+  "ibchem_part_854e5eb2c5dae580",
+  "ibchem_part_858fca4739cbddb3",
+  "ibchem_part_85c3b9939d3eab28",
+  "ibchem_part_85d77a5be705bb70",
+  "ibchem_part_85f1af2763057002",
+  "ibchem_part_8605e8532cd531b0",
+  "ibchem_part_8652618d0ec09b6e",
+  "ibchem_part_86827c6b214136b6",
+  "ibchem_part_86ab7fbc0869a9ae",
+  "ibchem_part_870f49a293d16351",
+  "ibchem_part_8743506b8623d584",
+  "ibchem_part_8753ab5f5782134f",
+  "ibchem_part_875836e13b65fd87",
+  "ibchem_part_879bd6ec9472c381",
+  "ibchem_part_87ce24d0739b3ea4",
+  "ibchem_part_87ecb866e76ca130",
+  "ibchem_part_8816310168db209f",
+  "ibchem_part_882f0e9cd0d0e37e",
+  "ibchem_part_8865a845a86e0085",
+  "ibchem_part_88833ff11bc1305e",
+  "ibchem_part_888c50edd1d928de",
+  "ibchem_part_88ddd24ce51ed015",
+  "ibchem_part_890e6c8e2594f347",
+  "ibchem_part_8947d3424a3d897f",
+  "ibchem_part_8954e8764f2f2aec",
+  "ibchem_part_89f2d163294a0ca4",
+  "ibchem_part_8a107b423330b97c",
+  "ibchem_part_8a1146fcbdc98a1e",
+  "ibchem_part_8a51b4b066f4e742",
+  "ibchem_part_8a576702378fef00",
+  "ibchem_part_8a7514263f2825f5",
+  "ibchem_part_8ae254396f973725",
+  "ibchem_part_8b491add7103ef06",
+  "ibchem_part_8b696ce1fbe8efb3",
+  "ibchem_part_8c0d4cbae7285234",
+  "ibchem_part_8c5177625cc75f4a",
+  "ibchem_part_8c5592bd15c4fb82",
+  "ibchem_part_8cc6b63e4e50978e",
+  "ibchem_part_8ce526463a101859",
+  "ibchem_part_8d781abe944381e1",
+  "ibchem_part_8d961b09a42cb86e",
+  "ibchem_part_8db368b15c140162",
+  "ibchem_part_8edcb6d59b261e14",
+  "ibchem_part_8f22307e2f928bd8",
+  "ibchem_part_8ff0495cce917a56",
+  "ibchem_part_90052430d7252e03",
+  "ibchem_part_905a4e4eac17bd84",
+  "ibchem_part_906943f74ec75403",
+  "ibchem_part_90746888bcae34f8",
+  "ibchem_part_910c072d099ace95",
+  "ibchem_part_9125c6990f654c3a",
+  "ibchem_part_915e6710d78355b7",
+  "ibchem_part_916b91a56d33d330",
+  "ibchem_part_917bfed0fbca372c",
+  "ibchem_part_9186504a0d72e2a6",
+  "ibchem_part_91dd1f84e8464b63",
+  "ibchem_part_92156247bda35806",
+  "ibchem_part_927a1dbbac0247e3",
+  "ibchem_part_929cc22ef1d4f0f0",
+  "ibchem_part_93c4a745f899f2d1",
+  "ibchem_part_93d02faeae771a74",
+  "ibchem_part_942981b3c1419d5c",
+  "ibchem_part_944bde70a667bda5",
+  "ibchem_part_947d78b088c8e819",
+  "ibchem_part_9498c4e94fcd6f18",
+  "ibchem_part_94c76a04c422eef6",
+  "ibchem_part_95069eb1a03ffd4d",
+  "ibchem_part_954a960b56428147",
+  "ibchem_part_95cc76bea5f21d92",
+  "ibchem_part_95ce7c131d9bdc92",
+  "ibchem_part_963086abe9855002",
+  "ibchem_part_9665b2368a24ba16",
+  "ibchem_part_969e55a53d8780ed",
+  "ibchem_part_970c5af9cddcefe0",
+  "ibchem_part_973a78efe6d53bfe",
+  "ibchem_part_98d8d1c4b0f7b74d",
+  "ibchem_part_98e6810e03f19deb",
+  "ibchem_part_99066dd68c7c7e6a",
+  "ibchem_part_994eba3cdb2d36a0",
+  "ibchem_part_99737618bf0e2a22",
+  "ibchem_part_997ab10b24c98915",
+  "ibchem_part_99b17d69c8644a45",
+  "ibchem_part_99d52a2224ce95d7",
+  "ibchem_part_9a7adae48f9680f1",
+  "ibchem_part_9af46e76efb0a8e4",
+  "ibchem_part_9b322cd9b682d03a",
+  "ibchem_part_9b5df4ecc0996600",
+  "ibchem_part_9c9f0d1109fa44b7",
+  "ibchem_part_9ce365e3dd9e0b47",
+  "ibchem_part_9d19b82b5adbef0f",
+  "ibchem_part_9d879d6f47c636c4",
+  "ibchem_part_9d8a6b5cda9e1d79",
+  "ibchem_part_9da9d33cb339f3d6",
+  "ibchem_part_9e5515f384578a4b",
+  "ibchem_part_9e5dbc9590df02b4",
+  "ibchem_part_9ead2c06c53a64ae",
+  "ibchem_part_9f122f284b8c8636",
+  "ibchem_part_9f822f9e463da69d",
+  "ibchem_part_9fc1d0f2481a431b",
+  "ibchem_part_9fd20091c175e6ca",
+  "ibchem_part_9fd9a271ade1bf62",
+  "ibchem_part_9ffb9de50598928f",
+  "ibchem_part_a061db8f64b2bd33",
+  "ibchem_part_a0b1462ed3afaeaf",
+  "ibchem_part_a0dd716e6656881b",
+  "ibchem_part_a0ddc2fc7de97d6d",
+  "ibchem_part_a172ce317525a359",
+  "ibchem_part_a1da454710ba6ec3",
+  "ibchem_part_a1e7655dec7a5b29",
+  "ibchem_part_a20519fd40530abc",
+  "ibchem_part_a23e50a26601e120",
+  "ibchem_part_a28dd01ba6bf7a2d",
+  "ibchem_part_a28f8c740ec11b7d",
+  "ibchem_part_a344af6839316433",
+  "ibchem_part_a34f4875a9aa3f8f",
+  "ibchem_part_a38a9d5a6fee37ee",
+  "ibchem_part_a3c43a023a45f8d1",
+  "ibchem_part_a3f56e0aaa690631",
+  "ibchem_part_a4109037edb890c3",
+  "ibchem_part_a47523214f7661b0",
+  "ibchem_part_a504fb6972dc5592",
+  "ibchem_part_a54f183147782a2a",
+  "ibchem_part_a6502dc4c0eb9cc2",
+  "ibchem_part_a6c5452c96b184b0",
+  "ibchem_part_a75dccbd30fcd566",
+  "ibchem_part_a77105bd8a9ece15",
+  "ibchem_part_a78747aabe62826c",
+  "ibchem_part_a79f3ba7d342aa0f",
+  "ibchem_part_a80b9aa248b12ac3",
+  "ibchem_part_a81c6841efbd03ad",
+  "ibchem_part_a81d0d0d461e71d4",
+  "ibchem_part_a82a52cd55615615",
+  "ibchem_part_a85b4ad0142d3b42",
+  "ibchem_part_a88231a94f4810db",
+  "ibchem_part_a886ea582d43a053",
+  "ibchem_part_a8e5414a13c4f945",
+  "ibchem_part_a8ff533df5697c80",
+  "ibchem_part_a95a1ec302f46fc7",
+  "ibchem_part_a95c6d302168c94f",
+  "ibchem_part_a977e29098be0eb1",
+  "ibchem_part_a978ab0ca47796a3",
+  "ibchem_part_a9b682faba9d9160",
+  "ibchem_part_a9d938fab60d81fe",
+  "ibchem_part_aa39a10e5deb7942",
+  "ibchem_part_aa6e325b705454cc",
+  "ibchem_part_aac142cb02662adf",
+  "ibchem_part_aad7762cb104f851",
+  "ibchem_part_aae8ccea80bf77de",
+  "ibchem_part_ab143c674c96c386",
+  "ibchem_part_ab1807b15c16fdf8",
+  "ibchem_part_ab2280be93d2640c",
+  "ibchem_part_ab4979e750629af6",
+  "ibchem_part_ab7ba724f747e285",
+  "ibchem_part_ab8e45ce794501ca",
+  "ibchem_part_ab8ebc2962ccc616",
+  "ibchem_part_ab9055debf36ffc5",
+  "ibchem_part_ac6ee2673aa0fce7",
+  "ibchem_part_ac95f9415a256238",
+  "ibchem_part_acb2a1cd656bccad",
+  "ibchem_part_acc9e87bef3a0f00",
+  "ibchem_part_ad22db13707e5814",
+  "ibchem_part_ad45fcb37ac98432",
+  "ibchem_part_ad61cb2aecbfef69",
+  "ibchem_part_ad7420d15579bbc2",
+  "ibchem_part_adda313ed1e8c4ba",
+  "ibchem_part_addf85eebbc7624c",
+  "ibchem_part_ae073105a485b917",
+  "ibchem_part_ae11dd24fe292d2a",
+  "ibchem_part_ae6e9b1300f753dd",
+  "ibchem_part_ae84cedd5ec46efe",
+  "ibchem_part_ae8a5b2fc8aaaed6",
+  "ibchem_part_aee86595614b080d",
+  "ibchem_part_af18395b7a464b40",
+  "ibchem_part_af2108c454ae7555",
+  "ibchem_part_aff0450ed534c916",
+  "ibchem_part_b06d88f81aa29c9d",
+  "ibchem_part_b0c825ab73059bca",
+  "ibchem_part_b0d02f4980d67af9",
+  "ibchem_part_b10cd94d6f97c812",
+  "ibchem_part_b1349f69c966563e",
+  "ibchem_part_b1be4619777725bc",
+  "ibchem_part_b1ca3cb989f3b431",
+  "ibchem_part_b1e13ffb26532588",
+  "ibchem_part_b2835bfb5041faac",
+  "ibchem_part_b2a6802ab916cab3",
+  "ibchem_part_b2ba83a3c5c06bd6",
+  "ibchem_part_b2e94566e7cd62f3",
+  "ibchem_part_b2f81f347af8bb06",
+  "ibchem_part_b30d117736da0e30",
+  "ibchem_part_b446e41d2896eba9",
+  "ibchem_part_b44daaedf4b73e78",
+  "ibchem_part_b44e8221d38170e3",
+  "ibchem_part_b4b1f318a97bfb1b",
+  "ibchem_part_b4b9a8028c268a0d",
+  "ibchem_part_b4e785702aaa237f",
+  "ibchem_part_b574c281c6535ec3",
+  "ibchem_part_b5927e4f1b074661",
+  "ibchem_part_b59ea2a816be65e9",
+  "ibchem_part_b5b318d319b15321",
+  "ibchem_part_b612163a67cd8582",
+  "ibchem_part_b63b7e388b9783cd",
+  "ibchem_part_b776891c5fc764e9",
+  "ibchem_part_b785cb71c45fa171",
+  "ibchem_part_b7a7c7fac4853d8d",
+  "ibchem_part_b7cda1b5469608f4",
+  "ibchem_part_b81a9aecbb50f7d4",
+  "ibchem_part_b82f2724a60b6113",
+  "ibchem_part_b8d0995ff8eef470",
+  "ibchem_part_b8ec4b83aa4dd8e0",
+  "ibchem_part_b8fc6ed1510ae954",
+  "ibchem_part_b904d074c9345d07",
+  "ibchem_part_b9b9a5c8705d2bd1",
+  "ibchem_part_b9d9044c38611a35",
+  "ibchem_part_b9db647dd8a6f23c",
+  "ibchem_part_ba2a2fd71fad9415",
+  "ibchem_part_ba4cde6b4a06ad4b",
+  "ibchem_part_ba9c979814d0cff4",
+  "ibchem_part_baaed49ee0e6b887",
+  "ibchem_part_bad0612d4edc09d2",
+  "ibchem_part_bad36f3db2a63905",
+  "ibchem_part_bb75b04182d2fd49",
+  "ibchem_part_bbe3edc07ed71e06",
+  "ibchem_part_bc028507b581db09",
+  "ibchem_part_bc3f88e940842a5a",
+  "ibchem_part_bc63b2e54521d3eb",
+  "ibchem_part_bcf2df769b914050",
+  "ibchem_part_bcffe3a7eb3d26ce",
+  "ibchem_part_bd25fd56e78f9a8a",
+  "ibchem_part_bd75b20f3ecd36fc",
+  "ibchem_part_bda81fdd0aec2a21",
+  "ibchem_part_bde689eee1b50baf",
+  "ibchem_part_be2b62c7b1baeb76",
+  "ibchem_part_be39091aa5c36b75",
+  "ibchem_part_be6e6d7b7a463e6a",
+  "ibchem_part_be79bbe31794b0d5",
+  "ibchem_part_be8a601945167f90",
+  "ibchem_part_beca3dc7fb648f70",
+  "ibchem_part_bedced4b793d3cef",
+  "ibchem_part_bee0b0cb4750b725",
+  "ibchem_part_bf5e887b69568129",
+  "ibchem_part_bf6d410a5570b9ed",
+  "ibchem_part_bfd16ed3c250064d",
+  "ibchem_part_c06fca53e76923c5",
+  "ibchem_part_c0ecd721e0a0a424",
+  "ibchem_part_c0eed874aca3ef37",
+  "ibchem_part_c14c506eba11348b",
+  "ibchem_part_c167637e2bd3272c",
+  "ibchem_part_c18cba12a6770f3e",
+  "ibchem_part_c28ea1c32821bd5f",
+  "ibchem_part_c2e19914d1d2d461",
+  "ibchem_part_c32403df63d3bea1",
+  "ibchem_part_c3774343bd144d79",
+  "ibchem_part_c4208f5d46d64809",
+  "ibchem_part_c42f4fa7125481c9",
+  "ibchem_part_c46f71583c2c501a",
+  "ibchem_part_c4e6ff2f409b1160",
+  "ibchem_part_c5228a2c196ee340",
+  "ibchem_part_c53a4e703ad924f1",
+  "ibchem_part_c5d91ec8dc365c28",
+  "ibchem_part_c65970188261bdcd",
+  "ibchem_part_c6a17c89b57d0610",
+  "ibchem_part_c751495e02f6d8c0",
+  "ibchem_part_c77854ae4297abfe",
+  "ibchem_part_c7a2632fd1d8ace3",
+  "ibchem_part_c7c365d32ffc89ac",
+  "ibchem_part_c81210c712ea3322",
+  "ibchem_part_c835441166969f70",
+  "ibchem_part_c835be9b1be3c09b",
+  "ibchem_part_c83bd8b4120f6b42",
+  "ibchem_part_c8840d10c6556eab",
+  "ibchem_part_c8c43be7df6d8f12",
+  "ibchem_part_c8c5a09f3e3957fc",
+  "ibchem_part_c8c67be54b88af72",
+  "ibchem_part_c8e13e911fd0bba0",
+  "ibchem_part_c928f80eccef1985",
+  "ibchem_part_c94d503d84213ba3",
+  "ibchem_part_c95509511fa20eb9",
+  "ibchem_part_caace3a63eb8e8d3",
+  "ibchem_part_cb52204d01b7fe87",
+  "ibchem_part_cb81031123b41925",
+  "ibchem_part_cba5c862f5e8f5a0",
+  "ibchem_part_cbb6541577bb9f2b",
+  "ibchem_part_cc08a49a02ecd35c",
+  "ibchem_part_cc7ece556c317456",
+  "ibchem_part_cc9b6f70b72976a5",
+  "ibchem_part_ccd3e4a9289de9bd",
+  "ibchem_part_ccf965b2864d30e3",
+  "ibchem_part_cd32492dea0432c0",
+  "ibchem_part_cdce624676fa1b14",
+  "ibchem_part_ce59f28b1926d20f",
+  "ibchem_part_ce77e2a8c61109f3",
+  "ibchem_part_ce8058d634f4c972",
+  "ibchem_part_ceca546aa85f29e6",
+  "ibchem_part_cf676bd1a3a26883",
+  "ibchem_part_cf83df2c0b8af3a5",
+  "ibchem_part_cf91ccd869a4ccbf",
+  "ibchem_part_cf97e13a1d8b352b",
+  "ibchem_part_cfc911e67b5261ea",
+  "ibchem_part_d02a335ce4c1b8a0",
+  "ibchem_part_d03ac20ab8eef380",
+  "ibchem_part_d0795c64c5289f31",
+  "ibchem_part_d0bd6fcebfc0e3cf",
+  "ibchem_part_d0d0fb691eb2fa18",
+  "ibchem_part_d0d25ec8668131cf",
+  "ibchem_part_d121eb1e07a90b5f",
+  "ibchem_part_d16d08fca5fc3942",
+  "ibchem_part_d198fb62b401cfc3",
+  "ibchem_part_d235c9076ea789de",
+  "ibchem_part_d25a8238e8744ff5",
+  "ibchem_part_d27eac9c8d7a81c8",
+  "ibchem_part_d2c2690d3dbdddb6",
+  "ibchem_part_d2ce7520136cfbe0",
+  "ibchem_part_d3281308625983fa",
+  "ibchem_part_d35fa5a29750d714",
+  "ibchem_part_d396d3d7e935c8ce",
+  "ibchem_part_d3a313f51ace020a",
+  "ibchem_part_d3af4ee0e8ee3114",
+  "ibchem_part_d46178c7e5f2ca35",
+  "ibchem_part_d47d9e28a3d5a638",
+  "ibchem_part_d4990a357d3fbdba",
+  "ibchem_part_d505a2fef318e47f",
+  "ibchem_part_d5a6102b3035da09",
+  "ibchem_part_d5d0cd5eef5cb778",
+  "ibchem_part_d65e83e77a35b6c3",
+  "ibchem_part_d6d0934d9b4cb8d0",
+  "ibchem_part_d6df05e4443ecd4a",
+  "ibchem_part_d73180b7f08704e6",
+  "ibchem_part_d7393ecbea8b72d5",
+  "ibchem_part_d76638c5a828e367",
+  "ibchem_part_d79955cf1c248e29",
+  "ibchem_part_d7a15e44b6ce1e8b",
+  "ibchem_part_d7e7dcf52f09abbe",
+  "ibchem_part_d82b8625e2a992ef",
+  "ibchem_part_d85b2848131640e6",
+  "ibchem_part_d8f68daaecd25cd6",
+  "ibchem_part_d91a66422363508e",
+  "ibchem_part_d99c6a2b60be3272",
+  "ibchem_part_d9e103d09eced670",
+  "ibchem_part_d9e45095c6ac0ad6",
+  "ibchem_part_da654864a4f4bc68",
+  "ibchem_part_daff4d2ef5966ec6",
+  "ibchem_part_db1cfe5fa10d3ba4",
+  "ibchem_part_db6aef05d3fbc33d",
+  "ibchem_part_dbc2cc0566e32dd2",
+  "ibchem_part_dbd401710784cbbe",
+  "ibchem_part_dc49d4511ff911e8",
+  "ibchem_part_dc5aeca8a6f0d9a8",
+  "ibchem_part_dca668a8a689d07b",
+  "ibchem_part_dceb00ab9a2f87c0",
+  "ibchem_part_dd1e109ea64988c8",
+  "ibchem_part_dd79f0387423d270",
+  "ibchem_part_de12ccca79a30cee",
+  "ibchem_part_de1cbe970ec81290",
+  "ibchem_part_de3ce233b79bee7e",
+  "ibchem_part_de68d9a5e8fc4102",
+  "ibchem_part_de7c7c3274123f75",
+  "ibchem_part_df207af9c1c92c06",
+  "ibchem_part_df31191da22f2383",
+  "ibchem_part_df4014d007195024",
+  "ibchem_part_df92ab2dc31dfbf4",
+  "ibchem_part_dff752e6e8c0b824",
+  "ibchem_part_e0b679a99f00c008",
+  "ibchem_part_e0b67ad2f1c7fa58",
+  "ibchem_part_e0e355d4f3865b7f",
+  "ibchem_part_e1564508218e9a9c",
+  "ibchem_part_e1c9655bbf094122",
+  "ibchem_part_e21cfce02d23fcf1",
+  "ibchem_part_e2b2bd9f2f085756",
+  "ibchem_part_e2c8cb21b1d25b3a",
+  "ibchem_part_e3374b02993772e4",
+  "ibchem_part_e3843f96b737e36f",
+  "ibchem_part_e385505c4f53b5d1",
+  "ibchem_part_e3859b505a8a3790",
+  "ibchem_part_e39c32853fc82e28",
+  "ibchem_part_e3ec558f8276f2ba",
+  "ibchem_part_e42a2b8f1f974500",
+  "ibchem_part_e454c1f4cce1a6d1",
+  "ibchem_part_e48c595b08a12a95",
+  "ibchem_part_e49b41260949fe92",
+  "ibchem_part_e4bb76f4142c391a",
+  "ibchem_part_e4e67879dcaa5710",
+  "ibchem_part_e57ca647b0ace478",
+  "ibchem_part_e57eea1bf259ea23",
+  "ibchem_part_e5a3d4be6dac9239",
+  "ibchem_part_e5c9769401bf96fe",
+  "ibchem_part_e5e966f113825ebe",
+  "ibchem_part_e6103d689af3296a",
+  "ibchem_part_e667d3943c5c4723",
+  "ibchem_part_e70cc32aa21eeb32",
+  "ibchem_part_e75183b88fe9ec4a",
+  "ibchem_part_e7767365914cb71d",
+  "ibchem_part_e7b59b0f7665edac",
+  "ibchem_part_e7e26646d2a6119a",
+  "ibchem_part_e829a5d810cff409",
+  "ibchem_part_e95ee10679b09877",
+  "ibchem_part_e9843fd621d05591",
+  "ibchem_part_e9d5f39e218cfa06",
+  "ibchem_part_ea070fc9d509793a",
+  "ibchem_part_ea1e56f6002bf91a",
+  "ibchem_part_ea72d6e1420553ac",
+  "ibchem_part_eb4b4cecd4768806",
+  "ibchem_part_eb59754f747b50e6",
+  "ibchem_part_ec4619719f58678c",
+  "ibchem_part_ec94105066849cbb",
+  "ibchem_part_ed3769d0f2f1e4cb",
+  "ibchem_part_ed37f82e3268f5e5",
+  "ibchem_part_edbdd9ddec27e468",
+  "ibchem_part_ee1df17cbc741691",
+  "ibchem_part_ee7ad0519cda8050",
+  "ibchem_part_eea23059901c27c6",
+  "ibchem_part_eee2dda9e73366d9",
+  "ibchem_part_eef11d4acf0060df",
+  "ibchem_part_ef31e6963a600419",
+  "ibchem_part_efddded9c3428a16",
+  "ibchem_part_effa67b8040f2d86",
+  "ibchem_part_f064443cd42fe2e4",
+  "ibchem_part_f15feb6d113a5168",
+  "ibchem_part_f177d50876bba266",
+  "ibchem_part_f17f5f8fdf51821f",
+  "ibchem_part_f182595222a670e9",
+  "ibchem_part_f1db8b1a6569c0b2",
+  "ibchem_part_f1f1255d1fbdd529",
+  "ibchem_part_f296fb2ba4944638",
+  "ibchem_part_f2b740797876c375",
+  "ibchem_part_f2d3223c42c80ec7",
+  "ibchem_part_f2f727d156aaf9af",
+  "ibchem_part_f2ff375a43a4326e",
+  "ibchem_part_f382d7f927a280ac",
+  "ibchem_part_f3c5753d51eb2b38",
+  "ibchem_part_f3f398059e9d4d6b",
+  "ibchem_part_f40bce10964e15f4",
+  "ibchem_part_f44acf7cb64f8fc7",
+  "ibchem_part_f462e4b8845855f3",
+  "ibchem_part_f4abc7e4d88cbd5c",
+  "ibchem_part_f5238940a68e14e1",
+  "ibchem_part_f52d06a9e28b2f14",
+  "ibchem_part_f52d2e275e30fc7f",
+  "ibchem_part_f584fa1db2c88619",
+  "ibchem_part_f5facc1f3560f169",
+  "ibchem_part_f5fe1883e7d469df",
+  "ibchem_part_f60407b1330d59bb",
+  "ibchem_part_f6600b8b9a153ffd",
+  "ibchem_part_f6cdc1f81e9c3f8e",
+  "ibchem_part_f7299bb40d69811c",
+  "ibchem_part_f730c2aa3245a065",
+  "ibchem_part_f73dac267b12117a",
+  "ibchem_part_f744db52fc335735",
+  "ibchem_part_f7626e716f64586b",
+  "ibchem_part_f79e1b9914636e2f",
+  "ibchem_part_f7d9599a8cfec9dd",
+  "ibchem_part_f7de78061ea27cf6",
+  "ibchem_part_f7e7d86456e9f307",
+  "ibchem_part_f863877e29c7a29c",
+  "ibchem_part_f874f2158fe62418",
+  "ibchem_part_f8a15db87a8520a6",
+  "ibchem_part_f942c4ffa4bbbb64",
+  "ibchem_part_f9a9d2b2e5466e9c",
+  "ibchem_part_f9fb3e50af895c93",
+  "ibchem_part_fa14e23589ad18ef",
+  "ibchem_part_fa68784680ba6efb",
+  "ibchem_part_fa6c6fa8fb45e991",
+  "ibchem_part_fa79d403384370a6",
+  "ibchem_part_face515b6090cdda",
+  "ibchem_part_fae20bfd21556fcf",
+  "ibchem_part_fb06c143b3a09dd4",
+  "ibchem_part_fb07396ca68dde3c",
+  "ibchem_part_fb0cdf97bafa9dd9",
+  "ibchem_part_fb343d7bdd29f93c",
+  "ibchem_part_fb38023beb8ac74e",
+  "ibchem_part_fb53512370688e84",
+  "ibchem_part_fb5acee53e96c995",
+  "ibchem_part_fb66e0bb05d19cc9",
+  "ibchem_part_fbc1687bc50efbca",
+  "ibchem_part_fbdafb31b712e92e",
+  "ibchem_part_fbf3a2794fd9c592",
+  "ibchem_part_fc49853d91343338",
+  "ibchem_part_fc7874733606dc4e",
+  "ibchem_part_fc8f223a91f2a2c3",
+  "ibchem_part_fd12581a9f7e9327",
+  "ibchem_part_fd21a8759331377c",
+  "ibchem_part_fd731e7dd838c828",
+  "ibchem_part_fdbfc07926920626",
+  "ibchem_part_fdc5aaaf767e19ec",
+  "ibchem_part_fe3370d97b282441",
+  "ibchem_part_fe6acf173eacbb78",
+  "ibchem_part_fe7055c5f1fd5e93",
+  "ibchem_part_feba9d16a56fea4e",
+  "ibchem_part_ff030ef7e2a38492",
+  "ibchem_part_ff5cb7491b59508b",
+  "ibchem_part_ff5fdc21d0bfa644",
+  "ibchem_part_ff6bf73e4baaf90d",
+  "ibchem_part_ff7847ab54002d03"
+ ],
+ "withheld": [
+  {
+   "source_part_id": "ibchem_part_00de603306520ce8",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_014076e24a1e2e34",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0188f19731579548",
+   "reason": "later_topic",
+   "topics": [
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_026ecee95e062e7d",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_055c29bfabbee6f7",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_076c4ccda6131d32",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_076f52a16a1895db",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.4",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.4",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_080484856ebdcdd1",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_080686cebe7d1efa",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0870f2c0d3c774a9",
+   "reason": "later_topic",
+   "topics": [
+    "C.1",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "C.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_091bd04bfb390755",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_097b6e867a1de562",
+   "reason": "later_topic",
+   "topics": [
+    "D.2",
+    "E.1"
+   ],
+   "group_member_needs": [
+    "D.2",
+    "E.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_09c0e7b35ba7c976",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0aa167fd0ff8f6de",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0ad283dc66c377d3",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0d1f8599c94d48f9",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0efe6b30a7a9748f",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0f35121afb4785de",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0f580b92d540e6cd",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0fdce7a09ce33e26",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_105ad98f0a00b6a1",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_105e7af2dd0987eb",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_109c432c083445bd",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_10dd6e7b8f762f1b",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_115c76c4b9102f30",
+   "reason": "later_topic",
+   "topics": [
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_11f418e5fca12bb3",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1228a1f4931f97cb",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_12330b92d312951b",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1245df35760ee379",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1294c08c300d77d5",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_13120012957dd0f1",
+   "reason": "later_topic",
+   "topics": [
+    "D.3"
+   ],
+   "group_member_needs": [
+    "D.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1387c3ba7a9fdaec",
+   "reason": "later_topic",
+   "topics": [
+    "E.1",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1499ba6e97564029",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_152a0cbda48bdf81",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1546a32c136fad55",
+   "reason": "later_topic",
+   "topics": [
+    "E.1",
+    "E.5"
+   ],
+   "group_member_needs": [
+    "E.1",
+    "E.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_159d92d4a393a053",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_17349c3090d802da",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1a4b70fa086b78a9",
+   "reason": "later_topic",
+   "topics": [
+    "B.1"
+   ],
+   "group_member_needs": [
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1b252979eda36212",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1bca5781440a5240",
+   "reason": "later_topic",
+   "topics": [
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1bfefd3c70bb30ae",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1c38f0c37a211ed5",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1dd6909e22e74601",
+   "reason": "later_topic",
+   "topics": [
+    "B.1",
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.1",
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1ea720c3a651b996",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1eb448b61f7f1d1a",
+   "reason": "later_topic",
+   "topics": [
+    "B.1",
+    "B.3",
+    "E.1",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "B.1",
+    "B.3",
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1f1643ed37b0d75e",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1f3dca94dfb87d65",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1f732e31fb8f0d1c",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1f77ca3f96d69eb4",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_210fbb39e54907eb",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_215ca58054f9ca6b",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_21f34875bf95c9a4",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_22a8cdb568aa5e41",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_23013e8d998c0190",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_247c4d31b5a1f9c4",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_253716f0a0f163c1",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "B.1",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "B.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_260b6b3abab2d0c1",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.5",
+    "C.1"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.5",
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_2896fad1b90fb1b4",
+   "reason": "later_topic",
+   "topics": [
+    "E.5"
+   ],
+   "group_member_needs": [
+    "E.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_29f4547f33f19c3c",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_2a500f5598645825",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_2ac0bacc5b18b243",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_2adad7bd09a91a16",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "B.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "B.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_2b02369d701fd715",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_2bb56de1dc0d3bfd",
+   "reason": "later_topic",
+   "topics": [
+    "D.1"
+   ],
+   "group_member_needs": [
+    "D.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_2eb9baf1b91ee998",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_30b0dfccc84862f1",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_3196f2340dc44c89",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_31daf526400901df",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_326e7006bf5000e0",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_328ee58c132876fe",
+   "reason": "later_topic",
+   "topics": [
+    "B.1",
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.1",
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_32c79d30252d1457",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_3301d57e57eacffe",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_336005750e4480a5",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_3411de5a59946f26",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_342db3abd60d32f0",
+   "reason": "later_topic",
+   "topics": [
+    "E.5"
+   ],
+   "group_member_needs": [
+    "E.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_3772dae94e723cfc",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_37ab8dbfd93a0201",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_37f6c0b4ca6d2e88",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_37fbbe99c6b4b03d",
+   "reason": "later_topic",
+   "topics": [
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_380a4c11c494d000",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_38db81bfdb4accdc",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_3958870ed95e542f",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_397b0368bc73c3ad",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_3c3d9333f2999a70",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_3c8e8469dafd7b36",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_3d5709cf9355cd56",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_41ee12541c500f10",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_42e03bd638ff90a3",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_43371339ec9641aa",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_463e73a276ac4ecd",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_466b7d5947e68c6e",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_469f4a4c31f84425",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_48c4885ef8ab17c3",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_48f47ad1d7be7212",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_49ba8303912735ba",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_4d966de6dc66a639",
+   "reason": "later_topic",
+   "topics": [
+    "E.1",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_4e4deb3c92d45e4c",
+   "reason": "later_topic",
+   "topics": [
+    "A.4",
+    "D.1"
+   ],
+   "group_member_needs": [
+    "A.4",
+    "D.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_4f1f599b86fb6178",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_4f8f68f715c15e25",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_4fec2976cc91031e",
+   "reason": "later_topic",
+   "topics": [
+    "E.5"
+   ],
+   "group_member_needs": [
+    "E.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_50ac42fba8042512",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_50b8fe83046e9ff2",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_516a83100d4becdd",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5243b3c7ae16411a",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_52967afaa65b8874",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5340122a68e58396",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "C.1",
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_53b7f9c006f5cc1d",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_54b62d5a2f71f777",
+   "reason": "later_topic",
+   "topics": [
+    "A.5",
+    "E.1"
+   ],
+   "group_member_needs": [
+    "A.5",
+    "E.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5554ffa789c3531f",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_562f685fc5f3e1d8",
+   "reason": "later_topic",
+   "topics": [
+    "A.4",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.4",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5698031a7595920e",
+   "reason": "later_topic",
+   "topics": [
+    "A.5",
+    "E.1"
+   ],
+   "group_member_needs": [
+    "A.5",
+    "E.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_57cba6a016fa1175",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_582073062815d115",
+   "reason": "later_topic",
+   "topics": [
+    "E.1"
+   ],
+   "group_member_needs": [
+    "E.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_58b65929fdf92b95",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_59777de26f713e16",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5ab9afc808eac403",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5bd3ce7919ea2e23",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5c4a4c638d306da5",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5dbf59eb1be49e2d",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5f7e87201a3c9412",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5fd56c82e241ed28",
+   "reason": "later_topic",
+   "topics": [
+    "B.1"
+   ],
+   "group_member_needs": [
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5feb584d036b8e94",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6081b9046f33eb99",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_60c8ca1939c30905",
+   "reason": "later_topic",
+   "topics": [
+    "C.1",
+    "E.1"
+   ],
+   "group_member_needs": [
+    "C.1",
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6326784d7845d7c9",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_632ceaded6bef92e",
+   "reason": "later_topic",
+   "topics": [
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_64afa8b3df4e06fe",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_66fbbde8118922ba",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_67b37a4565424f32",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "E.3"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "E.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_67e75695653c75d2",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_67e818d7bc9eff2a",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_69a3cc529c033a74",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6aa8d2caf02874b6",
+   "reason": "later_topic",
+   "topics": [
+    "A.4",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.4",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6b2b3c7e75df9810",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6bd1147aee458ce1",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6c0a19a40b05525a",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6d6644f5e8d79b34",
+   "reason": "later_topic",
+   "topics": [
+    "C.1",
+    "E.1"
+   ],
+   "group_member_needs": [
+    "C.1",
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6ef8b7c0e6633b57",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6f223279264acc28",
+   "reason": "later_topic",
+   "topics": [
+    "E.1"
+   ],
+   "group_member_needs": [
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6f2496b0de14eb57",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6f47703c40620948",
+   "reason": "later_topic",
+   "topics": [
+    "B.1"
+   ],
+   "group_member_needs": [
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6f952d2824052a89",
+   "reason": "later_topic",
+   "topics": [
+    "B.1",
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.1",
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_700b652c5436ecfc",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_70466b5ebe33baf3",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_719c0313cbc1e784",
+   "reason": "later_topic",
+   "topics": [
+    "D.1"
+   ],
+   "group_member_needs": [
+    "D.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_71be0be7be87318f",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_727adecd486ae58f",
+   "reason": "later_topic",
+   "topics": [
+    "B.1",
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.1",
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_73ef7e3a93a6718a",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7498111a85d30a0b",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_756c78e617f85da9",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "C.1"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_76b448f53eb314af",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_788b4da90e8d2e5f",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_78d36fb83d64ecb0",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_794d41edf2ace2c1",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7c9b231462999685",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7d30a0805bdb2d79",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7e2a43f11dafbf57",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7e866bcb548ebbf9",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_81187eccfb9e1c83",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_814496f5229223b3",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_831f862e8f15fcad",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_83906348be92dcbb",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8392d5c322749788",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_83b1fab18cd4b3dc",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_83b2ad8133e460d7",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_864a1e8adb488761",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_89e0b7c274be87fd",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8a2f6850868eb78a",
+   "reason": "later_topic",
+   "topics": [
+    "B.1",
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.1",
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8a3326098a6cbf21",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8c07f9a57d69a2f8",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8e3123eef95605c4",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8e5b22433e3c161e",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8ed2e72a823c107b",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8fced60f16f100f6",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_900d0cb6df8859d7",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_9192e2a62ec1856d",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_93aa3c546b185c68",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_93dd347802ed6305",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_94e03648580f3411",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_954bc0eaa9870b26",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_95a9f9cea313d2ef",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_95efe917f40b30b4",
+   "reason": "later_topic",
+   "topics": [
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_99713570693182a2",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_9a4bf0691b86e017",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_9a935644936831dd",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_9c0496938e3c1edc",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_9dc05a6f40221fc6",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_9fce91f7a77570e7",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a02ea9cf7b2453f7",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a154e1b81f599ade",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a180541e23e74e21",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a3ee208863754be6",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a480f325fac17c04",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a4c5dab7f198d125",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a5361da5a4ef9be4",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a6460d2c3f8abd70",
+   "reason": "later_topic",
+   "topics": [
+    "C.2"
+   ],
+   "group_member_needs": [
+    "C.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a6a77a667c1b6fc4",
+   "reason": "later_topic",
+   "topics": [
+    "A.5",
+    "E.1"
+   ],
+   "group_member_needs": [
+    "A.5",
+    "E.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a7a8df60540e3355",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_aa0b91e8c7ef010f",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ab1d3e6ed47f85c1",
+   "reason": "later_topic",
+   "topics": [
+    "C.5"
+   ],
+   "group_member_needs": [
+    "C.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_abc8ddcba9327b84",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_abd8b362cdf13b2b",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ac9ae9bed50cabeb",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ae0c6291e36044ff",
+   "reason": "later_topic",
+   "topics": [
+    "D.1"
+   ],
+   "group_member_needs": [
+    "D.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_aec24df263d2b58f",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_af2a479d32e6ba09",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_af63be1a64ebb10f",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_af73e6b8487ee410",
+   "reason": "later_topic",
+   "topics": [
+    "D.3"
+   ],
+   "group_member_needs": [
+    "D.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b0ad3e2a30c4dcb8",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b0e0c9830738ef42",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b11d131d3458d60e",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b1ac0c887bf52220",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b36f199e87f65bef",
+   "reason": "later_topic",
+   "topics": [
+    "D.2"
+   ],
+   "group_member_needs": [
+    "D.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b4f2af8e5976e17f",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b5140416cd2d5142",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b57a735a438bca6b",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b73c3c89f8264a4a",
+   "reason": "later_topic",
+   "topics": [
+    "A.4",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.4",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b7a5f3abcef08818",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b7a7aba215738eae",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b84e61a882948971",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b8a98cc7d32f4505",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b8c288edb0ef3cdf",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b987c653107a781f",
+   "reason": "later_topic",
+   "topics": [
+    "D.2",
+    "E.1"
+   ],
+   "group_member_needs": [
+    "D.2",
+    "E.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ba9f18d87e7a3689",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_bbff7f324fe278e1",
+   "reason": "later_topic",
+   "topics": [
+    "E.1"
+   ],
+   "group_member_needs": [
+    "E.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_bc42fb48e055d68d",
+   "reason": "later_topic",
+   "topics": [
+    "D.3"
+   ],
+   "group_member_needs": [
+    "D.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_bc95863ca491b685",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_be5a7fa3165839a1",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c004fd0871f910c4",
+   "reason": "later_topic",
+   "topics": [
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c01f3f5a4a90e3b7",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c1d686d12b2ddd1d",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c315f3928943612b",
+   "reason": "later_topic",
+   "topics": [
+    "B.1"
+   ],
+   "group_member_needs": [
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c3bde6ad3ccd2cf2",
+   "reason": "later_topic",
+   "topics": [
+    "E.5"
+   ],
+   "group_member_needs": [
+    "E.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c5b6742409ba5102",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c5b75f35fe50e564",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c5d30de682d87580",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c67af3ab4dc122f4",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c7ff66ee2c8c660f",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c824e510cbd80c91",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c973f4e2251d05ec",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ca1cfef3b5a2210c",
+   "reason": "later_topic",
+   "topics": [
+    "D.2"
+   ],
+   "group_member_needs": [
+    "D.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ca5a3c7e74b1502d",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "D.1"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "D.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_caad66beb354115b",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cb319958ae54375b",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cb966b4e401ebd25",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cb98305a2b0a9398",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cbd0eb051fe276fa",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cbf404e15c112c2b",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.4",
+    "D.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ccc1f1e838abbdf0",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "E.3"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "E.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cd0461159c6939fa",
+   "reason": "later_topic",
+   "topics": [
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cd6a102e8a89fc5c",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cef7f5368db8d2b5",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cf28f55f6af2a58f",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cf6352a4f2ad1a12",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d0c7e25fee8e3b69",
+   "reason": "later_topic",
+   "topics": [
+    "B.1",
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.1",
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d105e7562564d106",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d11e02fb97736ad0",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d1e01ee60b005979",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d2eee24832b3283d",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d338d51670bc4eee",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "B.1"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d36a533f913fcc94",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d3bcd9c60cc54423",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d4f79bb87708d8fc",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d5b6250f4df34227",
+   "reason": "later_topic",
+   "topics": [
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d62852994af176c9",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d88fae698f2acef2",
+   "reason": "later_topic",
+   "topics": [
+    "E.1",
+    "E.5"
+   ],
+   "group_member_needs": [
+    "E.1",
+    "E.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d90bb55be2912ffa",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d9660b4b2487fc23",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d96873123cbc55cf",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d9b7c67b454dfbdb",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_dabbaea6ae1f9d41",
+   "reason": "later_topic",
+   "topics": [
+    "A.4"
+   ],
+   "group_member_needs": [
+    "A.4"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_db3d2ce689a0a2b8",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "A.4",
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.4",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_dbad05bf913d2b90",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_df46e71acc9de51a",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_dfafc092ed1a4ef2",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e08b185294a90ee6",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e0f0737dbb856fc3",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e195e05d63291ecb",
+   "reason": "later_topic",
+   "topics": [
+    "C.1",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "C.1",
+    "E.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e2337730f9940c41",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e2376aca8a22464e",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e2c821aa5e9d06aa",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e30f5678659a1a31",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e4ec9e765e87f4aa",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e598b4c0befffab9",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e5d0f20527a96c27",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e61c55f26a9d7a5e",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e642a3b39d269811",
+   "reason": "later_topic",
+   "topics": [
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e7216f5fa168c262",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e872a61d0f19e2c3",
+   "reason": "later_topic",
+   "topics": [
+    "E.2"
+   ],
+   "group_member_needs": [
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e9428ec699958ebd",
+   "reason": "later_topic",
+   "topics": [
+    "B.1"
+   ],
+   "group_member_needs": [
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_eb8c599b1c4348ed",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "B.1"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_eb9b00c7d564b7cc",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f0bd7ff27bb1fd8f",
+   "reason": "later_topic",
+   "topics": [
+    "D.3"
+   ],
+   "group_member_needs": [
+    "D.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f0d46de3cec953bc",
+   "reason": "later_topic",
+   "topics": [
+    "C.1",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "C.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f14df41756b1e236",
+   "reason": "later_topic",
+   "topics": [],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f214721a0999c117",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f228df265e163911",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f25383ba136ecc2e",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "B.1"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f38a0273cfbbe576",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f3d1a3b5fd3b0af0",
+   "reason": "later_topic",
+   "topics": [
+    "A.3",
+    "D.1"
+   ],
+   "group_member_needs": [
+    "A.3",
+    "D.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f3ed8180f2168f59",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f431cfe970f0de22",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f49becefa68f456f",
+   "reason": "later_topic",
+   "topics": [
+    "D.2"
+   ],
+   "group_member_needs": [
+    "D.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f4a2bc80c913c963",
+   "reason": "later_topic",
+   "topics": [
+    "B.1"
+   ],
+   "group_member_needs": [
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f50ae85cd48ededa",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f635cc5c12d0a791",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f7af474447238aa6",
+   "reason": "later_topic",
+   "topics": [
+    "A.5",
+    "C.1",
+    "E.2"
+   ],
+   "group_member_needs": [
+    "A.5",
+    "C.1",
+    "E.2"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f82f4c63e3ab10ac",
+   "reason": "later_topic",
+   "topics": [
+    "B.1"
+   ],
+   "group_member_needs": [
+    "B.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f89266ff653a86ff",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f8c713c8a3404adc",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f96fa8f104c284d2",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f9a7670bff2093dd",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f9b623cc1a434309",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fa5020893ba896d4",
+   "reason": "later_topic",
+   "topics": [
+    "C.1"
+   ],
+   "group_member_needs": [
+    "C.1"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fbbb5d72bcac25ec",
+   "reason": "later_topic",
+   "topics": [
+    "B.3"
+   ],
+   "group_member_needs": [
+    "B.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fc8663238fdb186b",
+   "reason": "later_topic",
+   "topics": [
+    "C.5"
+   ],
+   "group_member_needs": [
+    "C.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fcbc474daf960aca",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fccd98196b7eca26",
+   "reason": "later_topic",
+   "topics": [
+    "A.5"
+   ],
+   "group_member_needs": [
+    "A.5"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fe611470a02172cf",
+   "reason": "later_topic",
+   "topics": [
+    "D.3"
+   ],
+   "group_member_needs": [
+    "D.3"
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ff9ebbc9618c5c88",
+   "reason": "later_topic",
+   "topics": [
+    "A.3"
+   ],
+   "group_member_needs": [
+    "A.3"
+   ]
+  }
+ ]
+}

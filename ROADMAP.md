@@ -214,10 +214,16 @@ Do not infer guessing from time. _(Stated in d013 and asserted by the suite.)_
 - [ ] **Next IB train (Smith's 2a, 2026-09-29):** the twin key (Physics
   Categorisation d085, 38 merges), the type list grouped under and led by its
   code, the report strip spread, d033's scales, and d035 (nothing served that
-  needs a topic not yet met; Smith 2026-09-30). **Not yet on any train:** A.2 as
-  a seventh topic (1,372 servable parts delivered by instinctivelymechanical
-  2026-09-29; Smith ruled it opens on `ibphysicsppqs`), and the A1 v004 import
-  (accepted in the teacher bank by 13 September, never imported).
+  needs a topic not yet met; Smith 2026-09-30). d035's holds and d033 ship first,
+  alone, through `GO_LIVE_IB.cmd` (Smith: "please get it live!", "skip test!").
+- [ ] **A.2 on `ibphysicsppqs`** (Smith 2026-09-30: "just need those questions up
+  there!"). Built 2026-09-30 as d036, on the E1/E2 pattern (one stage: the archive
+  supplies every picture): 1,372 served by the seat, 1,052 after d035, about 250
+  after the automatic school-test holds (sandbox dry run). Ships through
+  `GO_LIVE_IB.cmd`, which now scans the tests, clears A.2, builds, stages and pushes.
+  Follow-ups: teach `test/test_ibphysics_release.js` about A.2; put the strictness
+  of the whole-parent/shared-page test closure to Smith.
+- [ ] A1 v004 import (accepted in the teacher bank by 13 September, never imported).
 - [ ] IB Physics, Trilogy Physics and pre-IB Physics adapters. IB Physics published
   2026-09-13. **Trilogy Physics staged for publication 2026-09-15** (build
   `a8e2add2b62997e0`, 526 files in the checkout, 18-check gate green): the exclusion

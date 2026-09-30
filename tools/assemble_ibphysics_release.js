@@ -10,6 +10,8 @@ const {mergeERelease}=require("./merge_ib_e_topics_release");
 const {loadCurrentReviewAdditions}=require("./ib-current-review-additions");
 const {loadA5AdditionalGeometry}=require("./ib-a5-additional-geometry");
 const {loadHolds,applyHolds,holdsPath}=require("./ib-dependency-holds");
+const {prepareRelease:prepareA2Release,clearancePath:a2ClearancePath}=require("./ib-a2-release");
+const {mergeA2Release}=require("./merge_ib_a2_release");
 const ROOT=path.resolve(__dirname,".."),DB=path.resolve(process.env.PHYSICS_PAPERDB_ROOT || "C:/CodexProjects/PaperDatabases");
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
 const read=p=>fs.readFileSync(p,"utf8");
@@ -87,6 +89,26 @@ function assemble() {
     questions=mergeERelease(questions,eTopics.questions);
     additionalClearances.push({path:eClearancePath,sha256:sha(read(eClearancePath))});
   }
+  // A.2 (Smith, 2026-09-29/30): a seventh topic on the E1/E2 pattern, its own clearance.
+  let a2=null,a2NewlyReserved=[];
+  if(fs.existsSync(a2ClearancePath)){
+    a2=prepareA2Release();
+    const stored=JSON.parse(read(a2ClearancePath));
+    ensure(stored.review_complete===true&&JSON.stringify(stored.topics)===JSON.stringify(["A.2"]),"A.2 release clearance is incomplete");
+    for(const field of ["reviewed_source_part_ids","reviewed_parent_ids","counts","assets","fingerprints"])
+      ensure(JSON.stringify(stored[field])===JSON.stringify(a2.clearance[field]),"A.2 release evidence changed: "+field);
+    // Today's school-test scan protects every topic, not only A.2: an existing part it
+    // now links (a new or changed test) leaves the site with the A.2 build.
+    const reservedNow=q=>a2.safety.blockedSourceIds.has(q.source_part_id)||a2.safety.qualityHolds.has(q.source_part_id)||
+      [...q.question_images,...q.context_images].some(file=>{
+        const preview=path.basename(path.dirname(path.dirname(file))),page=Number((/_p(\d+)(?:_|\.)/.exec(file)||[])[1]);
+        return a2.safety.heldPages.has(preview+"/"+page);
+      });
+    a2NewlyReserved=questions.filter(reservedNow).map(q=>q.id);
+    questions=questions.filter(q=>!reservedNow(q));
+    questions=mergeA2Release(questions,a2.questions);
+    additionalClearances.push({path:a2ClearancePath,sha256:sha(read(a2ClearancePath))});
+  }
   // d035 (Smith, 2026-09-30): serve the cleared scope minus the parts that need a topic
   // the pupil has not met. The hold subtracts; every clearance above is checked unchanged.
   const holds=loadHolds(),holdResult=applyHolds(questions,holds);
@@ -99,7 +121,7 @@ function assemble() {
     ensure(within(path.join(DB,"outputs/previews"),file) && /[\\/]crops[\\/](?:question|mark)_.*\.png$/i.test(file),"Only attributed question and markscheme crops may be published");
     const bytes=fs.readFileSync(file);assets.set(file,{url:"assets/"+sha(bytes)+".png",bytes});
   }
-  const topicLabels={"A.1":"Kinematics","A.5":"Galilean and special relativity","C.1":"Simple harmonic motion",...(d2?{"D.2":"Electric and magnetic fields"}:{}),
+  const topicLabels={"A.1":"Kinematics",...(a2?{"A.2":"Forces and momentum"}:{}),"A.5":"Galilean and special relativity","C.1":"Simple harmonic motion",...(d2?{"D.2":"Electric and magnetic fields"}:{}),
     ...(eTopics?{"E.1":"Structure of the atom","E.2":"Quantum physics"}:{})};
   const d2Atoms=new Set(d2?d2.taxonomy.atoms.map(atom=>atom.code):[]);
   const eAtoms=new Map(eTopics?eTopics.taxonomy.atoms.map(atom=>[atom.code,atom.topic]):[]);
@@ -110,7 +132,7 @@ function assemble() {
   }]));
   const meta={course:"ib",title:"IB Physics past-paper question viewer",release:true,default_topic:"A.5", // QoderWork 2026-09-14
     topics:topicLabels,topic_mapping_counts:topicMappingCounts,
-    analysis:{...input.meta.analysis,...Object.fromEntries(["groups","atoms","types"].map(kind=>[kind,[...input.meta.analysis[kind],...(d2?d2.taxonomy[kind]:[]),...(eTopics?eTopics.taxonomy[kind]:[])]]))}};
+    analysis:{...input.meta.analysis,...Object.fromEntries(["groups","atoms","types"].map(kind=>[kind,[...input.meta.analysis[kind],...(d2?d2.taxonomy[kind]:[]),...(eTopics?eTopics.taxonomy[kind]:[]),...(a2?a2.taxonomy[kind]:[])]]))}};
   const publicQuestions=questions.map(q=>({...q,source_notice:"",topic_codes:q.topic_codes.filter(topic=>Object.hasOwn(topicLabels,topic)),
     question_images:q.question_images.map(f=>assets.get(f).url),
     context_images:q.context_images.map(f=>assets.get(f).url),
@@ -144,6 +166,7 @@ function assemble() {
   if(holds)shared.push("tools/ib-dependency-holds.js","reports/ib-dependency-holds.json");
   if(d2)shared.push("tools/ib-d2-release.js","tools/build_ib_d2_recovery.js","tools/merge_ib_d2_release.js");
   if(eTopics)shared.push("tools/ib-e-topics-input.js","tools/ib-e-topics-release.js","tools/merge_ib_e_topics_release.js");
+  if(a2)shared.push("tools/ib-a2-input.js","tools/ib-a2-release.js","tools/merge_ib_a2_release.js","reports/ib-a2-release-scope.json");
   const tracking=read(path.join(ROOT,"deploy/ibmathsppqs/index.html")).match(/<!-- GA4[\s\S]*?<\/script>\s*<!-- Microsoft Clarity[\s\S]*?<\/script>/);
   ensure(tracking && tracking[0].includes("G-WKYGJYERSR") && tracking[0].includes("xdr2tsc688"),"Estate analytics blocks are missing");
   const catalogue="window.PHYSICS_META="+JSON.stringify(meta)+";\nwindow.PHYSICS_QUESTIONS="+JSON.stringify(publicQuestions)+";\n";
@@ -162,12 +185,13 @@ function assemble() {
     assets:new Set([...assets.values()].map(a=>a.url)).size,
     crop_notices:cropNotices.applied,
     analysis_source:"Reviewed A1 taxonomy, Special Relativity taxonomy and SHM question types"+(d2?", with the authored D2 question types":"")+
-      (eTopics?", and reviewed E1/E2 question types":"")+"; fine memberships are included only where mapped"};
+      (eTopics?", and reviewed E1/E2 question types":"")+(a2?", and instinctivelymechanical's A.2 types":"")+"; fine memberships are included only where mapped"};
   fs.writeFileSync(path.join(out,"build-info.json"),JSON.stringify(info,null,2)+"\n");
   const local={...info,root:out,clearance:{path:clearancePath,sha256:sha(read(clearancePath))},
     topic_clearance:{path:topicClearancePath,sha256:sha(read(topicClearancePath))},
     additional_clearances:additionalClearances,
-    dependency_holds:holds?{path:holdsPath,sha256:holds.sha256,held:holdResult.held.length,by_topic:holds.record.counts}:null,
+    dependency_holds:holds?{path:holdsPath,sha256:holds.sha256,held:holdResult.held.length,lifted:holdResult.lifted,by_topic:holds.record.counts}:null,
+    a2_newly_reserved_existing_parts:a2NewlyReserved,
     crop_notice_list:cropNotices.sha256?{path:cropNoticePath,sha256:cropNotices.sha256,applied:cropNotices.applied,stale:cropNotices.stale}:null,source_report:{...input.report,...(d2?{d2_release:d2.report}:{}),...(eTopics?{e_topics_release:eTopics.report}:{})},shared_files:shared.map(f=>({path:f,sha256:sha(read(path.join(ROOT,f)))}))};
   fs.writeFileSync(path.join(ROOT,"dist/ibphysics-release/latest.json"),JSON.stringify(local,null,2)+"\n");
   console.log(JSON.stringify({root:out,...info},null,2));
