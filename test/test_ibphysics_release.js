@@ -21,6 +21,7 @@ const {prepareRelease:prepareERelease,clearancePath:eClearancePath}=require("../
 const {mergeERelease}=require("../tools/merge_ib_e_topics_release");
 const {loadA5AdditionalGeometry}=require("../tools/ib-a5-additional-geometry");
 const {loadVerifiedUi,canReuseQuestion}=require("./helpers/ib_verified_ui");
+const {loadHolds,applyHolds}=require("../tools/ib-dependency-holds");
 const latestPath = path.join(ROOT, "dist/ibphysics-release/latest.json");
 const latest = fs.existsSync(latestPath) ? json(latestPath) : null;
 const releaseRoot = path.resolve(process.argv[2] || process.env.IBPHYSICS_RELEASE_ROOT || (latest && latest.root) || "missing-release");
@@ -65,6 +66,10 @@ const expected = ibInput({release:true}).questions.filter(q => q.topic_codes.inc
 const reviewedTopics=loadReviewedTopics(analysisPaths),expandedInput=reviewedInput(),expandedAudit=auditCrops(expandedInput);
 const beforeE=d2?mergeD2Release(expandedAudit.questions,d2.questions):expandedAudit.questions;
 const expectedAll=eTopics?mergeERelease(beforeE,eTopics.questions):beforeE,expectedById = new Map(expectedAll.map(q => [q.id, q]));
+/* d035 (Smith, 2026-09-30): the bundle serves the cleared scope minus the dependency holds.
+   Clearance comparisons below stay against what was approved: served plus held. */
+const holds=loadHolds(),holdResult=applyHolds(expectedAll,holds),expectedServed=holdResult.served,heldQuestions=holdResult.held;
+const heldIn=topic=>heldQuestions.filter(q=>q.topic_codes.includes(topic));
 const topicClearance=json(topicClearancePath);
 const fingerprints = new Map(clearance.fingerprints.map(f => [path.resolve(f.path), f.sha256]));
 let checked = 0;
@@ -148,10 +153,19 @@ rejects("missing served-image fingerprint revokes clearance", c => {
   c.fingerprints = c.fingerprints.filter(f => path.resolve(f.path) !== file);
 });
 rejects("repeated evidence cannot replace independent fingerprints", c => c.fingerprints.push(clone(c.fingerprints[0])));
+check("d035 dependency holds: nothing held is served, every hold names a cleared part, twins go together",()=>{
+  if(!holds)return;
+  assert.deepStrictEqual(holdResult.missing,[],"A hold names a part outside the cleared scope");
+  assert.deepStrictEqual(holdResult.twinGaps,[],"A hold leaves its HL/SL twin served");
+  const served=new Set(allQuestions.map(q=>q.source_part_id));
+  for(const h of holds.record.holds)assert(!served.has(h.source_part_id),h.served_id+" is held but served");
+  assert.strictEqual(heldQuestions.length,holds.record.holds.length);
+  if(latest&&path.resolve(latest.root)===releaseRoot)assert.strictEqual(latest.dependency_holds&&latest.dependency_holds.sha256,holds.sha256,"The build records the hold list it applied");
+});
 check("the entire package contains exactly the additional cleared topic memberships",()=>{
   assert.strictEqual(new Set(allQuestions.map(q=>q.id)).size,allQuestions.length);
   assert.strictEqual(new Set(allQuestions.map(q=>q.source_part_id)).size,allQuestions.length);
-  assert.deepStrictEqual(sorted(allQuestions.map(q=>q.id)),sorted(expectedAll.map(q=>q.id)));
+  assert.deepStrictEqual(sorted(allQuestions.map(q=>q.id)),sorted(expectedServed.map(q=>q.id)));
   assert.deepStrictEqual(sorted(allQuestions.flatMap(q=>q.topic_codes)),topicCodes);
   for(const q of allQuestions){
     const source=expectedById.get(q.id);assert(source,q.id);assert(Number(q.year)<2026,q.id);
@@ -208,13 +222,14 @@ check("public taxonomy and typed counts retain authored mappings, without invent
     const selected=allQuestions.filter(q=>q.topic_codes.includes(topic.topic));
     const counts={parts:selected.length,typed_parts:selected.filter(q=>topic.parts[q.source_part_id].atom_codes.length>0).length};
     assert.deepStrictEqual(meta.topic_mapping_counts[topic.topic],counts);assert.deepStrictEqual(info.topic_counts[topic.topic],counts);
-    assert.strictEqual(topicClearance.counts[topic.topic].parts,selected.length);
-    assert.strictEqual(topicClearance.counts[topic.topic].typed_parts,counts.typed_parts);
+    const held=heldIn(topic.topic);
+    assert.strictEqual(topicClearance.counts[topic.topic].parts,selected.length+held.length);
+    assert.strictEqual(topicClearance.counts[topic.topic].typed_parts,counts.typed_parts+held.filter(q=>topic.parts[q.source_part_id].atom_codes.length>0).length);
   }
   assert.deepStrictEqual(info.topics,topicCodes);
   if(d2){
     const selected=allQuestions.filter(q=>q.topic_codes.includes("D.2"));
-    assert.deepStrictEqual(sorted(selected.map(q=>q.source_part_id)),d2.clearance.reviewed_source_part_ids);
+    assert.deepStrictEqual(sorted([...selected,...heldIn("D.2")].map(q=>q.source_part_id)),d2.clearance.reviewed_source_part_ids);
     const counts={parts:selected.length,typed_parts:selected.length};
     assert.deepStrictEqual(meta.topic_mapping_counts["D.2"],counts);
     assert.deepStrictEqual(info.topic_counts["D.2"],counts);
@@ -229,7 +244,8 @@ check("public taxonomy and typed counts retain authored mappings, without invent
   }
   if(eTopics){
     const eSelected=allQuestions.filter(q=>q.topic_codes.some(topic=>eTopicCodes.includes(topic)));
-    assert.deepStrictEqual(sorted(eSelected.map(q=>q.source_part_id)),eTopics.clearance.reviewed_source_part_ids);
+    const eHeld=heldQuestions.filter(q=>q.topic_codes.some(topic=>eTopicCodes.includes(topic)));
+    assert.deepStrictEqual(sorted([...eSelected,...eHeld].map(q=>q.source_part_id)),eTopics.clearance.reviewed_source_part_ids);
     assert.deepStrictEqual(sorted(eTopics.questions.flatMap(q=>q.topic_codes)),eTopicCodes,"The combined clearance cannot silently drop an E topic");
     for(const kind of ["groups","atoms","types"]){
       const codes=new Set(eTopics.taxonomy[kind].map(item=>item.code));
@@ -242,8 +258,9 @@ check("public taxonomy and typed counts retain authored mappings, without invent
       assert(counts.parts>0,"An offered E topic must have cleared parts");
       assert.deepStrictEqual(meta.topic_mapping_counts[topic.topic],counts);
       assert.deepStrictEqual(info.topic_counts[topic.topic],counts);
-      assert.strictEqual(eTopics.clearance.counts[topic.topic].parts,counts.parts);
-      assert.strictEqual(eTopics.clearance.counts[topic.topic].typed_parts,counts.typed_parts);
+      const held=heldIn(topic.topic);
+      assert.strictEqual(eTopics.clearance.counts[topic.topic].parts,counts.parts+held.length);
+      assert.strictEqual(eTopics.clearance.counts[topic.topic].typed_parts,counts.typed_parts+held.filter(q=>q.analysis_atoms.some(code=>codes.has(code))).length);
       for(const q of selected)assert(["HL","HLSL"].includes(q.current_topic_levels?.[topic.topic]),q.id+" current E level must be explicit");
     }
     assert.strictEqual(meta.topics["E.1"],"Structure of the atom");
@@ -604,7 +621,7 @@ try {
         }
       }
       if(topic.topic==="D.2"){
-        assert.strictEqual(selected.length,d2.clearance.counts.parts);
+        assert.strictEqual(selected.length+heldIn("D.2").length,d2.clearance.counts.parts);
         assert.strictEqual(selected.filter(q=>q.analysis_atoms.some(code=>allowed.has(code))).length,selected.length);
         for(const button of categories){
           const authored=topic.atoms.find(atom=>atom.code===button.dataset.value);
@@ -614,8 +631,9 @@ try {
         }
       }
       if(eTopicCodes.includes(topic.topic)){
-        assert.strictEqual(selected.length,eTopics.clearance.counts[topic.topic].parts);
-        assert.strictEqual(selected.filter(q=>q.analysis_atoms.some(code=>allowed.has(code))).length,eTopics.clearance.counts[topic.topic].typed_parts);
+        const held=heldIn(topic.topic);
+        assert.strictEqual(selected.length+held.length,eTopics.clearance.counts[topic.topic].parts);
+        assert.strictEqual([...selected,...held].filter(q=>q.analysis_atoms.some(code=>allowed.has(code))).length,eTopics.clearance.counts[topic.topic].typed_parts);
         for(const button of categories){
           const authored=topic.atoms.find(atom=>atom.code===button.dataset.value);
           assert.strictEqual(authored.topic,topic.topic);
@@ -673,7 +691,7 @@ try {
   check("every released reviewed MCQ marks A-D and 1-4 against its verified source key", () => {
     const keyed=q=>["reviewed_source_key","matched_source_key"].includes(q.answer_status);
     const reviewed = allQuestions.filter(keyed);
-    const expectedReviewed = expectedAll.filter(keyed);
+    const expectedReviewed = expectedServed.filter(keyed);
     assert(reviewed.length > 0, "The reviewed MCQ delivery must reach the public bundle");
     assert.deepStrictEqual(sorted(reviewed.map(q => q.id)), sorted(expectedReviewed.map(q => q.id)));
     const a5Reviewed=reviewed.filter(q=>q.topic_codes.includes("A.5"));
@@ -687,7 +705,7 @@ try {
     }
     const matched=reviewed.filter(q=>q.answer_status==="matched_source_key");
     assert(matched.length>0,"New topic source-matched MCQs must reach the interactive answer controls");
-    assert.deepStrictEqual(sorted(matched.map(q=>q.source_part_id)),sorted([...topicClearance.mcq_metadata.matched_source_ids,...(d2?d2.clearance.mcq_metadata.matched.map(q=>q.source_part_id):[]),...(eTopics?eTopics.clearance.mcq_metadata.matched.map(q=>q.source_part_id):[])]));
+    assert.deepStrictEqual(sorted([...matched,...heldQuestions.filter(q=>q.answer_status==="matched_source_key")].map(q=>q.source_part_id)),sorted([...topicClearance.mcq_metadata.matched_source_ids,...(d2?d2.clearance.mcq_metadata.matched.map(q=>q.source_part_id):[]),...(eTopics?eTopics.clearance.mcq_metadata.matched.map(q=>q.source_part_id):[])]));
     let reused=0,exercised=0;
     for (const q of reviewed) {
       assert(/^[A-D]$/.test(q.correct_option), q.id);

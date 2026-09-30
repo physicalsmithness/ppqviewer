@@ -9,6 +9,7 @@ const {prepareRelease:prepareERelease,clearancePath:eClearancePath}=require("./i
 const {mergeERelease}=require("./merge_ib_e_topics_release");
 const {loadCurrentReviewAdditions}=require("./ib-current-review-additions");
 const {loadA5AdditionalGeometry}=require("./ib-a5-additional-geometry");
+const {loadHolds,applyHolds,holdsPath}=require("./ib-dependency-holds");
 const ROOT=path.resolve(__dirname,".."),DB=path.resolve(process.env.PHYSICS_PAPERDB_ROOT || "C:/CodexProjects/PaperDatabases");
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
 const read=p=>fs.readFileSync(p,"utf8");
@@ -86,6 +87,12 @@ function assemble() {
     questions=mergeERelease(questions,eTopics.questions);
     additionalClearances.push({path:eClearancePath,sha256:sha(read(eClearancePath))});
   }
+  // d035 (Smith, 2026-09-30): serve the cleared scope minus the parts that need a topic
+  // the pupil has not met. The hold subtracts; every clearance above is checked unchanged.
+  const holds=loadHolds(),holdResult=applyHolds(questions,holds);
+  ensure(!holdResult.missing.length,"Dependency holds name parts outside the cleared scope: "+holdResult.missing.join(", "));
+  ensure(!holdResult.twinGaps.length,"A dependency hold leaves its HL/SL twin served: "+holdResult.twinGaps.join(", "));
+  questions=holdResult.served;
   const assetFiles=unique(questions.flatMap(q=>[...q.question_images,...q.context_images,...q.markscheme_images]));
   const assets=new Map();
   for(const file of assetFiles) {
@@ -134,6 +141,7 @@ function assemble() {
   }
   const shared=["engine/ppqviewer.js","engine/ppqviewer.css","example/physics.html","example/physics-config.js","example/physics-identity.js","example/physics-login.js","tools/assemble_ibphysics_release.js","tools/ib-topic-release.js","tools/ib-reviewed-topics.js","tools/ib-topic-originals.js","tools/ib-topic-mcq.js"];
   shared.push("example/physics-reporting.js");
+  if(holds)shared.push("tools/ib-dependency-holds.js","reports/ib-dependency-holds.json");
   if(d2)shared.push("tools/ib-d2-release.js","tools/build_ib_d2_recovery.js","tools/merge_ib_d2_release.js");
   if(eTopics)shared.push("tools/ib-e-topics-input.js","tools/ib-e-topics-release.js","tools/merge_ib_e_topics_release.js");
   const tracking=read(path.join(ROOT,"deploy/ibmathsppqs/index.html")).match(/<!-- GA4[\s\S]*?<\/script>\s*<!-- Microsoft Clarity[\s\S]*?<\/script>/);
@@ -159,6 +167,7 @@ function assemble() {
   const local={...info,root:out,clearance:{path:clearancePath,sha256:sha(read(clearancePath))},
     topic_clearance:{path:topicClearancePath,sha256:sha(read(topicClearancePath))},
     additional_clearances:additionalClearances,
+    dependency_holds:holds?{path:holdsPath,sha256:holds.sha256,held:holdResult.held.length,by_topic:holds.record.counts}:null,
     crop_notice_list:cropNotices.sha256?{path:cropNoticePath,sha256:cropNotices.sha256,applied:cropNotices.applied,stale:cropNotices.stale}:null,source_report:{...input.report,...(d2?{d2_release:d2.report}:{}),...(eTopics?{e_topics_release:eTopics.report}:{})},shared_files:shared.map(f=>({path:f,sha256:sha(read(path.join(ROOT,f)))}))};
   fs.writeFileSync(path.join(ROOT,"dist/ibphysics-release/latest.json"),JSON.stringify(local,null,2)+"\n");
   console.log(JSON.stringify({root:out,...info},null,2));

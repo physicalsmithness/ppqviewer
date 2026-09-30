@@ -1,0 +1,978 @@
+{
+ "schema_version": 1,
+ "decision": "d035 (a topic serves nothing that needs a topic the pupil has not met)",
+ "ruled_by": "Smith, 2026-09-30: \"withold all 65 for the moment. as long as we're adding lots of nice new ones. 2a. 1a\"",
+ "scope": "Withheld from the whole IB release until Physics Categorisation rules each later topic to be route or scenery (packet of 2026-09-30). A hold subtracts from the cleared scope; it never changes a clearance.",
+ "evidence": {
+  "path": "reports/topic-dependency-leaks-2026-09-30.json",
+  "sha256": "25eb8b3a57400eac0994a961edf77aa8b3e65cfbfb372a7863f5cf065c3f2864"
+ },
+ "twin_rule": "A cross-level twin group (source_group_id ibchem_xlvl_*) is served or withheld as one.",
+ "counts": {
+  "A.1": 47,
+  "C.1": 4,
+  "D.2": 13,
+  "E.1": 8
+ },
+ "holds": [
+  {
+   "source_part_id": "ibchem_part_3104322f47d9b16d",
+   "served_id": "06M.P1.HL.TZ2.Q12(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b63b7e388b9783cd",
+   "served_id": "08M.P1.HL.TZ1.Q3(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7e902d3876935cac",
+   "served_id": "08M.P1.SL.TZ1.Q10(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fa6c6fa8fb45e991",
+   "served_id": "08M.P1.SL.TZ1.Q3(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7b21edd4363bf45b",
+   "served_id": "08M.P3.SL.TZ1.QA1(a_i)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7885b9e9771bf75d",
+   "served_id": "08M.P3.SL.TZ1.QA1(a_ii)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_0ebabf4ad5cdc39e",
+   "served_id": "09M.P3.HL.TZ1.QI2(d_i)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "C.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6864157f9cd2a465",
+   "served_id": "09M.P3.SL.TZ1.QD2(a_i)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5"
+     ]
+    },
+    {
+     "kind": "route_atom_only",
+     "context": "relativity (spacecraft at 0.80c)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_347fc000b347bf66",
+   "served_id": "10N.P3.HL.TZ0.QF2(d_i)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "route_atom_only",
+     "context": "communications (signal travel time)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ff7f62f0845eaa45",
+   "served_id": "10N.P3.HL.TZ0.QH1(b_i)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5"
+     ]
+    },
+    {
+     "kind": "route_atom_only",
+     "context": "relativity (spaceship, Jill's frame)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_aee9c7dd08f6db0e",
+   "served_id": "11M.P1.SL.TZ2.Q19(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "D.1"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1c8c0fa374314522",
+   "served_id": "11N.P3.HL.TZ0.QF2(d)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5"
+     ]
+    },
+    {
+     "kind": "route_atom_only",
+     "context": "optic-fibre dispersion"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6233a709dfd74d3d",
+   "served_id": "11N.P3.SL.TZ0.QF2(d)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5"
+     ]
+    },
+    {
+     "kind": "route_atom_only",
+     "context": "optic-fibre dispersion"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5b2ffc0c00316494",
+   "served_id": "12M.P1.SL.TZ2.Q4(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_bcf2df769b914050",
+   "served_id": "14M.P1.SL.TZ1.Q6(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ff25ce11e340a3f4",
+   "served_id": "15M.P1.HL.TZ1.Q24(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_33c09f8b6143e337",
+   "served_id": "15M.P3.SL.TZ1.Q11(b_ii)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "route_atom_only",
+     "context": "relativity (spaceship at 0.85c)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_75e21403adbaccc9",
+   "served_id": "15M.P3.SL.TZ1.Q11(b_iii)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5"
+     ]
+    },
+    {
+     "kind": "route_atom_only",
+     "context": "relativity (spaceship at 0.85c); the part Smith met on 2026-09-30"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_95a9f9cea313d2ef",
+   "served_id": "16M.P1.HL.TZ0.Q4(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2",
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_93aa3c546b185c68",
+   "served_id": "16M.P1.SL.TZ0.Q7(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2",
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_07130555d5d506dd",
+   "served_id": "16M.P3.SL.TZ0.Q5(b)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5"
+     ]
+    },
+    {
+     "kind": "route_atom_only",
+     "context": "relativity (electron at 0.975c)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_34213f650d4f5927",
+   "served_id": "17M.P1.SL.TZ1.Q8(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_054c8c665f30b2b6",
+   "served_id": "18M.P2.HL.TZ1.Q1(a)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_d6e3c4852cc7bdd7",
+   "served_id": "18M.P2.SL.TZ1.Q1(a)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a5da8a99b7277a68",
+   "served_id": "18M.P3.HL.TZ2.Q17(a)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "route_atom_only",
+     "context": "astrophysics (age of the universe from galaxy data)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_736c5ec00bd8e0b9",
+   "served_id": "18M.P3.SL.TZ2.Q12(a)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "route_atom_only",
+     "context": "astrophysics (age of the universe from galaxy data)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_1f581f0ff8059000",
+   "served_id": "19M.P3.HL.TZ1.Q1(b_i)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8290a7bc511d83b1",
+   "served_id": "20N.P1.SL.TZ0.Q10(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_c7c365d32ffc89ac",
+   "served_id": "23M.P1.HL.TZ1.Q4(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_32b2fada3c495170",
+   "served_id": "23M.P3.HL.TZ1.Q13(b)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.5",
+      "C.3"
+     ]
+    },
+    {
+     "kind": "route_atom_only",
+     "context": "optic-fibre ray paths"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5a01edef9ea3feb4",
+   "served_id": "24M.P1.HL.TZ2.Q5(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fb343d7bdd29f93c",
+   "served_id": "24M.P1.SL.TZ2.Q5(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ff3a68de6396aebd",
+   "served_id": "24M.P2.HL.TZ1.Q1(d)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_f2272c2f64f59f93",
+   "served_id": "24M.P2.HL.TZ1.Q2(a_ii)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5fe6ac44665c0376",
+   "served_id": "24M.P2.HL.TZ2.Q1(a)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_37f6c0b4ca6d2e88",
+   "served_id": "24M.P2.HL.TZ2.Q1(b_ii)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2",
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_4f19306abe1c67fe",
+   "served_id": "24M.P2.HL.TZ2.Q1(d)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7ff5c70aabe3b9b7",
+   "served_id": "24M.P2.SL.TZ1.Q2(a_ii)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_b087424e924b8239",
+   "served_id": "24M.P2.SL.TZ2.Q1(a)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_30b0dfccc84862f1",
+   "served_id": "24M.P2.SL.TZ2.Q1(b_ii)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2",
+      "A.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_9f822f9e463da69d",
+   "served_id": "24M.P2.SL.TZ2.Q1(d)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_39563657b2dc5d9b",
+   "served_id": "24N.P3.HL.TZ0.Q2(c)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "route_atom_only",
+     "context": "data-analysis experiment (flash duration)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_727345aee9540caa",
+   "served_id": "24N.P3.SL.TZ0.Q2(c)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "route_atom_only",
+     "context": "data-analysis experiment (flash duration)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8605e8532cd531b0",
+   "served_id": "25M.P1A.HL.TZ3.Q4(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7ed0627009fc0899",
+   "served_id": "25M.P1A.SL.TZ3.Q4(whole)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e3843f96b737e36f",
+   "served_id": "25N.P2.HL.TZ1.Q1(b)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a79f3ba7d342aa0f",
+   "served_id": "25N.P2.SL.TZ1.Q1(b)",
+   "served_under": "A.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "A.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_7513e55c605fa736",
+   "served_id": "07M.P1.HL.TZ1.Q21(whole)",
+   "served_under": "C.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "C.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_af1f8bdc6a4d805a",
+   "served_id": "10M.P3.SL.TZ2.QA2(a)",
+   "served_under": "C.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "C.4"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_89a21ac429e3942f",
+   "served_id": "18M.P3.HL.TZ1.Q11(b_i)",
+   "served_under": "C.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "C.4"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a173e50d000c73ef",
+   "served_id": "18N.P2.HL.TZ0.Q4(a_ii)",
+   "served_under": "C.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "C.2",
+      "C.4"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_235c6ae3f9350374",
+   "served_id": "04N.P1.SL.TZ0.Q23(whole)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_5f9f9e7d768c1c77",
+   "served_id": "08M.P1.HL.TZ2.Q39(whole)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.1"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_82453f58b3cab83b",
+   "served_id": "11M.P1.HL.TZ1.Q17(whole)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_cb0686ae107040f4",
+   "served_id": "11M.P1.SL.TZ1.Q17(whole)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_50f6977365e2b04c",
+   "served_id": "18M.P1.HL.TZ1.Q40(whole)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.1",
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_11e3ee79ef123a19",
+   "served_id": "18N.P2.HL.TZ0.Q6(b_ii)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.1"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_e734fbc060344f0d",
+   "served_id": "19M.P2.HL.TZ2.Q6(b_ii)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_6411a1dee5aff7b5",
+   "served_id": "19M.P2.SL.TZ2.Q6(b_ii)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "twin_of_held",
+     "twin_of": "19M.P2.HL.TZ2.Q6(b_ii)"
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_615a975759c903ae",
+   "served_id": "21M.P2.HL.TZ2.Q4(b)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.1",
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_4bd3e3ead239b35a",
+   "served_id": "21M.P2.SL.TZ2.Q4(b)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.1",
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_fb6e85c97b58ca72",
+   "served_id": "22N.P2.HL.TZ0.Q10(a_ii)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.1"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8231798b8e724b73",
+   "served_id": "25M.P1A.HL.TZ1.Q26(whole)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "D.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_4bc035a88f0d8896",
+   "served_id": "25M.P1A.SL.TZ1.Q18(whole)",
+   "served_under": "D.2",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "D.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_397259310d5270bc",
+   "served_id": "06M.P1.HL.TZ1.Q38(whole)",
+   "served_under": "E.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_efe977f3235729d0",
+   "served_id": "06M.P1.SL.TZ1.Q29(whole)",
+   "served_under": "E.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_09db4f22c2d92d7f",
+   "served_id": "08M.P3.HL.TZ1.QE5(a_ii)",
+   "served_under": "E.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.2"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_736cf82aead7d8c7",
+   "served_id": "11M.P1.SL.TZ2.Q24(whole)",
+   "served_under": "E.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_db562c65eea94010",
+   "served_id": "16M.P1.HL.TZ0.Q37(whole)",
+   "served_under": "E.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_a876d4e961e9fe62",
+   "served_id": "21M.P2.HL.TZ2.Q4(a_i)",
+   "served_under": "E.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_8038ee395e8b43da",
+   "served_id": "21M.P2.SL.TZ2.Q4(a)",
+   "served_under": "E.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.3"
+     ]
+    }
+   ]
+  },
+  {
+   "source_part_id": "ibchem_part_ca4bd8608dd6c151",
+   "served_id": "25N.P1A.HL.TZ1.Q38(whole)",
+   "served_under": "E.1",
+   "reasons": [
+    {
+     "kind": "later_topic",
+     "topics": [
+      "E.3"
+     ]
+    }
+   ]
+  }
+ ]
+}
